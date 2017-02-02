@@ -3,14 +3,12 @@ import ReactDOM from 'react-dom/server'
 import { createBatchingNetworkInterface } from 'apollo-client'
 import { ApolloProvider, getDataFromTree } from 'react-apollo'
 import { match, RouterContext } from 'react-router'
-import { StyleSheetServer } from 'aphrodite'
-import { reset, startBuffering } from 'aphrodite/lib/inject'
 import fs from 'fs'
 import path from 'path'
 
 import createApolloClient from '../../apollo_client'
 import createReduxStore from '../../redux_store'
-import Html from '../../ui/components/html'
+import Html from '../../ui/components/Html'
 import routes from '../../routes'
 import log from '../../log'
 import { app as settings } from '../../../package.json'
@@ -47,23 +45,17 @@ export default (req, res) => {
         </ApolloProvider>
       );
 
-      // Work around Aphrodite not supporting async rendering
-      // See: https://github.com/Khan/aphrodite/pull/132 for discussion
-      reset();
-      startBuffering();
       getDataFromTree(component).then(() => {
-        // Work around Aphrodite not supporting async rendering
-        reset();
 
         res.status(200);
 
-        const { html, css } = StyleSheetServer.renderStatic(() => ReactDOM.renderToString(component));
+        const html = ReactDOM.renderToString(component);
 
         if (__DEV__ || !assetMap) {
           assetMap = JSON.parse(fs.readFileSync(path.join(settings.frontendBuildDir, 'assets.json')));
         }
 
-        const page = <Html content={html} state={client.store.getState()} assetMap={assetMap} aphroditeCss={css.content}/>;
+        const page = <Html content={html} state={client.store.getState()} assetMap={assetMap}/>;
         res.send(`<!doctype html>\n${ReactDOM.renderToStaticMarkup(page)}`);
         res.end();
       }).catch(e => log.error('RENDERING ERROR:', e));

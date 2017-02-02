@@ -1,4 +1,6 @@
-$footer-height: 40px;
+@import "~antd/dist/antd.css";
+
+$primary-color: #191654;
 
 html {
   min-height: 100%;
@@ -6,5 +8,12 @@ html {
 }
 
 body {
-  margin-bottom: $footer-height;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimSun, sans-serif;
+  background: #ECECEC;
+}
+
+.Container {
+  padding: 0 1em;
+  margin: 0 auto;
+  max-width: 1280px;
 }

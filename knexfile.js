@@ -1,35 +1,42 @@
-const isBabel = !(class {}.toString().indexOf('class ') === 0);
+const isBabel = !(class {
+}.toString().indexOf('class ') === 0);
 if (!isBabel) {
-  require('babel-register');
+	require('babel-register');
 }
 
 module.exports = {
-  development: {
-    client: 'sqlite3',
-    connection: {
-      filename: './dev-db.sqlite3'
-    },
-    seeds: {
-      directory: './src/database/seeds'
-    },
-    migrations: {
-      directory: './src/database/migrations'
-    },
-    useNullAsDefault: true
-  },
-  production: {
-    client: 'sqlite3',
-    connection: {
-      filename: './prod-db.sqlite3'
-    },
-    seeds: {
-      directory: './src/database/seeds'
-    },
-    migrations: {
-      directory: './src/database/migrations'
-    },
-    useNullAsDefault: true
-  },
+	development: {
+		client: 'mysql',
+		connection: {
+			host: '127.0.0.1',
+			user: 'root',
+			password: '',
+			database: 'clinic-app'
+		},
+		seeds: {
+			directory: './src/database/seeds'
+		},
+		migrations: {
+			directory: './src/database/migrations'
+		},
+		useNullAsDefault: true
+	},
+	production: {
+		client: 'mysql',
+		connection: {
+			host: '127.0.0.1',
+			user: 'clinic-app',
+			password: 'SUPER_SECURE_PASS',
+			database: 'clinic-app'
+		},
+		seeds: {
+			directory: './src/database/seeds'
+		},
+		migrations: {
+			directory: './src/database/migrations'
+		},
+		useNullAsDefault: true
+	},
 
 
 };

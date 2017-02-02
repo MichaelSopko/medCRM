@@ -4,9 +4,29 @@ type Count {
   amount: Int!
 }
 
+type User {
+	id: Int!
+	login: String,
+	password: String,
+	type: Role!
+}
+
+enum Role {
+	SYSTEM_ADMIN,
+	CLINIC_ADMIN,
+	THERAPIST,
+	PATIENT
+}
+
 type Query {
   # Counter
   count: Count
+}
+
+type Clinic {
+	id: Int!,
+	name: String!,
+	users: User
 }
 
 type Mutation {

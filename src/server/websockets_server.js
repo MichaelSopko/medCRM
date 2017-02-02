@@ -5,9 +5,9 @@ import { app as settings } from '../../package.json'
 import log from '../log'
 
 // Hot reloadable modules
-var subscriptionManager = require('./api/subscriptions').subscriptionManager;
+let subscriptionManager = require('./api/subscriptions').subscriptionManager;
 
-var server;
+let server;
 
 const port = process.env.WS_PORT || settings.wsPort;
 

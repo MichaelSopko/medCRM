@@ -1,0 +1,24 @@
+.Login {
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	background: linear-gradient(to left, #43C6AC , #191654);
+
+	&__Window {
+		width: 500px;
+		background: rgba(255, 255, 255, .15);
+		padding: 24px;
+		padding-bottom: 0;
+		border-radius: 3px;
+	}
+
+	&__Header {
+		font-size: 28px;
+		font-weight: 400;
+		margin: 0;
+		padding: 0 0 20px 0;
+		color: #000;
+	}
+}

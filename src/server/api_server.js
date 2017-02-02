@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser'
+import session from 'express-session';
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 import http from 'http'
 import path from 'path'
@@ -8,12 +9,12 @@ import { app as settings } from '../../package.json'
 import log from '../log'
 
 // Hot reloadable modules
-var websiteMiddleware = require('./middleware/website').default;
-var graphiqlMiddleware = require('./middleware/graphiql').default;
-var graphqlMiddleware = require('./middleware/graphql').default;
-var subscriptionManager = require('./api/subscriptions').subscriptionManager;
+let websiteMiddleware = require('./middleware/website').default;
+let graphiqlMiddleware = require('./middleware/graphiql').default;
+let graphqlMiddleware = require('./middleware/graphql').default;
+let subscriptionManager = require('./api/subscriptions').subscriptionManager;
 
-var server;
+let server;
 
 const app = express();
 
@@ -24,6 +25,8 @@ app.enable('trust proxy');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use(session({ secret: 'dfJf-9sFSldfsk_FxpB', cookie: { maxAge: 60000 }}));
 
 app.use('/assets', express.static(settings.frontendBuildDir, {maxAge: '180 days'}));
 if (__DEV__) {
