@@ -33,12 +33,12 @@ const resolvers = {
 		},
 		editClinic(_, { id, name, address }, context) {
 			return checkPermissions(context, ROLES.SYSTEM_ADMIN)
-				.context.Clinics.editClinic({ id, name, address })
+				.then(() => context.Clinics.editClinic({ id, name, address }))
 				.then(res => ({ status: res }))
 		},
 		deleteClinic(_, { id }, context) {
 			return checkPermissions(context, ROLES.SYSTEM_ADMIN)
-				.context.Clinics.deleteClinic({ id })
+				.then(() => context.Clinics.deleteClinic({ id }))
 				.then(res => ({ status: res }))
 		},
 	},
