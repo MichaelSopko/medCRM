@@ -3,13 +3,17 @@ import 'isomorphic-fetch';
 
 import schema from '../api/schema';
 import Count from '../sql/count';
+import Clinics from '../sql/clinics';
+import Users from '../sql/users';
 
-export default graphqlExpress((req) => {
+export default graphqlExpress((req, res) => {
   return {
     schema,
     context: {
       Count: new Count(),
-      session: req.session
+      Clinics: new Clinics(),
+      Users: new Users(),
+      currentUser: req.user.user
     },
   };
 });

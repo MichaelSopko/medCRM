@@ -1,23 +1,30 @@
+import ROLES from '../../helpers/roles';
+
 export function up(knex, Promise) {
 	return Promise.all([
 		knex.schema.createTable('users', (table) => {
 			table.increments();
-			table.timestamps();
-			table.string('login');
+			table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'));
+			table.timestamp('updated_at');
+			table.string('login').unique();
 			table.string('hash');
+			table.string('salt');
 			table.string('name');
-			table.enum('type', [
-				'SYSTEM_ADMIN',
-				'CLINIC_ADMIN',
-				'THERAPIST',
-				'PATIENT'
-			]);
+			table.enum('role', Object.keys(ROLES));
 		}),
-	]);
+	]).then(() => {
+		knex.schema.createTable('auth_tokens', (table) => {
+			table.increments();
+			table.timestamps();
+			table.integer('user_id').unsigned().references('id').inTable('users');
+			table.string('token').notNull();
+		})
+	});
 }
 
 export function down(knex, Promise) {
 	return Promise.all([
-		knex.schema.dropTable('count'),
+		knex.schema.dropTable('auth_tokens'),
+		knex.schema.dropTable('users'),
 	]);
 }

@@ -1,0 +1,8 @@
+mutation addClinic(
+    $name: String!
+    $address: String
+) {
+    addClinic(name: $name, address: $address) {
+        status
+    }
+}

@@ -9,7 +9,11 @@
     "webpackDevPort": 3000,
     "apiPort": 8080,
     "ssr": false,
-    "webpackDll": true
+    "webpackDll": true,
+    "secret": "FGSdg094_f(-gt34gre",
+    "theme": {
+      "primary-color": "#1DA57A"
+    }
   },
   "engines": {
     "node": "6.6.0",
@@ -51,6 +55,7 @@
     "body-parser": "^1.15.2",
     "classnames": "^2.2.5",
     "express": "^4.14.0",
+    "express-jwt": "^5.1.0",
     "express-session": "^1.15.0",
     "graphql": "^0.9.0",
     "graphql-server-express": "^0.5.1",
@@ -59,13 +64,16 @@
     "graphql-tools": "^0.9.0",
     "graphql-typings": "0.0.1-beta-2",
     "isomorphic-fetch": "^2.2.1",
+    "jsonwebtoken": "^7.2.1",
     "knex": "^0.12.1",
     "minilog": "^3.0.1",
     "mysql": "^2.13.0",
+    "pwd": "^1.1.0",
     "react": "^15.3.2",
     "react-addons-update": "^15.3.2",
     "react-apollo": "^0.8.3",
     "react-dom": "^15.3.2",
+    "react-intl": "^2.2.3",
     "react-redux": "^5.0.2",
     "react-router": "^3.0.2",
     "react-router-redux": "^4.0.7",

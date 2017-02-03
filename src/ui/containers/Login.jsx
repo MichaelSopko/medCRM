@@ -5,26 +5,53 @@ import './Login.scss';
 
 class Login extends Component {
 
-	handleSubmit(e) {
+	static contextTypes = {
+		router: PropTypes.object.isRequired
+	}
+
+	state = {
+		loading: false
+	}
+
+	handleSubmit = e => {
 		e.preventDefault();
-		this.props.form.validateFields((err, values) => {
+		this.props.form.validateFields(async(err, values) => {
 			if (!err) {
+				this.setState({ loading: true });
 				console.log('Received values of form: ', values);
+				try {
+					const resp = await fetch('/api/authentication', {
+						method: "POST",
+						body: JSON.stringify(values),
+						headers: {
+							"Content-Type": "application/json"
+						}
+					}).then(r => r.json());
+
+					if (resp.token) {
+						localStorage.setItem('token', resp.token);
+						this.context.router.push('/dashboard/clinics');
+					}
+				} catch (e) {
+					console.log(e);
+				} finally {
+					this.setState({ loading: false });
+				}
 			}
 		});
 	}
 
 	render() {
-
 		const { getFieldDecorator } = this.props.form;
+		const { loading } = this.state;
 
 		return (
 			<main className="Login">
 				<Form onSubmit={this.handleSubmit} className="Login__Window">
 					<h1 className="Login__Header">Authentication</h1>
 					<Form.Item>
-						{getFieldDecorator('userName', {
-							rules: [{ required: true, message: 'Please input your username!' }],
+						{getFieldDecorator('login', {
+							rules: [{ required: true, message: 'Please input your login!' }],
 						})(
 							<Input addonBefore={<Icon type="user"/>} placeholder="Username"/>
 						)}
@@ -37,7 +64,7 @@ class Login extends Component {
 						)}
 					</Form.Item>
 					<Form.Item>
-						<Button type="primary" htmlType="submit" className="Login__Button" loading>
+						<Button type="primary" htmlType="submit" className="Login__Button" loading={loading}>
 							Log in
 						</Button>
 					</Form.Item>

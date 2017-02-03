@@ -1,9 +1,9 @@
 import express from 'express';
 import bodyParser from 'body-parser'
-import session from 'express-session';
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 import http from 'http'
 import path from 'path'
+import jwt from 'express-jwt';
 
 import { app as settings } from '../../package.json'
 import log from '../log'
@@ -12,6 +12,7 @@ import log from '../log'
 let websiteMiddleware = require('./middleware/website').default;
 let graphiqlMiddleware = require('./middleware/graphiql').default;
 let graphqlMiddleware = require('./middleware/graphql').default;
+let authentication = require('./api/authentication').default;
 let subscriptionManager = require('./api/subscriptions').subscriptionManager;
 
 let server;
@@ -26,15 +27,14 @@ app.enable('trust proxy');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(session({ secret: 'dfJf-9sFSldfsk_FxpB', cookie: { maxAge: 60000 }}));
-
 app.use('/assets', express.static(settings.frontendBuildDir, {maxAge: '180 days'}));
 if (__DEV__) {
   app.use('/assets', express.static(path.join(settings.backendBuildDir, 'assets'), {maxAge: '180 days'}));
 }
 
-app.use('/graphql', (...args) => graphqlMiddleware(...args));
+app.use('/graphql', jwt({ secret: settings.secret }), (...args) => graphqlMiddleware(...args));
 app.use('/graphiql', (...args) => graphiqlMiddleware(...args));
+app.use('/api/authentication', (...args) => authentication(...args));
 app.use((...args) => websiteMiddleware(...args));
 
 server = http.createServer(app);
@@ -66,6 +66,7 @@ if (module.hot) {
     module.hot.accept('./middleware/graphql', () => { graphqlMiddleware = require('./middleware/graphql').default; });
     module.hot.accept('./middleware/graphiql', () => { graphiqlMiddleware = require('./middleware/graphiql').default; });
     module.hot.accept('./api/subscriptions', () => { subscriptionManager = require('./api/subscriptions').subscriptionManager; });
+    module.hot.accept('./api/authentication', () => { subscriptionManager = require('./api/authentication').default; });
   } catch (err) {
     log(err.stack);
   }

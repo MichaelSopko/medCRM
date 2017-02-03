@@ -1,0 +1,7 @@
+mutation deleteClinic(
+$id: Int!
+) {
+    deleteClinic(id: $id) {
+        status
+    }
+}

@@ -1,0 +1,9 @@
+mutation editClinic(
+    $id: Int!
+    $name: String!
+    $address: String
+) {
+    editClinic(id: $id, name: $name, address: $address) {
+        status
+    }
+}

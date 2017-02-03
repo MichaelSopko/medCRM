@@ -5,12 +5,27 @@ import Counter from './ui/containers/Counter'
 import Login from './ui/containers/Login'
 import Dashboard from './ui/containers/Dashboard'
 import App from './ui/components/App'
+import { Clinics, Treatments, Patients, Therapists } from './ui/components/Dashboard'
+
+function authCheck(router, replace) {
+	if (__CLIENT__) {
+		const isLogged = !!localStorage.getItem('token');
+		if (!isLogged && router.location.pathname !== '/login') {
+			replace('/login');
+		}
+	}
+}
 
 export default (
-  <Route path="/" component={App}>
-    <IndexRedirect to="/dashboard" />
-    <Route path="counter" component={Counter} />
-    <Route path="login" component={Login} />
-    <Route path="dashboard" component={Dashboard} />
-  </Route>
+	<Route path="/" component={App} onEnter={authCheck}>
+		<IndexRedirect to="/dashboard/clinics"/>
+		<Route path="counter" component={Counter}/>
+		<Route path="login" component={Login}/>
+		<Route path="dashboard" component={Dashboard}>
+			<Route path="clinics" component={Clinics}/>
+			<Route path="treatments" component={Treatments}/>
+			<Route path="patients" component={Patients}/>
+			<Route path="therapists" component={Therapists}/>
+		</Route>
+	</Route>
 );

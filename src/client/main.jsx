@@ -24,6 +24,17 @@ const networkInterface = createBatchingNetworkInterface({
   uri: "/graphql",
 });
 
+networkInterface.use([{
+	applyMiddleware(req, next) {
+		if (!req.options.headers) {
+			req.options.headers = {};
+		}
+		const token = localStorage.getItem('token');
+		req.options.headers.authorization = token ? `Bearer ${token}` : null;
+		next();
+	}
+}]);
+
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
   networkInterface,
   wsClient,
@@ -40,6 +51,7 @@ if (window.__APOLLO_STATE__) {
 const store = createReduxStore(initialState, client);
 
 const history = syncHistoryWithStore(browserHistory, store);
+
 
 export default class Main extends React.Component {
   render() {
