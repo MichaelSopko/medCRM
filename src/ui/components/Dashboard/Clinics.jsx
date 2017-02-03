@@ -65,7 +65,7 @@ const EntityForm = Form.create()(
 class Clinics extends Component {
 
 	static propTypes = {
-		clinics: PropTypes.array
+		data: PropTypes.object
 	};
 
 	state = {

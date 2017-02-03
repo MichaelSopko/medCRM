@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import { Link } from 'react-router'
 import { Menu, Icon } from 'antd';
+import ProfileWidget from './ProfileWidget';
+
 import './UserNavbar.scss'
 
 class UserNavbar extends Component {
@@ -36,6 +38,7 @@ class UserNavbar extends Component {
 							<Link to="/dashboard/treatments">Treatments</Link>
 						</Menu.Item>
 					</Menu>
+					<ProfileWidget/>
 				</div>
 			</nav>
 		);

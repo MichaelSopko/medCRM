@@ -1,0 +1,30 @@
+.ProfileWidget {
+	display: flex;
+	align-items: center;
+
+	&__Content {
+		padding-left: 12px;
+	}
+
+	&__Name {
+		padding-bottom: 4px;
+		font-size: 14px;
+		font-weight: 500;
+	}
+
+	&__Role {
+		font-weight: 300;
+		color: rgba(0, 0, 0, .5);
+		padding-left: 4px;
+		font-size: 12px;
+	}
+
+	&__Avatar {
+		img {
+			height: 48px;
+			width: 48px;
+			border-radius: 50%;
+			border: #eee 1px solid;
+		}
+	}
+}

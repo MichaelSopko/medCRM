@@ -28,7 +28,8 @@
     "lint": "eslint --fix --ext js --ext jsx src",
     "seed": "knex seed:run",
     "migrate": "knex migrate:latest",
-    "postinstall": "if [ \"$NODE_ENV\" = production ]; then npm run clean && npm run build && npm run migrate && npm run seed; fi"
+    "postinstall": "if [ \"$NODE_ENV\" = production ]; then npm run clean && npm run build && npm run migrate && npm run seed; fi",
+    "manage:translations": "node ./translationRunner.js"
   },
   "repository": {
     "type": "git",
@@ -89,6 +90,7 @@
     "babel-core": "^6.14.0",
     "babel-eslint": "^7.0.0",
     "babel-loader": "^6.2.5",
+    "babel-plugin-react-intl": "^2.3.1",
     "babel-plugin-transform-class-properties": "^6.11.5",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-runtime": "^6.15.0",
@@ -118,6 +120,7 @@
     "mocha-webpack": "^0.7.0",
     "node-sass": "^4.2.0",
     "raw-loader": "^0.5.1",
+    "react-intl-translations-manager": "^4.0.1",
     "resolve-url-loader": "^1.6.0",
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",

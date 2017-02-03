@@ -16,6 +16,12 @@ export default class User {
       .first()
   }
 
+  getUserSafe({ id }) {
+	  return knex('users')
+		  .where('id', id)
+		  .first('id', 'login', 'name', 'role')
+  }
+
   async checkPassword({ login, password }) {
     const user = await knex('users').where('login', login).first();
 	  if (user) {

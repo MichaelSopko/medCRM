@@ -18,41 +18,32 @@ async function checkPermissions(ctx, ...roles) {
 
 const resolvers = {
 	Query: {
-		count(ignored1, ignored2, context) {
-			return context.Count.getCount();
-		},
 		clinics(ignored1, ignored2, context) {
 			return context.Clinics.getClinics();
 		},
+		currentUser(ignored1, ignored2, context) {
+			return context.Users.getUserSafe({ id: context.currentUser.id });
+		},
 	},
 	Mutation: {
-		addCount(_, { amount }, context) {
-			return context.Count.addCount(amount)
-				.then(() => context.Count.getCount())
-				.then(count => {
-					pubsub.publish('countUpdated', count);
-					return count;
-				});
-		},
 		addClinic(_, { name, address }, context) {
-			console.log(context);
 			return checkPermissions(context, ROLES.SYSTEM_ADMIN)
 				.then(() => context.Clinics.addClinic({ name, address }))
 				.then(res => ({ status: res }))
 		},
 		editClinic(_, { id, name, address }, context) {
-			return context.Clinics.editClinic({ id, name, address })
+			return checkPermissions(context, ROLES.SYSTEM_ADMIN)
+				.context.Clinics.editClinic({ id, name, address })
 				.then(res => ({ status: res }))
 		},
 		deleteClinic(_, { id }, context) {
-			return context.Clinics.deleteClinic({ id })
+			return checkPermissions(context, ROLES.SYSTEM_ADMIN)
+				.context.Clinics.deleteClinic({ id })
 				.then(res => ({ status: res }))
 		},
 	},
-	Subscription: {
-		countUpdated(amount) {
-			return amount;
-		}
+	Subscription: {  // Here live subscriptions can be added
+		clinicUpdated(ids) { }
 	}
 };
 

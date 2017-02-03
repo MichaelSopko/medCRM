@@ -64,7 +64,7 @@ class Login extends Component {
 						)}
 					</Form.Item>
 					<Form.Item>
-						<Button type="primary" htmlType="submit" className="Login__Button" loading={loading}>
+						<Button type="primary" size="large" htmlType="submit" className="Login__Button" loading={loading}>
 							Log in
 						</Button>
 					</Form.Item>
