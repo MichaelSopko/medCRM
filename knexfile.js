@@ -23,7 +23,7 @@ module.exports = {
 	},
 	production: {
 		client: 'mysql',
-		connection: {
+		connection: process.env.CLEARDB_DATABASE_URL || {
 			host: '127.0.0.1',
 			user: 'clinic-app',
 			password: 'SUPER_SECURE_PASS',
