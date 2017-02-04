@@ -28,6 +28,9 @@ class UserNavbar extends Component {
 						<Menu.Item key="clinics">
 							<Link to="/dashboard/clinics">Clinics</Link>
 						</Menu.Item>
+						<Menu.Item key="administrators">
+							<Link to="/dashboard/administrators">Administrators</Link>
+						</Menu.Item>
 						<Menu.Item key="therapists">
 							<Link to="/dashboard/therapists">Therapists</Link>
 						</Menu.Item>

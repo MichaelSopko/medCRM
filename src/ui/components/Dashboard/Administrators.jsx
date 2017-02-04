@@ -5,10 +5,11 @@ import { graphql, compose, withApollo } from 'react-apollo'
 import ApolloClient from 'apollo-client'
 import gql from 'graphql-tag'
 import update from 'react-addons-update'
-import GET_CLINICS_QUERY from '../../graphql/ClinicsGet.graphql'
-import ADD_CLINIC_MUTATION from '../../graphql/ClinicAddMutation.graphql'
-import DELETE_CLINIC_MUTATION from '../../graphql/ClinicDeleteMutaion.graphql'
-import EDIT_CLINIC_MUTATION from '../../graphql/ClinicEditMutation.graphql'
+import GET_USERS_QUERY from '../../graphql/UsersGet.graphql'
+import ADD_USER_MUTATION from '../../graphql/UserAddMutation.graphql'
+import DELETE_USER_MUTATION from '../../graphql/UserDeleteMutaion.graphql'
+import EDIT_USER_MUTATION from '../../graphql/UserEditMutation.graphql'
+import ROLES from '../../../helpers/roles'
 
 import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm } from 'antd'
 
@@ -23,13 +24,26 @@ const EntityForm = Form.create()(
 		const isEditing = !!Object.keys(values).length;
 
 		return (
-			<Modal title={ `${isEditing ? 'Edit' : 'Create'} Clinic` }
+			<Modal title={ `${isEditing ? 'Edit' : 'Create'} Administrator` }
 			       visible={visible}
 			       okText={ isEditing ? 'Edit' : 'Create' }
 			       onCancel={onCancel}
 			       onOk={onSubmit}
 			       confirmLoading={loading}>
 				<Form>
+					{ !isEditing && <Form.Item
+						{...formItemLayout}
+						label="Login"
+						hasFeedback
+					>
+						{getFieldDecorator('login', {
+							rules: [{
+								required: true, message: 'Please input login',
+							}],
+						})(
+							<Input />
+						)}
+					</Form.Item> }
 					<Form.Item
 						{...formItemLayout}
 						label="Name"
@@ -37,21 +51,21 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('name', {
 							initialValue: values.name,
-							rules: [{
-								required: true, message: 'Please input clinic name',
-							}],
+							rules: [],
 						})(
 							<Input />
 						)}
 					</Form.Item>
 					<Form.Item
 						{...formItemLayout}
-						label="Address"
+						label={ isEditing ? 'New password' : 'Password' }
 						hasFeedback
 					>
-						{getFieldDecorator('address', {
-							initialValue: values.address,
-							rules: [],
+						{getFieldDecorator('password', {
+							rules: [{
+									required: !isEditing,  message: 'Please input password'
+								}
+							],
 						})(
 							<Input />
 						)}
@@ -62,7 +76,7 @@ const EntityForm = Form.create()(
 	}
 );
 
-class Clinics extends Component {
+class Administrators extends Component {
 
 	static propTypes = {
 		data: PropTypes.object
@@ -75,7 +89,7 @@ class Clinics extends Component {
 
 	handleOk = () => {
 		this.setState({ modalOpened: false, activeEntity: {} });
-		this.props.form.submit();
+		// this.props.form.submit();
 	};
 
 	handleCancel = () => {
@@ -94,13 +108,14 @@ class Clinics extends Component {
 				return;
 			}
 			isEditing ? this.props.editClinic({ id: this.state.activeEntity.id, ...values }) : this.props.addClinic(values);
-			console.log('Adding new clinic', values);
+			console.log('Adding new administrator', values);
 			form.resetFields();
 			this.setState({ modalOpened: false, activeEntity: {} });
 		});
 	}
 
 	editEntity = entity => () => {
+		this.form.resetFields();
 		this.setState({
 			modalOpened: true,
 			activeEntity: entity
@@ -108,16 +123,16 @@ class Clinics extends Component {
 	}
 
 	render() {
-		const { data: { loading, clinics }, deleteClinic } = this.props;
+		const { data: { loading, users }, deleteUser } = this.props;
 
 		const columns = [{
+			title: 'Login',
+			dataIndex: 'login',
+			key: 'login',
+		}, {
 			title: 'Name',
 			dataIndex: 'name',
 			key: 'name',
-		}, {
-			title: 'Address',
-			dataIndex: 'address',
-			key: 'address',
 		}, {
 			title: 'Action',
 			key: 'action',
@@ -126,9 +141,9 @@ class Clinics extends Component {
 		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>Edit</Button>
 					<span className="ant-divider"></span>
 		      <Popconfirm title="Are you sure?" onConfirm={ () => {
-			      deleteClinic(record)
+			      deleteUser(record)
 		      } } okText="Yes" cancelText="No">
-		        <Button size="small" type='ghost'>Delete</Button>
+		        <Button size="small" type='ghost' disabled>Delete</Button>
 		      </Popconfirm>
         </span>
 			),
@@ -136,7 +151,7 @@ class Clinics extends Component {
 		const { modalOpened, activeEntity } = this.state;
 
 		return (
-			<section className="Clinics">
+			<section className="Administrators">
 				<EntityForm
 					ref={ form => {
 						this.form = form
@@ -148,52 +163,54 @@ class Clinics extends Component {
 				  values={activeEntity}
 				/>
 				<div className="Dashboard__Details">
-					<h1 className="Dashboard__Header">Clinics</h1>
+					<h1 className="Dashboard__Header">Administrators</h1>
 					<div className="Dashboard__Actions">
 						<Button type="primary" onClick={ this.showModal }>
 							<Icon type="plus-circle-o"/>
-							Create a Clinic
+							Create an Administrator
 						</Button>
 					</div>
 				</div>
-				<Table dataSource={clinics} columns={columns} loading={loading} rowKey='id'/>
+				<Table dataSource={users} columns={columns} loading={loading} rowKey='id'/>
 			</section>
 		);
 	}
 }
 
-const ClinicsWithApollo = withApollo(compose(
-	graphql(GET_CLINICS_QUERY),
-	graphql(ADD_CLINIC_MUTATION, {
+const AdministratorsApollo = withApollo(compose(
+	graphql(GET_USERS_QUERY, {
+		options: (props) => ({ variables: { role: ROLES.CLINIC_ADMIN } })
+	}),
+	graphql(ADD_USER_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
 			addClinic: ({ name, address }) => mutate({
 				variables: { name, address },
 				refetchQueries: [{
-					query: GET_CLINICS_QUERY
+					query: GET_USERS_QUERY
 				}],
 			})
 		})
 	}),
-	graphql(DELETE_CLINIC_MUTATION, {
+	graphql(DELETE_USER_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
 			deleteClinic: ({ id }) => mutate({
 				variables: { id },
 				refetchQueries: [{
-					query: GET_CLINICS_QUERY
+					query: GET_USERS_QUERY
 				}],
 			})
 		})
 	}),
-	graphql(EDIT_CLINIC_MUTATION, {
+	graphql(EDIT_USER_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
 			editClinic: ({ id, name, address }) => mutate({
 				variables: { id, name, address },
 				refetchQueries: [{
-					query: GET_CLINICS_QUERY
+					query: GET_USERS_QUERY
 				}],
 			})
 		})
 	}),
-)(Clinics));
+)(Administrators));
 
-export default ClinicsWithApollo;
+export default AdministratorsApollo;

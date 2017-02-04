@@ -3,32 +3,40 @@ import pwd from 'pwd';
 
 import createUser from './helpers/create_user';
 
-export default class User {
+export default class Users {
 
-  async createUser(...params) {
-	  return createUser(knex, ...params);
-  }
+	static safeFields = ['id', 'login', 'name', 'role'];
 
-  getUser({ id, login }) {
-  	const clause = id ? [ 'id', id ] : [ 'login', login ];
-    return knex('users')
-      .where(...clause)
-      .first()
-  }
+	async createUser(...params) {
+		return createUser(knex, ...params);
+	}
 
-  getUserSafe({ id }) {
-	  return knex('users')
-		  .where('id', id)
-		  .first('id', 'login', 'name', 'role')
-  }
+	getUser({ id, login }) {
+		const clause = id ? ['id', id] : ['login', login];
+		return knex('users')
+			.where(...clause)
+			.first()
+	}
 
-  async checkPassword({ login, password }) {
-    const user = await knex('users').where('login', login).first();
-	  if (user) {
-		  const result = await pwd.hash(password, user.salt);
-		  return user.hash === result.hash;
-    } else {
-		  return false;
-	  }
-  }
+	getUserSafe({ id }) {
+		return knex('users')
+			.where('id', id)
+			.first(...Users.safeFields)
+	}
+
+	findByRole(role) {
+		return knex('users')
+			.where('role', role)
+			.select(...Users.safeFields)
+	}
+
+	async checkPassword({ login, password }) {
+		const user = await knex('users').where('login', login).first();
+		if (user) {
+			const result = await pwd.hash(password, user.salt);
+			return user.hash === result.hash;
+		} else {
+			return false;
+		}
+	}
 }

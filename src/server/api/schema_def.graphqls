@@ -1,7 +1,7 @@
 type User {
 	id: Int!
 	role: Role!
-	login: String
+	login: String!
 	name: String
 }
 
@@ -14,6 +14,7 @@ enum Role {
 
 type Query {
 	clinics: [Clinic]
+	users(role: Role): [User]
 	currentUser: User
 }
 
@@ -28,28 +29,45 @@ type MutationStatus {
 }
 
 type Mutation {
-  addClinic(
-    name: String!
-		address: String
-  ): MutationStatus
+	addClinic(
+	name: String!
+	address: String
+): MutationStatus
 
-  editClinic(
-		id: Int!
-    name: String!
-		address: String
-  ): MutationStatus
+	editClinic(
+	id: Int!
+	name: String!
+	address: String
+): MutationStatus
 
 	deleteClinic(
-		id: Int!
+	id: Int!
+): MutationStatus
+
+	addUser(
+		role: Role!
+		login: String!
+		name: String
+		password: String
 	): MutationStatus
+
+	editUser(
+	id: Int!
+	name: String
+	password: String
+): MutationStatus
+
+	deleteUser(
+	id: Int!
+): MutationStatus
 }
 
 type Subscription {
-  clinicUpdated(ids: String): Clinic
+	clinicUpdated(ids: String): Clinic
 }
 
 schema {
-  query: Query
-  mutation: Mutation
-  subscription: Subscription
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
 }

@@ -28,8 +28,7 @@
     "lint": "eslint --fix --ext js --ext jsx src",
     "seed": "knex seed:run",
     "migrate": "knex migrate:latest",
-    "postinstall": "if [ \"$NODE_ENV\" = production ]; then npm run clean && npm run build && npm run migrate && npm run seed; fi",
-    "manage:translations": "node ./translationRunner.js"
+    "postinstall": "if [ \"$NODE_ENV\" = production ]; then npm run clean && npm run build && npm run migrate && npm run seed; fi"
   },
   "repository": {
     "type": "git",

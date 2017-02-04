@@ -7,10 +7,18 @@ import ROLES from '../../helpers/roles';
 
 export const pubsub = new PubSub();
 
-async function checkPermissions(ctx, ...roles) {
+async function checkPermissions(ctx, role) {
 	const user = await ctx.Users.getUser({ id: ctx.currentUser.id });
-	if (roles.some(role => role === user.role)) {
-		return true;
+	const userWeight = Object.keys(ROLES).indexOf(user.role);
+	const requiredWeight = Object.keys(ROLES).indexOf(role);
+
+	if (userWeight === -1 || requiredWeight === -1) {
+		throw new Error('Invalid user role');
+	}
+
+	const isOk = userWeight >= requiredWeight;
+	if (isOk) {
+		return user;
 	} else {
 		throw new Error('No access');
 	}
@@ -20,6 +28,9 @@ const resolvers = {
 	Query: {
 		clinics(ignored1, ignored2, context) {
 			return context.Clinics.getClinics();
+		},
+		users(ignored1, { role }, context) {
+			return context.Users.findByRole(role);
 		},
 		currentUser(ignored1, ignored2, context) {
 			return context.Users.getUserSafe({ id: context.currentUser.id });

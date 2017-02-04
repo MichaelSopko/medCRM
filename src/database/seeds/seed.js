@@ -12,6 +12,8 @@ export function seed(knex, Promise) { // eslint-disable-line import/prefer-defau
     return Promise.all([
       knex('count').insert({ amount: initialAmount }),
       createUser(knex, { login: 'admin', password: '1234', name: 'First Last', role: ROLES.SYSTEM_ADMIN }),
+      createUser(knex, { login: 'clinic_admin', password: '1234', name: 'First Last', role: ROLES.CLINIC_ADMIN }),
+      createUser(knex, { login: 'clinic_admin2', password: '1234', name: 'First Last', role: ROLES.CLINIC_ADMIN }),
       knex('clinics').insert({ name: 'Central Los Santos Medical Center', address: 'Davis Avenue' }),
     ]);
   });

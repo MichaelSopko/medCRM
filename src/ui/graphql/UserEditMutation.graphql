@@ -1,0 +1,9 @@
+mutation editUser(
+    $id: Int!
+    $password: String
+    $name: String
+) {
+    editUser(id: $id, name: $name, password: $password) {
+        status
+    }
+}

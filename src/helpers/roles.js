@@ -1,6 +1,9 @@
+/**
+ * Each next role is higher than previous
+ */
 export default {
-	SYSTEM_ADMIN: 'SYSTEM_ADMIN',
-	CLINIC_ADMIN: 'CLINIC_ADMIN',
+	PATIENT: 'PATIENT',
 	THERAPIST: 'THERAPIST',
-	PATIENT: 'PATIENT'
+	CLINIC_ADMIN: 'CLINIC_ADMIN',
+	SYSTEM_ADMIN: 'SYSTEM_ADMIN'
 }

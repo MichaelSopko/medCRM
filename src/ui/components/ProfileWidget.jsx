@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import { Button, Icon } from 'antd';
 import { graphql } from 'react-apollo'
 
-import GET_CURRENT_USER_QUERY from '../graphql/UsersGetCurrent.graphql'
+import GET_CURRENT_USER_QUERY from '../graphql/UserGetCurrent.graphql'
 
 import './ProfileWidget.scss'
 
@@ -26,7 +26,15 @@ class ProfileWidget extends Component {
 	logout = () => {
 		localStorage.removeItem('token');
 		this.context.router.push('/login');
+		this.props.client.resetStore();
 	};
+
+	componentWillReceiveProps(newProps) {
+		if (newProps.data.error) {
+			this.logout();
+			return false;
+		}
+	}
 
 	render() {
 		const { data: { loading, currentUser, error } } = this.props;

@@ -1,0 +1,8 @@
+query users($role: Role) {
+    users(role: $role) {
+        id
+        name
+        login
+        role
+    }
+}

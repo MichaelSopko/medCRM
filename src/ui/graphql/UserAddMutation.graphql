@@ -1,0 +1,10 @@
+mutation addUser(
+    $name: String
+    $login: String!
+    $password: String!
+    $role: String!
+) {
+    addUser(name: $name, login: $login, password: $password, role: $role) {
+        status
+    }
+}
