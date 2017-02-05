@@ -1,24 +1,35 @@
 import knex from './connector'
 
 export default class Clinics {
-  getClinics() {
-    return knex('clinics').select();
-  }
+	getClinics() {
+		return knex('clinics').select();
+	}
 
-  addClinic({ name, address }) {
-    return knex('clinics')
-      .insert({ name, address });
-  }
+	addClinic(fields) {
+		return knex('clinics')
+			.insert(fields);
+	}
 
-  editClinic({ id, name, address }) {
-    return knex('clinics')
-      .where('id', id)
-      .update({ name, address });
-  }
+	editClinic({ id, ...fields }) {
+		return knex('clinics')
+			.where('id', id)
+			.update(fields);
+	}
 
-  deleteClinic({ id }) {
-    return knex('clinics')
-      .where('id', id)
-      .delete();
-  }
+	findOne(id) {
+		return knex('clinics')
+			.where('id', id)
+			.first();
+	}
+
+	deleteClinic({ id }) {
+		return Promise.all([
+			knex('clinics')
+				.where('id', id)
+				.delete(),
+			knex('users')
+				.where('clinic_id', id)
+				.delete()
+		]);
+	}
 }

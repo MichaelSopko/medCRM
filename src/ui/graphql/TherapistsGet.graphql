@@ -1,0 +1,10 @@
+query therapists {
+    therapists {
+        id
+        first_name
+        last_name
+        email
+        licence_number
+        phone
+    }
+}

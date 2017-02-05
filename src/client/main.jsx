@@ -79,7 +79,7 @@ export default class Main extends React.Component {
     <IntlProvider locale={ navigator.language } defaultLocale="en" messages={ flattenMessages(enMessages) }>
 	    <ApolloProvider store={store} client={client}>
 		    <Router history={history}>
-			    {routes}
+				    {routes}
 		    </Router>
 	    </ApolloProvider>
     </IntlProvider>

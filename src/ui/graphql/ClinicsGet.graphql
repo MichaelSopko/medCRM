@@ -3,5 +3,8 @@ query getClinics {
         id
         name
         address
+        phone
+        fax
+        email
     }
 }

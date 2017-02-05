@@ -51,7 +51,50 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('address', {
 							initialValue: values.address,
+							rules: [{
+								required: true, message: 'Please input clinic address',
+							}],
+						})(
+							<Input />
+						)}
+					</Form.Item>
+					<Form.Item
+						{...formItemLayout}
+						label="Phone"
+						hasFeedback
+					  type="tel"
+					>
+						{getFieldDecorator('phone', {
+							initialValue: values.phone,
+							rules: [{
+								number: true, message: 'Please input a valid phone number'
+							}],
+						})(
+							<Input />
+						)}
+					</Form.Item>
+					<Form.Item
+						{...formItemLayout}
+						label="Fax"
+						hasFeedback
+					>
+						{getFieldDecorator('fax', {
+							initialValue: values.fax,
 							rules: [],
+						})(
+							<Input />
+						)}
+					</Form.Item>
+					<Form.Item
+						{...formItemLayout}
+						label="Email"
+						hasFeedback
+					>
+						{getFieldDecorator('email', {
+							initialValue: values.email,
+							rules: [{
+								email: true, message: 'Please input valid email address',
+							}],
 						})(
 							<Input />
 						)}
@@ -118,6 +161,16 @@ class Clinics extends Component {
 			title: 'Address',
 			dataIndex: 'address',
 			key: 'address',
+		},  {
+			title: 'Phone',
+			dataIndex: 'phone',
+			key: 'phone',
+			render: text => <a href={ `tel:${text}` }>{ text }</a>
+		},  {
+			title: 'Email',
+			dataIndex: 'email',
+			key: 'email',
+			render: text => <a href={ `mailto:${text}` }>{ text }</a>
 		}, {
 			title: 'Action',
 			key: 'action',
@@ -166,8 +219,8 @@ const ClinicsWithApollo = withApollo(compose(
 	graphql(GET_CLINICS_QUERY),
 	graphql(ADD_CLINIC_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
-			addClinic: ({ name, address }) => mutate({
-				variables: { name, address },
+			addClinic: (fields) => mutate({
+				variables: fields,
 				refetchQueries: [{
 					query: GET_CLINICS_QUERY
 				}],
@@ -186,8 +239,8 @@ const ClinicsWithApollo = withApollo(compose(
 	}),
 	graphql(EDIT_CLINIC_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
-			editClinic: ({ id, name, address }) => mutate({
-				variables: { id, name, address },
+			editClinic: (fields) => mutate({
+				variables: fields,
 				refetchQueries: [{
 					query: GET_CLINICS_QUERY
 				}],

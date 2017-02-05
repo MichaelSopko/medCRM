@@ -6,12 +6,13 @@ import './Login.scss';
 class Login extends Component {
 
 	static contextTypes = {
-		router: PropTypes.object.isRequired
-	}
+		router: PropTypes.object.isRequired,
+		currentUser: PropTypes.object.isRequired,
+	};
 
 	state = {
 		loading: false
-	}
+	};
 
 	handleSubmit = e => {
 		e.preventDefault();
@@ -29,7 +30,7 @@ class Login extends Component {
 					}).then(r => r.json());
 
 					if (resp.token) {
-						localStorage.setItem('token', resp.token);
+						this.context.currentUser.setToken(resp.token);
 						this.context.router.push('/dashboard/clinics');
 					}
 				} catch (e) {
@@ -51,9 +52,9 @@ class Login extends Component {
 					<h1 className="Login__Header">Authentication</h1>
 					<Form.Item>
 						{getFieldDecorator('login', {
-							rules: [{ required: true, message: 'Please input your login!' }],
+							rules: [{ required: true, message: 'Please input your email!' }],
 						})(
-							<Input addonBefore={<Icon type="user"/>} placeholder="Username"/>
+							<Input addonBefore={<Icon type="user"/>} placeholder="Email"/>
 						)}
 					</Form.Item>
 					<Form.Item>

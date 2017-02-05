@@ -1,11 +1,11 @@
-import ROLES from '../../helpers/roles';
+import ROLES from '../../helpers/constants/roles';
 
 export function up(knex, Promise) {
 	return Promise.all([
 		knex.schema.createTable('users', (table) => {
 			table.increments();
-			table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'));
-			table.timestamp('updated_at');
+			table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
+			table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
 			table.string('login').unique();
 			table.string('hash');
 			table.string('salt');
@@ -13,7 +13,7 @@ export function up(knex, Promise) {
 			table.enum('role', Object.keys(ROLES));
 		}),
 	]).then(() => {
-		knex.schema.createTable('auth_tokens', (table) => {
+		return knex.schema.createTable('auth_tokens', (table) => {
 			table.increments();
 			table.timestamps();
 			table.integer('user_id').unsigned().references('id').inTable('users');

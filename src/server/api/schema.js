@@ -1,22 +1,18 @@
 import { makeExecutableSchema, addErrorLoggingToSchema } from 'graphql-tools'
 import { PubSub } from 'graphql-subscriptions'
+import ROLES from '../../helpers/constants/roles'
+import checkAccessLogic from '../../helpers/checkAccessLogic'
+import { GraphQLScalarType } from 'graphql';
+import { Kind } from 'graphql/language';
 
 import log from '../../log'
 import schema from './schema_def.graphqls'
-import ROLES from '../../helpers/roles';
 
 export const pubsub = new PubSub();
 
-async function checkPermissions(ctx, role) {
+async function checkAccess(ctx, role) {
 	const user = await ctx.Users.getUser({ id: ctx.currentUser.id });
-	const userWeight = Object.keys(ROLES).indexOf(user.role);
-	const requiredWeight = Object.keys(ROLES).indexOf(role);
-
-	if (userWeight === -1 || requiredWeight === -1) {
-		throw new Error('Invalid user role');
-	}
-
-	const isOk = userWeight >= requiredWeight;
+	const isOk = checkAccessLogic(user.role, role);
 	if (isOk) {
 		return user;
 	} else {
@@ -27,35 +23,129 @@ async function checkPermissions(ctx, role) {
 const resolvers = {
 	Query: {
 		clinics(ignored1, ignored2, context) {
-			return context.Clinics.getClinics();
+			return checkAccess(context)
+			.then(() => context.Clinics.getClinics());
 		},
-		users(ignored1, { role }, context) {
-			return context.Users.findByRole(role);
+		administrators(ignored1, ignored2, context) {
+			return context.Users.findByRole(ROLES.CLINIC_ADMIN);
+		},
+		therapists(ignored1, ignored2, context) {
+			return context.Users.findByRole(ROLES.THERAPIST);
 		},
 		currentUser(ignored1, ignored2, context) {
 			return context.Users.getUserSafe({ id: context.currentUser.id });
 		},
 	},
 	Mutation: {
-		addClinic(_, { name, address }, context) {
-			return checkPermissions(context, ROLES.SYSTEM_ADMIN)
-				.then(() => context.Clinics.addClinic({ name, address }))
+		addClinic(_, clinic, context) {
+			return checkAccess(context, ROLES.SYSTEM_ADMIN)
+				.then(() => context.Clinics.addClinic(clinic))
 				.then(res => ({ status: res }))
 		},
-		editClinic(_, { id, name, address }, context) {
-			return checkPermissions(context, ROLES.SYSTEM_ADMIN)
-				.then(() => context.Clinics.editClinic({ id, name, address }))
+		editClinic(_, clinic, context) {
+			return checkAccess(context, ROLES.SYSTEM_ADMIN)
+				.then(() => context.Clinics.editClinic(clinic))
 				.then(res => ({ status: res }))
 		},
 		deleteClinic(_, { id }, context) {
-			return checkPermissions(context, ROLES.SYSTEM_ADMIN)
+			return checkAccess(context, ROLES.SYSTEM_ADMIN)
 				.then(() => context.Clinics.deleteClinic({ id }))
 				.then(res => ({ status: res }))
 		},
+
+		addAdministrator(_, user, context) {
+			return checkAccess(context, ROLES.SYSTEM_ADMIN)
+				.then(() => context.Users.createUser({ ...user, role: ROLES.CLINIC_ADMIN }))
+				.then(res => ({ status: res }))
+		},
+		editAdministrator(_, user, context) {
+			return checkAccess(context, ROLES.SYSTEM_ADMIN)
+				.then(() => context.Users.editUser(user))
+				.then(res => ({ status: res }))
+		},
+		deleteAdministrator(_, { id }, context) {
+			return checkAccess(context, ROLES.SYSTEM_ADMIN)
+				.then(() => context.Users.deleteUser({ id }))
+				.then(res => ({ status: res }))
+		},
+
+		addTherapist(_, user, context) {
+			return checkAccess(context, ROLES.CLINIC_ADMIN)
+				.then(() => context.Users.createUser({ ...user, role: ROLES.THERAPIST }))
+				.then(res => ({ status: res }))
+		},
+		editTherapist(_, user, context) {
+			return checkAccess(context, ROLES.CLINIC_ADMIN)
+				.then(() => context.Users.editUser(user))
+				.then(res => ({ status: res }))
+		},
+		deleteTherapist(_, { id }, context) {
+			return checkAccess(context, ROLES.CLINIC_ADMIN)
+				.then(() => context.Users.deleteUser({ id }))
+				.then(res => ({ status: res }))
+		},
+
+/*		addClinic(_, clinic, context) {
+			return checkAccess(context, ROLES.SYSTEM_ADMIN)
+				.then(() => context.Clinics.addClinic(clinic))
+				.then(res => ({ status: res }))
+		},
+		editClinic(_, clinic, context) {
+			return checkAccess(context, ROLES.SYSTEM_ADMIN)
+				.then(() => context.Clinics.editClinic(clinic))
+				.then(res => ({ status: res }))
+		},
+		deleteClinic(_, { id }, context) {
+			return checkAccess(context, ROLES.SYSTEM_ADMIN)
+				.then(() => context.Clinics.deleteClinic({ id }))
+				.then(res => ({ status: res }))
+		},
+
+		addClinic(_, clinic, context) {
+			return checkAccess(context, ROLES.SYSTEM_ADMIN)
+				.then(() => context.Clinics.addClinic(clinic))
+				.then(res => ({ status: res }))
+		},
+		editClinic(_, clinic, context) {
+			return checkAccess(context, ROLES.SYSTEM_ADMIN)
+				.then(() => context.Clinics.editClinic(clinic))
+				.then(res => ({ status: res }))
+		},
+		deleteClinic(_, { id }, context) {
+			return checkAccess(context, ROLES.SYSTEM_ADMIN)
+				.then(() => context.Clinics.deleteClinic({ id }))
+				.then(res => ({ status: res }))
+		},*/
 	},
 	Subscription: {  // Here live subscriptions can be added
 		clinicUpdated(ids) { }
-	}
+	},
+	ClinicAdministrator: {
+		clinic(user, _, context) {
+			return context.Clinics.findOne(user.clinic_id);
+		}
+	},
+	Therapist: {
+		clinic(user, _, context) {
+			return context.Clinics.findOne(user.clinic_id);
+		}
+	},
+	Date: new GraphQLScalarType({
+		name: 'Date',
+		description: 'Date custom scalar type',
+		parseValue(value) {
+			return new Date(value); // value from the client
+		},
+		serialize(value) {
+			return value.getTime(); // value sent to the client
+		},
+		parseLiteral(ast) {
+			if (ast.kind === Kind.INT) {
+				return parseInt(ast.value, 10); // ast value is always in string format
+			}
+			return null;
+		},
+	}),
 };
 
 const executableSchema = makeExecutableSchema({

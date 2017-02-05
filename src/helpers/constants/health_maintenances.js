@@ -1,0 +1,7 @@
+export default {
+	CLATIT: 'CLATIT',
+	MACCABI: 'MACCABI',
+	MEUHEDET: 'MEUHEDET',
+	LEUMIT: 'LEUMIT',
+	PRIVATE: 'PRIVATE'
+}

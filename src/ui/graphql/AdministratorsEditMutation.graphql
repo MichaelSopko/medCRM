@@ -1,0 +1,9 @@
+mutation editAdministrator(
+    $id: Int!
+    $password: String
+    $name: String
+) {
+    editAdministrator(id: $id, name: $name, password: $password) {
+        status
+    }
+}

@@ -1,54 +1,32 @@
 import React, { Component, PropTypes } from 'react'
 import { Link } from 'react-router'
-import { Button, Icon } from 'antd';
-import { graphql } from 'react-apollo'
-
-import GET_CURRENT_USER_QUERY from '../graphql/UserGetCurrent.graphql'
+import { Button, Icon } from 'antd'
 
 import './ProfileWidget.scss'
 
 const defaultAvatar = require('../../../assets/images/default_avatar.png');
 
-// TODO: add abstraction and dumb component
-
-@graphql(GET_CURRENT_USER_QUERY)
 class ProfileWidget extends Component {
 
 	static contextTypes = {
-		router: PropTypes.object.isRequired,
+		currentUser: PropTypes.object,
 		intl: PropTypes.object.isRequired
 	};
 
-	static propTypes = {
-		data: PropTypes.object
-	};
-
-	logout = () => {
-		localStorage.removeItem('token');
-		this.context.router.push('/login');
-		this.props.client.resetStore();
-	};
-
-	componentWillReceiveProps(newProps) {
-		if (newProps.data.error) {
-			this.logout();
-			return false;
-		}
-	}
-
 	render() {
-		const { data: { loading, currentUser, error } } = this.props;
+		const { currentUser: { loading, first_name, last_name, login, role, logout } } = this.context;
 		const formatMessage = this.context.intl.formatMessage;
+		const fullName = `${first_name} ${last_name}`;
 
 		return (
 			<div className="ProfileWidget">
 				<div className="ProfileWidget__Avatar">
 					<img src={ defaultAvatar } alt=""/>
 				</div>
-				{ !loading && !error && <div className="ProfileWidget__Content">
+				{ !loading && <div className="ProfileWidget__Content">
 					<div className="ProfileWidget__Name">
-						{ currentUser.name || currentUser.login }
-						<span className="ProfileWidget__Role">{ formatMessage({ id: `roles.${currentUser.role}` }) }</span>
+						{ fullName.length > 1 ? fullName : login }
+						<span className="ProfileWidget__Role">{ formatMessage({ id: `roles.${role}` }) }</span>
 					</div>
 
 					<div className="ProfileWidget__Actions">
@@ -56,7 +34,7 @@ class ProfileWidget extends Component {
 							<Button type="ghost" disabled>
 								<Icon type="setting"/>Settings
 							</Button>
-							<Button type="ghost" onClick={ this.logout }>
+							<Button type="ghost" onClick={ logout }>
 								<Icon type="logout"/>Log out
 							</Button>
 						</Button.Group>

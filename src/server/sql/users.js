@@ -5,8 +5,6 @@ import createUser from './helpers/create_user';
 
 export default class Users {
 
-	static safeFields = ['id', 'login', 'name', 'role'];
-
 	async createUser(...params) {
 		return createUser(knex, ...params);
 	}
@@ -21,17 +19,20 @@ export default class Users {
 	getUserSafe({ id }) {
 		return knex('users')
 			.where('id', id)
-			.first(...Users.safeFields)
+			.first()
 	}
 
 	findByRole(role) {
 		return knex('users')
 			.where('role', role)
-			.select(...Users.safeFields)
+			.select()
 	}
 
 	async checkPassword({ login, password }) {
-		const user = await knex('users').where('login', login).first();
+		const user = await knex('users')
+			.where('login', login)
+			.orWhere('email', login)
+			.first();
 		if (user) {
 			const result = await pwd.hash(password, user.salt);
 			return user.hash === result.hash;

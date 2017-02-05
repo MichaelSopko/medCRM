@@ -1,11 +1,9 @@
 import pwd from 'pwd';
 
-export default async function createUser(knex, { login, password, name, role }) {
+export default async function createUser(knex, { password, ...fields }) {
 	const { salt, hash } = await pwd.hash(password);
 	return knex('users').insert({
-		login,
-		name,
-		role,
+		...fields,
 		salt,
 		hash
 	});

@@ -1,0 +1,7 @@
+mutation deleteAdministrator(
+$id: Int!
+) {
+    deleteAdministrator(id: $id) {
+        status
+    }
+}

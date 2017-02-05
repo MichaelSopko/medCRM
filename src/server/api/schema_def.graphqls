@@ -1,8 +1,7 @@
-type User {
+scalar Date
+
+interface User {
 	id: Int!
-	role: Role!
-	login: String!
-	name: String
 }
 
 enum Role {
@@ -12,16 +11,113 @@ enum Role {
 	PATIENT
 }
 
+type SystemAdministrator implements User {
+	id: Int!
+	role: Role!
+	login: String
+}
+
+type ClinicAdministrator implements User {
+	id: Int!
+	clinic: Clinic
+	first_name: String
+	last_name: String
+	email: String!
+}
+
+type Therapist implements User {
+	id: Int!
+	id_number: Int
+	first_name: String
+	last_name: String
+	clinic: Clinic
+	licence_number: Int
+	phone: String
+	email: String
+	birth_date: Date
+}
+
+type Patient implements User {
+	id: Int!
+	id_number: Int!
+	first_name: String!
+	last_name: String!
+	birth_date: Date!
+	phone: String!
+	email: String
+	clinic: Clinic
+	related_persons: [PatientRelatedPerson]
+	health_maintenance: PatientHealthMaintenance
+}
+
+enum PatientRelatedPersonType {
+	MOTHER
+	FATHER
+	OTHER
+}
+
+enum PatientHealthMaintenance {
+	CLATIT
+	MACCABI
+	MEUHEDET
+	LEUMIT
+	PRIVATE
+}
+
+type PatientRelatedPerson {
+	type: PatientRelatedPersonType
+	description: String
+	phone: String!
+	email: String
+}
+
+type TreatmentSeries {
+	id: Int!
+	name: String
+	treatments_number: Int!
+	treatments: [Treatment]
+}
+
+type Treatment {
+	id: Int!
+	target: String
+	method: String
+	process: String
+	parents_guidance: String
+	next_treatment_remark: String
+	patients: [Patient]
+	therapists: [Therapist]
+	date: Date
+}
+
+type CurrentUser implements User {
+	id: Int!
+	login: String,
+	role: Role!,
+	first_name: String,
+	last_name: String,
+	clinic: Clinic
+}
+
 type Query {
 	clinics: [Clinic]
-	users(role: Role): [User]
-	currentUser: User
+	administrators: [ClinicAdministrator]
+	therapists: [Therapist]
+	patients: [Patient]
+	treatmentSeries: [TreatmentSeries]
+	currentUser: CurrentUser
 }
 
 type Clinic {
 	id: Int!,
 	name: String!
-	address: String
+	address: String!
+	email: String
+	fax: String
+	phone: String
+	administrators: [ClinicAdministrator]
+	patients: [Patient]
+	therapists: [Therapist]
 }
 
 type MutationStatus {
@@ -31,35 +127,70 @@ type MutationStatus {
 type Mutation {
 	addClinic(
 	name: String!
-	address: String
+	address: String!
+	phone: String
+	email: String
+	fax: String
 ): MutationStatus
 
 	editClinic(
 	id: Int!
 	name: String!
-	address: String
+	address: String!
+	phone: String
+	email: String
+	fax: String
 ): MutationStatus
 
 	deleteClinic(
 	id: Int!
 ): MutationStatus
 
-	addUser(
-		role: Role!
-		login: String!
-		name: String
-		password: String
+	addAdministrator(
+		email: String!
+		password: String!
+		clinic_id: Int!
 	): MutationStatus
 
-	editUser(
-	id: Int!
-	name: String
-	password: String
-): MutationStatus
+	editAdministrator(
+		id: Int!
+		email: String!
+		password: String!
+	): MutationStatus
 
-	deleteUser(
-	id: Int!
-): MutationStatus
+	deleteAdministrator(
+		id: Int!
+	): MutationStatus
+
+	addTherapist(
+	password: String!
+	id_number: Int!
+	first_name: String!
+	last_name: String!
+	clinic_id: Int!
+	licence_number: Int!
+	phone: String!
+	email: String!
+	birth_date: Date!
+	): MutationStatus
+
+	editTherapist(
+		id: Int!
+		password: String
+		id_number: Int!
+		first_name: String!
+		last_name: String!
+		clinic_id: Int!
+		licence_number: Int!
+		phone: String!
+		email: String!
+		birth_date: Date!
+	): MutationStatus
+
+	deleteTherapist(
+		id: Int!
+	): MutationStatus
+
 }
 
 type Subscription {

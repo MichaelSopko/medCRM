@@ -1,17 +1,16 @@
 import React from 'react'
 import classnames from 'classnames'
+import CurrentUserProvider from './CurrentUserProvider'
 
 import NavBar from './NavBar'
 
 export default function App({ children }) {
   return (
-    <div>
-      <NavBar/>
-      <div className="container">
+    <CurrentUserProvider>
+      <div>
         {children}
       </div>
-      <footer></footer>
-    </div>
+    </CurrentUserProvider>
   );
 }
 

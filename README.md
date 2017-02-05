@@ -37,3 +37,48 @@ The relations in the application:
 4. Each patient will have many Therapists
 4. Each patient will have many treatment series
 5. Each treatment series will have many treatments
+
+#additions
+
+1. Clinic
+a. Name - Mandatory, a valid string
+b. Address - Mandatory, a valid string
+c. Telephone - Not mandatory, a valid phone pattern
+d. Fax - Not mandatory, a valid phone pattern
+e. Email - Not mandatory, a valid email address
+
+2. Therapist
+a. First Name - Mandatory, a valid string
+b. Last Name - Mandatory, a valid string
+c. Phone - mandatory
+d. License Number - mandatory - only numbers
+e. Email - mandatory
+f. Date Of Birth - mandatory - a nice but not too fancy date picker can be nice but also an option to enter the date manually
+g. A list of related patients - Not mandatory when creating, will be editable later. (An option to add\remove therapists)
+
+3. Patient
+a. First Name - Mandatory
+b. Last Name - Mandatory
+c. Phone - Mandatory
+d. Date Of Birth - Mandatory
+e. Related Person: At least 1
+Could be an option between: Father, Mother, Other + description
+Will have a phone number and email
+Each pateint can have as many related persons
+f. Health Maintenance - Clalit, Maccabi, Meuhedet, Leumit, Private
+g. File Upload - An option to upload files + file description
+h. A list of related Therapists
+
+4. Treatments
+Note: Each treatment will be a part of a treatments series. Meaning, when a new patient is added to the system, we can define a new series of treatments and define the number
+of treatments in the series. Afterwards we'll fill the series with treatments.
+Each treatment will have:
+
+- A patient: Selection between all the patients in the clinic, could be more than 1
+- A therapist: Selection between all the therapists in the clinic, could be more than 1
+a. Date and time
+b. Treatment target - Text field
+c. Treatment method - Text field
+d. Treatment process - Text field
+f. Parents guidance - Text field
+g. Next treatment remarks - Text field

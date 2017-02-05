@@ -5,17 +5,17 @@ import { graphql, compose, withApollo } from 'react-apollo'
 import ApolloClient from 'apollo-client'
 import gql from 'graphql-tag'
 import update from 'react-addons-update'
-import GET_USERS_QUERY from '../../graphql/UsersGet.graphql'
-import ADD_USER_MUTATION from '../../graphql/UserAddMutation.graphql'
-import DELETE_USER_MUTATION from '../../graphql/UserDeleteMutaion.graphql'
-import EDIT_USER_MUTATION from '../../graphql/UserEditMutation.graphql'
-import ROLES from '../../../helpers/roles'
+import GET_ADMINISTRATORS_QUERY from '../../graphql/AdministratorsGet.graphql'
+import ADD_ADMINISTRATOR_MUTATION from '../../graphql/AdministratorsAddMutation.graphql'
+import DELETE_ADMINISTRATOR_MUTATION from '../../graphql/AdministratorsDeleteMutaion.graphql'
+import EDIT_ADMINISTRATOR_MUTATION from '../../graphql/AdministratorsEditMutation.graphql'
+import ROLES from '../../../helpers/constants/roles'
 
-import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm } from 'antd'
+import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select } from 'antd'
 
 const EntityForm = Form.create()(
 	(props) => {
-		const { visible, onCancel, onSubmit, form, loading, values = {} } = props;
+		const { visible, onCancel, onSubmit, form, loading, values = {}, clinics = [] } = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
 			labelCol: { span: 6 },
@@ -33,29 +33,29 @@ const EntityForm = Form.create()(
 				<Form>
 					{ !isEditing && <Form.Item
 						{...formItemLayout}
-						label="Login"
+						label="Email"
 						hasFeedback
 					>
-						{getFieldDecorator('login', {
+						{getFieldDecorator('email', {
 							rules: [{
-								required: true, message: 'Please input login',
+								type: 'email', required: true, message: 'Please input email',
 							}],
 						})(
 							<Input />
 						)}
 					</Form.Item> }
-					<Form.Item
-						{...formItemLayout}
-						label="Name"
-						hasFeedback
-					>
-						{getFieldDecorator('name', {
-							initialValue: values.name,
-							rules: [],
-						})(
-							<Input />
-						)}
-					</Form.Item>
+					{ /* <Form.Item
+					 {...formItemLayout}
+					 label="Name"
+					 hasFeedback
+					 >
+					 {getFieldDecorator('first_name', {
+					 initialValue: values.first_name,
+					 rules: [],
+					 })(
+					 <Input />
+					 )}
+					 </Form.Item> */ }
 					<Form.Item
 						{...formItemLayout}
 						label={ isEditing ? 'New password' : 'Password' }
@@ -63,13 +63,29 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('password', {
 							rules: [{
-									required: !isEditing,  message: 'Please input password'
-								}
+								required: !isEditing, message: 'Please input password'
+							}
 							],
 						})(
 							<Input />
 						)}
 					</Form.Item>
+					{ !isEditing && <Form.Item
+						{...formItemLayout}
+						label="Clinic"
+						hasFeedback
+					>
+						{getFieldDecorator('clinic_id', {
+							rules: [{
+								required: true, message: 'Please choose a clinic',
+							}],
+						})(
+							<Select>
+								{ clinics.map(clinic => <Select.Option key={clinic.id}
+								                                       value={clinic.id.toString()}>{ clinic.name }</Select.Option>) }
+							</Select>
+						)}
+					</Form.Item> }
 				</Form>
 			</Modal>
 		);
@@ -88,16 +104,26 @@ class Administrators extends Component {
 	};
 
 	handleOk = () => {
-		this.setState({ modalOpened: false, activeEntity: {} });
-		// this.props.form.submit();
+		this.setState({ modalOpened: false });
+		this.resetActiveEntity();
 	};
 
 	handleCancel = () => {
-		this.setState({ modalOpened: false, activeEntity: {} });
+		this.setState({ modalOpened: false });
+		this.resetActiveEntity();
 	};
 
 	showModal = () => {
 		this.setState({ modalOpened: true });
+	};
+
+	/**
+	 * Handle modal transition
+	 */
+	resetActiveEntity = () => {
+		setTimeout(() => {
+			this.setState({ activeEntity: false });
+		}, 300);
 	};
 
 	handleFormSubmit = () => {
@@ -107,12 +133,12 @@ class Administrators extends Component {
 			if (err) {
 				return;
 			}
-			isEditing ? this.props.editClinic({ id: this.state.activeEntity.id, ...values }) : this.props.addClinic(values);
+			isEditing ? this.props.editAdministrator({ id: this.state.activeEntity.id, ...values }) : this.props.addAdministrator(values);
 			console.log('Adding new administrator', values);
 			form.resetFields();
 			this.setState({ modalOpened: false, activeEntity: {} });
 		});
-	}
+	};
 
 	editEntity = entity => () => {
 		this.form.resetFields();
@@ -123,15 +149,15 @@ class Administrators extends Component {
 	}
 
 	render() {
-		const { data: { loading, users }, deleteUser } = this.props;
+		const { data: { loading, administrators, clinics }, deleteAdministrator } = this.props;
 
 		const columns = [{
-			title: 'Login',
-			dataIndex: 'login',
-			key: 'login',
+			title: 'Email',
+			dataIndex: 'email',
+			key: 'email',
 		}, {
-			title: 'Name',
-			dataIndex: 'name',
+			title: 'Clinic',
+			dataIndex: 'clinic.name',
 			key: 'name',
 		}, {
 			title: 'Action',
@@ -141,9 +167,9 @@ class Administrators extends Component {
 		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>Edit</Button>
 					<span className="ant-divider"></span>
 		      <Popconfirm title="Are you sure?" onConfirm={ () => {
-			      deleteUser(record)
+			      deleteAdministrator(record)
 		      } } okText="Yes" cancelText="No">
-		        <Button size="small" type='ghost' disabled>Delete</Button>
+		        <Button size="small" type='ghost'>Delete</Button>
 		      </Popconfirm>
         </span>
 			),
@@ -160,7 +186,8 @@ class Administrators extends Component {
 					loading={loading}
 					onCancel={this.handleCancel}
 					onSubmit={this.handleFormSubmit}
-				  values={activeEntity}
+					clinics={clinics}
+					values={activeEntity}
 				/>
 				<div className="Dashboard__Details">
 					<h1 className="Dashboard__Header">Administrators</h1>
@@ -171,42 +198,40 @@ class Administrators extends Component {
 						</Button>
 					</div>
 				</div>
-				<Table dataSource={users} columns={columns} loading={loading} rowKey='id'/>
+				<Table dataSource={administrators} columns={columns} loading={loading} rowKey='id'/>
 			</section>
 		);
 	}
 }
 
 const AdministratorsApollo = withApollo(compose(
-	graphql(GET_USERS_QUERY, {
-		options: (props) => ({ variables: { role: ROLES.CLINIC_ADMIN } })
-	}),
-	graphql(ADD_USER_MUTATION, {
+	graphql(GET_ADMINISTRATORS_QUERY),
+	graphql(ADD_ADMINISTRATOR_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
-			addClinic: ({ name, address }) => mutate({
-				variables: { name, address },
+			addAdministrator: (fields) => mutate({
+				variables: fields,
 				refetchQueries: [{
-					query: GET_USERS_QUERY
+					query: GET_ADMINISTRATORS_QUERY
 				}],
 			})
 		})
 	}),
-	graphql(DELETE_USER_MUTATION, {
+	graphql(DELETE_ADMINISTRATOR_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
-			deleteClinic: ({ id }) => mutate({
+			deleteAdministrator: ({ id }) => mutate({
 				variables: { id },
 				refetchQueries: [{
-					query: GET_USERS_QUERY
+					query: GET_ADMINISTRATORS_QUERY
 				}],
 			})
 		})
 	}),
-	graphql(EDIT_USER_MUTATION, {
+	graphql(EDIT_ADMINISTRATOR_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
-			editClinic: ({ id, name, address }) => mutate({
-				variables: { id, name, address },
+			editAdministrator: (fields) => mutate({
+				variables: fields,
 				refetchQueries: [{
-					query: GET_USERS_QUERY
+					query: GET_ADMINISTRATORS_QUERY
 				}],
 			})
 		})
