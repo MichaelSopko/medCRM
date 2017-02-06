@@ -1,13 +1,13 @@
 const defaultState = {
-  reduxCount: 1
+  id: undefined
 };
 
 export default function(state = defaultState, action) {
   switch (action.type) {
-    case 'COUNTER_INCREMENT':
+    case 'SET_CLINIC':
       return {
         ...state,
-        reduxCount: state.reduxCount += action.value
+        ...action.clinic
       };
 
     default:

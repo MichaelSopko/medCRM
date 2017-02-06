@@ -1,9 +1,22 @@
 import React, { PropTypes, Component } from 'react'
 import { withApollo, graphql } from 'react-apollo'
 import GET_CURRENT_USER_QUERY from '../graphql/UserGetCurrent.graphql'
+import { connect } from 'react-redux';
 
 @graphql(GET_CURRENT_USER_QUERY)
 @withApollo
+@connect(
+	(state) => ({ currentClinic: state.currentClinic }),
+	(dispatch) => ({
+		setCurrentClinic(clinic)
+		{
+			dispatch({
+				type: 'SET_CLINIC',
+				clinic
+			});
+		}
+	}),
+)
 export default class CurrentUserProvider extends Component {
 
 	static contextTypes = {
@@ -49,6 +62,9 @@ export default class CurrentUserProvider extends Component {
 			console.error('CurrentUserProvider', newProps.data.error);
 			this.logout();
 			return false;
+		}
+		if (newProps.data.currentUser && newProps.data.currentUser.clinic) {
+			this.props.setCurrentClinic(newProps.data.currentUser.clinic);
 		}
 	}
 

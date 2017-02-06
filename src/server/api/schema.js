@@ -4,6 +4,7 @@ import ROLES from '../../helpers/constants/roles'
 import checkAccessLogic from '../../helpers/checkAccessLogic'
 import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language';
+import GraphQLJSON from 'graphql-type-json';
 
 import log from '../../log'
 import schema from './schema_def.graphqls'
@@ -24,16 +25,19 @@ const resolvers = {
 	Query: {
 		clinics(ignored1, ignored2, context) {
 			return checkAccess(context)
-			.then(() => context.Clinics.getClinics());
+				.then(() => context.Clinics.getClinics());
 		},
 		administrators(ignored1, ignored2, context) {
 			return context.Users.findByRole(ROLES.CLINIC_ADMIN);
 		},
-		therapists(ignored1, ignored2, context) {
-			return context.Users.findByRole(ROLES.THERAPIST);
+		therapists(ignored1, { clinic_id }, context) {
+			return context.Users.findByRole(ROLES.THERAPIST, clinic_id);
+		},
+		patients(ignored1, { clinic_id }, context) {
+			return context.Users.findByRole(ROLES.PATIENT, clinic_id);
 		},
 		currentUser(ignored1, ignored2, context) {
-			return context.Users.getUserSafe({ id: context.currentUser.id });
+			return context.Users.getUser({ id: context.currentUser.id });
 		},
 	},
 	Mutation: {
@@ -85,40 +89,25 @@ const resolvers = {
 				.then(res => ({ status: res }))
 		},
 
-/*		addClinic(_, clinic, context) {
-			return checkAccess(context, ROLES.SYSTEM_ADMIN)
-				.then(() => context.Clinics.addClinic(clinic))
+		addPatient(_, user, context) {
+			return checkAccess(context, ROLES.CLINIC_ADMIN)
+				.then(() => context.Users.createUser({ ...user, role: ROLES.PATIENT }))
 				.then(res => ({ status: res }))
 		},
-		editClinic(_, clinic, context) {
-			return checkAccess(context, ROLES.SYSTEM_ADMIN)
-				.then(() => context.Clinics.editClinic(clinic))
+		editPatient(_, user, context) {
+			return checkAccess(context, ROLES.THERAPIST)
+				.then(() => context.Users.editUser(user))
 				.then(res => ({ status: res }))
 		},
-		deleteClinic(_, { id }, context) {
-			return checkAccess(context, ROLES.SYSTEM_ADMIN)
-				.then(() => context.Clinics.deleteClinic({ id }))
+		deletePatient(_, { id }, context) {
+			return checkAccess(context, ROLES.CLINIC_ADMIN)
+				.then(() => context.Users.deleteUser({ id }))
 				.then(res => ({ status: res }))
 		},
-
-		addClinic(_, clinic, context) {
-			return checkAccess(context, ROLES.SYSTEM_ADMIN)
-				.then(() => context.Clinics.addClinic(clinic))
-				.then(res => ({ status: res }))
-		},
-		editClinic(_, clinic, context) {
-			return checkAccess(context, ROLES.SYSTEM_ADMIN)
-				.then(() => context.Clinics.editClinic(clinic))
-				.then(res => ({ status: res }))
-		},
-		deleteClinic(_, { id }, context) {
-			return checkAccess(context, ROLES.SYSTEM_ADMIN)
-				.then(() => context.Clinics.deleteClinic({ id }))
-				.then(res => ({ status: res }))
-		},*/
 	},
 	Subscription: {  // Here live subscriptions can be added
-		clinicUpdated(ids) { }
+		clinicUpdated(ids) {
+		}
 	},
 	ClinicAdministrator: {
 		clinic(user, _, context) {
@@ -130,22 +119,12 @@ const resolvers = {
 			return context.Clinics.findOne(user.clinic_id);
 		}
 	},
-	Date: new GraphQLScalarType({
-		name: 'Date',
-		description: 'Date custom scalar type',
-		parseValue(value) {
-			return new Date(value); // value from the client
-		},
-		serialize(value) {
-			return value.getTime(); // value sent to the client
-		},
-		parseLiteral(ast) {
-			if (ast.kind === Kind.INT) {
-				return parseInt(ast.value, 10); // ast value is always in string format
-			}
-			return null;
-		},
-	}),
+	CurrentUser: {
+		clinic(user, _, context) {
+			return context.Clinics.findOne(user.clinic_id);
+		}
+	},
+	Date: GraphQLJSON
 };
 
 const executableSchema = makeExecutableSchema({

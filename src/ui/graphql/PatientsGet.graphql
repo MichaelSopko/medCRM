@@ -1,4 +1,4 @@
-query therapists($clinic_id: Int!) {
+query patients($clinic_id: Int!) {
     therapists(clinic_id: $clinic_id) {
         id
         first_name

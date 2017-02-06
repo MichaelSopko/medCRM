@@ -16,16 +16,25 @@ export default class Users {
 			.first()
 	}
 
-	getUserSafe({ id }) {
+	// TODO: change password
+	editUser({ id, password, ...fields }) {
 		return knex('users')
 			.where('id', id)
-			.first()
+			.update(fields)
 	}
 
-	findByRole(role) {
+	deleteUser({ id }) {
 		return knex('users')
-			.where('role', role)
-			.select()
+			.where('id', id)
+			.delete()
+	}
+
+	findByRole(role, clinic_id) {
+		let k = knex('users').where('role', role);
+		if (clinic_id) {
+			k = k.andWhere('clinic_id', clinic_id);
+		}
+		return k.select()
 	}
 
 	async checkPassword({ login, password }) {

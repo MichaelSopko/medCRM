@@ -77,15 +77,4 @@ class Login extends Component {
 
 const LoginWithForm = Form.create()(Login);
 
-export default connect(
-	(state) => ({ reduxCount: state.counter.reduxCount }),
-	(dispatch) => ({
-		onLogin(value)
-		{
-			dispatch({
-				type: 'LOGIN_REQUEST',
-				value: Number(value)
-			});
-		}
-	}),
-)(LoginWithForm);
+export default LoginWithForm;

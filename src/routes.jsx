@@ -1,5 +1,6 @@
 import React from 'react'
 import { Route, IndexRedirect } from 'react-router'
+import { connect } from 'react-router';
 
 import Login from './ui/containers/Login'
 import Dashboard from './ui/containers/Dashboard'

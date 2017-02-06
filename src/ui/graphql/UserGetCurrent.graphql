@@ -5,5 +5,8 @@ query currentUser {
         last_name
         login
         role
+        clinic {
+            id
+        }
     }
 }

@@ -7,6 +7,9 @@ import { syncHistoryWithStore } from 'react-router-redux'
 import { IntlProvider, addLocaleData } from 'react-intl';
 import en from 'react-intl/locale-data/en';
 import enMessages from '../l10n/en.json';
+import moment from 'moment';
+
+moment.locale('en');
 
 import createApolloClient from '../apollo_client'
 import createReduxStore from '../redux_store'

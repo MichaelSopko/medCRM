@@ -1,9 +1,25 @@
-mutation editAdministrator(
-    $id: Int!
-    $password: String
-    $name: String
+mutation editTherapist(
+$id: Int!
+$password: String
+$id_number: Int!
+$first_name: String!
+$last_name: String!
+$license_number: Int!
+$phone: String!
+$email: String!
+$birth_date: Date!
 ) {
-    editAdministrator(id: $id, name: $name, password: $password) {
+    editTherapist(
+        id: $id
+        password: $password,
+        id_number: $id_number,
+        first_name: $first_name,
+        last_name: $last_name,
+        license_number: $license_number,
+        phone: $phone,
+        email: $email,
+        birth_date: $birth_date
+    ) {
         status
     }
 }

@@ -10,8 +10,11 @@ import ADD_THERAPIST_MUTATION from '../../graphql/TherapistAddMutation.graphql'
 import DELETE_THERAPIST_MUTATION from '../../graphql/TherapistDeleteMutaion.graphql'
 import EDIT_THERAPIST_MUTATION from '../../graphql/TherapistEditMutation.graphql'
 import ROLES from '../../../helpers/constants/roles'
+import ClinicsSelector from '../ClinicsSelector'
+import CheckAccess from '../helpers/CheckAccess'
+import moment from 'moment';
 
-import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select } from 'antd'
+import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, DatePicker } from 'antd'
 
 const EntityForm = Form.create()(
 	(props) => {
@@ -31,31 +34,104 @@ const EntityForm = Form.create()(
 			       onOk={onSubmit}
 			       confirmLoading={loading}>
 				<Form>
-					{ !isEditing && <Form.Item
+					<Form.Item
+						{...formItemLayout}
+						label="ID"
+						hasFeedback
+					>
+						{getFieldDecorator('id_number', {
+							initialValue: values.id_number,
+							rules: [{
+								type: 'regexp', pattern: /^\d+$/, required: true, message: 'Please input ID',
+							}],
+						})(
+							<Input type="number" />
+						)}
+					</Form.Item>
+					<Form.Item
+						{...formItemLayout}
+						label="Licence number"
+						hasFeedback
+					>
+						{getFieldDecorator('license_number', {
+							initialValue: values.license_number,
+							rules: [{
+								type: 'regexp', pattern: /^\d+$/, required: true, message: 'Please license number',
+							}],
+						})(
+							<Input type="number" />
+						)}
+					</Form.Item>
+					{ <Form.Item
 						{...formItemLayout}
 						label="Email"
 						hasFeedback
 					>
 						{getFieldDecorator('email', {
+							initialValue: values.email,
 							rules: [{
 								type: 'email', required: true, message: 'Please input email',
+							}],
+						})(
+							<Input type="email" />
+						)}
+					</Form.Item> }
+					{ <Form.Item
+						{...formItemLayout}
+						label="First name"
+						hasFeedback
+					>
+						{getFieldDecorator('first_name', {
+							initialValue: values.first_name,
+							rules: [{
+								required: true, message: 'Please input first name',
 							}],
 						})(
 							<Input />
 						)}
 					</Form.Item> }
-					{ /* <Form.Item
-					 {...formItemLayout}
-					 label="Name"
-					 hasFeedback
-					 >
-					 {getFieldDecorator('first_name', {
-					 initialValue: values.first_name,
-					 rules: [],
-					 })(
-					 <Input />
-					 )}
-					 </Form.Item> */ }
+					{ <Form.Item
+						{...formItemLayout}
+						label="Last name"
+						hasFeedback
+					>
+						{getFieldDecorator('last_name', {
+							initialValue: values.last_name,
+							rules: [{
+								required: true, message: 'Please input last name',
+							}],
+						})(
+							<Input />
+						)}
+					</Form.Item> }
+					{ <Form.Item
+						{...formItemLayout}
+						label="Phone"
+						hasFeedback
+					>
+						{getFieldDecorator('phone', {
+							initialValue: values.phone,
+							rules: [{
+								required: true, message: 'Please input phone',
+							}],
+						})(
+							<Input />
+						)}
+					</Form.Item> }
+					{ <Form.Item
+						{...formItemLayout}
+						label="Birth date"
+						hasFeedback
+					>
+						{getFieldDecorator('birth_date', {
+							initialValue: moment(values.birth_date),
+							rules: [{
+								required: true, message: 'Please input date',
+							}],
+						})(
+							<DatePicker locale="en-US"/>
+						)}
+					</Form.Item> }
 					<Form.Item
 						{...formItemLayout}
 						label={ isEditing ? 'New password' : 'Password' }
@@ -117,7 +193,10 @@ class Therapists extends Component {
 			if (err) {
 				return;
 			}
-			isEditing ? this.props.editTherapist({ id: this.state.activeEntity.id, ...values }) : this.props.addTherapist(values);
+			console.log(this.props.currentClinic);
+			isEditing ?
+				this.props.editTherapist({ id: this.state.activeEntity.id, ...values }) :
+				this.props.addTherapist({ clinic_id: this.props.currentClinic.id, ...values });
 			console.log('Adding new therapist', values);
 			form.resetFields();
 			this.setState({ modalOpened: false, activeEntity: {} });
@@ -133,7 +212,7 @@ class Therapists extends Component {
 	}
 
 	render() {
-		const { data: { loading, therapists }, deleteTherapist } = this.props;
+		const { data: { loading, therapists }, deleteTherapist, currentClinic } = this.props;
 
 		const columns = [{
 			title: 'Name',
@@ -181,7 +260,10 @@ class Therapists extends Component {
 				<div className="Dashboard__Details">
 					<h1 className="Dashboard__Header">Therapists</h1>
 					<div className="Dashboard__Actions">
-						<Button type="primary" onClick={ this.showModal }>
+						<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
+							<ClinicsSelector/>
+						</CheckAccess>
+						<Button type="primary" onClick={ this.showModal } disabled={ !currentClinic.id }>
 							<Icon type="plus-circle-o"/>
 							Create a Therapist
 						</Button>
@@ -194,37 +276,61 @@ class Therapists extends Component {
 }
 
 const TherapistsApollo = withApollo(compose(
-	graphql(GET_THERAPISTS_QUERY),
+	graphql(GET_THERAPISTS_QUERY, {
+		options: ({ currentClinic }) => ({
+				variables: {
+					clinic_id: currentClinic.id || 0
+				}
+			})
+	}),
 	graphql(ADD_THERAPIST_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
-			addAdministrator: (fields) => mutate({
+			addTherapist: (fields) => mutate({
 				variables: fields,
 				refetchQueries: [{
-					query: GET_THERAPISTS_QUERY
+					query: GET_THERAPISTS_QUERY,
+					variables: {
+						clinic_id: ownProps.currentClinic.id
+					}
 				}],
 			})
 		})
 	}),
 	graphql(DELETE_THERAPIST_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
-			deleteAdministrator: ({ id }) => mutate({
+			deleteTherapist: ({ id }) => mutate({
 				variables: { id },
 				refetchQueries: [{
-					query: GET_THERAPISTS_QUERY
+					query: GET_THERAPISTS_QUERY,
+					variables: {
+						clinic_id: ownProps.currentClinic.id
+					}
 				}],
 			})
 		})
 	}),
 	graphql(EDIT_THERAPIST_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
-			editAdministrator: (fields) => mutate({
+			editTherapist: (fields) => mutate({
 				variables: fields,
 				refetchQueries: [{
-					query: GET_THERAPISTS_QUERY
+					query: GET_THERAPISTS_QUERY,
+					variables: {
+						clinic_id: ownProps.currentClinic.id
+					}
 				}],
 			})
 		})
 	}),
 )(Therapists));
 
-export default TherapistsApollo;
+
+
+@connect((state) => ({ currentClinic: state.currentClinic }))
+class CurrentClinicWrapper extends Component {
+	render() {
+		return <TherapistsApollo { ...this.props }/>
+	}
+}
+
+export default CurrentClinicWrapper;

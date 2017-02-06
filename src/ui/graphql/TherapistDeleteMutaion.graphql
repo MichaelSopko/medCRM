@@ -1,7 +1,7 @@
-mutation deleteAdministrator(
+mutation deleteTherapist(
 $id: Int!
 ) {
-    deleteAdministrator(id: $id) {
+    deleteTherapist(id: $id) {
         status
     }
 }

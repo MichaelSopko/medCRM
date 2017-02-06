@@ -1,11 +1,11 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { routerReducer } from 'react-router-redux'
-import CounterReducers from './store/reducers/counter_reducers';
+import clinicReducer from './store/reducers/clinic_reducer';
 
 const createReduxStore = (initialState, client) => {
   const store = createStore(
     combineReducers({
-      counter: CounterReducers,
+      currentClinic: clinicReducer,
       apollo: client.reducer(),
       routing: routerReducer
     }),
