@@ -1,0 +1,11 @@
+mutation editTreatment(
+$id: Int!
+$treatment: TreatmentInput
+) {
+    editTreatment(
+        id: $series_id
+        treatment: $treatment
+    ) {
+        status
+    }
+}

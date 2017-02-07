@@ -27,7 +27,6 @@ import { graphql } from 'react-apollo'
 class ClinicSelector extends Component {
 
 	onClinicChange = id => {
-		console.log(id);
 		this.props.setCurrentClinic({ id });
 	}
 

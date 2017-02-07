@@ -10,21 +10,27 @@ import ADD_PATIENT_MUTATION from '../../graphql/PatientAddMutation.graphql'
 import DELETE_PATIENT_MUTATION from '../../graphql/PatientDeleteMutaion.graphql'
 import EDIT_PATIENT_MUTATION from '../../graphql/PatientEditMutation.graphql'
 import ROLES from '../../../helpers/constants/roles'
+import HEALTH_MAINTENANCES from '../../../helpers/constants/health_maintenances'
 import ClinicsSelector from '../ClinicsSelector'
 import CheckAccess from '../helpers/CheckAccess'
 import moment from 'moment';
+import { FormattedMessage } from 'react-intl';
 
-import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, DatePicker } from 'antd'
+import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, DatePicker, Upload } from 'antd'
 
 const EntityForm = Form.create()(
 	(props) => {
-		const { visible, onCancel, onSubmit, form, loading, values = {} } = props;
+		const { visible, onCancel, onSubmit, form, loading, values = {}, onUploadFileChange } = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
 			labelCol: { span: 6 },
 			wrapperCol: { span: 14 },
 		};
 		const isEditing = !!Object.keys(values).length;
+		const token = localStorage.getItem('token');
+		const uploadHeaders = {
+			Authorization: `Bearer ${token}`
+		};
 
 		return (
 			<Modal title={ `${isEditing ? 'Edit' : 'Create'} Patient` }
@@ -32,6 +38,7 @@ const EntityForm = Form.create()(
 			       okText={ isEditing ? 'Edit' : 'Create' }
 			       onCancel={onCancel}
 			       onOk={onSubmit}
+			       width={600}
 			       confirmLoading={loading}>
 				<Form>
 					<Form.Item
@@ -45,7 +52,7 @@ const EntityForm = Form.create()(
 								type: 'regexp', pattern: /^\d+$/, required: true, message: 'Please input ID',
 							}],
 						})(
-							<Input type="number" />
+							<Input type="number"/>
 						)}
 					</Form.Item>
 					{ <Form.Item
@@ -59,7 +66,7 @@ const EntityForm = Form.create()(
 								type: 'email', message: 'Please input email',
 							}],
 						})(
-							<Input type="email" />
+							<Input type="email"/>
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -106,6 +113,22 @@ const EntityForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
+						label="Health maintenance"
+						hasFeedback
+					>
+						{getFieldDecorator('health_maintenance', {
+							initialValue: values.health_maintenance,
+							rules: [],
+						})(
+							<Select>
+								{ Object.keys(HEALTH_MAINTENANCES).map(key => <Select.Option value={key} key={key}>
+									{HEALTH_MAINTENANCES[key]}
+								</Select.Option>) }
+							</Select>
+						)}
+					</Form.Item> }
+					{ <Form.Item
+						{...formItemLayout}
 						label="Birth date"
 						hasFeedback
 					>
@@ -117,38 +140,39 @@ const EntityForm = Form.create()(
 						})(
 							<DatePicker locale="en-US"/>
 						)}
+					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
 						label="Related Persons"
 						hasFeedback
 					>
-						{getFieldDecorator('birth_date', {
-							initialValue: moment(values.related_persons),
-							rules: [{
-								required: true, message: 'Please input date',
-							}],
+						{getFieldDecorator('related_persons', {
+							initialValue: values.related_persons,
+							rules: [],
 						})(
-							<Select>
-								<Select.Option></Select.Option>
-							</Select>
+							<Select/>
 						)}
 					</Form.Item> }
-					<CheckAccess role={ ROLES.CLINIC_ADMIN }>
-						<Form.Item
-							{...formItemLayout}
-							label={ isEditing ? 'New password' : 'Password' }
-							hasFeedback
-						>
-							{getFieldDecorator('password', {
-								rules: [{
-									required: !isEditing, message: 'Please input password'
-								}
-								],
-							})(
-								<Input />
-							)}
-						</Form.Item>
-					</CheckAccess>
+					{ <Form.Item
+						{...formItemLayout}
+						label="Files"
+						hasFeedback
+					>
+						{getFieldDecorator('files', {
+							initialValue: values.files,
+							rules: [],
+						})(
+							<Upload
+								headers={uploadHeaders}
+								defaultFileList={values.files}
+								onChange={onUploadFileChange}
+								action="/api/upload-file">
+								<Button>
+									<Icon type="upload"/> Upload files
+								</Button>
+							</Upload>
+						)}
+					</Form.Item> }
 				</Form>
 			</Modal>
 		);
@@ -156,6 +180,10 @@ const EntityForm = Form.create()(
 );
 
 class Patients extends Component {
+
+	static contextTypes = {
+		intl: PropTypes.object.isRequired
+	};
 
 	static propTypes = {
 		data: PropTypes.object
@@ -192,14 +220,23 @@ class Patients extends Component {
 	handleFormSubmit = () => {
 		const form = this.form;
 		const isEditing = !!Object.keys(this.state.activeEntity).length;
-		form.validateFields((err, values) => {
+		const processFiles = files => files.fileList.map(file => ({
+
+		}));
+
+		form.validateFields((err, { files, ...values }) => {
 			if (err) {
 				return;
 			}
-			console.log(this.props.currentClinic);
 			isEditing ?
-				this.props.editPatient({ id: this.state.activeEntity.id, ...values }) :
-				this.props.addPatient({ clinic_id: this.props.currentClinic.id, ...values });
+				this.props.editPatient({
+					id: this.state.activeEntity.id,
+					patient: values
+				}) :
+				this.props.addPatient({
+					clinic_id: this.props.currentClinic.id,
+					patient: values
+				});
 			console.log('Adding new patient', values);
 			form.resetFields();
 			this.setState({ modalOpened: false, activeEntity: {} });
@@ -214,8 +251,13 @@ class Patients extends Component {
 		});
 	}
 
+	onUploadFileChange = info => {
+
+	}
+
 	render() {
 		const { data: { loading, patients }, deletePatient, currentClinic } = this.props;
+		const formatMessage = this.context.intl.formatMessage;
 
 		const columns = [{
 			title: 'Name',
@@ -258,6 +300,8 @@ class Patients extends Component {
 					loading={loading}
 					onCancel={this.handleCancel}
 					onSubmit={this.handleFormSubmit}
+					formatMessage={formatMessage}
+					onUploadFileChange={this.onUploadFileChange}
 					values={activeEntity}
 				/>
 				<div className="Dashboard__Details">
@@ -326,7 +370,6 @@ const PatientsApollo = withApollo(compose(
 		})
 	}),
 )(Patients));
-
 
 
 @connect((state) => ({ currentClinic: state.currentClinic }))

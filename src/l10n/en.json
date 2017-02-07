@@ -1,5 +1,15 @@
 {
   "roles": {
-    "SYSTEM_ADMIN": "System administrator"
-  }
+    "SYSTEM_ADMIN": "System administrator",
+    "CLINIC_ADMIN": "Clinic administrator",
+    "THERAPIST": "Therapist",
+    "Patient": "Patient"
+  },
+ "health_maintenance": {
+   "CLATIT": "CLATIT",
+   "MACCABI": "MACCABI",
+   "MEUHEDET": "MEUHEDET",
+   "LEUMIT": "LEUMIT",
+   "PRIVATE": "PRIVATE"
+ }
 }

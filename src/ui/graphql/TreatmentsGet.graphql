@@ -1,0 +1,20 @@
+query treatments($clinic_id: Int!) {
+    treatmentSeries(clinic_id: $clinic_id) {
+        id
+        name
+        treatments_number
+        treatments
+    }
+    therapists(clinic_id: $clinic_id) {
+        id
+        id_number
+        first_name
+        last_name
+    }
+    patients(clinic_id: $clinic_id) {
+        id
+        id_number
+        first_name
+        last_name
+    }
+}

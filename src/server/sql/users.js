@@ -3,6 +3,7 @@ import pwd from 'pwd';
 
 import createUser from './helpers/create_user';
 
+
 export default class Users {
 
 	async createUser(...params) {

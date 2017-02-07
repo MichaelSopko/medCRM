@@ -1,5 +1,4 @@
 scalar Date
-scalar JSON
 
 interface User {
 	id: Int!
@@ -38,6 +37,20 @@ type Therapist implements User {
 	birth_date: Date
 }
 
+type PatientFile {
+	name: String!
+	url: String!
+	size: Int!
+	type: String!
+}
+
+input PatientFileInput {
+	name: String!
+	url: String!
+	size: Int!
+	type: String!
+}
+
 type Patient implements User {
 	id: Int!
 	id_number: Int!
@@ -49,6 +62,19 @@ type Patient implements User {
 	clinic: Clinic
 	related_persons: [PatientRelatedPerson]
 	health_maintenance: PatientHealthMaintenance
+	files: [PatientFile]
+}
+
+input PatientInput {
+	id_number: Int!
+	first_name: String!
+	last_name: String!
+	birth_date: Date!
+	phone: String!
+	email: String
+	related_persons: [PatientRelatedPersonInput]
+	health_maintenance: PatientHealthMaintenance
+	files: [PatientFileInput]
 }
 
 enum PatientRelatedPersonType {
@@ -66,6 +92,13 @@ enum PatientHealthMaintenance {
 }
 
 type PatientRelatedPerson {
+	type: PatientRelatedPersonType
+	description: String
+	phone: String!
+	email: String
+}
+
+input PatientRelatedPersonInput {
 	type: PatientRelatedPersonType
 	description: String
 	phone: String!
@@ -123,6 +156,17 @@ type Clinic {
 
 type MutationStatus {
 	status: String
+}
+
+input TreatmentInput {
+	target: String
+	method: String
+	process: String
+	parents_guidance: String
+	next_treatment_remark: String
+	patients: [Int]
+	therapists: [Int]
+	date: Date
 }
 
 type Mutation {
@@ -194,36 +238,54 @@ type Mutation {
 
 
 	addPatient(
-	password: String!
-	id_number: Int!
-	first_name: String!
-	last_name: String!
-	birth_date: Date!
-	phone: String!
-	email: String
 	clinic_id: Int!
-	related_persons: JSON
-	health_maintenance: PatientHealthMaintenance
+	patient: PatientInput
 ): MutationStatus
 
 	editPatient(
 	id: Int!
-	password: String
-	id_number: Int!
-	first_name: String!
-	last_name: String!
-	birth_date: Date!
-	phone: String!
-	email: String
-	related_persons: JSON
-	health_maintenance: PatientHealthMaintenance
+	patient: PatientInput
 ): MutationStatus
 
 	deletePatient(
 	id: Int!
 ): MutationStatus
 
+
+	addTreatmentSeries(
+	name: String
+	treatments_number: Int!
+	clinic_id: Int!
+): MutationStatus
+
+	editTreatmentSeries(
+	id: Int!
+	name: String
+	treatments_number: Int!
+): MutationStatus
+
+	deleteTreatmentSeries(
+	id: Int!
+): MutationStatus
+
+
+	addTreatment(
+	series_id: Int!
+	treatment: TreatmentInput
+): MutationStatus
+
+	editTreatment(
+	id: Int!
+	treatment: TreatmentInput
+): MutationStatus
+
+	deleteTreatment(
+	id: Int!
+): MutationStatus
+
 }
+
+
 
 type Subscription {
 	clinicUpdated(ids: String): Clinic

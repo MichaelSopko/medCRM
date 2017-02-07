@@ -5,6 +5,8 @@ import checkAccessLogic from '../../helpers/checkAccessLogic'
 import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language';
 import GraphQLJSON from 'graphql-type-json';
+import CustomGraphQLDateType from 'graphql-custom-datetype';
+import GraphQLDateType from './GraphQLMoment';
 
 import log from '../../log'
 import schema from './schema_def.graphqls'
@@ -89,14 +91,21 @@ const resolvers = {
 				.then(res => ({ status: res }))
 		},
 
-		addPatient(_, user, context) {
+		addPatient(_, { clinic_id, patient }, context) {
 			return checkAccess(context, ROLES.CLINIC_ADMIN)
-				.then(() => context.Users.createUser({ ...user, role: ROLES.PATIENT }))
+				.then(() => context.Users.createUser({
+					clinic_id,
+					...patient,
+					role: ROLES.PATIENT
+				}))
 				.then(res => ({ status: res }))
 		},
-		editPatient(_, user, context) {
+		editPatient(_, { id, patient }, context) {
 			return checkAccess(context, ROLES.THERAPIST)
-				.then(() => context.Users.editUser(user))
+				.then(() => context.Users.editUser({
+					id,
+					...patient
+				}))
 				.then(res => ({ status: res }))
 		},
 		deletePatient(_, { id }, context) {
@@ -124,7 +133,7 @@ const resolvers = {
 			return context.Clinics.findOne(user.clinic_id);
 		}
 	},
-	Date: GraphQLJSON
+	Date: GraphQLDateType
 };
 
 const executableSchema = makeExecutableSchema({
