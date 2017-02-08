@@ -20,8 +20,10 @@ export function up(knex, Promise) {
 			table.string('parents_guidance');
 			table.string('next_treatment_remark');
 			table.dateTime('date');
-			table.specificType('therapist_ids', 'JSON');
-			table.specificType('patient_ids', 'JSON');
+			//table.specificType('therapist_ids', 'JSON');
+			table.string('therapist_ids');
+			//table.specificType('patient_ids', 'JSON');
+			table.string('patient_ids');
 		})])
 	})
 }
