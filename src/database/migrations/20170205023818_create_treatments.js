@@ -3,7 +3,7 @@ export function up(knex, Promise) {
 		knex.schema.createTable('treatment_series', (table) => {
 			table.increments();
 			table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
-			table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
+			table.timestamp('updated_at').notNullable();
 			table.integer('clinic_id').unsigned().references('id').inTable('clinics');
 			table.string('name');
 			table.integer('treatments_number').unsigned();

@@ -18,7 +18,7 @@
   },
   "engines": {
     "node": "7.3.0",
-    "npm": "3.10.3"
+    "npm": "3.10.10"
   },
   "scripts": {
     "build": "babel-node tools/webpack.run build",
