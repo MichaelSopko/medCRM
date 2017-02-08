@@ -1,7 +1,7 @@
 mutation editTherapist(
 $id: Int!
 $password: String
-$id_number: Int!
+$id_number: String!
 $first_name: String!
 $last_name: String!
 $license_number: Int!

@@ -1,6 +1,6 @@
 mutation addTherapist(
 $password: String!
-$id_number: Int!
+$id_number: String!
 $first_name: String!
 $last_name: String!
 $clinic_id: Int!

@@ -17,8 +17,27 @@ export default class Users {
 			.first()
 	}
 
-	// TODO: change password
-	editUser({ id, password, ...fields }) {
+	getUsers(ids) {
+		return knex('users')
+			.whereIn('id', ids)
+			.select();
+	}
+
+	async editUser({ id, password, ...fields }) {
+		if ('files' in fields) {
+			fields.files = JSON.stringify(fields.files);
+		}
+		if ('related_persons' in fields) {
+			fields.related_persons = JSON.stringify(fields.related_persons);
+		}
+		if (password) {
+			const { salt, hash } = await pwd.hash(password);
+			fields = {
+				...fields,
+				salt,
+				hash
+			};
+		}
 		return knex('users')
 			.where('id', id)
 			.update(fields)
@@ -36,6 +55,11 @@ export default class Users {
 			k = k.andWhere('clinic_id', clinic_id);
 		}
 		return k.select()
+			.then(users => users.map(user => ({
+				...user,
+				files: JSON.parse(user.files),
+				related_persons: JSON.parse(user.related_persons),
+			})));
 	}
 
 	async checkPassword({ login, password }) {

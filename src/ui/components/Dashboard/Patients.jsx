@@ -31,6 +31,12 @@ const EntityForm = Form.create()(
 		const uploadHeaders = {
 			Authorization: `Bearer ${token}`
 		};
+		const normFile = (e) => {
+			if (Array.isArray(e)) {
+				return e;
+			}
+			return e && e.fileList;
+		};
 
 		return (
 			<Modal title={ `${isEditing ? 'Edit' : 'Create'} Patient` }
@@ -133,7 +139,7 @@ const EntityForm = Form.create()(
 						hasFeedback
 					>
 						{getFieldDecorator('birth_date', {
-							initialValue: moment(values.birth_date),
+							initialValue: values.birth_date ? moment(values.birth_date) : null,
 							rules: [{
 								required: true, message: 'Please input date',
 							}],
@@ -159,12 +165,12 @@ const EntityForm = Form.create()(
 						hasFeedback
 					>
 						{getFieldDecorator('files', {
-							initialValue: values.files,
-							rules: [],
+							valuePropName: 'fileList',
+							initialValue: values.files && values.files.map(f => ({ uid: f.url, ...f })),
+							normalize: normFile,
 						})(
 							<Upload
 								headers={uploadHeaders}
-								defaultFileList={values.files}
 								onChange={onUploadFileChange}
 								action="/api/upload-file">
 								<Button>
@@ -191,7 +197,8 @@ class Patients extends Component {
 
 	state = {
 		modalOpened: false,
-		activeEntity: {}
+		activeEntity: {},
+		modalLoading: false
 	};
 
 	handleOk = () => {
@@ -220,28 +227,54 @@ class Patients extends Component {
 	handleFormSubmit = () => {
 		const form = this.form;
 		const isEditing = !!Object.keys(this.state.activeEntity).length;
-		const processFiles = files => files.fileList.map(file => ({
-
-		}));
+		const processFiles = files => files.map(file => {
+			file = file.response ? file.response.files[0] : file; // Handle new uploaded files
+			const { name, url, size, type } = file;
+			return {
+				name,
+				url,
+				size,
+				type
+			}
+		});
 
 		form.validateFields((err, { files, ...values }) => {
 			if (err) {
 				return;
 			}
+			this.setState({ modalLoading: true });
+			console.log(files);
+			files = processFiles(files);
 			isEditing ?
 				this.props.editPatient({
 					id: this.state.activeEntity.id,
-					patient: values
+					patient: {
+						...values,
+						files
+					}
+				}).then(() => {
+					form.resetFields();
+					this.setState({ modalOpened: false, modalLoading: false });
+					this.resetActiveEntity();
+				}).catch(e => {
+					this.setState({ modalLoading: false });
+					console.log(e);
 				}) :
 				this.props.addPatient({
 					clinic_id: this.props.currentClinic.id,
-					patient: values
+					patient: {
+						...values,
+						files
+					}
+				}).then(() => {
+					form.resetFields();
+					this.setState({ modalOpened: false, modalLoading: false });
+				}).catch(e => {
+					this.setState({ modalLoading: false });
+					console.log(e);
 				});
-			console.log('Adding new patient', values);
-			form.resetFields();
-			this.setState({ modalOpened: false, activeEntity: {} });
 		});
-	}
+	};
 
 	editEntity = entity => () => {
 		this.form.resetFields();
@@ -249,11 +282,11 @@ class Patients extends Component {
 			modalOpened: true,
 			activeEntity: entity
 		});
-	}
+	};
 
 	onUploadFileChange = info => {
 
-	}
+	};
 
 	render() {
 		const { data: { loading, patients }, deletePatient, currentClinic } = this.props;
@@ -288,7 +321,7 @@ class Patients extends Component {
         </span>
 			),
 		}];
-		const { modalOpened, activeEntity } = this.state;
+		const { modalOpened, activeEntity, modalLoading } = this.state;
 
 		return (
 			<section className="Patients">
@@ -297,7 +330,7 @@ class Patients extends Component {
 						this.form = form
 					} }
 					visible={modalOpened}
-					loading={loading}
+					loading={modalLoading}
 					onCancel={this.handleCancel}
 					onSubmit={this.handleFormSubmit}
 					formatMessage={formatMessage}
@@ -372,6 +405,7 @@ const PatientsApollo = withApollo(compose(
 )(Patients));
 
 
+// TODO: migrate to clean redux connector
 @connect((state) => ({ currentClinic: state.currentClinic }))
 class CurrentClinicWrapper extends Component {
 	render() {

@@ -18,14 +18,14 @@ export default new GraphQLScalarType({
 	/**
 	 * Parse value into date
 	 * @param  {*} value serialized date value
-	 * @return {moment} date value
+	 * @return {String} formatted for MySQL Datetime type string
 	 */
 	parseValue: function (value) {
 		let date = moment(value);
 		if(!date.isValid()) {
 			throw new GraphQLError('Field parse error: value is an invalid Date');
 		}
-		return date;
+		return date.format('YYYY-MM-DD HH:mm:ss');
 	},
 	/**
 	 * Parse ast literal to date

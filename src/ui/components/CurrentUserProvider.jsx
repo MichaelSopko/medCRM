@@ -63,6 +63,9 @@ export default class CurrentUserProvider extends Component {
 			this.logout();
 			return false;
 		}
+		if (newProps.data.currentUser) {
+			this.setState({});
+		}
 		if (newProps.data.currentUser && newProps.data.currentUser.clinic) {
 			this.props.setCurrentClinic(newProps.data.currentUser.clinic);
 		}

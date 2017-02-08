@@ -1,12 +1,24 @@
 query patients($clinic_id: Int!) {
-    therapists(clinic_id: $clinic_id) {
+    patients(clinic_id: $clinic_id) {
         id
+        id_number
         first_name
         last_name
-        email
-        license_number
-        phone
         birth_date
-        id_number
+        phone
+        email
+        related_persons {
+            type
+            description
+            phone
+            email
+        }
+        health_maintenance
+        files {
+            name
+            url
+            size
+            type
+        }
     }
 }

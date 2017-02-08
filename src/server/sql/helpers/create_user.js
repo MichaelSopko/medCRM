@@ -2,8 +2,11 @@ import pwd from 'pwd';
 import moment from 'moment';
 
 export default async function createUser(knex, { password, ...fields }) {
-	if ('birth_date' in fields) {
-		fields.birth_date = moment(fields.birth_date).format('YYYY-MM-DD HH:mm:ss');
+	if ('files' in fields) {
+		fields.files = JSON.stringify(fields.files);
+	}
+	if ('related_persons' in fields) {
+		fields.related_persons = JSON.stringify(fields.related_persons);
 	}
 	if (password) {
 		const { salt, hash } = await pwd.hash(password);

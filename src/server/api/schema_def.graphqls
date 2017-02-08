@@ -27,7 +27,7 @@ type ClinicAdministrator implements User {
 
 type Therapist implements User {
 	id: Int!
-	id_number: Int
+	id_number: String
 	first_name: String
 	last_name: String
 	clinic: Clinic
@@ -53,7 +53,7 @@ input PatientFileInput {
 
 type Patient implements User {
 	id: Int!
-	id_number: Int!
+	id_number: String!
 	first_name: String!
 	last_name: String!
 	birth_date: Date!
@@ -66,7 +66,7 @@ type Patient implements User {
 }
 
 input PatientInput {
-	id_number: Int!
+	id_number: String!
 	first_name: String!
 	last_name: String!
 	birth_date: Date!
@@ -164,8 +164,8 @@ input TreatmentInput {
 	process: String
 	parents_guidance: String
 	next_treatment_remark: String
-	patients: [Int]
-	therapists: [Int]
+	patient_ids: [Int]
+	therapist_ids: [Int]
 	date: Date
 }
 
@@ -210,7 +210,7 @@ type Mutation {
 
 	addTherapist(
 	password: String!
-	id_number: Int!
+	id_number: String!
 	first_name: String!
 	last_name: String!
 	clinic_id: Int!
@@ -223,7 +223,7 @@ type Mutation {
 	editTherapist(
 	id: Int!
 	password: String
-	id_number: Int!
+	id_number: String!
 	first_name: String!
 	last_name: String!
 	license_number: Int!

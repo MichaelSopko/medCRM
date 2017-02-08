@@ -193,7 +193,6 @@ class Therapists extends Component {
 			if (err) {
 				return;
 			}
-			console.log(this.props.currentClinic);
 			isEditing ?
 				this.props.editTherapist({ id: this.state.activeEntity.id, ...values }) :
 				this.props.addTherapist({ clinic_id: this.props.currentClinic.id, ...values });

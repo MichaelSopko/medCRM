@@ -6,7 +6,7 @@ import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language';
 import GraphQLJSON from 'graphql-type-json';
 import CustomGraphQLDateType from 'graphql-custom-datetype';
-import GraphQLDateType from './GraphQLMoment';
+import GraphQLDateType from './GraphQLMomentMySQL';
 
 import log from '../../log'
 import schema from './schema_def.graphqls'
@@ -38,9 +38,12 @@ const resolvers = {
 		patients(ignored1, { clinic_id }, context) {
 			return context.Users.findByRole(ROLES.PATIENT, clinic_id);
 		},
+		treatmentSeries(ignored1, { clinic_id }, context) {
+			return context.Treatments.getSeries(clinic_id);
+		},
 		currentUser(ignored1, ignored2, context) {
 			return context.Users.getUser({ id: context.currentUser.id });
-		},
+		}
 	},
 	Mutation: {
 		addClinic(_, clinic, context) {
@@ -113,6 +116,41 @@ const resolvers = {
 				.then(() => context.Users.deleteUser({ id }))
 				.then(res => ({ status: res }))
 		},
+
+		addTreatmentSeries(_, series, context) {
+			return checkAccess(context, ROLES.THERAPIST)
+				.then(() => context.Treatments.addSeries(series))
+				.then(res => ({ status: res }))
+		},
+		editTreatmentSeries(_, series, context) {
+			return checkAccess(context, ROLES.THERAPIST)
+				.then(() => context.Treatments.editSeries(series))
+				.then(res => ({ status: res }))
+		},
+		deleteTreatmentSeries(_, { id }, context) {
+			return checkAccess(context, ROLES.THERAPIST)
+				.then(() => context.Treatments.deleteSeries({ id }))
+				.then(res => ({ status: res }))
+		},
+
+		addTreatment(_, { series_id, treatment }, context) {
+			return checkAccess(context, ROLES.THERAPIST)
+				.then(() => context.Treatments.addTreatment({ series_id, ...treatment }))
+				.then(res => ({ status: res }))
+		},
+		editTreatment(_, { id, treatment }, context) {
+			return checkAccess(context, ROLES.THERAPIST)
+				.then(() => context.Treatments.editTreatment({
+					id,
+					...treatment
+				}))
+				.then(res => ({ status: res }))
+		},
+		deleteTreatment(_, { id }, context) {
+			return checkAccess(context, ROLES.THERAPIST)
+				.then(() => context.Treatments.deleteTreatment({ id }))
+				.then(res => ({ status: res }))
+		},
 	},
 	Subscription: {  // Here live subscriptions can be added
 		clinicUpdated(ids) {
@@ -131,6 +169,21 @@ const resolvers = {
 	CurrentUser: {
 		clinic(user, _, context) {
 			return context.Clinics.findOne(user.clinic_id);
+		}
+	},
+	TreatmentSeries: {
+		treatments(series, _, context) {
+			return context.Treatments.getTreatments(series.id);
+		}
+	},
+	Treatment: {
+		therapists(treatment, _, context) {
+			const ids = JSON.parse(treatment.therapist_ids);
+			return context.Users.getUsers(ids);
+		},
+		patients(treatment, _, context) {
+			const ids = JSON.parse(treatment.patient_ids);
+			return context.Users.getUsers(ids);
 		}
 	},
 	Date: GraphQLDateType

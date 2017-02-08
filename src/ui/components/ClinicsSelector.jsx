@@ -22,7 +22,7 @@ import { graphql } from 'react-apollo'
 				clinic
 			});
 		}
-	}),
+	})
 )
 class ClinicSelector extends Component {
 
