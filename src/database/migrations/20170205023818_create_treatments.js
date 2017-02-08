@@ -12,7 +12,7 @@ export function up(knex, Promise) {
 		return Promise.all([knex.schema.createTable('treatments', (table) => {
 			table.increments();
 			table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
-			table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
+			table.timestamp('updated_at').notNullable();
 			table.integer('series_id').unsigned().references('id').inTable('treatment_series');
 			table.string('target');
 			table.string('method');
