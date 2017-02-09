@@ -11,6 +11,7 @@ import DELETE_PATIENT_MUTATION from '../../graphql/PatientDeleteMutaion.graphql'
 import EDIT_PATIENT_MUTATION from '../../graphql/PatientEditMutation.graphql'
 import ROLES from '../../../helpers/constants/roles'
 import HEALTH_MAINTENANCES from '../../../helpers/constants/health_maintenances'
+import RELATED_PERSONS from '../../../helpers/constants/related_persons'
 import ClinicsSelector from '../ClinicsSelector'
 import CheckAccess from '../helpers/CheckAccess'
 import moment from 'moment';
@@ -18,9 +19,15 @@ import { FormattedMessage } from 'react-intl';
 
 import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, DatePicker, Upload } from 'antd'
 
+import './Patients.scss'
+
+
 const EntityForm = Form.create()(
 	(props) => {
-		const { visible, onCancel, onSubmit, form, loading, values = {}, onUploadFileChange } = props;
+		const {
+			visible, onCancel, onSubmit, form, loading, values = {},
+			onUploadFileChange, addRelatedPerson, relatedPersonsCount, formatMessage
+		} = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
 			labelCol: { span: 6 },
@@ -38,10 +45,61 @@ const EntityForm = Form.create()(
 			return e && e.fileList;
 		};
 
+		let relatedPersonsItems = [];
+		for (let i = 0; i < relatedPersonsCount; i++) {
+			const item = (values.related_persons && values.related_persons[i]) ? values.related_persons[i] : {};
+			relatedPersonsItems.push(<div className="Patients__RelatedPersonsItem ant-form" key={i}>
+				<Form.Item
+					hasFeedback
+				>
+					{getFieldDecorator(`related_persons-${i}-type`, {
+						initialValue: item.type,
+						rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_type_error' }) }],
+					})(
+						<Select placeholder={formatMessage({ id: 'Patients.field_person_type' })}>
+							{ Object.keys(RELATED_PERSONS).map(key => <Select.Option value={key} key={key}>
+								{RELATED_PERSONS[key]}
+							</Select.Option>) }
+						</Select>
+					)}
+				</Form.Item>
+				<Form.Item
+					hasFeedback
+				>
+					{getFieldDecorator(`related_persons-${i}-description`, {
+						initialValue: item.description,
+						rules: [],
+					})(
+						<Input placeholder={formatMessage({ id: 'Patients.field_person_description' })}/>
+					)}
+				</Form.Item>
+				<Form.Item
+					hasFeedback
+				>
+					{getFieldDecorator(`related_persons-${i}-phone`, {
+						initialValue: item.phone,
+						rules: [{ required: true, message: formatMessage({ id: 'common.field_phone_error' }) }],
+					})(
+						<Input placeholder={formatMessage({ id: 'common.field_phone' })}/>
+					)}
+				</Form.Item>
+				<Form.Item
+					hasFeedback
+				>
+					{getFieldDecorator(`related_persons-${i}-email`, {
+						initialValue: item.email,
+						rules: [{ type: 'email', message: formatMessage({ id: 'common.field_email_error' }) }],
+					})(
+						<Input type="email" placeholder={formatMessage({ id: 'common.field_email' })}/>
+					)}
+				</Form.Item>
+			</div>)
+		}
+
 		return (
-			<Modal title={ `${isEditing ? 'Edit' : 'Create'} Patient` }
+			<Modal title={ formatMessage({ id: isEditing ? 'Patients.edit_header' : 'Patients.create_header' }) }
 			       visible={visible}
-			       okText={ isEditing ? 'Edit' : 'Create' }
+			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
 			       onCancel={onCancel}
 			       onOk={onSubmit}
 			       width={600}
@@ -49,13 +107,16 @@ const EntityForm = Form.create()(
 				<Form>
 					<Form.Item
 						{...formItemLayout}
-						label="ID"
+						label={formatMessage({ id: 'common.field_id_number' })}
 						hasFeedback
 					>
 						{getFieldDecorator('id_number', {
 							initialValue: values.id_number,
 							rules: [{
-								type: 'regexp', pattern: /^\d+$/, required: true, message: 'Please input ID',
+								type: 'regexp',
+								pattern: /^\d+$/,
+								required: true,
+								message: formatMessage({ id: 'common.field_id_number_error' }),
 							}],
 						})(
 							<Input type="number"/>
@@ -63,13 +124,13 @@ const EntityForm = Form.create()(
 					</Form.Item>
 					{ <Form.Item
 						{...formItemLayout}
-						label="Email"
+						label={formatMessage({ id: 'common.field_email' })}
 						hasFeedback
 					>
 						{getFieldDecorator('email', {
 							initialValue: values.email,
 							rules: [{
-								type: 'email', message: 'Please input email',
+								type: 'email', message: formatMessage({ id: 'common.field_email_error' }),
 							}],
 						})(
 							<Input type="email"/>
@@ -77,13 +138,13 @@ const EntityForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="First name"
+						label={formatMessage({ id: 'common.field_first_name' })}
 						hasFeedback
 					>
 						{getFieldDecorator('first_name', {
 							initialValue: values.first_name,
 							rules: [{
-								required: true, message: 'Please input first name',
+								required: true, message: formatMessage({ id: 'common.field_first_name_error' }),
 							}],
 						})(
 							<Input />
@@ -91,13 +152,13 @@ const EntityForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="Last name"
+						label={formatMessage({ id: 'common.field_last_name' })}
 						hasFeedback
 					>
 						{getFieldDecorator('last_name', {
 							initialValue: values.last_name,
 							rules: [{
-								required: true, message: 'Please input last name',
+								required: true, message: formatMessage({ id: 'common.field_last_name_error' }),
 							}],
 						})(
 							<Input />
@@ -105,13 +166,13 @@ const EntityForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="Phone"
+						label={formatMessage({ id: 'common.field_phone' })}
 						hasFeedback
 					>
 						{getFieldDecorator('phone', {
 							initialValue: values.phone,
 							rules: [{
-								required: true, message: 'Please input phone',
+								required: true, message: formatMessage({ id: 'common.field_phone_error' }),
 							}],
 						})(
 							<Input />
@@ -119,7 +180,7 @@ const EntityForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="Health maintenance"
+						label={formatMessage({ id: 'Patients.field_health_maintenance' })}
 						hasFeedback
 					>
 						{getFieldDecorator('health_maintenance', {
@@ -135,29 +196,27 @@ const EntityForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="Birth date"
+						label={formatMessage({ id: 'common.field_birth_date' })}
 						hasFeedback
 					>
 						{getFieldDecorator('birth_date', {
 							initialValue: values.birth_date ? moment(values.birth_date) : null,
 							rules: [{
-								required: true, message: 'Please input date',
+								required: true, message: formatMessage({ id: 'common.field_birth_date_error' }),
 							}],
 						})(
-							<DatePicker locale="en-US"/>
+							<DatePicker/>
 						)}
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="Related Persons"
+						label={formatMessage({ id: 'Patients.field_related_persons' })}
 						hasFeedback
 					>
-						{getFieldDecorator('related_persons', {
-							initialValue: values.related_persons,
-							rules: [],
-						})(
-							<Select/>
-						)}
+						{ relatedPersonsItems }
+						<Button type="dashed" onClick={ addRelatedPerson }>
+							{formatMessage({ id: 'Patients.add_related_persons' })}
+						</Button>
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
@@ -174,7 +233,7 @@ const EntityForm = Form.create()(
 								onChange={onUploadFileChange}
 								action="/api/upload-file">
 								<Button>
-									<Icon type="upload"/> Upload files
+									<Icon type="upload"/> {formatMessage({ id: 'Patients.upload_files' })}
 								</Button>
 							</Upload>
 						)}
@@ -198,7 +257,8 @@ class Patients extends Component {
 	state = {
 		modalOpened: false,
 		activeEntity: {},
-		modalLoading: false
+		modalLoading: false,
+		relatedPersonsCount: 0
 	};
 
 	handleOk = () => {
@@ -207,12 +267,12 @@ class Patients extends Component {
 	};
 
 	handleCancel = () => {
-		this.setState({ modalOpened: false });
+		this.setState({ modalOpened: false, relatedPersonsCount: 0 });
 		this.resetActiveEntity();
 	};
 
 	showModal = () => {
-		this.setState({ modalOpened: true });
+		this.setState({ modalOpened: true, relatedPersonsCount: 0 });
 	};
 
 	/**
@@ -237,14 +297,30 @@ class Patients extends Component {
 				type
 			}
 		});
+		const processRelatedPersons = (count, values) => {
+			values.related_persons = [];
+			for (let i = 0; i < count; i++) {
+				const type = values[`related_persons-${i}-type`];
+				delete values[`related_persons-${i}-type`];
+				const phone = values[`related_persons-${i}-phone`];
+				delete values[`related_persons-${i}-phone`];
+				const email = values[`related_persons-${i}-email`];
+				delete values[`related_persons-${i}-email`];
+				const description = values[`related_persons-${i}-description`];
+				delete values[`related_persons-${i}-description`];
+				values.related_persons.push({ type, phone, email, description });
+			}
+			return values;
+		};
 
 		form.validateFields((err, { files, ...values }) => {
 			if (err) {
 				return;
 			}
 			this.setState({ modalLoading: true });
-			console.log(files);
-			files = processFiles(files);
+			console.log(values);
+			files = files ? processFiles(files) : [];
+			values = processRelatedPersons(this.state.relatedPersonsCount, values);
 			isEditing ?
 				this.props.editPatient({
 					id: this.state.activeEntity.id,
@@ -254,7 +330,7 @@ class Patients extends Component {
 					}
 				}).then(() => {
 					form.resetFields();
-					this.setState({ modalOpened: false, modalLoading: false });
+					this.setState({ modalOpened: false, modalLoading: false, relatedPersonsCount: 0 });
 					this.resetActiveEntity();
 				}).catch(e => {
 					this.setState({ modalLoading: false });
@@ -268,7 +344,7 @@ class Patients extends Component {
 					}
 				}).then(() => {
 					form.resetFields();
-					this.setState({ modalOpened: false, modalLoading: false });
+					this.setState({ modalOpened: false, modalLoading: false, relatedPersonsCount: 0 });
 				}).catch(e => {
 					this.setState({ modalLoading: false });
 					console.log(e);
@@ -280,7 +356,8 @@ class Patients extends Component {
 		this.form.resetFields();
 		this.setState({
 			modalOpened: true,
-			activeEntity: entity
+			activeEntity: entity,
+			relatedPersonsCount: entity.related_persons ? entity.related_persons.length : 0
 		});
 	};
 
@@ -288,40 +365,48 @@ class Patients extends Component {
 
 	};
 
+	addRelatedPerson = relatedPersons => {
+		this.setState({ relatedPersonsCount: this.state.relatedPersonsCount + 1 });
+	};
+
 	render() {
 		const { data: { loading, patients }, deletePatient, currentClinic } = this.props;
 		const formatMessage = this.context.intl.formatMessage;
 
 		const columns = [{
-			title: 'Name',
+			title: formatMessage({ id: 'common.field_name' }),
 			key: 'name',
 			render: (text, record) => <span>{record.first_name} {record.last_name}</span>
 		}, {
-			title: 'Phone',
+			title: formatMessage({ id: 'common.field_phone' }),
 			dataIndex: 'phone',
 			key: 'phone',
 			render: text => <a href={ `tel:${text}` }>{ text }</a>
 		}, {
-			title: 'Email',
+			title: formatMessage({ id: 'common.field_email' }),
 			dataIndex: 'email',
 			key: 'email',
 			render: text => <a href={ `mailto:${text}` }>{ text }</a>
 		}, {
-			title: 'Action',
+			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
 			render: (text, record) => (
 				<span>
-		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>Edit</Button>
-					<span className="ant-divider"></span>
-		      <Popconfirm title="Are you sure?" onConfirm={ () => {
+		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
+			      {formatMessage({ id: 'common.action_edit' })}
+		      </Button>
+					<span className="ant-divider"/>
+		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
 			      deletePatient(record)
-		      } } okText="Yes" cancelText="No">
-		        <Button size="small" type='ghost'>Delete</Button>
+		      } } okText={formatMessage({ id: 'common.confirm_yes' })} cancelText={formatMessage({ id: 'common.confirm_no' })}>
+		        <Button size="small" type='ghost'>
+			        {formatMessage({ id: 'common.action_delete' })}
+			        </Button>
 		      </Popconfirm>
         </span>
 			),
 		}];
-		const { modalOpened, activeEntity, modalLoading } = this.state;
+		const { modalOpened, activeEntity, modalLoading, relatedPersonsCount } = this.state;
 
 		return (
 			<section className="Patients">
@@ -336,16 +421,20 @@ class Patients extends Component {
 					formatMessage={formatMessage}
 					onUploadFileChange={this.onUploadFileChange}
 					values={activeEntity}
+					relatedPersonsCount={relatedPersonsCount}
+					addRelatedPerson={this.addRelatedPerson}
 				/>
 				<div className="Dashboard__Details">
-					<h1 className="Dashboard__Header">Patients</h1>
+					<h1 className="Dashboard__Header">
+						{ formatMessage({ id: 'Patients.header' }) }
+						</h1>
 					<div className="Dashboard__Actions">
 						<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
 							<ClinicsSelector/>
 						</CheckAccess>
 						<Button type="primary" onClick={ this.showModal } disabled={ !currentClinic.id }>
 							<Icon type="plus-circle-o"/>
-							Create a Patient
+							{ formatMessage({ id: 'Patients.create_button' }) }
 						</Button>
 					</div>
 				</div>
@@ -359,7 +448,7 @@ const PatientsApollo = withApollo(compose(
 	graphql(GET_PATIENTS_QUERY, {
 		options: ({ currentClinic }) => ({
 			variables: {
-				clinic_id: currentClinic.id || 0
+				clinic_id: currentClinic.id
 			}
 		})
 	}),

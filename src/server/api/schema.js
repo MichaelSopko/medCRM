@@ -6,7 +6,7 @@ import { GraphQLScalarType } from 'graphql';
 import { Kind } from 'graphql/language';
 import GraphQLJSON from 'graphql-type-json';
 import CustomGraphQLDateType from 'graphql-custom-datetype';
-import GraphQLDateType from './GraphQLMomentMySQL';
+import GraphQLMomentMySQL from './GraphQLMomentMySQL';
 
 import log from '../../log'
 import schema from './schema_def.graphqls'
@@ -14,7 +14,7 @@ import schema from './schema_def.graphqls'
 export const pubsub = new PubSub();
 
 async function checkAccess(ctx, role) {
-	const user = await ctx.Users.getUser({ id: ctx.currentUser.id });
+	const user = await ctx.Users.findOne(ctx.currentUser.id);
 	const isOk = checkAccessLogic(user.role, role);
 	if (isOk) {
 		return user;
@@ -42,7 +42,7 @@ const resolvers = {
 			return context.Treatments.getSeries(clinic_id);
 		},
 		currentUser(ignored1, ignored2, context) {
-			return context.Users.getUser({ id: context.currentUser.id });
+			return context.Users.findOne(context.currentUser.id);
 		}
 	},
 	Mutation: {
@@ -186,7 +186,7 @@ const resolvers = {
 			return context.Users.getUsers(ids);
 		}
 	},
-	Date: GraphQLDateType
+	Date: GraphQLMomentMySQL
 };
 
 const executableSchema = makeExecutableSchema({

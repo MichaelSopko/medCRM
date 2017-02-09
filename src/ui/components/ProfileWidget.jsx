@@ -1,11 +1,15 @@
 import React, { Component, PropTypes } from 'react'
 import { Link } from 'react-router'
 import { Button, Icon } from 'antd'
+import { connect } from 'react-redux'
 
 import './ProfileWidget.scss'
 
 const defaultAvatar = require('../../../assets/images/default_avatar.png');
 
+@connect(
+	({ currentUser }) => ({ currentUser })
+)
 class ProfileWidget extends Component {
 
 	static contextTypes = {
@@ -14,9 +18,8 @@ class ProfileWidget extends Component {
 	};
 
 	render() {
-		const { currentUser: { loading, first_name, last_name, login, role, logout } } = this.context;
+		const { currentUser: { loading, first_name, last_name, login, role, email } } = this.props;
 		const formatMessage = this.context.intl.formatMessage;
-		const fullName = `${first_name} ${last_name}`;
 
 		return (
 			<div className="ProfileWidget">
@@ -25,17 +28,17 @@ class ProfileWidget extends Component {
 				</div>
 				{ !loading && <div className="ProfileWidget__Content">
 					<div className="ProfileWidget__Name">
-						{ fullName.length > 1 ? fullName : login }
+						{ !!first_name ? `${first_name} ${last_name}` : (email || login) }
 						<span className="ProfileWidget__Role">{ formatMessage({ id: `roles.${role}` }) }</span>
 					</div>
 
 					<div className="ProfileWidget__Actions">
 						<Button.Group size="small">
 							<Button type="ghost" disabled>
-								<Icon type="setting"/>Settings
+								<Icon type="setting"/>{ formatMessage({ id: 'ProfileWidget.settings' }) }
 							</Button>
-							<Button type="ghost" onClick={ logout }>
-								<Icon type="logout"/>Log out
+							<Button type="ghost" onClick={ this.context.currentUser.logout }>
+								<Icon type="logout"/>{ formatMessage({ id: 'ProfileWidget.logout' }) }
 							</Button>
 						</Button.Group>
 					</div>

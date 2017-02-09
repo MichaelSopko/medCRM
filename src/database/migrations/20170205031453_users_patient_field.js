@@ -1,8 +1,7 @@
 export function up(knex, Promise) {
 	return Promise.all([
-		// knex.schema.raw('ALTER TABLE users ADD related_persons JSON;') // because knex doesn't support mysql json type yet
-
 		knex.schema.table('users', (table) => {
+			// table.specificType('related_persons', 'JSON');
 			table.string('related_persons');
 		}),
 	]);

@@ -3,16 +3,22 @@ import { withApollo, graphql } from 'react-apollo'
 import GET_CURRENT_USER_QUERY from '../graphql/UserGetCurrent.graphql'
 import { connect } from 'react-redux';
 
+
 @graphql(GET_CURRENT_USER_QUERY)
 @withApollo
 @connect(
-	(state) => ({ currentClinic: state.currentClinic }),
+	false,
 	(dispatch) => ({
-		setCurrentClinic(clinic)
-		{
+		setCurrentClinic(clinic) {
 			dispatch({
 				type: 'SET_CLINIC',
 				clinic
+			});
+		},
+		setCurrentUser(user) {
+			dispatch({
+				type: 'SET_USER',
+				user
 			});
 		}
 	}),
@@ -32,42 +38,47 @@ export default class CurrentUserProvider extends Component {
 	};
 
 	getChildContext() {
-		const { data: { loading = false, currentUser = null } } = this.props;
 		return {
 			currentUser: {
-				...currentUser,
-				isLogged: !!currentUser,
 				logout: ::this.logout,
-				setToken: ::this.setToken,
-				loading
+				setToken: ::this.setToken
 			}
 		}
 	}
 
 	setToken(token) {
 		localStorage.setItem('token', token);
-		this.props.client.resetStore();
+		this.props.data.refetch();
 	}
 
 	logout() {
-		// localStorage.removeItem('token');
+		localStorage.removeItem('token');
 		if (this.context.router.location.pathname !== '/login') {
 			this.context.router.push('/login');
-			this.props.client.resetStore();
+			this.props.data.refetch();
+			this.props.setCurrentClinic(null);
+			this.props.setCurrentUser(null);
 		}
 	}
 
 	componentWillReceiveProps(newProps) {
+		const { data: { loading = false, currentUser = null, error = null } } = newProps;
+
 		if (newProps.data.error) {
-			console.error('CurrentUserProvider', newProps.data.error);
 			this.logout();
 			return false;
 		}
-		if (newProps.data.currentUser) {
-			this.setState({});
+		if (currentUser) {
+			this.props.setCurrentUser({
+				...currentUser,
+				loading: false
+			});
 		}
-		if (newProps.data.currentUser && newProps.data.currentUser.clinic) {
-			this.props.setCurrentClinic(newProps.data.currentUser.clinic);
+		if (!currentUser && loading) {
+			this.props.setCurrentUser({ loading });
+		}
+		if (currentUser && currentUser.clinic) {
+			this.props.setCurrentClinic(currentUser.clinic);
 		}
 	}
 

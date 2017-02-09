@@ -18,7 +18,7 @@ function authCheck(router, replace) {
 
 export default (
 	<Route path="/" component={App} onEnter={authCheck}>
-		<IndexRedirect to="/dashboard/clinics"/>
+		<IndexRedirect to="/dashboard"/>
 		<Route path="login" component={Login}/>
 		<Route path="dashboard" component={Dashboard}>
 			<Route path="clinics" component={Clinics}/>

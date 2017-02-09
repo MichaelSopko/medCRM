@@ -99,7 +99,7 @@ type PatientRelatedPerson {
 }
 
 input PatientRelatedPersonInput {
-	type: PatientRelatedPersonType
+	type: PatientRelatedPersonType!
 	description: String
 	phone: String!
 	email: String
@@ -130,6 +130,7 @@ type CurrentUser implements User {
 	role: Role!,
 	first_name: String,
 	last_name: String,
+	email: String,
 	clinic: Clinic
 }
 

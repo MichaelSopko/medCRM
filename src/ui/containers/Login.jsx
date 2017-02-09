@@ -8,6 +8,7 @@ class Login extends Component {
 	static contextTypes = {
 		router: PropTypes.object.isRequired,
 		currentUser: PropTypes.object.isRequired,
+		intl: PropTypes.object.isRequired
 	};
 
 	state = {
@@ -29,13 +30,13 @@ class Login extends Component {
 						}
 					}).then(r => r.json());
 
+					this.setState({ loading: false });
 					if (resp.token) {
 						this.context.currentUser.setToken(resp.token);
-						this.context.router.push('/dashboard/clinics');
+						this.context.router.push('/dashboard');
 					}
 				} catch (e) {
 					console.log(e);
-				} finally {
 					this.setState({ loading: false });
 				}
 			}
@@ -45,28 +46,29 @@ class Login extends Component {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		const { loading } = this.state;
+		const formatMessage = this.context.intl.formatMessage;
 
 		return (
 			<main className="Login">
 				<Form onSubmit={this.handleSubmit} className="Login__Window">
-					<h1 className="Login__Header">Authentication</h1>
+					<h1 className="Login__Header">{ formatMessage({ id: 'Login.header' }) }</h1>
 					<Form.Item>
 						{getFieldDecorator('login', {
-							rules: [{ required: true, message: 'Please input your email!' }],
+							rules: [{ required: true, message: formatMessage({ id: 'Login.field_email_error' }) }],
 						})(
-							<Input addonBefore={<Icon type="user"/>} placeholder="Email"/>
+							<Input addonBefore={<Icon type="user"/>} placeholder={ formatMessage({ id: 'Login.field_email' }) }/>
 						)}
 					</Form.Item>
 					<Form.Item>
 						{getFieldDecorator('password', {
 							rules: [{ required: true, message: 'Please input your Password!' }],
 						})(
-							<Input addonBefore={<Icon type="lock"/>} type="password" placeholder="Password"/>
+							<Input addonBefore={<Icon type="lock"/>} type="password" placeholder={ formatMessage({ id: 'Login.field_password' }) }/>
 						)}
 					</Form.Item>
 					<Form.Item>
 						<Button type="primary" size="large" htmlType="submit" className="Login__Button" loading={loading}>
-							Log in
+							{ formatMessage({ id: 'Login.login_button' }) }
 						</Button>
 					</Form.Item>
 				</Form>

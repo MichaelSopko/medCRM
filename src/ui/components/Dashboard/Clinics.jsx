@@ -14,7 +14,7 @@ import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm } from 'a
 
 const EntityForm = Form.create()(
 	(props) => {
-		const { visible, onCancel, onSubmit, form, loading, values = {} } = props;
+		const { visible, onCancel, onSubmit, form, loading, values = {}, formatMessage } = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
 			labelCol: { span: 6 },
@@ -23,22 +23,22 @@ const EntityForm = Form.create()(
 		const isEditing = !!Object.keys(values).length;
 
 		return (
-			<Modal title={ `${isEditing ? 'Edit' : 'Create'} Clinic` }
+			<Modal title={ formatMessage({ id: isEditing ? 'Clinics.edit_header' : 'Clinics.create_header' }) }
 			       visible={visible}
-			       okText={ isEditing ? 'Edit' : 'Create' }
+			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
 			       onCancel={onCancel}
 			       onOk={onSubmit}
 			       confirmLoading={loading}>
 				<Form>
 					<Form.Item
 						{...formItemLayout}
-						label="Name"
+						label={formatMessage({ id: 'common.field_name' })}
 						hasFeedback
 					>
 						{getFieldDecorator('name', {
 							initialValue: values.name,
 							rules: [{
-								required: true, message: 'Please input clinic name',
+								required: true, message: formatMessage({ id: 'common.field_name_error' }),
 							}],
 						})(
 							<Input />
@@ -46,13 +46,13 @@ const EntityForm = Form.create()(
 					</Form.Item>
 					<Form.Item
 						{...formItemLayout}
-						label="Address"
+						label={formatMessage({ id: 'common.field_address' })}
 						hasFeedback
 					>
 						{getFieldDecorator('address', {
 							initialValue: values.address,
 							rules: [{
-								required: true, message: 'Please input clinic address',
+								required: true, message: formatMessage({ id: 'common.field_address_error' }),
 							}],
 						})(
 							<Input />
@@ -60,14 +60,14 @@ const EntityForm = Form.create()(
 					</Form.Item>
 					<Form.Item
 						{...formItemLayout}
-						label="Phone"
+						label={formatMessage({ id: 'common.field_phone' })}
 						hasFeedback
-					  type="tel"
+						type="tel"
 					>
 						{getFieldDecorator('phone', {
 							initialValue: values.phone,
 							rules: [{
-								number: true, message: 'Please input a valid phone number'
+								number: true, message: formatMessage({ id: 'common.field_phone_error' })
 							}],
 						})(
 							<Input />
@@ -75,7 +75,7 @@ const EntityForm = Form.create()(
 					</Form.Item>
 					<Form.Item
 						{...formItemLayout}
-						label="Fax"
+						label={formatMessage({ id: 'common.field_fax' })}
 						hasFeedback
 					>
 						{getFieldDecorator('fax', {
@@ -87,13 +87,13 @@ const EntityForm = Form.create()(
 					</Form.Item>
 					<Form.Item
 						{...formItemLayout}
-						label="Email"
+						label={formatMessage({ id: 'common.field_email' })}
 						hasFeedback
 					>
 						{getFieldDecorator('email', {
 							initialValue: values.email,
 							rules: [{
-								email: true, message: 'Please input valid email address',
+								email: true, message: formatMessage({ id: 'common.field_email_error' }),
 							}],
 						})(
 							<Input />
@@ -106,6 +106,10 @@ const EntityForm = Form.create()(
 );
 
 class Clinics extends Component {
+
+	static contextTypes = {
+		intl: PropTypes.object.isRequired
+	};
 
 	static propTypes = {
 		data: PropTypes.object
@@ -152,36 +156,40 @@ class Clinics extends Component {
 
 	render() {
 		const { data: { loading, clinics }, deleteClinic } = this.props;
+		const formatMessage = this.context.intl.formatMessage;
 
 		const columns = [{
-			title: 'Name',
+			title: formatMessage({ id: 'common.field_name' }),
 			dataIndex: 'name',
 			key: 'name',
 		}, {
-			title: 'Address',
+			title: formatMessage({ id: 'common.field_address' }),
 			dataIndex: 'address',
 			key: 'address',
-		},  {
-			title: 'Phone',
+		}, {
+			title: formatMessage({ id: 'common.field_phone' }),
 			dataIndex: 'phone',
 			key: 'phone',
 			render: text => <a href={ `tel:${text}` }>{ text }</a>
-		},  {
-			title: 'Email',
+		}, {
+			title: formatMessage({ id: 'common.field_email' }),
 			dataIndex: 'email',
 			key: 'email',
 			render: text => <a href={ `mailto:${text}` }>{ text }</a>
 		}, {
-			title: 'Action',
+			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
 			render: (text, record) => (
 				<span>
-		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>Edit</Button>
+		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
+			      {formatMessage({ id: 'common.action_edit' })}
+		      </Button>
 					<span className="ant-divider"></span>
-		      <Popconfirm title="Are you sure?" onConfirm={ () => {
+		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
 			      deleteClinic(record)
-		      } } okText="Yes" cancelText="No">
-		        <Button size="small" type='ghost'>Delete</Button>
+		      } } okText={formatMessage({ id: 'common.confirm_yes' })}
+		                  cancelText={formatMessage({ id: 'common.confirm_no' })}>
+		        <Button size="small" type='ghost'>{formatMessage({ id: 'common.action_delete' })}</Button>
 		      </Popconfirm>
         </span>
 			),
@@ -198,14 +206,17 @@ class Clinics extends Component {
 					loading={loading}
 					onCancel={this.handleCancel}
 					onSubmit={this.handleFormSubmit}
-				  values={activeEntity}
+					values={activeEntity}
+					formatMessage={formatMessage}
 				/>
 				<div className="Dashboard__Details">
-					<h1 className="Dashboard__Header">Clinics</h1>
+					<h1 className="Dashboard__Header">
+						{ formatMessage({ id: 'Clinics.header' }) }
+					</h1>
 					<div className="Dashboard__Actions">
 						<Button type="primary" onClick={ this.showModal }>
 							<Icon type="plus-circle-o"/>
-							Create a Clinic
+							{ formatMessage({ id: 'Clinics.create_button' }) }
 						</Button>
 					</div>
 				</div>

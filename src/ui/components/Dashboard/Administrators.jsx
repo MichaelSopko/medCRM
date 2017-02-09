@@ -15,7 +15,7 @@ import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select }
 
 const EntityForm = Form.create()(
 	(props) => {
-		const { visible, onCancel, onSubmit, form, loading, values = {}, clinics = [] } = props;
+		const { visible, onCancel, onSubmit, form, loading, values = {}, clinics = [], formatMessage } = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
 			labelCol: { span: 6 },
@@ -24,46 +24,34 @@ const EntityForm = Form.create()(
 		const isEditing = !!Object.keys(values).length;
 
 		return (
-			<Modal title={ `${isEditing ? 'Edit' : 'Create'} Administrator` }
+			<Modal title={ formatMessage({ id: isEditing ? 'Administrators.edit_header' : 'Administrators.create_header' }) }
 			       visible={visible}
-			       okText={ isEditing ? 'Edit' : 'Create' }
+			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
 			       onCancel={onCancel}
 			       onOk={onSubmit}
 			       confirmLoading={loading}>
 				<Form>
 					{ !isEditing && <Form.Item
 						{...formItemLayout}
-						label="Email"
+						label={formatMessage({ id: 'common.field_email' })}
 						hasFeedback
 					>
 						{getFieldDecorator('email', {
 							rules: [{
-								type: 'email', required: true, message: 'Please input email',
+								type: 'email', required: true, message: formatMessage({ id: 'common.field_email_error' }),
 							}],
 						})(
 							<Input />
 						)}
 					</Form.Item> }
-					{ /* <Form.Item
-					 {...formItemLayout}
-					 label="Name"
-					 hasFeedback
-					 >
-					 {getFieldDecorator('first_name', {
-					 initialValue: values.first_name,
-					 rules: [],
-					 })(
-					 <Input />
-					 )}
-					 </Form.Item> */ }
 					<Form.Item
 						{...formItemLayout}
-						label={ isEditing ? 'New password' : 'Password' }
+						label={ formatMessage({ id: isEditing ? 'common.field_new_password' : 'common.field_password' }) }
 						hasFeedback
 					>
 						{getFieldDecorator('password', {
 							rules: [{
-								required: !isEditing, message: 'Please input password'
+								required: !isEditing, message: formatMessage({ id: 'common.field_password_error' })
 							}
 							],
 						})(
@@ -72,12 +60,12 @@ const EntityForm = Form.create()(
 					</Form.Item>
 					{ !isEditing && <Form.Item
 						{...formItemLayout}
-						label="Clinic"
+						label={formatMessage({ id: 'Administrators.field_clinic' })}
 						hasFeedback
 					>
 						{getFieldDecorator('clinic_id', {
 							rules: [{
-								required: true, message: 'Please choose a clinic',
+								required: true, message: formatMessage({ id: 'Administrators.field_clinic_error' }),
 							}],
 						})(
 							<Select>
@@ -93,6 +81,10 @@ const EntityForm = Form.create()(
 );
 
 class Administrators extends Component {
+
+	static contextTypes = {
+		intl: PropTypes.object.isRequired
+	};
 
 	static propTypes = {
 		data: PropTypes.object
@@ -150,26 +142,31 @@ class Administrators extends Component {
 
 	render() {
 		const { data: { loading, administrators, clinics }, deleteAdministrator } = this.props;
+		const formatMessage = this.context.intl.formatMessage;
 
 		const columns = [{
-			title: 'Email',
+			title: formatMessage({ id: 'common.field_email' }),
 			dataIndex: 'email',
 			key: 'email',
 		}, {
-			title: 'Clinic',
+			title: formatMessage({ id: 'common.field_name' }),
 			dataIndex: 'clinic.name',
 			key: 'name',
 		}, {
-			title: 'Action',
+			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
 			render: (text, record) => (
 				<span>
-		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>Edit</Button>
-					<span className="ant-divider"></span>
-		      <Popconfirm title="Are you sure?" onConfirm={ () => {
+		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
+			      {formatMessage({ id: 'common.action_edit' })}
+		      </Button>
+					<span className="ant-divider"/>
+		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
 			      deleteAdministrator(record)
-		      } } okText="Yes" cancelText="No">
-		        <Button size="small" type='ghost'>Delete</Button>
+		      } } okText={formatMessage({ id: 'common.confirm_yes' })} cancelText={formatMessage({ id: 'common.confirm_no' })}>
+		        <Button size="small" type='ghost'>
+			        {formatMessage({ id: 'common.action_delete' })}
+			        </Button>
 		      </Popconfirm>
         </span>
 			),
@@ -188,13 +185,16 @@ class Administrators extends Component {
 					onSubmit={this.handleFormSubmit}
 					clinics={clinics}
 					values={activeEntity}
+					formatMessage={formatMessage}
 				/>
 				<div className="Dashboard__Details">
-					<h1 className="Dashboard__Header">Administrators</h1>
+					<h1 className="Dashboard__Header">
+						{ formatMessage({ id: 'Administrators.header' }) }
+						</h1>
 					<div className="Dashboard__Actions">
 						<Button type="primary" onClick={ this.showModal }>
 							<Icon type="plus-circle-o"/>
-							Create an Administrator
+							{ formatMessage({ id: 'Administrators.create_button' }) }
 						</Button>
 					</div>
 				</div>

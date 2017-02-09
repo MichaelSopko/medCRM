@@ -18,7 +18,7 @@ import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, 
 
 const EntityForm = Form.create()(
 	(props) => {
-		const { visible, onCancel, onSubmit, form, loading, values = {} } = props;
+		const { visible, onCancel, onSubmit, form, loading, values = {}, formatMessage } = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
 			labelCol: { span: 6 },
@@ -27,64 +27,70 @@ const EntityForm = Form.create()(
 		const isEditing = !!Object.keys(values).length;
 
 		return (
-			<Modal title={ `${isEditing ? 'Edit' : 'Create'} Therapist` }
+			<Modal title={ formatMessage({ id: isEditing ? 'Therapists.edit_header' : 'Therapists.create_header' }) }
 			       visible={visible}
-			       okText={ isEditing ? 'Edit' : 'Create' }
+			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
 			       onCancel={onCancel}
 			       onOk={onSubmit}
 			       confirmLoading={loading}>
 				<Form>
 					<Form.Item
 						{...formItemLayout}
-						label="ID"
+						label={formatMessage({ id: 'common.field_id_number' })}
 						hasFeedback
 					>
 						{getFieldDecorator('id_number', {
 							initialValue: values.id_number,
 							rules: [{
-								type: 'regexp', pattern: /^\d+$/, required: true, message: 'Please input ID',
+								type: 'regexp',
+								pattern: /^\d+$/,
+								required: true,
+								message: formatMessage({ id: 'common.field_id_number_error' }),
 							}],
 						})(
-							<Input type="number" />
+							<Input type="number"/>
 						)}
 					</Form.Item>
 					<Form.Item
 						{...formItemLayout}
-						label="Licence number"
+						label={formatMessage({ id: 'common.field_licence' })}
 						hasFeedback
 					>
 						{getFieldDecorator('license_number', {
 							initialValue: values.license_number,
 							rules: [{
-								type: 'regexp', pattern: /^\d+$/, required: true, message: 'Please license number',
+								type: 'regexp',
+								pattern: /^\d+$/,
+								required: true,
+								message: formatMessage({ id: 'common.field_licence_error' }),
 							}],
 						})(
-							<Input type="number" />
+							<Input type="number"/>
 						)}
 					</Form.Item>
 					{ <Form.Item
 						{...formItemLayout}
-						label="Email"
+						label={formatMessage({ id: 'common.field_email' })}
 						hasFeedback
 					>
 						{getFieldDecorator('email', {
 							initialValue: values.email,
 							rules: [{
-								type: 'email', required: true, message: 'Please input email',
+								type: 'email', required: true, message: formatMessage({ id: 'common.field_email_error' }),
 							}],
 						})(
-							<Input type="email" />
+							<Input type="email"/>
 						)}
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="First name"
+						label={formatMessage({ id: 'common.field_first_name' })}
 						hasFeedback
 					>
 						{getFieldDecorator('first_name', {
 							initialValue: values.first_name,
 							rules: [{
-								required: true, message: 'Please input first name',
+								required: true, message: formatMessage({ id: 'common.field_first_name_error' }),
 							}],
 						})(
 							<Input />
@@ -92,13 +98,13 @@ const EntityForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="Last name"
+						label={formatMessage({ id: 'common.field_last_name' })}
 						hasFeedback
 					>
 						{getFieldDecorator('last_name', {
 							initialValue: values.last_name,
 							rules: [{
-								required: true, message: 'Please input last name',
+								required: true, message: formatMessage({ id: 'common.field_last_name_error' }),
 							}],
 						})(
 							<Input />
@@ -106,13 +112,13 @@ const EntityForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="Phone"
+						label={formatMessage({ id: 'common.field_phone' })}
 						hasFeedback
 					>
 						{getFieldDecorator('phone', {
 							initialValue: values.phone,
 							rules: [{
-								required: true, message: 'Please input phone',
+								required: true, message: formatMessage({ id: 'common.field_phone_error' }),
 							}],
 						})(
 							<Input />
@@ -120,26 +126,26 @@ const EntityForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="Birth date"
+						label={formatMessage({ id: 'common.field_birth_date' })}
 						hasFeedback
 					>
 						{getFieldDecorator('birth_date', {
 							initialValue: moment(values.birth_date),
 							rules: [{
-								required: true, message: 'Please input date',
+								required: true, message: formatMessage({ id: 'common.field_birth_date_error' }),
 							}],
 						})(
-							<DatePicker locale="en-US"/>
+							<DatePicker/>
 						)}
 					</Form.Item> }
 					<Form.Item
 						{...formItemLayout}
-						label={ isEditing ? 'New password' : 'Password' }
+						label={ formatMessage({ id: isEditing ? 'common.field_new_password' : 'common.field_password' }) }
 						hasFeedback
 					>
 						{getFieldDecorator('password', {
 							rules: [{
-								required: !isEditing, message: 'Please input password'
+								required: !isEditing, message: formatMessage({ id: 'common.field_password_error' })
 							}
 							],
 						})(
@@ -153,6 +159,10 @@ const EntityForm = Form.create()(
 );
 
 class Therapists extends Component {
+
+	static contextTypes = {
+		intl: PropTypes.object.isRequired
+	};
 
 	static propTypes = {
 		data: PropTypes.object
@@ -212,32 +222,37 @@ class Therapists extends Component {
 
 	render() {
 		const { data: { loading, therapists }, deleteTherapist, currentClinic } = this.props;
+		const formatMessage = this.context.intl.formatMessage;
 
 		const columns = [{
-			title: 'Name',
+			title: formatMessage({ id: 'common.field_name' }),
 			key: 'name',
 			render: (text, record) => <span>{record.first_name} {record.last_name}</span>
 		}, {
-			title: 'Phone',
+			title: formatMessage({ id: 'common.field_phone' }),
 			dataIndex: 'phone',
 			key: 'phone',
 			render: text => <a href={ `tel:${text}` }>{ text }</a>
 		}, {
-			title: 'Email',
+			title: formatMessage({ id: 'common.field_email' }),
 			dataIndex: 'email',
 			key: 'email',
 			render: text => <a href={ `mailto:${text}` }>{ text }</a>
 		}, {
-			title: 'Action',
+			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
 			render: (text, record) => (
 				<span>
-		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>Edit</Button>
-					<span className="ant-divider"></span>
-		      <Popconfirm title="Are you sure?" onConfirm={ () => {
+		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
+			      {formatMessage({ id: 'common.action_edit' })}
+		      </Button>
+					<span className="ant-divider"/>
+		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
 			      deleteTherapist(record)
-		      } } okText="Yes" cancelText="No">
-		        <Button size="small" type='ghost'>Delete</Button>
+		      } } okText={formatMessage({ id: 'common.confirm_yes' })} cancelText={formatMessage({ id: 'common.confirm_no' })}>
+		        <Button size="small" type='ghost'>
+			        {formatMessage({ id: 'common.action_delete' })}
+			        </Button>
 		      </Popconfirm>
         </span>
 			),
@@ -255,16 +270,19 @@ class Therapists extends Component {
 					onCancel={this.handleCancel}
 					onSubmit={this.handleFormSubmit}
 					values={activeEntity}
+					formatMessage={formatMessage}
 				/>
 				<div className="Dashboard__Details">
-					<h1 className="Dashboard__Header">Therapists</h1>
+					<h1 className="Dashboard__Header">
+						{ formatMessage({ id: 'Therapists.header' }) }
+						</h1>
 					<div className="Dashboard__Actions">
 						<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
 							<ClinicsSelector/>
 						</CheckAccess>
 						<Button type="primary" onClick={ this.showModal } disabled={ !currentClinic.id }>
 							<Icon type="plus-circle-o"/>
-							Create a Therapist
+							{ formatMessage({ id: 'Therapists.create_button' }) }
 						</Button>
 					</div>
 				</div>
@@ -277,10 +295,10 @@ class Therapists extends Component {
 const TherapistsApollo = withApollo(compose(
 	graphql(GET_THERAPISTS_QUERY, {
 		options: ({ currentClinic }) => ({
-				variables: {
-					clinic_id: currentClinic.id || 0
-				}
-			})
+			variables: {
+				clinic_id: currentClinic.id
+			}
+		})
 	}),
 	graphql(ADD_THERAPIST_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
@@ -322,7 +340,6 @@ const TherapistsApollo = withApollo(compose(
 		})
 	}),
 )(Therapists));
-
 
 
 @connect((state) => ({ currentClinic: state.currentClinic }))

@@ -1,7 +1,7 @@
 export function up(knex, Promise) {
 	return Promise.all([
 		knex.schema.table('users', (table) => {
-			table.integer('id_number').unique().unsigned();
+			table.bigInteger('id_number').unique().unsigned();
 		}),
 	]);
 }

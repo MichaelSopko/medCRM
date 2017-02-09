@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { Link } from 'react-router'
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 import { graphql, compose, withApollo } from 'react-apollo'
 import ApolloClient from 'apollo-client'
 import gql from 'graphql-tag'
@@ -17,7 +17,9 @@ import EDIT_SERIES_MUTATION from '../../graphql/TreatmentSeriesEditMutation.grap
 import ROLES from '../../../helpers/constants/roles'
 import ClinicsSelector from '../ClinicsSelector'
 import CheckAccess from '../helpers/CheckAccess'
-import moment from 'moment';
+import moment from 'moment'
+
+import './Treatments.scss'
 
 import {
 	Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, DatePicker, InputNumber
@@ -25,7 +27,7 @@ import {
 
 const SeriesForm = Form.create()(
 	(props) => {
-		const { visible, onCancel, onSubmit, form, loading, values = {} } = props;
+		const { visible, onCancel, onSubmit, form, loading, values = {}, formatMessage } = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
 			labelCol: { span: 6 },
@@ -34,16 +36,16 @@ const SeriesForm = Form.create()(
 		const isEditing = !!Object.keys(values).length;
 
 		return (
-			<Modal title={ `${isEditing ? 'Edit' : 'Create'} Series` }
+			<Modal title={ formatMessage({ id: isEditing ? 'Treatments.edit_header' : 'Treatments.create_header' }) }
 			       visible={visible}
-			       okText={ isEditing ? 'Edit' : 'Create' }
+			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
 			       onCancel={onCancel}
 			       onOk={onSubmit}
 			       confirmLoading={loading}>
 				<Form>
 					{ <Form.Item
 						{...formItemLayout}
-						label="Name"
+						label={formatMessage({ id: 'common.field_name' })}
 						hasFeedback
 					>
 						{getFieldDecorator('name', {
@@ -55,13 +57,13 @@ const SeriesForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="Number"
+						label={formatMessage({ id: 'Treatments.field_treatments_number' })}
 						hasFeedback
 					>
 						{getFieldDecorator('treatments_number', {
 							initialValue: values.treatments_number || 1,
 							rules: [{
-								required: true, message: 'Please input treatments number'
+								required: true, message: formatMessage({ id: 'Treatments.field_treatments_number_error' })
 							}],
 						})(
 							<InputNumber min={1}/>
@@ -75,7 +77,7 @@ const SeriesForm = Form.create()(
 
 const TreatmentForm = Form.create()(
 	(props) => {
-		const { visible, onCancel, onSubmit, form, loading, therapists, patients, values = {} } = props;
+		const { visible, onCancel, onSubmit, form, loading, therapists, patients, values = {}, formatMessage } = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
 			labelCol: { span: 6 },
@@ -84,9 +86,9 @@ const TreatmentForm = Form.create()(
 		const isEditing = !!Object.keys(values).length;
 
 		return (
-			<Modal title={ `${isEditing ? 'Edit' : 'Create'} Treatment` }
+			<Modal title={ formatMessage({ id: isEditing ? 'Treatments.edit_header' : 'Treatments.create_header' }) }
 			       visible={visible}
-			       okText={ isEditing ? 'Edit' : 'Create' }
+			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
 			       onCancel={onCancel}
 			       onOk={onSubmit}
 			       width={600}
@@ -94,7 +96,7 @@ const TreatmentForm = Form.create()(
 				<Form>
 					{ <Form.Item
 						{...formItemLayout}
-						label="Target"
+						label={formatMessage({ id: 'Treatments.field_target' })}
 						hasFeedback
 					>
 						{getFieldDecorator('target', {
@@ -106,11 +108,11 @@ const TreatmentForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="Method"
+						label={formatMessage({ id: 'Treatments.field_method' })}
 						hasFeedback
 					>
 						{getFieldDecorator('method', {
-							initialValue: values.target,
+							initialValue: values.method,
 							rules: [],
 						})(
 							<Input />
@@ -118,11 +120,11 @@ const TreatmentForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="Process"
+						label={formatMessage({ id: 'Treatments.field_process' })}
 						hasFeedback
 					>
 						{getFieldDecorator('process', {
-							initialValue: values.target,
+							initialValue: values.process,
 							rules: [],
 						})(
 							<Input />
@@ -130,11 +132,11 @@ const TreatmentForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="Parents guidance"
+						label={formatMessage({ id: 'Treatments.field_parents_guidance' })}
 						hasFeedback
 					>
 						{getFieldDecorator('parents_guidance', {
-							initialValue: values.target,
+							initialValue: values.parents_guidance,
 							rules: [],
 						})(
 							<Input type="textarea" rows={3}/>
@@ -142,11 +144,11 @@ const TreatmentForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="Next treatment remark"
+						label={formatMessage({ id: 'Treatments.field_next_treatment_remark' })}
 						hasFeedback
 					>
 						{getFieldDecorator('next_treatment_remark', {
-							initialValue: values.target,
+							initialValue: values.next_treatment_remark,
 							rules: [],
 						})(
 							<Input type="textarea" rows={3}/>
@@ -154,30 +156,27 @@ const TreatmentForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="Date and time"
+						label={formatMessage({ id: 'Treatments.field_datetime' })}
 						hasFeedback
 					>
 						{getFieldDecorator('date', {
 							initialValue: moment(values.date),
-							rules: [{
-								required: true, message: 'Please input date and time',
-							}],
+							rules: [],
 						})(
 							<DatePicker
 								showTime
-								format="YYYY-MM-DD HH:mm:ss"
-								locale="en"/>
+								format="YYYY-MM-DD HH:mm:ss"/>
 						)}
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="Select patients"
+						label={formatMessage({ id: 'Treatments.field_patients' })}
 						hasFeedback
 					>
 						{getFieldDecorator('patient_ids', {
-							initialValue: values.patients && values.patients.map(({ id }) => id),
+							initialValue: values.patients && values.patients.map(({ id }) => id.toString()),
 							rules: [{
-								type: 'array', required: true, message: 'Please at least one ',
+								type: 'array', required: true, message: formatMessage({ id: 'Treatments.field_patients_error' }),
 							}],
 						})(
 							<Select multiple>
@@ -190,13 +189,13 @@ const TreatmentForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="Select therapists"
+						label={formatMessage({ id: 'Treatments.field_therapists' })}
 						hasFeedback
 					>
 						{getFieldDecorator('therapist_ids', {
-							initialValue: values.therapists && values.therapists.map(({ id }) => id),
+							initialValue: values.therapists && values.therapists.map(({ id }) => id.toString()),
 							rules: [{
-								type: 'array', required: true, message: 'Please at least one ',
+								type: 'array', required: true, message: formatMessage({ id: 'Treatments.field_therapists_error' }),
 							}],
 						})(
 							<Select multiple>
@@ -213,7 +212,7 @@ const TreatmentForm = Form.create()(
 	}
 );
 
-const TreatmentsTable = ({ treatments, deleteTreatment, editTreatment }) => {
+const TreatmentsTable = ({ treatments, deleteTreatment, editTreatment, formatMessage }) => {
 	const columns = [
 		{ title: 'Target', dataIndex: 'target', key: 'target' },
 		{ title: 'Method', dataIndex: 'method', key: 'method' },
@@ -235,12 +234,13 @@ const TreatmentsTable = ({ treatments, deleteTreatment, editTreatment }) => {
 			key: 'action',
 			render: (text, record) => (
 				<span>
-		      <a onClick={ editTreatment(record) }>Edit</a>
+		      <a onClick={ editTreatment(record) }>{formatMessage({ id: 'common.action_edit' })}</a>
 					<span className="ant-divider"></span>
-		      <Popconfirm title="Are you sure?" onConfirm={ () => {
+		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
 			      deleteTreatment(record)
-		      } } okText="Yes" cancelText="No">
-		        <a>Delete</a>
+		      } } okText={formatMessage({ id: 'common.confirm_yes' })}
+		                  cancelText={formatMessage({ id: 'common.confirm_no' })}>
+		        <a>{formatMessage({ id: 'common.action_delete' })}</a>
 		      </Popconfirm>
         </span>
 			),
@@ -254,6 +254,10 @@ const TreatmentsTable = ({ treatments, deleteTreatment, editTreatment }) => {
 
 
 class Treatments extends Component {
+
+	static contextTypes = {
+		intl: PropTypes.object.isRequired
+	};
 
 	static propTypes = {
 		data: PropTypes.object
@@ -365,32 +369,41 @@ class Treatments extends Component {
 	};
 
 	render() {
-		const { data: { loading, treatmentSeries = [], patients = [], therapists = [] }, deleteTreatment, currentClinic } = this.props;
+		const {
+			data: { loading, treatmentSeries = [], patients = [], therapists = [] },
+			deleteTreatment, currentClinic
+		} = this.props;
+		const formatMessage = this.context.intl.formatMessage;
 
 		const columns = [{
-			title: 'Name',
+			title: formatMessage({ id: 'common.field_name' }),
 			key: 'name',
 			dataIndex: 'name'
 		}, {
-			title: 'Treatments number',
+			title: formatMessage({ id: 'Treatments.field_treatments_number' }),
 			key: 'treatments_number',
 			dataIndex: 'treatments_number'
 		}, {
-			title: 'Action',
+			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
 			render: (text, record) => (
 				<span>
 		      <Button size="small" type='primary' onClick={ this.showTreatmentModal(record) }>
 			      <Icon type="plus-circle-o"/>
-			      Add Treatment
+			      {formatMessage({ id: 'Treatments.create_treatment_button' })}
 		      </Button>
 					<span className="ant-divider"></span>
-		      <Button size="small" type='ghost' onClick={ this.editSeries(record) }>Edit</Button>
+		      <Button size="small" type='ghost' onClick={ this.editSeries(record) }>
+			      {formatMessage({ id: 'common.action_edit' })}
+		      </Button>
 					<span className="ant-divider"></span>
-		      <Popconfirm title="Are you sure?" onConfirm={ () => {
+		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
 			      deleteTreatment(record)
-		      } } okText="Yes" cancelText="No">
-		        <Button size="small" type='ghost'>Delete</Button>
+		      } } okText={formatMessage({ id: 'common.confirm_yes' })}
+		                  cancelText={formatMessage({ id: 'common.confirm_no' })}>
+		        <Button size="small" type='ghost'>
+			        {formatMessage({ id: 'common.action_delete' })}
+		        </Button>
 		      </Popconfirm>
         </span>
 			),
@@ -408,6 +421,7 @@ class Treatments extends Component {
 					onCancel={this.handleCancel}
 					onSubmit={this.handleSeriesSubmit}
 					values={activeSeries}
+					formatMessage={formatMessage}
 				/>
 				<TreatmentForm
 					ref={ form => {
@@ -420,22 +434,26 @@ class Treatments extends Component {
 					values={activeTreatment}
 					patients={patients}
 					therapists={therapists}
+					formatMessage={formatMessage}
 				/>
 				<div className="Dashboard__Details">
-					<h1 className="Dashboard__Header">Treatment Series</h1>
+					<h1 className="Dashboard__Header">
+						{ formatMessage({ id: 'Treatments.header' }) }
+					</h1>
 					<div className="Dashboard__Actions">
 						<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
 							<ClinicsSelector/>
 						</CheckAccess>
 						<Button type="primary" onClick={ this.showSeriesModal } disabled={ !currentClinic.id }>
 							<Icon type="plus-circle-o"/>
-							Create a Treatment series
+							{ formatMessage({ id: 'Treatments.create_series_button' }) }
 						</Button>
 					</div>
 				</div>
 				<Table
 					expandedRowRender={record => <TreatmentsTable treatments={record.treatments}
 					                                              editTreatment={this.editTreatment}
+					                                              formatMessage={formatMessage}
 					                                              deleteTreatment={deleteTreatment}/>
 					}
 					dataSource={treatmentSeries}
@@ -465,7 +483,7 @@ const TreatmentsApollo = withApollo(compose(
 	graphql(GET_TREATMENTS_QUERY, {
 		options: ({ currentClinic }) => ({
 			variables: {
-				clinic_id: currentClinic.id || 0
+				clinic_id: currentClinic.id
 			}
 		})
 	}),

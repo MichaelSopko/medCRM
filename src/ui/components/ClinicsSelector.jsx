@@ -26,18 +26,23 @@ import { graphql } from 'react-apollo'
 )
 class ClinicSelector extends Component {
 
+	static contextTypes = {
+		intl: PropTypes.object.isRequired
+	};
+
 	onClinicChange = id => {
 		this.props.setCurrentClinic({ id });
 	}
 
 	render() {
 		const { currentClinic: { id }, data: { clinics, loading } } = this.props;
+		const formatMessage = this.context.intl.formatMessage;
 
 		return <Select
 			style={{ width: 250, marginRight: 12 }}
 			value={ id }
 			onChange={this.onClinicChange}
-			placeholder="Select active clinic"
+			placeholder={ formatMessage({ id: 'ClinicsSelector.placeholder' }) }
 			optionFilterProp="children"
 			showSearch>
 			{ clinics && clinics.map(clinic => <Select.Option key={ clinic.id.toString() } value={ clinic.id.toString() }>{ clinic.name }</Select.Option>) }

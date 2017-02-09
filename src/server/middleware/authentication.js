@@ -17,11 +17,15 @@ const user = new User();
 export default (req, res, next) => {
 	user.checkPassword(req.body).then(async isValid => {
 		if (isValid) {
-			const { id } = await user.getUser({ login: req.body.login });
-			const token = generateToken(req, { id });
-			next(res.json({
-				token
-			}));
+			try {
+				const { id } = await user.getByLogin(req.body.login);
+				const token = generateToken(req, { id });
+				next(res.json({
+					token
+				}));
+			} catch (e) {
+				res.status(400);
+			}
 		} else {
 			next(res.status(400).json(
 				{

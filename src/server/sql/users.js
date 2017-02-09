@@ -10,10 +10,17 @@ export default class Users {
 		return createUser(knex, ...params);
 	}
 
-	getUser({ id, login }) {
-		const clause = id ? ['id', id] : ['login', login];
+	findOne(id) {
 		return knex('users')
-			.where(...clause)
+			.where('id', id)
+			.first()
+	}
+
+	getByLogin(login) {
+		if (!login) return false;
+		return knex('users')
+			.orWhere('login', login)
+			.orWhere('email', login)
 			.first()
 	}
 
@@ -64,8 +71,8 @@ export default class Users {
 
 	async checkPassword({ login, password }) {
 		const user = await knex('users')
-			.where('login', login)
 			.orWhere('email', login)
+			.orWhere('login', login)
 			.first();
 		if (user) {
 			const result = await pwd.hash(password, user.salt);
