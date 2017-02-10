@@ -1,0 +1,119 @@
+{
+  "roles": {
+    "SYSTEM_ADMIN": "מנהל מערכת",
+    "CLINIC_ADMIN": "מנהל קליניקה",
+    "THERAPIST": "מטפל",
+    "Patient": "מטופל"
+  },
+  "health_maintenance": {
+    "CLATIT": "כללית",
+    "MACCABI": "מכבי",
+    "MEUHEDET": "מאוחדת",
+    "LEUMIT": "לאומית",
+    "PRIVATE": "פרטי"
+  },
+  "Login": {
+    "header": "כניסה",
+    "field_email_error": "נא להכניס כתובת אימייל",
+    "field_email": "אימייל",
+    "field_password": "סיסמא",
+    "login_button": "התחברות"
+  },
+  "ProfileWidget": {
+    "logout": "להתנתק",
+    "settings": "הגדרות"
+  },
+  "ClinicsSelector": {
+    "placeholder": "נא לבחור קליניקה"
+  },
+  "UserNavbar": {
+    "treatments": "טיפולים",
+    "patients": "מטופלים",
+    "administrators": "מנהלים",
+    "clinics": "קליניקות",
+    "therapists": "מטפלים"
+  },
+  "Clinics": {
+    "create_button": "יצירת קליניקה",
+    "create_header": "יצירת קליניקה",
+    "edit_header": "עריכת קליניקה",
+    "header": "קליניקות"
+  },
+  "Administrators": {
+    "create_button": "יצירת מנהל מערכת",
+    "create_header": "יצירת מנהל מערכת",
+    "edit_header": "עריכת מנהל מערכת",
+    "header": "מנהלים",
+    "field_clinic": "קליניקה",
+    "field_clinic_error": "נא לבחור קליניקה"
+  },
+  "Therapists": {
+    "create_button": "יצית מטופל",
+    "create_header": "צו מטופל",
+    "edit_header": "ערכת מטופל",
+    "header": "מטפלים"
+  },
+  "Patients": {
+    "create_button": "צור מטופל",
+    "create_header": "צור מטופל",
+    "edit_header": "ערוך מטופל",
+    "header": "מטופלים",
+    "field_related_persons": "קרובים",
+    "field_person_type": "קרבה",
+    "field_person_type_error": "נא לבחור סוג קרבה",
+    "field_person_description": "תיאור",
+    "add_related_persons": "הוספת מקורב",
+    "upload_files": "העלאת קבצים",
+    "field_health_maintenance": "קופת חולים"
+  },
+  "Treatments": {
+    "create_treatment_button": "הוספת טיפול",
+    "create_series_button": "הוספת סדרת טיפולים",
+    "create_header": "יצירה",
+    "edit_header": "עריכה",
+    "header": "סדרת טיפולים",
+    "field_treatments_number": "מספר טיפולים",
+    "field_treatments_number_error": "נא להכניס מספר טיפולים",
+    "field_method": "מתהוד",
+    "field_target": "מטרת הטיפול",
+    "field_process": "מהלך הטיפול",
+    "field_parents_guidance": "הדרכת הורים",
+    "field_next_treatment_remark": "הערות לטיפול הבא",
+    "field_datetime": "תאריך ושעה",
+    "field_patients": "מטופלים",
+    "field_patients_error": "נא לבחור לפחות אחד",
+    "field_therapists": "מטפלים",
+    "field_therapists_error": "נא לבחור לפחות אחד"
+  },
+  "common": {
+    "field_name": "שם",
+    "field_name_error": "נא להכניס שם",
+    "field_first_name": "שם פרטי",
+    "field_first_name_error": "נא להכניס שם פרטי",
+    "field_last_name": "שם משפחה",
+    "field_last_name_error": "נא להכניס שם משפחה",
+    "field_address": "כתובת",
+    "field_address_error": "נא להכניס כתובת",
+    "field_phone": "טלפון",
+    "field_phone_error": "נא להכניס מספר טלפון",
+    "field_email": "אימייל",
+    "field_email_error": "נא להכניס אימייל",
+    "field_fax": "פקס",
+    "field_actions": "אקשנים",
+    "confirm_message": "האם אתה בטוח?",
+    "confirm_yes": "כן",
+    "confirm_no": "לא",
+    "action_delete": "מחיקה",
+    "action_create": "יצירה",
+    "action_edit": "עריכה",
+    "field_new_password": "סיסמא חדשה",
+    "field_password": "סיסמא",
+    "field_password_error": "נא להכניס סיסמא",
+    "field_birth_date": "תאריך לידה",
+    "field_birth_date_error": "נא להכניס תאריך",
+    "field_id_number": "מספר זהות",
+    "field_id_number_error": "נא להכניס מספר זהות",
+    "field_licence": "מספר רשיון",
+    "field_licence_error": "נא להכניס מספר רשיון"
+  }
+}

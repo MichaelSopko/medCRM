@@ -4,8 +4,8 @@ import createUser from '../../server/sql/helpers/create_user';
 
 export function seed(knex, Promise) { // eslint-disable-line import/prefer-default-export
   return Promise.all([
+	  knex('clinics').del(),
     knex('users').del(),
-    knex('clinics').del(),
   ])
   .then(() => {
     return Promise.all([

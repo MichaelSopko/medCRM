@@ -1,8 +1,11 @@
 import React, { PropTypes } from 'react'
+import { locale } from '../../../config.json';
+import cx from 'classnames';
 
 const Html = ({ content, state, assetMap }) => {
+	const isRtl = locale === 'he';
 	return (
-		<html lang="en">
+		<html lang={locale}>
 		<head>
 			<meta charSet="utf-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -15,7 +18,7 @@ const Html = ({ content, state, assetMap }) => {
 			}
 			<link rel="shortcut icon" href="/favicon.ico"/>
 		</head>
-		<body>
+		<body className={ cx({ 'rtl': isRtl }) }>
 		<div id="content" dangerouslySetInnerHTML={{ __html: content }}/>
 		<script
 			dangerouslySetInnerHTML={{ __html: `window.__APOLLO_STATE__=${JSON.stringify(state)};` }}

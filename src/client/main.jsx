@@ -6,13 +6,15 @@ import { Router, browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 import { IntlProvider, addLocaleData } from 'react-intl';
 import en from 'react-intl/locale-data/en';
+import he from 'react-intl/locale-data/he';
 import enMessages from '../l10n/en.json';
+import heMessages from '../l10n/he.json';
 import moment from 'moment';
 import { LocaleProvider } from 'antd';
 import enUS from 'antd/lib/locale-provider/en_US';
+import { locale } from '../../config.json';
 
-
-moment.locale('en');
+moment.locale(locale);
 
 import createApolloClient from '../apollo_client'
 import createReduxStore from '../redux_store'
@@ -37,7 +39,7 @@ function flattenMessages(nestedMessages, prefix = '') {
 	}, {});
 }
 
-addLocaleData([...en]);
+addLocaleData([...he]);
 
 const wsClient = new Client(window.location.origin.replace(/^http/, 'ws')
 	.replace(':' + settings.webpackDevPort, ':' + settings.apiPort));
@@ -78,11 +80,13 @@ const store = createReduxStore(initialState, client);
 
 const history = syncHistoryWithStore(browserHistory, store);
 
+const messages = locale === 'he' ? heMessages : enMessages;
+
 
 export default class Main extends React.Component {
 	render() {
 		return (
-			<IntlProvider locale={ navigator.language } defaultLocale="en" messages={ flattenMessages(enMessages) }>
+			<IntlProvider locale={'en'} defaultLocale='en' messages={ flattenMessages(messages) }>
 				<LocaleProvider locale={enUS}>
 					<ApolloProvider store={store} client={client}>
 						<Router history={history}>

@@ -12,6 +12,32 @@ body {
   background: #ECECEC;
 }
 
+body.rtl {
+  direction: rtl;
+	.ant-modal-close {
+		left: 16px;
+	}
+	.ant-modal-footer button + button {
+		margin-left: 0;
+		margin-right: 8px;
+	}
+	.ProfileWidget__Content {
+		padding-left: 0;
+		padding-right: 12px;
+	}
+	.ProfileWidget__Role {
+		padding-left: 0;
+		padding-right: 4px;
+	}
+	.ant-btn > .anticon + span, .ant-btn > span + .anticon {
+		margin-right: 0.5em;
+		margin-left: 0.5em;
+	}
+	.Dashboard__Actions > div {
+		margin-left: 12px;
+	}
+}
+
 .Container {
   padding: 0 1em;
   margin: 0 auto;

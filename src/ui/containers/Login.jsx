@@ -56,14 +56,14 @@ class Login extends Component {
 						{getFieldDecorator('login', {
 							rules: [{ required: true, message: formatMessage({ id: 'Login.field_email_error' }) }],
 						})(
-							<Input addonBefore={<Icon type="user"/>} placeholder={ formatMessage({ id: 'Login.field_email' }) }/>
+							<Input placeholder={ formatMessage({ id: 'Login.field_email' }) }/>
 						)}
 					</Form.Item>
 					<Form.Item>
 						{getFieldDecorator('password', {
 							rules: [{ required: true, message: 'Please input your Password!' }],
 						})(
-							<Input addonBefore={<Icon type="lock"/>} type="password" placeholder={ formatMessage({ id: 'Login.field_password' }) }/>
+							<Input type="password" placeholder={ formatMessage({ id: 'Login.field_password' }) }/>
 						)}
 					</Form.Item>
 					<Form.Item>
