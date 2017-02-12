@@ -21,6 +21,23 @@ import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, 
 
 import './Patients.scss'
 
+/* intersperse: Return an array with the separator interspersed between
+ * each element of the input array.
+ *
+ * @url http://stackoverflow.com/a/23619085
+ *
+ * > _([1,2,3]).intersperse(0)
+ * [1,0,2,0,3]
+ */
+function intersperse(arr, sep) {
+	if (arr.length === 0) {
+		return [];
+	}
+
+	return arr.slice(1).reduce(function(xs, x, i) {
+		return xs.concat([sep, x]);
+	}, [arr[0]]);
+}
 
 const EntityForm = Form.create()(
 	(props) => {
@@ -54,7 +71,7 @@ const EntityForm = Form.create()(
 				>
 					{getFieldDecorator(`related_persons-${i}-type`, {
 						initialValue: item.type,
-						rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_type_error' }) }],
+						validateTrigger: 'onBlur', rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_type_error' }) }],
 					})(
 						<Select placeholder={formatMessage({ id: 'Patients.field_person_type' })}>
 							{ Object.keys(RELATED_PERSONS).map(key => <Select.Option value={key} key={key}>
@@ -68,7 +85,7 @@ const EntityForm = Form.create()(
 				>
 					{getFieldDecorator(`related_persons-${i}-description`, {
 						initialValue: item.description,
-						rules: [],
+						validateTrigger: 'onBlur', rules: [],
 					})(
 						<Input placeholder={formatMessage({ id: 'Patients.field_person_description' })}/>
 					)}
@@ -78,7 +95,7 @@ const EntityForm = Form.create()(
 				>
 					{getFieldDecorator(`related_persons-${i}-phone`, {
 						initialValue: item.phone,
-						rules: [{ required: true, message: formatMessage({ id: 'common.field_phone_error' }) }],
+						validateTrigger: 'onBlur', rules: [{ required: true, message: formatMessage({ id: 'common.field_phone_error' }) }],
 					})(
 						<Input placeholder={formatMessage({ id: 'common.field_phone' })}/>
 					)}
@@ -88,7 +105,7 @@ const EntityForm = Form.create()(
 				>
 					{getFieldDecorator(`related_persons-${i}-email`, {
 						initialValue: item.email,
-						rules: [{ type: 'email', message: formatMessage({ id: 'common.field_email_error' }) }],
+						validateTrigger: 'onBlur', rules: [{ type: 'email', message: formatMessage({ id: 'common.field_email_error' }) }],
 					})(
 						<Input type="email" placeholder={formatMessage({ id: 'common.field_email' })}/>
 					)}
@@ -112,7 +129,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('id_number', {
 							initialValue: values.id_number,
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								type: 'regexp',
 								pattern: /^\d+$/,
 								required: true,
@@ -129,7 +146,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('email', {
 							initialValue: values.email,
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								type: 'email', message: formatMessage({ id: 'common.field_email_error' }),
 							}],
 						})(
@@ -143,7 +160,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('first_name', {
 							initialValue: values.first_name,
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								required: true, message: formatMessage({ id: 'common.field_first_name_error' }),
 							}],
 						})(
@@ -157,7 +174,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('last_name', {
 							initialValue: values.last_name,
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								required: true, message: formatMessage({ id: 'common.field_last_name_error' }),
 							}],
 						})(
@@ -171,7 +188,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('phone', {
 							initialValue: values.phone,
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								required: true, message: formatMessage({ id: 'common.field_phone_error' }),
 							}],
 						})(
@@ -185,7 +202,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('health_maintenance', {
 							initialValue: values.health_maintenance,
-							rules: [],
+							validateTrigger: 'onBlur', rules: [],
 						})(
 							<Select>
 								{ Object.keys(HEALTH_MAINTENANCES).map(key => <Select.Option value={key} key={key}>
@@ -201,7 +218,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('birth_date', {
 							initialValue: values.birth_date ? moment(values.birth_date) : null,
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								required: true, message: formatMessage({ id: 'common.field_birth_date_error' }),
 							}],
 						})(
@@ -387,6 +404,11 @@ class Patients extends Component {
 			dataIndex: 'email',
 			key: 'email',
 			render: text => <a href={ `mailto:${text}` }>{ text }</a>
+		}, {
+			title: '',
+			dataIndex: 'files',
+			key: 'files',
+			render: (text, record) => intersperse(record.files.map(file => <a href={file.url}>{file.name}</a>), ", ")
 		}, {
 			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',

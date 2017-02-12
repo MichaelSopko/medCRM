@@ -17,10 +17,6 @@ body.rtl {
 	.ant-modal-close {
 		left: 16px;
 	}
-	.ant-modal-footer button + button {
-		margin-left: 0;
-		margin-right: 8px;
-	}
 	.ProfileWidget__Content {
 		padding-left: 0;
 		padding-right: 12px;
@@ -35,6 +31,54 @@ body.rtl {
 	}
 	.Dashboard__Actions > div {
 		margin-left: 12px;
+	}
+	.Dashboard__Details {
+		flex-direction: row-reverse;
+	}
+	.ant-table table {
+		text-align: right;
+	}
+	.ant-table-thead > tr > th {
+		text-align: right;
+	}
+	.ant-form-item {
+		display: flex;
+	}
+	.has-success.has-feedback:after, .has-warning.has-feedback:after, .has-error.has-feedback:after, .is-validating.has-feedback:after {
+		right: auto;
+		left: 0;
+	}
+	.ant-modal-footer {
+		display: flex;
+		flex-direction: row-reverse;
+	}
+	form .has-feedback .ant-input {
+		padding-right: 7px;
+		padding-left: 24px;
+	}
+	.ant-calendar-picker-clear {
+		right: auto;
+		left: 7px;
+	}
+	.ant-calendar-picker-icon {
+		right: auto;
+		left: 8px;
+	}
+	.ant-select-selection-selected-value {
+		float: right;
+	}
+	.ant-select-selection__placeholder, .ant-select-search__field__placeholder {
+		right: 16px;
+	}
+	.ant-select-selection--multiple .ant-select-selection__rendered {
+		padding-left: 24px;
+		ul {
+			display: inline-flex;
+		}
+	}
+	.ant-select-dropdown.ant-select-dropdown--multiple .ant-select-dropdown-menu-item:after {
+		right: auto;
+		left: 8px;
 	}
 }
 

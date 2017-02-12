@@ -37,7 +37,7 @@ const EntityForm = Form.create()(
 						hasFeedback
 					>
 						{getFieldDecorator('email', {
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								type: 'email', required: true, message: formatMessage({ id: 'common.field_email_error' }),
 							}],
 						})(
@@ -50,7 +50,7 @@ const EntityForm = Form.create()(
 						hasFeedback
 					>
 						{getFieldDecorator('password', {
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								required: !isEditing, message: formatMessage({ id: 'common.field_password_error' })
 							}
 							],
@@ -64,7 +64,7 @@ const EntityForm = Form.create()(
 						hasFeedback
 					>
 						{getFieldDecorator('clinic_id', {
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								required: true, message: formatMessage({ id: 'Administrators.field_clinic_error' }),
 							}],
 						})(

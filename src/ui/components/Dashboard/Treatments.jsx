@@ -50,7 +50,7 @@ const SeriesForm = Form.create()(
 					>
 						{getFieldDecorator('name', {
 							initialValue: values.name,
-							rules: [],
+							validateTrigger: 'onBlur', rules: [],
 						})(
 							<Input/>
 						)}
@@ -62,7 +62,7 @@ const SeriesForm = Form.create()(
 					>
 						{getFieldDecorator('treatments_number', {
 							initialValue: values.treatments_number || 1,
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								required: true, message: formatMessage({ id: 'Treatments.field_treatments_number_error' })
 							}],
 						})(
@@ -101,7 +101,7 @@ const TreatmentForm = Form.create()(
 					>
 						{getFieldDecorator('target', {
 							initialValue: values.target,
-							rules: [],
+							validateTrigger: 'onBlur', rules: [],
 						})(
 							<Input />
 						)}
@@ -113,7 +113,7 @@ const TreatmentForm = Form.create()(
 					>
 						{getFieldDecorator('method', {
 							initialValue: values.method,
-							rules: [],
+							validateTrigger: 'onBlur', rules: [],
 						})(
 							<Input />
 						)}
@@ -125,7 +125,7 @@ const TreatmentForm = Form.create()(
 					>
 						{getFieldDecorator('process', {
 							initialValue: values.process,
-							rules: [],
+							validateTrigger: 'onBlur', rules: [],
 						})(
 							<Input />
 						)}
@@ -137,7 +137,7 @@ const TreatmentForm = Form.create()(
 					>
 						{getFieldDecorator('parents_guidance', {
 							initialValue: values.parents_guidance,
-							rules: [],
+							validateTrigger: 'onBlur', rules: [],
 						})(
 							<Input type="textarea" rows={3}/>
 						)}
@@ -149,7 +149,7 @@ const TreatmentForm = Form.create()(
 					>
 						{getFieldDecorator('next_treatment_remark', {
 							initialValue: values.next_treatment_remark,
-							rules: [],
+							validateTrigger: 'onBlur', rules: [],
 						})(
 							<Input type="textarea" rows={3}/>
 						)}
@@ -161,7 +161,7 @@ const TreatmentForm = Form.create()(
 					>
 						{getFieldDecorator('date', {
 							initialValue: moment(values.date),
-							rules: [],
+							validateTrigger: 'onBlur', rules: [],
 						})(
 							<DatePicker
 								showTime
@@ -175,7 +175,7 @@ const TreatmentForm = Form.create()(
 					>
 						{getFieldDecorator('patient_ids', {
 							initialValue: values.patients && values.patients.map(({ id }) => id.toString()),
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								type: 'array', required: true, message: formatMessage({ id: 'Treatments.field_patients_error' }),
 							}],
 						})(
@@ -194,7 +194,7 @@ const TreatmentForm = Form.create()(
 					>
 						{getFieldDecorator('therapist_ids', {
 							initialValue: values.therapists && values.therapists.map(({ id }) => id.toString()),
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								type: 'array', required: true, message: formatMessage({ id: 'Treatments.field_therapists_error' }),
 							}],
 						})(

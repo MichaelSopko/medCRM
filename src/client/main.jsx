@@ -11,7 +11,8 @@ import enMessages from '../l10n/en.json';
 import heMessages from '../l10n/he.json';
 import moment from 'moment';
 import { LocaleProvider } from 'antd';
-import enUS from 'antd/lib/locale-provider/en_US';
+import enUSAnt from 'antd/lib/locale-provider/en_US';
+import heAnt from '../l10n/ant/he';
 import { locale } from '../../config.json';
 
 moment.locale(locale);
@@ -81,13 +82,14 @@ const store = createReduxStore(initialState, client);
 const history = syncHistoryWithStore(browserHistory, store);
 
 const messages = locale === 'he' ? heMessages : enMessages;
+const antMessages = locale === 'he' ? heAnt : enUSAnt;
 
 
 export default class Main extends React.Component {
 	render() {
 		return (
 			<IntlProvider locale={'en'} defaultLocale='en' messages={ flattenMessages(messages) }>
-				<LocaleProvider locale={enUS}>
+				<LocaleProvider locale={antMessages}>
 					<ApolloProvider store={store} client={client}>
 						<Router history={history}>
 							{routes}

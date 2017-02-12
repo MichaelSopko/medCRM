@@ -37,7 +37,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('name', {
 							initialValue: values.name,
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								required: true, message: formatMessage({ id: 'common.field_name_error' }),
 							}],
 						})(
@@ -51,7 +51,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('address', {
 							initialValue: values.address,
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								required: true, message: formatMessage({ id: 'common.field_address_error' }),
 							}],
 						})(
@@ -66,7 +66,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('phone', {
 							initialValue: values.phone,
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								number: true, message: formatMessage({ id: 'common.field_phone_error' })
 							}],
 						})(
@@ -80,7 +80,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('fax', {
 							initialValue: values.fax,
-							rules: [],
+							validateTrigger: 'onBlur', rules: [],
 						})(
 							<Input />
 						)}
@@ -92,7 +92,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('email', {
 							initialValue: values.email,
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								email: true, message: formatMessage({ id: 'common.field_email_error' }),
 							}],
 						})(

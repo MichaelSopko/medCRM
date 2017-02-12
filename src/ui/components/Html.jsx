@@ -9,7 +9,7 @@ const Html = ({ content, state, assetMap }) => {
 		<head>
 			<meta charSet="utf-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>
-			<title>Apollo Fullstack Starter Kit</title>
+			<title>Clinic</title>
 			{!__DEV__ && <link rel="stylesheet" type="text/css" href={`/assets/${assetMap['bundle.css']}`}/>}
 			{__DEV__ &&
 			<style dangerouslySetInnerHTML={{

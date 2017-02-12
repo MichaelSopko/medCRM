@@ -54,14 +54,14 @@ class Login extends Component {
 					<h1 className="Login__Header">{ formatMessage({ id: 'Login.header' }) }</h1>
 					<Form.Item>
 						{getFieldDecorator('login', {
-							rules: [{ required: true, message: formatMessage({ id: 'Login.field_email_error' }) }],
+							validateTrigger: 'onBlur', rules: [{ required: true, message: formatMessage({ id: 'Login.field_email_error' }) }],
 						})(
 							<Input placeholder={ formatMessage({ id: 'Login.field_email' }) }/>
 						)}
 					</Form.Item>
 					<Form.Item>
 						{getFieldDecorator('password', {
-							rules: [{ required: true, message: 'Please input your Password!' }],
+							validateTrigger: 'onBlur', rules: [{ required: true, message: 'Please input your Password!' }],
 						})(
 							<Input type="password" placeholder={ formatMessage({ id: 'Login.field_password' }) }/>
 						)}

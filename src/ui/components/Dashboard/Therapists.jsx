@@ -41,7 +41,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('id_number', {
 							initialValue: values.id_number,
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								type: 'regexp',
 								pattern: /^\d+$/,
 								required: true,
@@ -58,7 +58,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('license_number', {
 							initialValue: values.license_number,
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								type: 'regexp',
 								pattern: /^\d+$/,
 								required: true,
@@ -75,7 +75,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('email', {
 							initialValue: values.email,
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								type: 'email', required: true, message: formatMessage({ id: 'common.field_email_error' }),
 							}],
 						})(
@@ -89,7 +89,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('first_name', {
 							initialValue: values.first_name,
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								required: true, message: formatMessage({ id: 'common.field_first_name_error' }),
 							}],
 						})(
@@ -103,7 +103,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('last_name', {
 							initialValue: values.last_name,
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								required: true, message: formatMessage({ id: 'common.field_last_name_error' }),
 							}],
 						})(
@@ -117,7 +117,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('phone', {
 							initialValue: values.phone,
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								required: true, message: formatMessage({ id: 'common.field_phone_error' }),
 							}],
 						})(
@@ -131,7 +131,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('birth_date', {
 							initialValue: moment(values.birth_date),
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								required: true, message: formatMessage({ id: 'common.field_birth_date_error' }),
 							}],
 						})(
@@ -144,7 +144,7 @@ const EntityForm = Form.create()(
 						hasFeedback
 					>
 						{getFieldDecorator('password', {
-							rules: [{
+							validateTrigger: 'onBlur', rules: [{
 								required: !isEditing, message: formatMessage({ id: 'common.field_password_error' })
 							}
 							],
