@@ -10,6 +10,7 @@ html {
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimSun, sans-serif;
   background: #ECECEC;
+	min-width: 1024px;
 }
 
 body.rtl {
@@ -33,7 +34,7 @@ body.rtl {
 		margin-left: 12px;
 	}
 	.Dashboard__Details {
-		flex-direction: row-reverse;
+		justify-content: flex-start;
 	}
 	.ant-table table {
 		text-align: right;
@@ -43,6 +44,7 @@ body.rtl {
 	}
 	.ant-form-item {
 		display: flex;
+
 	}
 	.has-success.has-feedback:after, .has-warning.has-feedback:after, .has-error.has-feedback:after, .is-validating.has-feedback:after {
 		right: auto;
@@ -79,6 +81,17 @@ body.rtl {
 	.ant-select-dropdown.ant-select-dropdown--multiple .ant-select-dropdown-menu-item:after {
 		right: auto;
 		left: 8px;
+	}
+	form .has-feedback .ant-select-arrow, form .has-feedback .ant-select-selection__clear {
+		right: 7px;
+	}
+	.Patients__RelatedPersonsItem .ant-row.ant-form-item {
+		> div {
+			flex: 1;
+		}
+	}
+	.Login .ant-row.ant-form-item > div {
+		flex: 1;
 	}
 }
 

@@ -16,7 +16,7 @@ class Dashboard extends Component {
 		router: PropTypes.object
 	};
 
-	componentWillReceiveProps({ location, router, currentUser }) {
+	checkRedirect({ location, router, currentUser }) {
 		if (currentUser && location.pathname === '/dashboard') {
 			switch (currentUser.role) {
 				case ROLES.SYSTEM_ADMIN:
@@ -38,6 +38,7 @@ class Dashboard extends Component {
 	render() {
 		const { children, currentUser } = this.props;
 		const showSpinner = !currentUser;
+		this.checkRedirect(this.props);
 
 		return (
 			<main className="Dashboard">

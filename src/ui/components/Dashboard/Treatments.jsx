@@ -62,7 +62,7 @@ const SeriesForm = Form.create()(
 					>
 						{getFieldDecorator('treatments_number', {
 							initialValue: values.treatments_number || 1,
-							validateTrigger: 'onBlur', rules: [{
+							rules: [{
 								required: true, message: formatMessage({ id: 'Treatments.field_treatments_number_error' })
 							}],
 						})(
