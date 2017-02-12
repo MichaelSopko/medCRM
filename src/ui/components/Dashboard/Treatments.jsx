@@ -214,23 +214,23 @@ const TreatmentForm = Form.create()(
 
 const TreatmentsTable = ({ treatments, deleteTreatment, editTreatment, formatMessage }) => {
 	const columns = [
-		{ title: 'Target', dataIndex: 'target', key: 'target' },
-		{ title: 'Method', dataIndex: 'method', key: 'method' },
-		{ title: 'Process', dataIndex: 'process', key: 'process' },
+		{ title: formatMessage({ id: 'Treatments.field_target' }), dataIndex: 'target', key: 'target' },
+		{ title: formatMessage({ id: 'Treatments.field_method' }), dataIndex: 'method', key: 'method' },
+		{ title: formatMessage({ id: 'Treatments.field_process' }), dataIndex: 'process', key: 'process' },
 		{
-			title: 'Patients',
+			title: formatMessage({ id: 'Treatments.field_patients' }),
 			dataIndex: 'patients',
 			render: (text, record) =>
 				<span>{ record.patients.map(user => `${user.first_name} ${user.last_name}`).join(', ') }</span>
 		},
 		{
-			title: 'Therapists',
+			title: formatMessage({ id: 'Treatments.field_therapists' }),
 			dataIndex: 'therapists',
 			render: (text, record) =>
 				<span>{ record.therapists.map(user => `${user.first_name} ${user.last_name}`).join(', ') }</span>
 		},
 		{
-			title: 'Action',
+			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
 			render: (text, record) => (
 				<span>
