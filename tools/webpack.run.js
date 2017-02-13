@@ -34,14 +34,10 @@ function createDirs(dir) {
 }
 
 function runServer(path) {
-	const args = [path];
   if (startBackend) {
     startBackend = false;
     logBack('Starting backend');
-    if (__DEV__) {
-	    args.unshift('--inspect');
-    }
-    server = spawn('node', args);
+    server = spawn('node', [path]);
     server.stdout.on('data', data => {
       process.stdout.write(data);
     });
