@@ -22,7 +22,7 @@ import moment from 'moment'
 import './Treatments.scss'
 
 import {
-	Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, DatePicker, InputNumber
+	Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, DatePicker, InputNumber, notification
 } from 'antd'
 
 const SeriesForm = Form.create()(
@@ -301,6 +301,15 @@ class Treatments extends Component {
 	handleSeriesSubmit = () => {
 		const form = this.seriesForm;
 		const isEditing = !!Object.keys(this.state.activeSeries).length;
+		const formatMessage = this.context.intl.formatMessage;
+		const errorHandler = e => {
+			this.setState({ modalLoading: false });
+			console.error(e);
+			let id = 'common.server_error';
+			notification.error({
+				message: formatMessage({ id })
+			});
+		};
 		form.validateFields((err, values) => {
 			if (err) {
 				return;
@@ -310,17 +319,11 @@ class Treatments extends Component {
 				this.props.editSeries({ id: this.state.activeSeries.id, ...values }).then(() => {
 					form.resetFields();
 					this.setState({ seriesModalOpened: false, modalLoading: false, activeSeries: {} });
-				}).catch(e => {
-					console.error(e);
-					this.setState({ modalLoading: false });
-				}) :
+				}).catch(errorHandler) :
 				this.props.addSeries({ clinic_id: this.props.currentClinic.id, ...values }).then(() => {
 					form.resetFields();
 					this.setState({ seriesModalOpened: false, modalLoading: false });
-				}).catch(e => {
-					console.error(e);
-					this.setState({ modalLoading: false });
-				});
+				}).catch(errorHandler);
 
 		});
 	};
@@ -328,6 +331,15 @@ class Treatments extends Component {
 	handleTreatmentSubmit = () => {
 		const form = this.treatmentForm;
 		const isEditing = !!Object.keys(this.state.activeTreatment).length;
+		const formatMessage = this.context.intl.formatMessage;
+		const errorHandler = e => {
+			this.setState({ modalLoading: false });
+			console.error(e);
+			let id = 'common.server_error';
+			notification.error({
+				message: formatMessage({ id })
+			});
+		};
 		form.validateFields((err, values) => {
 			if (err) {
 				return;
@@ -337,17 +349,11 @@ class Treatments extends Component {
 				this.props.editTreatment({ id: this.state.activeTreatment.id, treatment: values }).then(() => {
 					form.resetFields();
 					this.setState({ treatmentModalOpened: false, modalLoading: false, activeTreatment: {} });
-				}).catch(e => {
-					console.error(e);
-					this.setState({ modalLoading: false });
-				}) :
+				}).catch(errorHandler) :
 				this.props.addTreatment({ series_id: this.state.activeSeries.id, treatment: values }).then(() => {
 					form.resetFields();
 					this.setState({ treatmentModalOpened: false, modalLoading: false, activeSeries: {} });
-				}).catch(e => {
-					console.error(e);
-					this.setState({ modalLoading: false });
-				});
+				}).catch(errorHandler);
 
 		});
 	};

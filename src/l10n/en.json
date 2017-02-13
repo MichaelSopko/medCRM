@@ -12,6 +12,11 @@
     "LEUMIT": "LEUMIT",
     "PRIVATE": "PRIVATE"
   },
+  "related_persons": {
+    "MOTHER": "Mother",
+    "FATHER": "Father",
+    "OTHER": "Other"
+  },
   "Login": {
     "header": "Authentication",
     "field_email_error": "Please input your email!",
@@ -64,7 +69,8 @@
     "field_person_description": "Description",
     "add_related_persons": "Add related person",
     "upload_files": "Upload files",
-    "field_health_maintenance": "Health maintenance"
+    "field_health_maintenance": "Health maintenance",
+    "field_files": "Files"
   },
   "Treatments": {
     "create_treatment_button": "Add treatment",
@@ -98,6 +104,7 @@
     "field_phone_error": "Please input a valid phone number",
     "field_email": "Email",
     "field_email_error": "Please input valid email address",
+    "field_email_error_duplicate": "Same email already exists",
     "field_fax": "Fax",
     "field_actions": "Actions",
     "confirm_message": "Are you sure?",
@@ -113,6 +120,7 @@
     "field_birth_date_error": "Please input date",
     "field_id_number": "ID number",
     "field_id_number_error": "Please input ID",
+    "field_id_number_error_duplicate": "Same id number already exists",
     "field_licence": "Licence number",
     "field_licence_error": "Please input licence"
   }

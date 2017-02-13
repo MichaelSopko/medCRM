@@ -58,7 +58,7 @@ type Patient implements User {
 	last_name: String!
 	birth_date: Date!
 	phone: String!
-	email: String
+	profile_email: String
 	clinic: Clinic
 	related_persons: [PatientRelatedPerson]
 	health_maintenance: PatientHealthMaintenance
@@ -71,7 +71,7 @@ input PatientInput {
 	last_name: String!
 	birth_date: Date!
 	phone: String!
-	email: String
+	profile_email: String
 	related_persons: [PatientRelatedPersonInput]
 	health_maintenance: PatientHealthMaintenance
 	files: [PatientFileInput]

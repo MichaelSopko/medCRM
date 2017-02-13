@@ -17,7 +17,21 @@ import CheckAccess from '../helpers/CheckAccess'
 import moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 
-import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, DatePicker, Upload } from 'antd'
+import {
+	Table,
+	Icon,
+	Button,
+	Modal,
+	Input,
+	Form,
+	Row,
+	Col,
+	Popconfirm,
+	Select,
+	DatePicker,
+	Upload,
+	notification
+} from 'antd'
 
 import './Patients.scss'
 
@@ -34,7 +48,7 @@ function intersperse(arr, sep) {
 		return [];
 	}
 
-	return arr.slice(1).reduce(function(xs, x, i) {
+	return arr.slice(1).reduce(function (xs, x, i) {
 		return xs.concat([sep, x]);
 	}, [arr[0]]);
 }
@@ -71,11 +85,12 @@ const EntityForm = Form.create()(
 				>
 					{getFieldDecorator(`related_persons-${i}-type`, {
 						initialValue: item.type,
-						validateTrigger: 'onBlur', rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_type_error' }) }],
+						validateTrigger: 'onBlur',
+						rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_type_error' }) }],
 					})(
 						<Select placeholder={formatMessage({ id: 'Patients.field_person_type' })}>
 							{ Object.keys(RELATED_PERSONS).map(key => <Select.Option value={key} key={key}>
-								{RELATED_PERSONS[key]}
+								{formatMessage({ id: `related_persons.${RELATED_PERSONS[key]}` })}
 							</Select.Option>) }
 						</Select>
 					)}
@@ -95,7 +110,8 @@ const EntityForm = Form.create()(
 				>
 					{getFieldDecorator(`related_persons-${i}-phone`, {
 						initialValue: item.phone,
-						validateTrigger: 'onBlur', rules: [{ required: true, message: formatMessage({ id: 'common.field_phone_error' }) }],
+						validateTrigger: 'onBlur',
+						rules: [{ required: true, message: formatMessage({ id: 'common.field_phone_error' }) }],
 					})(
 						<Input placeholder={formatMessage({ id: 'common.field_phone' })}/>
 					)}
@@ -105,7 +121,8 @@ const EntityForm = Form.create()(
 				>
 					{getFieldDecorator(`related_persons-${i}-email`, {
 						initialValue: item.email,
-						validateTrigger: 'onBlur', rules: [{ type: 'email', message: formatMessage({ id: 'common.field_email_error' }) }],
+						validateTrigger: 'onBlur',
+						rules: [{ type: 'email', message: formatMessage({ id: 'common.field_email_error' }) }],
 					})(
 						<Input type="email" placeholder={formatMessage({ id: 'common.field_email' })}/>
 					)}
@@ -144,8 +161,8 @@ const EntityForm = Form.create()(
 						label={formatMessage({ id: 'common.field_email' })}
 						hasFeedback
 					>
-						{getFieldDecorator('email', {
-							initialValue: values.email,
+						{getFieldDecorator('profile_email', {
+							initialValue: values.profile_email,
 							validateTrigger: 'onBlur', rules: [{
 								type: 'email', message: formatMessage({ id: 'common.field_email_error' }),
 							}],
@@ -237,7 +254,7 @@ const EntityForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label="Files"
+						label={formatMessage({ id: 'Patients.field_files' })}
 						hasFeedback
 					>
 						{getFieldDecorator('files', {
@@ -302,6 +319,7 @@ class Patients extends Component {
 	};
 
 	handleFormSubmit = () => {
+		const formatMessage = this.context.intl.formatMessage;
 		const form = this.form;
 		const isEditing = !!Object.keys(this.state.activeEntity).length;
 		const processFiles = files => files.map(file => {
@@ -329,6 +347,19 @@ class Patients extends Component {
 			}
 			return values;
 		};
+		const errorHandler = e => {
+			this.setState({ modalLoading: false });
+			console.error(e);
+			let id = 'common.server_error';
+			if (e.graphQLErrors) {
+				const message = e.graphQLErrors[0].message;
+				if (message === 'DUPLICATE_EMAIL') id = 'common.field_email_error_duplicate';
+				if (message === 'DUPLICATE_ID_NUMBER') id = 'common.field_id_number_error_duplicate';
+			}
+			notification.error({
+				message: formatMessage({ id })
+			});
+		};
 
 		form.validateFields((err, { files, ...values }) => {
 			if (err) {
@@ -349,10 +380,7 @@ class Patients extends Component {
 					form.resetFields();
 					this.setState({ modalOpened: false, modalLoading: false, relatedPersonsCount: 0 });
 					this.resetActiveEntity();
-				}).catch(e => {
-					this.setState({ modalLoading: false });
-					console.log(e);
-				}) :
+				}).catch(errorHandler) :
 				this.props.addPatient({
 					clinic_id: this.props.currentClinic.id,
 					patient: {
@@ -362,10 +390,7 @@ class Patients extends Component {
 				}).then(() => {
 					form.resetFields();
 					this.setState({ modalOpened: false, modalLoading: false, relatedPersonsCount: 0 });
-				}).catch(e => {
-					this.setState({ modalLoading: false });
-					console.log(e);
-				});
+				}).catch(errorHandler);
 		});
 	};
 
@@ -401,11 +426,11 @@ class Patients extends Component {
 			render: text => <a href={ `tel:${text}` }>{ text }</a>
 		}, {
 			title: formatMessage({ id: 'common.field_email' }),
-			dataIndex: 'email',
-			key: 'email',
+			dataIndex: 'profile_email',
+			key: 'profile_email',
 			render: text => <a href={ `mailto:${text}` }>{ text }</a>
 		}, {
-			title: '',
+			title: formatMessage({ id: 'Patients.field_files' }),
 			dataIndex: 'files',
 			key: 'files',
 			render: (text, record) => intersperse(record.files.map(file => <a href={file.url}>{file.name}</a>), ", ")
@@ -420,7 +445,8 @@ class Patients extends Component {
 					<span className="ant-divider"/>
 		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
 			      deletePatient(record)
-		      } } okText={formatMessage({ id: 'common.confirm_yes' })} cancelText={formatMessage({ id: 'common.confirm_no' })}>
+		      } } okText={formatMessage({ id: 'common.confirm_yes' })}
+		                  cancelText={formatMessage({ id: 'common.confirm_no' })}>
 		        <Button size="small" type='ghost'>
 			        {formatMessage({ id: 'common.action_delete' })}
 			        </Button>
@@ -449,7 +475,7 @@ class Patients extends Component {
 				<div className="Dashboard__Details">
 					<h1 className="Dashboard__Header">
 						{ formatMessage({ id: 'Patients.header' }) }
-						</h1>
+					</h1>
 					<div className="Dashboard__Actions">
 						<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
 							<ClinicsSelector/>

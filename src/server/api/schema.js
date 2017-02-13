@@ -23,6 +23,14 @@ async function checkAccess(ctx, role) {
 	}
 }
 
+function checkForNonUniqueField(e) {
+	if (e.code === 'ER_DUP_ENTRY') {
+		if (e.message.indexOf('users_email_unique') !== -1) throw new Error('DUPLICATE_EMAIL');
+		if (e.message.indexOf('users_id_number_unique') !== -1) throw new Error('DUPLICATE_ID_NUMBER');
+	}
+	throw new Error(e);
+}
+
 const resolvers = {
 	Query: {
 		clinics(ignored1, ignored2, context) {
@@ -66,11 +74,13 @@ const resolvers = {
 			return checkAccess(context, ROLES.SYSTEM_ADMIN)
 				.then(() => context.Users.createUser({ ...user, role: ROLES.CLINIC_ADMIN }))
 				.then(res => ({ status: res }))
+				.catch(checkForNonUniqueField)
 		},
 		editAdministrator(_, user, context) {
 			return checkAccess(context, ROLES.SYSTEM_ADMIN)
 				.then(() => context.Users.editUser(user))
 				.then(res => ({ status: res }))
+				.catch(checkForNonUniqueField)
 		},
 		deleteAdministrator(_, { id }, context) {
 			return checkAccess(context, ROLES.SYSTEM_ADMIN)
@@ -82,11 +92,13 @@ const resolvers = {
 			return checkAccess(context, ROLES.CLINIC_ADMIN)
 				.then(() => context.Users.createUser({ ...user, role: ROLES.THERAPIST }))
 				.then(res => ({ status: res }))
+				.catch(checkForNonUniqueField)
 		},
 		editTherapist(_, user, context) {
 			return checkAccess(context, ROLES.CLINIC_ADMIN)
 				.then(() => context.Users.editUser(user))
 				.then(res => ({ status: res }))
+				.catch(checkForNonUniqueField)
 		},
 		deleteTherapist(_, { id }, context) {
 			return checkAccess(context, ROLES.CLINIC_ADMIN)
@@ -95,13 +107,14 @@ const resolvers = {
 		},
 
 		addPatient(_, { clinic_id, patient }, context) {
-			return checkAccess(context, ROLES.CLINIC_ADMIN)
+			return checkAccess(context, ROLES.THERAPIST)
 				.then(() => context.Users.createUser({
 					clinic_id,
 					...patient,
 					role: ROLES.PATIENT
 				}))
 				.then(res => ({ status: res }))
+				.catch(checkForNonUniqueField)
 		},
 		editPatient(_, { id, patient }, context) {
 			return checkAccess(context, ROLES.THERAPIST)
@@ -110,9 +123,10 @@ const resolvers = {
 					...patient
 				}))
 				.then(res => ({ status: res }))
+				.catch(checkForNonUniqueField)
 		},
 		deletePatient(_, { id }, context) {
-			return checkAccess(context, ROLES.CLINIC_ADMIN)
+			return checkAccess(context, ROLES.THERAPIST)
 				.then(() => context.Users.deleteUser({ id }))
 				.then(res => ({ status: res }))
 		},

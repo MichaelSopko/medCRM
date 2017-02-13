@@ -12,6 +12,11 @@
     "LEUMIT": "לאומית",
     "PRIVATE": "פרטי"
   },
+  "related_persons": {
+    "MOTHER": "אמא",
+    "FATHER": "אבא",
+    "OTHER": "אחר"
+  },
   "Login": {
     "header": "כניסה",
     "field_email_error": "נא להכניס כתובת אימייל",
@@ -64,6 +69,7 @@
     "field_person_description": "תיאור",
     "add_related_persons": "הוספת מקורב",
     "upload_files": "העלאת קבצים",
+    "field_files": "קבצים",
     "field_health_maintenance": "קופת חולים"
   },
   "Treatments": {

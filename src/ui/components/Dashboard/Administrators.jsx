@@ -11,7 +11,7 @@ import DELETE_ADMINISTRATOR_MUTATION from '../../graphql/AdministratorsDeleteMut
 import EDIT_ADMINISTRATOR_MUTATION from '../../graphql/AdministratorsEditMutation.graphql'
 import ROLES from '../../../helpers/constants/roles'
 
-import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select } from 'antd'
+import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, notification } from 'antd'
 
 const EntityForm = Form.create()(
 	(props) => {
@@ -121,14 +121,33 @@ class Administrators extends Component {
 	handleFormSubmit = () => {
 		const form = this.form;
 		const isEditing = !!Object.keys(this.state.activeEntity).length;
+		const formatMessage = this.context.intl.formatMessage;
+		const errorHandler = e => {
+			this.setState({ modalLoading: false });
+			console.error(e);
+			let id = 'common.server_error';
+			if (e.graphQLErrors) {
+				const message = e.graphQLErrors[0].message;
+				if (message === 'DUPLICATE_EMAIL') id = 'common.field_email_error_duplicate';
+			}
+			notification.error({
+				message: formatMessage({ id })
+			});
+		};
 		form.validateFields((err, values) => {
 			if (err) {
 				return;
 			}
-			isEditing ? this.props.editAdministrator({ id: this.state.activeEntity.id, ...values }) : this.props.addAdministrator(values);
-			console.log('Adding new administrator', values);
-			form.resetFields();
-			this.setState({ modalOpened: false, activeEntity: {} });
+			isEditing
+				? this.props.editAdministrator({ id: this.state.activeEntity.id, ...values })
+					.then(() => {
+						form.resetFields();
+						this.setState({ modalOpened: false, activeEntity: {} });
+					}).catch(errorHandler)
+				: this.props.addAdministrator(values).then(() => {
+					form.resetFields();
+					this.setState({ modalOpened: false, activeEntity: {} });
+				}).catch(errorHandler);
 		});
 	};
 
@@ -163,7 +182,8 @@ class Administrators extends Component {
 					<span className="ant-divider"/>
 		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
 			      deleteAdministrator(record)
-		      } } okText={formatMessage({ id: 'common.confirm_yes' })} cancelText={formatMessage({ id: 'common.confirm_no' })}>
+		      } } okText={formatMessage({ id: 'common.confirm_yes' })}
+		                  cancelText={formatMessage({ id: 'common.confirm_no' })}>
 		        <Button size="small" type='ghost'>
 			        {formatMessage({ id: 'common.action_delete' })}
 			        </Button>
@@ -190,7 +210,7 @@ class Administrators extends Component {
 				<div className="Dashboard__Details">
 					<h1 className="Dashboard__Header">
 						{ formatMessage({ id: 'Administrators.header' }) }
-						</h1>
+					</h1>
 					<div className="Dashboard__Actions">
 						<Button type="primary" onClick={ this.showModal }>
 							<Icon type="plus-circle-o"/>

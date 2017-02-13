@@ -14,7 +14,7 @@ import ClinicsSelector from '../ClinicsSelector'
 import CheckAccess from '../helpers/CheckAccess'
 import moment from 'moment';
 
-import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, DatePicker } from 'antd'
+import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, DatePicker, notification } from 'antd'
 
 const EntityForm = Form.create()(
 	(props) => {
@@ -197,20 +197,42 @@ class Therapists extends Component {
 	};
 
 	handleFormSubmit = () => {
+		const formatMessage = this.context.intl.formatMessage;
 		const form = this.form;
 		const isEditing = !!Object.keys(this.state.activeEntity).length;
+		const errorHandler = e => {
+			this.setState({ modalLoading: false });
+			console.error(e);
+			let id = 'common.server_error';
+			if (e.graphQLErrors) {
+				const message = e.graphQLErrors[0].message;
+				if (message === 'DUPLICATE_EMAIL') id = 'common.field_email_error_duplicate';
+				if (message === 'DUPLICATE_ID_NUMBER') id = 'common.field_id_number_error_duplicate';
+			}
+			notification.error({
+				message: formatMessage({ id })
+			});
+		};
+
 		form.validateFields((err, values) => {
 			if (err) {
 				return;
 			}
 			isEditing ?
-				this.props.editTherapist({ id: this.state.activeEntity.id, ...values }) :
-				this.props.addTherapist({ clinic_id: this.props.currentClinic.id, ...values });
-			console.log('Adding new therapist', values);
-			form.resetFields();
-			this.setState({ modalOpened: false, activeEntity: {} });
+				this.props.editTherapist({ id: this.state.activeEntity.id, ...values })
+					.then(() => {
+						form.resetFields();
+						this.setState({ modalOpened: false, modalLoading: false, activeEntity: {} });
+						this.resetActiveEntity();
+					}).catch(errorHandler) :
+				this.props.addTherapist({ clinic_id: this.props.currentClinic.id, ...values })
+					.then(() => {
+						form.resetFields();
+						this.setState({ modalOpened: false, modalLoading: false });
+						this.resetActiveEntity();
+					}).catch(errorHandler);
 		});
-	}
+	};
 
 	editEntity = entity => () => {
 		this.form.resetFields();
@@ -218,7 +240,7 @@ class Therapists extends Component {
 			modalOpened: true,
 			activeEntity: entity
 		});
-	}
+	};
 
 	render() {
 		const { data: { loading, therapists }, deleteTherapist, currentClinic } = this.props;
@@ -249,7 +271,8 @@ class Therapists extends Component {
 					<span className="ant-divider"/>
 		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
 			      deleteTherapist(record)
-		      } } okText={formatMessage({ id: 'common.confirm_yes' })} cancelText={formatMessage({ id: 'common.confirm_no' })}>
+		      } } okText={formatMessage({ id: 'common.confirm_yes' })}
+		                  cancelText={formatMessage({ id: 'common.confirm_no' })}>
 		        <Button size="small" type='ghost'>
 			        {formatMessage({ id: 'common.action_delete' })}
 			        </Button>
@@ -275,7 +298,7 @@ class Therapists extends Component {
 				<div className="Dashboard__Details">
 					<h1 className="Dashboard__Header">
 						{ formatMessage({ id: 'Therapists.header' }) }
-						</h1>
+					</h1>
 					<div className="Dashboard__Actions">
 						<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
 							<ClinicsSelector/>
