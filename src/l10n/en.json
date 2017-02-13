@@ -122,6 +122,7 @@
     "field_id_number_error": "Please input ID",
     "field_id_number_error_duplicate": "Same id number already exists",
     "field_licence": "Licence number",
-    "field_licence_error": "Please input licence"
+    "field_licence_error": "Please input licence",
+    "server_error": "Server error"
   }
 }
