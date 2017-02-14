@@ -194,6 +194,7 @@ class Therapists extends Component {
 		setTimeout(() => {
 			this.setState({ activeEntity: false });
 		}, 300);
+		this.form.resetFields();
 	};
 
 	handleFormSubmit = () => {

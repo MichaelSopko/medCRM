@@ -295,6 +295,8 @@ class Treatments extends Component {
 	resetActiveEntity = () => {
 		setTimeout(() => {
 			this.setState({ activeSeries: {}, activeTreatment: {} });
+			this.seriesForm.resetFields();
+			this.treatmentForm.resetFields();
 		}, 300);
 	};
 

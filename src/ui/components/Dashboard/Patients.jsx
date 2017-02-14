@@ -315,6 +315,7 @@ class Patients extends Component {
 	resetActiveEntity = () => {
 		setTimeout(() => {
 			this.setState({ activeEntity: false });
+			this.form.resetFields();
 		}, 300);
 	};
 

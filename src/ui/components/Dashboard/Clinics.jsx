@@ -127,6 +127,7 @@ class Clinics extends Component {
 
 	handleCancel = () => {
 		this.setState({ modalOpened: false, activeEntity: {} });
+		this.form.resetFields();
 	};
 
 	showModal = () => {
