@@ -3,7 +3,7 @@ $id: Int!
 $treatment: TreatmentInput
 ) {
     editTreatment(
-        id: $series_id
+        id: $id
         treatment: $treatment
     ) {
         status

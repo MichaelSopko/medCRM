@@ -51,14 +51,14 @@ export default class Treatments {
 		if ('patient_ids' in fields) {
 			fields.patient_ids = JSON.stringify(fields.patient_ids);
 		}
-		return knex('treatment_series')
+		return knex('treatments')
 			.where('id', id)
 			.update(fields);
 	}
 
 	deleteTreatment({ id }) {
 		return Promise.all([
-			knex('treatment_series')
+			knex('treatments')
 				.where('id', id)
 				.delete()
 		]);
