@@ -120,6 +120,9 @@
     "field_id_number": "מספר זהות",
     "field_id_number_error": "נא להכניס מספר זהות",
     "field_licence": "מספר רשיון",
-    "field_licence_error": "נא להכניס מספר רשיון"
+    "field_licence_error": "נא להכניס מספר רשיון",
+    "field_id_number_error_duplicate": "מספר זהות כבר קיים במערכת",
+    "field_email_error_duplicate": "אימייל כבר קיים במערכת",
+    "server_error": "שגיאה כללית"
   }
 }

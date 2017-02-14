@@ -200,7 +200,6 @@ type Mutation {
 
 	editAdministrator(
 	id: Int!
-	email: String!
 	password: String!
 ): MutationStatus
 

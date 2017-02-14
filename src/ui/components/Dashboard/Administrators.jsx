@@ -135,7 +135,7 @@ class Administrators extends Component {
 			});
 		};
 		form.validateFields((err, values) => {
-			if (err) {
+			if (err && !isEditing) {
 				return;
 			}
 			isEditing

@@ -1,9 +1,8 @@
 mutation editAdministrator(
     $id: Int!
-    $password: String
-    $name: String
+    $password: String!
 ) {
-    editAdministrator(id: $id, name: $name, password: $password) {
+    editAdministrator(id: $id, password: $password) {
         status
     }
 }
