@@ -26,7 +26,7 @@ async function checkAccess(ctx, role) {
 function checkForNonUniqueField(e) {
 	if (e.code === 'ER_DUP_ENTRY') {
 		if (e.message.indexOf('users_email_unique') !== -1) throw new Error('DUPLICATE_EMAIL');
-		if (e.message.indexOf('users_id_number_unique') !== -1) throw new Error('DUPLICATE_ID_NUMBER');
+		if (e.message.indexOf('users_id_number_clinic_id_unique') !== -1) throw new Error('DUPLICATE_ID_NUMBER');
 	}
 	throw new Error(e);
 }

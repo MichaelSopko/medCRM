@@ -396,7 +396,7 @@ class Treatments extends Component {
 			key: 'action',
 			render: (text, record) => (
 				<span>
-		      <Button size="small" type='primary' onClick={ this.showTreatmentModal(record) }>
+		      <Button size="small" type='primary' disabled={record.treatments_number <= record.treatments.length} onClick={ this.showTreatmentModal(record) }>
 			      <Icon type="plus-circle-o"/>
 			      {formatMessage({ id: 'Treatments.create_treatment_button' })}
 		      </Button>
@@ -459,10 +459,11 @@ class Treatments extends Component {
 					</div>
 				</div>
 				<Table
-					expandedRowRender={record => <TreatmentsTable treatments={record.treatments}
-					                                              editTreatment={this.editTreatment}
-					                                              formatMessage={formatMessage}
-					                                              deleteTreatment={deleteTreatment}/>
+					expandedRowRender={record => <TreatmentsTable
+						treatments={record.treatments}
+						editTreatment={this.editTreatment}
+						formatMessage={formatMessage}
+						deleteTreatment={deleteTreatment}/>
 					}
 					dataSource={treatmentSeries}
 					columns={columns}
