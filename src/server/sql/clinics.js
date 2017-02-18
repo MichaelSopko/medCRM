@@ -24,12 +24,14 @@ export default class Clinics {
 
 	deleteClinic({ id }) {
 		return Promise.all([
-			knex('clinics')
-				.where('id', id)
-				.delete(),
-			knex('users')
-				.where('clinic_id', id)
-				.delete()
-		]);
+			knex('treatment_series').where('clinic_id', id).select(),
+			knex('users').where('clinic_id', id).delete()
+		]).then(([ts]) => {
+			return knex('treatments').whereIn('id', ts.map(t => t.id)).delete().then(() => {
+				return knex('treatment_series').where('clinic_id', id).delete();
+			}).then(() => {
+				return knex('clinics').where('id', id).delete();
+			})
+		})
 	}
 }
