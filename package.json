@@ -8,7 +8,7 @@
     "frontendBuildDir": "build/client",
     "uploadsDir": "uploads",
     "webpackDevPort": 3000,
-    "apiPort": 8080,
+    "apiPort": 8081,
     "ssr": false,
     "webpackDll": true,
     "secret": "FGSdg094_f(-gt34gre",

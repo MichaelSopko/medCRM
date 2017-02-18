@@ -13,6 +13,15 @@ import schema from './schema_def.graphqls'
 
 export const pubsub = new PubSub();
 
+const safeParse = (json, deflt = []) => {
+	try {
+		return JSON.parse(json || `${deflt}`)
+	} catch (e) {
+		log('JSON parse error');
+		return deflt;
+	}
+}
+
 async function checkAccess(ctx, role) {
 	const user = await ctx.Users.findOne(ctx.currentUser.id);
 	const isOk = checkAccessLogic(user.role, role);
@@ -192,11 +201,11 @@ const resolvers = {
 	},
 	Treatment: {
 		therapists(treatment, _, context) {
-			const ids = JSON.parse(treatment.therapist_ids);
+			const ids = safeParse(treatment.therapist_ids);
 			return context.Users.getUsers(ids);
 		},
 		patients(treatment, _, context) {
-			const ids = JSON.parse(treatment.patient_ids);
+			const ids = safeParse(treatment.patient_ids);
 			return context.Users.getUsers(ids);
 		}
 	},

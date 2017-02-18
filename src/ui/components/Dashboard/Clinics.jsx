@@ -187,7 +187,9 @@ class Clinics extends Component {
 		      </Button>
 					<span className="ant-divider"></span>
 		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
-			      deleteClinic(record)
+			      deleteClinic(record).then(() => {
+			      	this.props.client.resetStore();
+			      })
 		      } } okText={formatMessage({ id: 'common.confirm_yes' })}
 		                  cancelText={formatMessage({ id: 'common.confirm_no' })}>
 		        <Button size="small" type='ghost'>{formatMessage({ id: 'common.action_delete' })}</Button>

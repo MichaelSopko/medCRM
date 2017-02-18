@@ -57,7 +57,8 @@ const EntityForm = Form.create()(
 	(props) => {
 		const {
 			visible, onCancel, onSubmit, form, loading, values = {},
-			onUploadFileChange, addRelatedPerson, relatedPersonsCount, formatMessage
+			onUploadFileChange, addRelatedPerson, removeRelatedPerson,
+			relatedPersons, formatMessage
 		} = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
@@ -76,14 +77,22 @@ const EntityForm = Form.create()(
 			return e && e.fileList;
 		};
 
-		let relatedPersonsItems = [];
-		for (let i = 0; i < relatedPersonsCount; i++) {
-			const item = (values.related_persons && values.related_persons[i]) ? values.related_persons[i] : {};
-			relatedPersonsItems.push(<div className="Patients__RelatedPersonsItem ant-form" key={i}>
+		let relatedPersonsItems = relatedPersons.map(item => (<div className="Patients__RelatedPersonsItem ant-form" key={item._id}>
+				<Button
+					title={formatMessage({ id: 'common.action_delete' })}
+					shape='circle'
+					type="ghost"
+					className='Patients__RelatedPersonsRemove'
+					size="small"
+					onClick={ () => {
+						removeRelatedPerson(item._id)
+					} }>
+					<Icon type="close"/>
+				</Button>
 				<Form.Item
 					hasFeedback
 				>
-					{getFieldDecorator(`related_persons-${i}-type`, {
+					{getFieldDecorator(`related_persons-${item._id}-type`, {
 						initialValue: item.type,
 						validateTrigger: 'onBlur',
 						rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_type_error' }) }],
@@ -98,7 +107,7 @@ const EntityForm = Form.create()(
 				<Form.Item
 					hasFeedback
 				>
-					{getFieldDecorator(`related_persons-${i}-description`, {
+					{getFieldDecorator(`related_persons-${item._id}-description`, {
 						initialValue: item.description,
 						validateTrigger: 'onBlur', rules: [],
 					})(
@@ -108,7 +117,7 @@ const EntityForm = Form.create()(
 				<Form.Item
 					hasFeedback
 				>
-					{getFieldDecorator(`related_persons-${i}-phone`, {
+					{getFieldDecorator(`related_persons-${item._id}-phone`, {
 						initialValue: item.phone,
 						validateTrigger: 'onBlur',
 						rules: [{ required: true, message: formatMessage({ id: 'common.field_phone_error' }) }],
@@ -119,7 +128,7 @@ const EntityForm = Form.create()(
 				<Form.Item
 					hasFeedback
 				>
-					{getFieldDecorator(`related_persons-${i}-email`, {
+					{getFieldDecorator(`related_persons-${item._id}-email`, {
 						initialValue: item.email,
 						validateTrigger: 'onBlur',
 						rules: [{ type: 'email', message: formatMessage({ id: 'common.field_email_error' }) }],
@@ -127,8 +136,7 @@ const EntityForm = Form.create()(
 						<Input type="email" placeholder={formatMessage({ id: 'common.field_email' })}/>
 					)}
 				</Form.Item>
-			</div>)
-		}
+			</div>));
 
 		return (
 			<Modal title={ formatMessage({ id: isEditing ? 'Patients.edit_header' : 'Patients.create_header' }) }
@@ -292,7 +300,7 @@ class Patients extends Component {
 		modalOpened: false,
 		activeEntity: {},
 		modalLoading: false,
-		relatedPersonsCount: 0
+		relatedPersons: []
 	};
 
 	handleOk = () => {
@@ -301,12 +309,12 @@ class Patients extends Component {
 	};
 
 	handleCancel = () => {
-		this.setState({ modalOpened: false, relatedPersonsCount: 0 });
+		this.setState({ modalOpened: false, relatedPersons: [] });
 		this.resetActiveEntity();
 	};
 
 	showModal = () => {
-		this.setState({ modalOpened: true, relatedPersonsCount: 0 });
+		this.setState({ modalOpened: true, relatedPersons: [] });
 	};
 
 	/**
@@ -333,19 +341,19 @@ class Patients extends Component {
 				type
 			}
 		});
-		const processRelatedPersons = (count, values) => {
+		const processRelatedPersons = (relatedPersons, values) => {
 			values.related_persons = [];
-			for (let i = 0; i < count; i++) {
-				const type = values[`related_persons-${i}-type`];
-				delete values[`related_persons-${i}-type`];
-				const phone = values[`related_persons-${i}-phone`];
-				delete values[`related_persons-${i}-phone`];
-				const email = values[`related_persons-${i}-email`];
-				delete values[`related_persons-${i}-email`];
-				const description = values[`related_persons-${i}-description`];
-				delete values[`related_persons-${i}-description`];
+			relatedPersons.forEach(({ _id }) => {
+				const type = values[`related_persons-${_id}-type`];
+				delete values[`related_persons-${_id}-type`];
+				const phone = values[`related_persons-${_id}-phone`];
+				delete values[`related_persons-${_id}-phone`];
+				const email = values[`related_persons-${_id}-email`];
+				delete values[`related_persons-${_id}-email`];
+				const description = values[`related_persons-${_id}-description`];
+				delete values[`related_persons-${_id}-description`];
 				values.related_persons.push({ type, phone, email, description });
-			}
+			})
 			return values;
 		};
 		const errorHandler = e => {
@@ -369,7 +377,7 @@ class Patients extends Component {
 			this.setState({ modalLoading: true });
 			console.log(values);
 			files = files ? processFiles(files) : [];
-			values = processRelatedPersons(this.state.relatedPersonsCount, values);
+			values = processRelatedPersons(this.state.relatedPersons, values);
 			isEditing ?
 				this.props.editPatient({
 					id: this.state.activeEntity.id,
@@ -379,7 +387,7 @@ class Patients extends Component {
 					}
 				}).then(() => {
 					form.resetFields();
-					this.setState({ modalOpened: false, modalLoading: false, relatedPersonsCount: 0 });
+					this.setState({ modalOpened: false, modalLoading: false, relatedPersons: [] });
 					this.resetActiveEntity();
 				}).catch(errorHandler) :
 				this.props.addPatient({
@@ -390,17 +398,19 @@ class Patients extends Component {
 					}
 				}).then(() => {
 					form.resetFields();
-					this.setState({ modalOpened: false, modalLoading: false, relatedPersonsCount: 0 });
+					this.setState({ modalOpened: false, modalLoading: false, relatedPersons: [] });
 				}).catch(errorHandler);
 		});
 	};
 
 	editEntity = entity => () => {
 		this.form.resetFields();
+		let relatedPersons = entity.related_persons || [];
+		relatedPersons = relatedPersons.map(person => ({ ...person, _id: Math.random().toString(36).substring(7) }));
 		this.setState({
 			modalOpened: true,
 			activeEntity: entity,
-			relatedPersonsCount: entity.related_persons ? entity.related_persons.length : 0
+			relatedPersons
 		});
 	};
 
@@ -408,8 +418,15 @@ class Patients extends Component {
 
 	};
 
-	addRelatedPerson = relatedPersons => {
-		this.setState({ relatedPersonsCount: this.state.relatedPersonsCount + 1 });
+	addRelatedPerson = () => {
+		let relatedPersons = [ ...this.state.relatedPersons, { _id: Math.random().toString(36).substring(7) } ];
+		this.setState({ relatedPersons });
+	};
+
+	removeRelatedPerson = (id) => {
+		let { relatedPersons } = this.state;
+		relatedPersons = relatedPersons.filter(person => person._id !== id);
+		this.setState({ relatedPersons });
 	};
 
 	render() {
@@ -450,12 +467,12 @@ class Patients extends Component {
 		                  cancelText={formatMessage({ id: 'common.confirm_no' })}>
 		        <Button size="small" type='ghost'>
 			        {formatMessage({ id: 'common.action_delete' })}
-			        </Button>
+		        </Button>
 		      </Popconfirm>
         </span>
 			),
 		}];
-		const { modalOpened, activeEntity, modalLoading, relatedPersonsCount } = this.state;
+		const { modalOpened, activeEntity, modalLoading, relatedPersons } = this.state;
 
 		return (
 			<section className="Patients">
@@ -470,8 +487,9 @@ class Patients extends Component {
 					formatMessage={formatMessage}
 					onUploadFileChange={this.onUploadFileChange}
 					values={activeEntity}
-					relatedPersonsCount={relatedPersonsCount}
+					relatedPersons={relatedPersons}
 					addRelatedPerson={this.addRelatedPerson}
+					removeRelatedPerson={this.removeRelatedPerson}
 				/>
 				<div className="Dashboard__Details">
 					<h1 className="Dashboard__Header">

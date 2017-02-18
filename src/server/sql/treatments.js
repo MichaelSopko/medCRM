@@ -26,11 +26,9 @@ export default class Treatments {
 	}
 
 	deleteSeries({ id }) {
-		return Promise.all([
-			knex('treatment_series')
-				.where('id', id)
-				.delete()
-		]);
+		return knex('treatments').where('series_id', id).delete().then(() => {
+			return knex('treatment_series').where('id', id).delete();
+		});
 	}
 
 	addTreatment(fields) {

@@ -379,7 +379,7 @@ class Treatments extends Component {
 	render() {
 		const {
 			data: { loading, treatmentSeries = [], patients = [], therapists = [] },
-			deleteTreatment, currentClinic
+			deleteTreatment, currentClinic, deleteSeries
 		} = this.props;
 		const formatMessage = this.context.intl.formatMessage;
 
@@ -406,7 +406,7 @@ class Treatments extends Component {
 		      </Button>
 					<span className="ant-divider"></span>
 		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
-			      deleteTreatment(record)
+			      deleteSeries(record)
 		      } } okText={formatMessage({ id: 'common.confirm_yes' })}
 		                  cancelText={formatMessage({ id: 'common.confirm_no' })}>
 		        <Button size="small" type='ghost'>

@@ -62,7 +62,7 @@
     "create_button": "Create a Patient",
     "create_header": "Create Patient",
     "edit_header": "Edit Patient",
-    "header": "Therapists",
+    "header": "Patients",
     "field_related_persons": "Related persons",
     "field_person_type": "Person type",
     "field_person_type_error": "Please select person type",

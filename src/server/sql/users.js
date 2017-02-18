@@ -1,8 +1,17 @@
-import knex from './connector';
-import pwd from 'pwd';
+import knex from './connector'
+import pwd from 'pwd'
 
-import createUser from './helpers/create_user';
+import log from '../../log'
+import createUser from './helpers/create_user'
 
+const safeParse = (json, deflt = []) => {
+	try {
+		return JSON.parse(json || `${deflt}`)
+	} catch (e) {
+		log('JSON parse error');
+		return deflt;
+	}
+}
 
 export default class Users {
 
@@ -64,8 +73,8 @@ export default class Users {
 		return k.select()
 			.then(users => users.map(user => ({
 				...user,
-				files: JSON.parse(user.files),
-				related_persons: JSON.parse(user.related_persons),
+				files: safeParse(user.files, []),
+				related_persons: safeParse(user.related_persons),
 			})));
 	}
 
