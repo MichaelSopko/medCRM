@@ -60,6 +60,7 @@ type Patient implements User {
 	phone: String!
 	profile_email: String
 	clinic: Clinic
+	clinic_id: Int,
 	related_persons: [PatientRelatedPerson]
 	health_maintenance: PatientHealthMaintenance
 	files: [PatientFile]
@@ -240,7 +241,7 @@ type Mutation {
 	addPatient(
 	clinic_id: Int!
 	patient: PatientInput
-): MutationStatus
+): Patient
 
 	editPatient(
 	id: Int!
@@ -288,7 +289,12 @@ type Mutation {
 
 
 type Subscription {
-	clinicUpdated(ids: String): Clinic
+	patientCreated(clinic_id: Int!): Patient!
+	patientUpdated(clinic_id: Int!): Patient!
+	patientDeleted(clinic_id: Int!): Patient!
+	treatmentSeriesCreated(clinic_id: Int!): TreatmentSeries!
+	treatmentSeriesUpdated(clinic_id: Int!): TreatmentSeries!
+	treatmentSeriesDeleted(clinic_id: Int!): TreatmentSeries!
 }
 
 schema {

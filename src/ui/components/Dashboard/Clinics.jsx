@@ -70,7 +70,7 @@ const EntityForm = Form.create()(
 								number: true, message: formatMessage({ id: 'common.field_phone_error' })
 							}],
 						})(
-							<Input />
+							<Input type="number" />
 						)}
 					</Form.Item>
 					<Form.Item
@@ -82,7 +82,7 @@ const EntityForm = Form.create()(
 							initialValue: values.fax,
 							validateTrigger: 'onBlur', rules: [],
 						})(
-							<Input />
+							<Input type="number"/>
 						)}
 					</Form.Item>
 					<Form.Item
@@ -91,12 +91,11 @@ const EntityForm = Form.create()(
 						hasFeedback
 					>
 						{getFieldDecorator('email', {
-							initialValue: values.email,
 							validateTrigger: 'onBlur', rules: [{
-								email: true, message: formatMessage({ id: 'common.field_email_error' }),
+								type: 'email', message: formatMessage({ id: 'common.field_email_error' }),
 							}],
 						})(
-							<Input />
+							<Input type='email' />
 						)}
 					</Form.Item>
 				</Form>

@@ -41,7 +41,7 @@ const EntityForm = Form.create()(
 								type: 'email', required: true, message: formatMessage({ id: 'common.field_email_error' }),
 							}],
 						})(
-							<Input />
+							<Input type='email' />
 						)}
 					</Form.Item> }
 					<Form.Item

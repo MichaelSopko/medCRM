@@ -2,7 +2,7 @@ export function up(knex, Promise) {
 	return Promise.all([
 		knex.schema.table('users', (table) => {
 			// table.specificType('files', 'JSON');
-			table.string('files');
+			table.text('files');
 		}),
 	]);
 }

@@ -121,7 +121,7 @@ const EntityForm = Form.create()(
 								required: true, message: formatMessage({ id: 'common.field_phone_error' }),
 							}],
 						})(
-							<Input />
+							<Input type="number" />
 						)}
 					</Form.Item> }
 					{ <Form.Item

@@ -9,6 +9,9 @@ import GET_PATIENTS_QUERY from '../../graphql/PatientsGet.graphql'
 import ADD_PATIENT_MUTATION from '../../graphql/PatientAddMutation.graphql'
 import DELETE_PATIENT_MUTATION from '../../graphql/PatientDeleteMutaion.graphql'
 import EDIT_PATIENT_MUTATION from '../../graphql/PatientEditMutation.graphql'
+
+import PATIENT_CREATED_SUBSCRIPTION from '../../graphql/PatientCreatedSubscription.graphql'
+
 import ROLES from '../../../helpers/constants/roles'
 import HEALTH_MAINTENANCES from '../../../helpers/constants/health_maintenances'
 import RELATED_PERSONS from '../../../helpers/constants/related_persons'
@@ -77,7 +80,8 @@ const EntityForm = Form.create()(
 			return e && e.fileList;
 		};
 
-		let relatedPersonsItems = relatedPersons.map(item => (<div className="Patients__RelatedPersonsItem ant-form" key={item._id}>
+		let relatedPersonsItems = relatedPersons.map(item => (
+			<div className="Patients__RelatedPersonsItem ant-form" key={item._id}>
 				<Button
 					title={formatMessage({ id: 'common.action_delete' })}
 					shape='circle'
@@ -122,7 +126,7 @@ const EntityForm = Form.create()(
 						validateTrigger: 'onBlur',
 						rules: [{ required: true, message: formatMessage({ id: 'common.field_phone_error' }) }],
 					})(
-						<Input placeholder={formatMessage({ id: 'common.field_phone' })}/>
+						<Input type="number" placeholder={formatMessage({ id: 'common.field_phone' })}/>
 					)}
 				</Form.Item>
 				<Form.Item
@@ -217,7 +221,7 @@ const EntityForm = Form.create()(
 								required: true, message: formatMessage({ id: 'common.field_phone_error' }),
 							}],
 						})(
-							<Input />
+							<Input type="number"/>
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -302,6 +306,33 @@ class Patients extends Component {
 		modalLoading: false,
 		relatedPersons: []
 	};
+
+	constructor(props) {
+		super(props);
+
+		this.subscription = null;
+	}
+
+	componentWillReceiveProps(nextProps) {
+		// we don't resubscribe on changed props, because it never happens in our app
+		if (!this.subscription && !nextProps.data.loading) {
+			this.subscription = this.props.data.subscribeToMore({
+				document: PATIENT_CREATED_SUBSCRIPTION,
+				variables: { clinic_id: nextProps.currentClinic.id },
+				updateQuery: (previousResult, { subscriptionData }) => {
+					const newPatient = subscriptionData.data.patientCreated;
+					const newResult = update(previousResult, {
+						entry: {
+							patients: {
+								$unshift: [newPatient],
+							},
+						},
+					});
+					return newResult;
+				},
+			});
+		}
+	}
 
 	handleOk = () => {
 		this.setState({ modalOpened: false });
@@ -419,7 +450,7 @@ class Patients extends Component {
 	};
 
 	addRelatedPerson = () => {
-		let relatedPersons = [ ...this.state.relatedPersons, { _id: Math.random().toString(36).substring(7) } ];
+		let relatedPersons = [...this.state.relatedPersons, { _id: Math.random().toString(36).substring(7) }];
 		this.setState({ relatedPersons });
 	};
 

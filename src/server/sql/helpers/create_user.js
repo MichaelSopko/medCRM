@@ -14,8 +14,8 @@ export default async function createUser(knex, { password, ...fields }) {
 			...fields,
 			salt,
 			hash
-		});
+		}).returning('*');
 	} else {
-		return knex('users').insert(fields);
+		return knex('users').insert(fields).returning('*');
 	}
 }

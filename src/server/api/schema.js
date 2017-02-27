@@ -122,7 +122,10 @@ const resolvers = {
 					...patient,
 					role: ROLES.PATIENT
 				}))
-				.then(res => ({ status: res }))
+				.then(res => {
+					pubsub.publish('patientCreated', res);
+					return res;
+				})
 				.catch(checkForNonUniqueField)
 		},
 		editPatient(_, { id, patient }, context) {
@@ -176,7 +179,8 @@ const resolvers = {
 		},
 	},
 	Subscription: {  // Here live subscriptions can be added
-		clinicUpdated(ids) {
+		patientCreated(patient) {
+			return patient;
 		}
 	},
 	ClinicAdministrator: {
