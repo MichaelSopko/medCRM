@@ -95,6 +95,12 @@ body.rtl {
 	}
 }
 
+.ant-table-row  td {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
 .Container {
   padding: 0 1em;
   margin: 0 auto;
