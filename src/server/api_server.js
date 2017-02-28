@@ -32,6 +32,8 @@ app.use('/', express.static(settings.frontendBuildDir, {maxAge: '180 days'}));
 app.use('/uploads', express.static(settings.uploadsDir));
 if (__DEV__) {
   app.use('/assets', express.static(path.join(settings.backendBuildDir, 'assets'), {maxAge: '180 days'}));
+} else {
+	app.use('/assets', express.static(settings.frontendBuildDir, {maxAge: '180 days'}));
 }
 
 app.use('/graphql', jwt({ secret: settings.secret }), (...args) => graphqlMiddleware(...args));

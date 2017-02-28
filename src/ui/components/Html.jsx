@@ -19,7 +19,7 @@ const Html = ({ content, state, assetMap }) => {
 			<link rel="shortcut icon" href={`${assetMap["favicon.ico"]}`} />
 			<meta name="msapplication-config" content={`${assetMap["browserconfig.xml"]}`} />
 			<meta name="theme-color" content="#ffffff"/>
-			{!__DEV__ && <link rel="stylesheet" type="text/css" href={`${assetMap['bundle.css']}`} />}
+			{!__DEV__ && <link rel="stylesheet" type="text/css" href={`/${assetMap['bundle.css']}`} />}
 			{__DEV__ &&
 			<style dangerouslySetInnerHTML={{ __html:
 				require('../styles.scss')._getCss()
