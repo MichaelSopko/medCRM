@@ -45,7 +45,8 @@ server = http.createServer(app);
 new SubscriptionServer({
   subscriptionManager
 }, {
-	server
+	server,
+	path: '/'
 });
 
 server.listen(port, () => {

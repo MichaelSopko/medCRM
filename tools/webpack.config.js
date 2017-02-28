@@ -9,7 +9,7 @@ const path = require('path');
 const pkg = require('../package.json');
 const _ = require('lodash');
 
-global.__DEV__ = process.argv.length >= 3 && process.argv[2] === 'watch';
+global.__DEV__ = process.argv.length >= 3 && (process.argv[2] === 'watch' || process.argv[1].indexOf('mocha-webpack') >= 0);
 const buildNodeEnv = __DEV__ ? 'development' : 'production';
 
 let basePlugins = [];
@@ -35,14 +35,14 @@ const baseConfig = {
 				},
 			},
 			{ test: /\.json$/, loader: 'json' },
-			{ test: /\.(woff2?|svg|png|jpg)$/, loader: 'url?name=./assets/[hash].[ext]&limit=10000' },
-			{ test: /\.(ttf|eot)$/, loader: 'file?name=./assets/[hash].[ext]' },
 			{ test: /\.graphqls/, loader: 'raw' },
 			{
 				test: /\.(graphql|gql)$/,
 				exclude: /node_modules/,
 				loader: 'graphql-tag/loader'
-			}
+			},
+			{ test: /\.(woff2?|svg|png|ico|jpg|xml)$/, loader: 'url?name=[hash].[ext]&limit=10000' },
+			{ test: /\.(ttf|eot)$/, loader: 'file?name=[hash].[ext]' },
 		]
 	},
 	resolve: {
@@ -57,10 +57,8 @@ const baseConfig = {
 let serverPlugins = [
 	new webpack.BannerPlugin('require("source-map-support").install();',
 		{ raw: true, entryOnly: false }),
-	new webpack.DefinePlugin(Object.assign({
-		__CLIENT__: false, __SERVER__: true, __SSR__: pkg.app.ssr,
-		__DEV__: __DEV__, 'process.env.NODE_ENV': `"${buildNodeEnv}"`
-	}))
+	new webpack.DefinePlugin(Object.assign({__CLIENT__: false, __SERVER__: true, __SSR__: pkg.app.ssr,
+		__DEV__: __DEV__, 'process.env.NODE_ENV': `"${buildNodeEnv}"`}))
 ];
 
 const serverConfig = merge.smart(_.cloneDeep(baseConfig), {
@@ -102,10 +100,8 @@ let clientPlugins = [
 	new ManifestPlugin({
 		fileName: 'assets.json'
 	}),
-	new webpack.DefinePlugin(Object.assign({
-		__CLIENT__: true, __SERVER__: false, __SSR__: pkg.app.ssr,
-		__DEV__: __DEV__, 'process.env.NODE_ENV': `"${buildNodeEnv}"`
-	})),
+	new webpack.DefinePlugin(Object.assign({__CLIENT__: true, __SERVER__: false, __SSR__: pkg.app.ssr,
+		__DEV__: __DEV__, 'process.env.NODE_ENV': `"${buildNodeEnv}"`})),
 ];
 
 if (!__DEV__) {
@@ -127,15 +123,15 @@ const clientConfig = merge.smart(_.cloneDeep(baseConfig), {
 	module: {
 		loaders: [
 			{
-				test: /\.(scss|css)$/,
-				loader: __DEV__ ? 'style!css!sass' : ExtractTextPlugin.extract("style", "css!sass")
+				test: /\.scss$/,
+				loader: __DEV__ ? 'style!css?importLoaders=1!sass' : ExtractTextPlugin.extract("style", "css!sass")
 			}
 		]
 	},
 	output: {
 		filename: '[name].[hash].js',
 		path: pkg.app.frontendBuildDir,
-		publicPath: '/assets/'
+		publicPath: '/'
 	},
 	plugins: clientPlugins
 });
@@ -158,6 +154,6 @@ const dllConfig = merge.smart(_.cloneDeep(baseConfig), {
 });
 
 module.exports =
-	process.env.npm_lifecycle_script.indexOf('mocha-webpack') >= 0 ?
+	process.argv.length >= 2 && process.argv[1].indexOf('mocha-webpack') >= 0 ?
 		serverConfig :
-		[serverConfig, clientConfig, dllConfig];
+		[ serverConfig, clientConfig, dllConfig ];

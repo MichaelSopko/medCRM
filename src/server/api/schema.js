@@ -122,9 +122,11 @@ const resolvers = {
 					...patient,
 					role: ROLES.PATIENT
 				}))
-				.then(res => {
-					pubsub.publish('patientCreated', res);
-					return res;
+				.then(async ([id]) => {
+					const patient = await context.Users.findOne(id);
+					// console.log(patient);
+					pubsub.publish('patientCreated', patient);
+					return { status: true };
 				})
 				.catch(checkForNonUniqueField)
 		},
@@ -134,12 +136,23 @@ const resolvers = {
 					id,
 					...patient
 				}))
-				.then(res => ({ status: res }))
+				.then(async res => {
+					const patient = await context.Users.findOne(id);
+					pubsub.publish('patientUpdated', patient);
+					return { status: res };
+				})
 				.catch(checkForNonUniqueField)
 		},
 		deletePatient(_, { id }, context) {
 			return checkAccess(context, ROLES.THERAPIST)
-				.then(() => context.Users.deleteUser({ id }))
+				.then(() => context.Users.findOne(id))
+				.then(async patient => {
+					const res = await context.Users.deleteUser({ id });
+					if (res) {
+						pubsub.publish('patientDeleted', patient);
+						return { status: res };
+					}
+				})
 				.then(res => ({ status: res }))
 		},
 

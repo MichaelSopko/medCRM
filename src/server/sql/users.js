@@ -6,9 +6,12 @@ import createUser from './helpers/create_user'
 
 const safeParse = (json, deflt = []) => {
 	try {
+		if (json == null) {
+			return deflt;
+		}
 		return JSON.parse(json || `${deflt}`)
 	} catch (e) {
-		log('JSON parse error');
+		log('JSON parse error', json, e);
 		return deflt;
 	}
 }
@@ -23,6 +26,11 @@ export default class Users {
 		return knex('users')
 			.where('id', id)
 			.first()
+			.then(user => ({
+				...user,
+				files: safeParse(user.files, []),
+				related_persons: safeParse(user.related_persons)
+			}))
 	}
 
 	getByLogin(login) {
@@ -66,7 +74,7 @@ export default class Users {
 	}
 
 	findByRole(role, clinic_id) {
-		let k = knex('users').where('role', role);
+		let k = knex('users').where('role', role).orderBy('id', 'desc');
 		if (clinic_id) {
 			k = k.andWhere('clinic_id', clinic_id);
 		}

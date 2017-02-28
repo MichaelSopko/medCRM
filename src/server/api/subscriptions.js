@@ -6,7 +6,7 @@ const subscriptionManager = new SubscriptionManager({
 	pubsub,
 	setupFunctions: {
 		patientCreated: (options, args) => ({
-			patientCreated: patient => patient.clinic_id === args.clinic_id,
+			patientCreated: patient => patient.clinic_id === args.clinic_id
 		}),
 		patientUpdated: (options, args) => ({
 			patientUpdated: patient => patient.clinic_id === args.clinic_id,

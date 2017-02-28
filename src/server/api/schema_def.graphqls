@@ -241,7 +241,7 @@ type Mutation {
 	addPatient(
 	clinic_id: Int!
 	patient: PatientInput
-): Patient
+): MutationStatus
 
 	editPatient(
 	id: Int!

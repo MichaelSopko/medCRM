@@ -1,6 +1,5 @@
 import React from 'react'
 import { createBatchingNetworkInterface } from 'apollo-client'
-import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 import { ApolloProvider } from 'react-apollo'
 import { Router, browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
@@ -24,6 +23,13 @@ import { app as settings } from '../../package.json'
 
 import '../ui/styles.scss'
 
+// Favicon.ico should not be hashed, since some browsers expect it to be exactly on /favicon.ico URL
+require('!file?name=[name].[ext]!../assets/favicon.ico'); // eslint-disable-line import/no-webpack-loader-syntax
+
+// Require all files from assets dir recursively addding them into assets.json
+var req = require.context('!file?name=[hash].[ext]!../assets', true, /.*/);
+req.keys().map(req);
+
 function flattenMessages(nestedMessages, prefix = '') {
 	return Object.keys(nestedMessages).reduce((messages, key) => {
 		let value = nestedMessages[key];
@@ -41,17 +47,14 @@ function flattenMessages(nestedMessages, prefix = '') {
 
 addLocaleData([...he]);
 
-const wsClient = new SubscriptionClient(window.location.origin.replace(/^http/, 'ws')
-	.replace(':' + settings.webpackDevPort, ':' + settings.apiPort));
-
-
-const networkInterface = createBatchingNetworkInterface({
+let networkInterface = createBatchingNetworkInterface({
 	opts: {
 		credentials: "same-origin",
 	},
 	batchInterval: 20,
 	uri: "/graphql",
 });
+
 
 networkInterface.use([{
 	applyMiddleware(req, next) {
@@ -64,12 +67,17 @@ networkInterface.use([{
 	}
 }]);
 
-const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
+const subscriptions = require('subscriptions-transport-ws');
+
+const wsClient = new subscriptions.SubscriptionClient(window.location.origin.replace(/^http/, 'ws')
+	.replace(':' + settings.webpackDevPort, ':' + settings.apiPort));
+
+networkInterface = subscriptions.addGraphQLSubscriptions(
 	networkInterface,
 	wsClient,
 );
 
-const client = createApolloClient(networkInterfaceWithSubscriptions);
+const client = createApolloClient(networkInterface);
 
 let initialState = {};
 

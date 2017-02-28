@@ -315,17 +315,16 @@ class Patients extends Component {
 
 	componentWillReceiveProps(nextProps) {
 		// we don't resubscribe on changed props, because it never happens in our app
-		if (!this.subscription && !nextProps.data.loading) {
+		if (!this.subscription && !nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id) {
 			this.subscription = this.props.data.subscribeToMore({
 				document: PATIENT_CREATED_SUBSCRIPTION,
 				variables: { clinic_id: nextProps.currentClinic.id },
 				updateQuery: (previousResult, { subscriptionData }) => {
 					const newPatient = subscriptionData.data.patientCreated;
+					console.log(previousResult);
 					const newResult = update(previousResult, {
-						entry: {
-							patients: {
-								$unshift: [newPatient],
-							},
+						patients: {
+							$unshift: [newPatient],
 						},
 					});
 					return newResult;
