@@ -24,8 +24,8 @@ const Html = ({ content, state, assetMap }) => {
 			dangerouslySetInnerHTML={{ __html: `window.__APOLLO_STATE__=${JSON.stringify(state)};` }}
 			charSet="UTF-8"
 		/>
-		{assetMap["vendor.js"] && <script src={`/assets/${assetMap["vendor.js"]}`} charSet="utf-8" />}
-		<script src={`${ __DEV__ ? '/' : '/assets'}/${assetMap['bundle.js']}`} charSet="utf-8" />
+		{assetMap["vendor.js"] && <script src={`/${assetMap["vendor.js"]}`} charSet="utf-8" />}
+		<script src={`/${assetMap['bundle.js']}`} charSet="utf-8" />
 		</body>
 		</html>
 	);

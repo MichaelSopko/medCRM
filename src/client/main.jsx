@@ -13,6 +13,7 @@ import { LocaleProvider } from 'antd';
 import enUSAnt from 'antd/lib/locale-provider/en_US';
 import heAnt from '../l10n/ant/he';
 import { locale } from '../../config.json';
+import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 
 moment.locale(locale);
 
@@ -67,12 +68,10 @@ networkInterface.use([{
 	}
 }]);
 
-const subscriptions = require('subscriptions-transport-ws');
-
-const wsClient = new subscriptions.SubscriptionClient(window.location.origin.replace(/^http/, 'ws')
+const wsClient = new SubscriptionClient(window.location.origin.replace(/^http/, 'ws')
 	.replace(':' + settings.webpackDevPort, ':' + settings.apiPort));
 
-networkInterface = subscriptions.addGraphQLSubscriptions(
+networkInterface = addGraphQLSubscriptions(
 	networkInterface,
 	wsClient,
 );
