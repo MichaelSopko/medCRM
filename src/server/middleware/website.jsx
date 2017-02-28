@@ -19,9 +19,9 @@ export default (req, res) => {
       log.error('ROUTER ERROR:', error);
       res.status(500);
     } else if (renderProps) {
-      if (__DEV__ || !assetMap) {
-        assetMap = JSON.parse(fs.readFileSync(path.join(settings.frontendBuildDir, 'assets.json')));
-      }
+	    if (__DEV__ || !assetMap) {
+		    assetMap = JSON.parse(fs.readFileSync(path.join(settings.frontendBuildDir, 'assets.json')));
+	    }
       const page = <Html content="" state={({})} assetMap={assetMap} />;
       res.send(`<!doctype html>\n${ReactDOM.renderToStaticMarkup(page)}`);
       res.end();
