@@ -14,6 +14,10 @@ import ADD_SERIES_MUTATION from '../../graphql/TreatmentSeriesAddMutation.graphq
 import DELETE_SERIES_MUTATION from '../../graphql/TreatmentSeriesDeleteMutaion.graphql'
 import EDIT_SERIES_MUTATION from '../../graphql/TreatmentSeriesEditMutation.graphql'
 
+import SERIES_CREATED_SUBSCRIPTION from '../../graphql/SeriesCreatedSubscription.graphql'
+import SERIES_UPDATED_SUBSCRIPTION from '../../graphql/SeriesUpdatedSubscription.graphql'
+import SERIES_DELETED_SUBSCRIPTION from '../../graphql/SeriesDeletedSubscription.graphql'
+
 import ROLES from '../../../helpers/constants/roles'
 import ClinicsSelector from '../ClinicsSelector'
 import CheckAccess from '../helpers/CheckAccess'
@@ -270,6 +274,53 @@ class Treatments extends Component {
 		activeSeries: {},
 		modalLoading: false
 	};
+
+	subscriptions = null;
+
+	componentWillReceiveProps(nextProps) {
+		const { subscribeToMore } = this.props.data;
+		if (!this.subscriptions && !nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id) {
+			this.subscriptions = [
+				subscribeToMore({
+					document: SERIES_CREATED_SUBSCRIPTION,
+					variables: { clinic_id: nextProps.currentClinic.id },
+					updateQuery: (previousResult, { subscriptionData }) => {
+						previousResult = Object.assign({}, previousResult);
+						const newSeries = subscriptionData.data.treatmentSeriesCreated;
+						const newResult = update(previousResult, {
+							treatmentSeries: {
+								$unshift: [newSeries],
+							},
+						});
+						return newResult;
+					},
+				}),
+				subscribeToMore({
+					document: SERIES_UPDATED_SUBSCRIPTION,
+					variables: { clinic_id: nextProps.currentClinic.id },
+					updateQuery: (previousResult, { subscriptionData }) => {
+						previousResult = Object.assign({}, previousResult);
+						previousResult.treatmentSeries = previousResult.treatmentSeries.map((series) => {
+							if (series.id === subscriptionData.data.treatmentSeriesUpdated.id) {
+								return subscriptionData.data.treatmentSeriesUpdated
+							} else {
+								return series
+							}
+						})
+						return previousResult
+					},
+				}),
+				subscribeToMore({
+					document: SERIES_DELETED_SUBSCRIPTION,
+					variables: { clinic_id: nextProps.currentClinic.id },
+					updateQuery: (previousResult, { subscriptionData }) => {
+						previousResult = Object.assign({}, previousResult);
+						previousResult.treatmentSeries = previousResult.treatmentSeries.filter(series => series.id !== subscriptionData.data.treatmentSeriesDeleted.id)
+						return previousResult
+					},
+				})];
+		}
+	}
 
 	handleOk = () => {
 		this.setState({ seriesModalOpened: false, treatmentModalOpened: false });

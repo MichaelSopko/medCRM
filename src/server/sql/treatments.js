@@ -1,11 +1,53 @@
 import knex from './connector'
 
+const safeParse = (json, deflt = []) => {
+	try {
+		if (json == null) {
+			return deflt;
+		}
+		return JSON.parse(json || `${deflt}`)
+	} catch (e) {
+		log('JSON parse error', json, e);
+		return deflt;
+	}
+}
+
 export default class Treatments {
 
 	getSeries(clinic_id) {
 		return knex('treatment_series')
 			.where('clinic_id', clinic_id)
 			.select();
+	}
+
+	async findOne(id) {
+		const [series, treatments] = await Promise.all([
+			knex('treatment_series')
+				.where('id', id)
+				.first(),
+			knex('treatments')
+				.where('series_id', id)
+				.select()
+				.then(treatments => treatments.map(async treatment => {
+					const [therapists, patients] = await Promise.all([
+						knex('users').whereIn('id', safeParse(treatment.therapist_ids)).select(),
+						knex('users').whereIn('id', safeParse(treatment.patient_ids)).select()
+					]);
+					return {
+						...treatment,
+						therapists,
+						patients
+					};
+				}))
+		]);
+		series.treatments = treatments || [];
+		return series;
+	}
+
+	findOneTreatment(id) {
+		return knex('treatments')
+			.where('id', id)
+			.first();
 	}
 
 	getTreatments(series_id) {
@@ -16,7 +58,8 @@ export default class Treatments {
 
 	addSeries(fields) {
 		return knex('treatment_series')
-			.insert(fields);
+			.insert(fields)
+			.returning('*');
 	}
 
 	editSeries({ id, ...fields }) {
@@ -40,6 +83,7 @@ export default class Treatments {
 		}
 		return knex('treatments')
 			.insert(fields)
+			.returning('*')
 	}
 
 	editTreatment({ id, ...fields }) {

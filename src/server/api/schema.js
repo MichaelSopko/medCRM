@@ -123,8 +123,8 @@ const resolvers = {
 					role: ROLES.PATIENT
 				}))
 				.then(async ([id]) => {
+					console.log(id);
 					const patient = await context.Users.findOne(id);
-					// console.log(patient);
 					pubsub.publish('patientCreated', patient);
 					return { status: true };
 				})
@@ -136,10 +136,10 @@ const resolvers = {
 					id,
 					...patient
 				}))
-				.then(async res => {
-					const patient = await context.Users.findOne(id);
+				.then(() => context.Users.findOne(id))
+				.then(patient => {
 					pubsub.publish('patientUpdated', patient);
-					return { status: res };
+					return { status: true };
 				})
 				.catch(checkForNonUniqueField)
 		},
@@ -150,7 +150,7 @@ const resolvers = {
 					const res = await context.Users.deleteUser({ id });
 					if (res) {
 						pubsub.publish('patientDeleted', patient);
-						return { status: res };
+						return { status: true };
 					}
 				})
 				.then(res => ({ status: res }))
@@ -159,23 +159,43 @@ const resolvers = {
 		addTreatmentSeries(_, series, context) {
 			return checkAccess(context, ROLES.THERAPIST)
 				.then(() => context.Treatments.addSeries(series))
-				.then(res => ({ status: res }))
+				.then(async ([id]) => {
+					const series = await context.Treatments.findOne(id);
+					pubsub.publish('treatmentSeriesCreated', series);
+					return { status: true };
+				})
 		},
 		editTreatmentSeries(_, series, context) {
 			return checkAccess(context, ROLES.THERAPIST)
 				.then(() => context.Treatments.editSeries(series))
-				.then(res => ({ status: res }))
+				.then(() => context.Treatments.findOne(series.id))
+				.then(series => {
+					console.log(series);
+					pubsub.publish('treatmentSeriesUpdated', series);
+					return { status: true };
+				})
 		},
 		deleteTreatmentSeries(_, { id }, context) {
 			return checkAccess(context, ROLES.THERAPIST)
-				.then(() => context.Treatments.deleteSeries({ id }))
-				.then(res => ({ status: res }))
+				.then(() => context.Treatments.findOne(id))
+				.then(async series => {
+					const res = await context.Treatments.deleteSeries({ id });
+					if (res) {
+						pubsub.publish('treatmentSeriesDeleted', series);
+						return { status: true };
+					}
+				})
 		},
 
 		addTreatment(_, { series_id, treatment }, context) {
 			return checkAccess(context, ROLES.THERAPIST)
 				.then(() => context.Treatments.addTreatment({ series_id, ...treatment }))
-				.then(res => ({ status: res }))
+				.then(async () => {
+					const series = await context.Treatments.findOne(series_id);
+					pubsub.publish('treatmentSeriesUpdated', series);
+					return series;
+				})
+				.then(res => ({ status: true }))
 		},
 		editTreatment(_, { id, treatment }, context) {
 			return checkAccess(context, ROLES.THERAPIST)
@@ -183,18 +203,48 @@ const resolvers = {
 					id,
 					...treatment
 				}))
-				.then(res => ({ status: res }))
+				.then(async () => {
+					treatment = await context.Treatments.findOneTreatment(id);
+					const series = await context.Treatments.findOne(treatment.series_id);
+					pubsub.publish('treatmentSeriesUpdated', series);
+					return series;
+				})
+				.then(res => ({ status: true }))
 		},
 		deleteTreatment(_, { id }, context) {
+			let series_id;
 			return checkAccess(context, ROLES.THERAPIST)
+				.then(() => context.Treatments.findOneTreatment(id))
+				.then(treatment => {
+					series_id = treatment.series_id;
+				})
 				.then(() => context.Treatments.deleteTreatment({ id }))
-				.then(res => ({ status: res }))
+				.then(() => context.Treatments.findOne(series_id))
+				.then((series) => {
+					pubsub.publish('treatmentSeriesUpdated', series);
+				})
+				.then(res => ({ status: true }))
 		},
 	},
-	Subscription: {  // Here live subscriptions can be added
+	Subscription: {
 		patientCreated(patient) {
 			return patient;
-		}
+		},
+		patientUpdated(patient) {
+			return patient;
+		},
+		patientDeleted(patient) {
+			return patient;
+		},
+		treatmentSeriesCreated(series) {
+			return series;
+		},
+		treatmentSeriesUpdated(series) {
+			return series;
+		},
+		treatmentSeriesDeleted(series) {
+			return series;
+		},
 	},
 	ClinicAdministrator: {
 		clinic(user, _, context) {
@@ -213,17 +263,15 @@ const resolvers = {
 	},
 	TreatmentSeries: {
 		treatments(series, _, context) {
-			return context.Treatments.getTreatments(series.id);
+			return series.treatments || context.Treatments.getTreatments(series.id);
 		}
 	},
 	Treatment: {
 		therapists(treatment, _, context) {
-			const ids = safeParse(treatment.therapist_ids);
-			return context.Users.getUsers(ids);
+			return treatment.therapists || context.Users.getUsers(safeParse(treatment.therapist_ids));
 		},
 		patients(treatment, _, context) {
-			const ids = safeParse(treatment.patient_ids);
-			return context.Users.getUsers(ids);
+			return treatment.patients || context.Users.getUsers(safeParse(treatment.patient_ids));
 		}
 	},
 	Date: GraphQLMomentMySQL

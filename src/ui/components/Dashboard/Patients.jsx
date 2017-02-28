@@ -11,6 +11,8 @@ import DELETE_PATIENT_MUTATION from '../../graphql/PatientDeleteMutaion.graphql'
 import EDIT_PATIENT_MUTATION from '../../graphql/PatientEditMutation.graphql'
 
 import PATIENT_CREATED_SUBSCRIPTION from '../../graphql/PatientCreatedSubscription.graphql'
+import PATIENT_UPDATED_SUBSCRIPTION from '../../graphql/PatientUpdatedSubscription.graphql'
+import PATIENT_DELETED_SUBSCRIPTION from '../../graphql/PatientDeletedSubscription.graphql'
 
 import ROLES from '../../../helpers/constants/roles'
 import HEALTH_MAINTENANCES from '../../../helpers/constants/health_maintenances'
@@ -310,26 +312,51 @@ class Patients extends Component {
 	constructor(props) {
 		super(props);
 
-		this.subscription = null;
+		this.subscriptions = null;
 	}
 
 	componentWillReceiveProps(nextProps) {
-		// we don't resubscribe on changed props, because it never happens in our app
-		if (!this.subscription && !nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id) {
-			this.subscription = this.props.data.subscribeToMore({
-				document: PATIENT_CREATED_SUBSCRIPTION,
-				variables: { clinic_id: nextProps.currentClinic.id },
-				updateQuery: (previousResult, { subscriptionData }) => {
-					const newPatient = subscriptionData.data.patientCreated;
-					console.log(previousResult);
-					const newResult = update(previousResult, {
-						patients: {
-							$unshift: [newPatient],
-						},
-					});
-					return newResult;
-				},
-			});
+		const { subscribeToMore } = this.props.data;
+		if (!this.subscriptions && !nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id) {
+			this.subscriptions = [
+				subscribeToMore({
+					document: PATIENT_CREATED_SUBSCRIPTION,
+					variables: { clinic_id: nextProps.currentClinic.id },
+					updateQuery: (previousResult, { subscriptionData }) => {
+						previousResult = Object.assign({}, previousResult);
+						const newPatient = subscriptionData.data.patientCreated;
+						const newResult = update(previousResult, {
+							patients: {
+								$unshift: [newPatient],
+							},
+						});
+						return newResult;
+					},
+				}),
+				subscribeToMore({
+					document: PATIENT_UPDATED_SUBSCRIPTION,
+					variables: { clinic_id: nextProps.currentClinic.id },
+					updateQuery: (previousResult, { subscriptionData }) => {
+						previousResult = Object.assign({}, previousResult);
+						previousResult.patients = previousResult.patients.map((post) => {
+							if (post.id === subscriptionData.data.patientUpdated.id) {
+								return subscriptionData.data.patientUpdated
+							} else {
+								return post
+							}
+						})
+						return previousResult
+					},
+				}),
+				subscribeToMore({
+					document: PATIENT_DELETED_SUBSCRIPTION,
+					variables: { clinic_id: nextProps.currentClinic.id },
+					updateQuery: (previousResult, { subscriptionData }) => {
+						previousResult = Object.assign({}, previousResult);
+						previousResult.patients = previousResult.patients.filter(patient => patient.id !== subscriptionData.data.patientDeleted.id)
+						return previousResult
+					},
+				})];
 		}
 	}
 

@@ -1,0 +1,5 @@
+subscription onSeriesDeleted($clinic_id: Int!){
+    treatmentSeriesDeleted(clinic_id: $clinic_id) {
+        id
+    }
+}
