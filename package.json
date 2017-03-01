@@ -62,7 +62,7 @@
     "graphql-server-express": "^0.6.0",
     "graphql-subscriptions": "^0.3.0",
     "graphql-tag": "^1.2.1",
-    "graphql-tools": "^0.9.0",
+    "graphql-tools": "^0.10.0",
     "graphql-type-json": "^0.1.4",
     "graphql-typings": "0.0.1-beta-2",
     "isomorphic-fetch": "^2.2.1",
@@ -86,9 +86,7 @@
     "redux": "^3.6.0",
     "source-map-support": "^0.4.2",
     "sqlite3": "^3.1.4",
-    "subscriptions-transport-ws": "^0.5.3",
-    "webpack": "^1.13.2",
-    "webpack-manifest-plugin": "^1.0.1"
+    "subscriptions-transport-ws": "^0.5.3"
   },
   "devDependencies": {
     "babel-cli": "^6.14.0",
@@ -115,7 +113,7 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^3.0.2",
     "eslint-plugin-react": "^6.3.0",
-    "extract-text-webpack-plugin": "^1.0.1",
+    "extract-text-webpack-plugin": "^2.0.0",
     "file-loader": "^0.9.0",
     "graphql": "^0.8.2",
     "ignore-loader": "^0.1.1",
@@ -132,8 +130,10 @@
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "wait-for-port": "0.0.2",
+    "webpack": "^1.14.0",
     "webpack-dev-server": "^1.16.3",
-    "webpack-merge": "^2.3.1",
+    "webpack-manifest-plugin": "^1.0.1",
+    "webpack-merge": "^3.0.0",
     "webpack-node-externals": "^1.4.3"
   },
   "eslintConfig": {

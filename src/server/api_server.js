@@ -74,7 +74,7 @@ if (module.hot) {
     module.hot.accept('./middleware/graphql', () => { graphqlMiddleware = require('./middleware/graphql').default; });
     module.hot.accept('./middleware/graphiql', () => { graphiqlMiddleware = require('./middleware/graphiql').default; });
     module.hot.accept('./api/subscriptions', () => { subscriptionManager = require('./api/subscriptions').subscriptionManager; });
-    module.hot.accept('./middleware/uploads', () => { authenticationMiddleware = require('./middleware/uploads').default; });
+    module.hot.accept('./middleware/authentication', () => { authenticationMiddleware = require('./middleware/authentication').default; });
     module.hot.accept('./middleware/uploads', () => { uploadsMiddleware = require('./middleware/uploads').default; });
   } catch (err) {
     log(err.stack);

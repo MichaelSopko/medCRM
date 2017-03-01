@@ -253,7 +253,7 @@ const EntityForm = Form.create()(
 								required: true, message: formatMessage({ id: 'common.field_birth_date_error' }),
 							}],
 						})(
-							<DatePicker/>
+							<DatePicker showToday={false}/>
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -493,25 +493,39 @@ class Patients extends Component {
 		const columns = [{
 			title: formatMessage({ id: 'common.field_name' }),
 			key: 'name',
-			render: (text, record) => <span>{record.first_name} {record.last_name}</span>
+			width: '20%',
+			render: (text, record) => <div className="to-dynamic-container">
+				<span className="to-dynamic">{record.first_name} {record.last_name}</span>
+			</div>
 		}, {
 			title: formatMessage({ id: 'common.field_phone' }),
 			dataIndex: 'phone',
 			key: 'phone',
-			render: text => <a href={ `tel:${text}` }>{ text }</a>
+			width: '15%',
+			render: text => <div className="to-dynamic-container">
+				<span className="to-dynamic"><a href={ `tel:${text}` }>{ text }</a></span>
+			</div>
 		}, {
 			title: formatMessage({ id: 'common.field_email' }),
 			dataIndex: 'profile_email',
 			key: 'profile_email',
-			render: text => <a href={ `mailto:${text}` }>{ text }</a>
+			width: '15%',
+			render: text => <div className="to-dynamic-container">
+				<span className="to-dynamic"><a href={ `mailto:${text}` }>{ text }</a></span>
+			</div>
 		}, {
 			title: formatMessage({ id: 'Patients.field_files' }),
 			dataIndex: 'files',
 			key: 'files',
-			render: (text, record) => intersperse(record.files.map(file => <a href={file.url}>{file.name}</a>), ", ")
+			render: (text, record) => <div className="to-dynamic-container">
+				<span className="to-dynamic">
+					{ intersperse(record.files.map(file => <a href={file.url}>{file.name}</a>), ", ") }
+					</span>
+			</div>
 		}, {
 			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
+			width: '20%',
 			render: (text, record) => (
 				<span>
 		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>

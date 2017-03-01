@@ -81,13 +81,17 @@ const SeriesForm = Form.create()(
 
 const TreatmentForm = Form.create()(
 	(props) => {
-		const { visible, onCancel, onSubmit, form, loading, therapists, patients, values = {}, formatMessage } = props;
+		const { visible, onCancel, onSubmit, form, loading, therapists, patients, values = {}, formatMessage, currentUser } = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
 			labelCol: { span: 6 },
 			wrapperCol: { span: 14 },
 		};
 		const isEditing = !!Object.keys(values).length;
+		const isTherapist = currentUser.role === ROLES.THERAPIST;
+		const therapistsValue = isTherapist && !isEditing
+			? currentUser.id.toString()
+			: values.therapists && values.therapists.map(({ id }) => id.toString());
 
 		return (
 			<Modal title={ formatMessage({ id: isEditing ? 'Treatments.edit_header' : 'Treatments.create_header' }) }
@@ -197,12 +201,12 @@ const TreatmentForm = Form.create()(
 						hasFeedback
 					>
 						{getFieldDecorator('therapist_ids', {
-							initialValue: values.therapists && values.therapists.map(({ id }) => id.toString()),
+							initialValue: therapistsValue,
 							validateTrigger: 'onBlur', rules: [{
 								type: 'array', required: true, message: formatMessage({ id: 'Treatments.field_therapists_error' }),
 							}],
 						})(
-							<Select multiple>
+							<Select multiple disabled={isTherapist}>
 								{ therapists.map(({ first_name, last_name, id }) =>
 									<Select.Option key={id} value={id.toString()}>
 										{first_name} {last_name}
@@ -218,24 +222,48 @@ const TreatmentForm = Form.create()(
 
 const TreatmentsTable = ({ treatments, deleteTreatment, editTreatment, formatMessage }) => {
 	const columns = [
-		{ title: formatMessage({ id: 'Treatments.field_target' }), dataIndex: 'target', key: 'target' },
-		{ title: formatMessage({ id: 'Treatments.field_method' }), dataIndex: 'method', key: 'method' },
-		{ title: formatMessage({ id: 'Treatments.field_process' }), dataIndex: 'process', key: 'process' },
+		{
+			title: formatMessage({ id: 'Treatments.field_target' }), dataIndex: 'target', key: 'target',
+			width: '15%',
+			render: (text, record) => <div className="to-dynamic-container">
+				<span className="to-dynamic">{text}</span>
+			</div>
+		},
+		{
+			title: formatMessage({ id: 'Treatments.field_method' }), dataIndex: 'method', key: 'method',
+			width: '15%',
+			render: (text, record) => <div className="to-dynamic-container">
+				<span className="to-dynamic">{text}</span>
+			</div>
+		},
+		{
+			title: formatMessage({ id: 'Treatments.field_process' }), dataIndex: 'process', key: 'process',
+			width: '15%',
+			render: (text, record) => <div className="to-dynamic-container">
+				<span className="to-dynamic">{text}</span>
+			</div>
+		},
 		{
 			title: formatMessage({ id: 'Treatments.field_patients' }),
 			dataIndex: 'patients',
-			render: (text, record) =>
-				<span>{ record.patients.map(user => `${user.first_name} ${user.last_name}`).join(', ') }</span>
+			width: '15%',
+			render: (text, record) => <div className="to-dynamic-container">
+				<span
+					className="to-dynamic">{ record.patients.map(user => `${user.first_name} ${user.last_name}`).join(', ') }</span>
+			</div>
 		},
 		{
 			title: formatMessage({ id: 'Treatments.field_therapists' }),
 			dataIndex: 'therapists',
-			render: (text, record) =>
-				<span>{ record.therapists.map(user => `${user.first_name} ${user.last_name}`).join(', ') }</span>
+			width: '20%',
+			render: (text, record) => <div className="to-dynamic-container">
+				<span className="to-dynamic">{ record.therapists.map(user => `${user.first_name} ${user.last_name}`).join(', ') }</span>
+			</div>
 		},
 		{
 			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
+			width: '15%',
 			render: (text, record) => (
 				<span>
 		      <a onClick={ editTreatment(record) }>{formatMessage({ id: 'common.action_edit' })}</a>
@@ -430,14 +458,18 @@ class Treatments extends Component {
 	render() {
 		const {
 			data: { loading, treatmentSeries = [], patients = [], therapists = [] },
-			deleteTreatment, currentClinic, deleteSeries
+			deleteTreatment, currentClinic, deleteSeries, currentUser
 		} = this.props;
 		const formatMessage = this.context.intl.formatMessage;
 
 		const columns = [{
 			title: formatMessage({ id: 'common.field_name' }),
 			key: 'name',
-			dataIndex: 'name'
+			dataIndex: 'name',
+			render: text => <div className="to-dynamic-container">
+				<span className="to-dynamic">{ text }</span>
+			</div>,
+			width: '40%'
 		}, {
 			title: formatMessage({ id: 'Treatments.field_treatments_number' }),
 			key: 'treatments_number',
@@ -445,9 +477,11 @@ class Treatments extends Component {
 		}, {
 			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
+			width: '35%',
 			render: (text, record) => (
 				<span>
-		      <Button size="small" type='primary' disabled={record.treatments_number <= record.treatments.length} onClick={ this.showTreatmentModal(record) }>
+		      <Button size="small" type='primary' disabled={record.treatments_number <= record.treatments.length}
+		              onClick={ this.showTreatmentModal(record) }>
 			      <Icon type="plus-circle-o"/>
 			      {formatMessage({ id: 'Treatments.create_treatment_button' })}
 		      </Button>
@@ -494,6 +528,7 @@ class Treatments extends Component {
 					patients={patients}
 					therapists={therapists}
 					formatMessage={formatMessage}
+					currentUser={currentUser}
 				/>
 				<div className="Dashboard__Details">
 					<h1 className="Dashboard__Header">
@@ -557,7 +592,7 @@ const TreatmentsApollo = withApollo(compose(
 )(Treatments));
 
 
-@connect((state) => ({ currentClinic: state.currentClinic }))
+@connect(({ currentClinic, currentUser }) => ({ currentClinic, currentUser }))
 class CurrentClinicWrapper extends Component {
 	render() {
 		return <TreatmentsApollo { ...this.props }/>

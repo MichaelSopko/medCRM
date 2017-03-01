@@ -93,12 +93,25 @@ body.rtl {
 	.Login .ant-row.ant-form-item > div {
 		flex: 1;
 	}
-}
 
-.ant-table-row  td {
-	text-overflow: ellipsis;
-	overflow: hidden;
-	white-space: nowrap;
+	.ant-calendar-header .ant-calendar-next-century-btn, .ant-calendar-header .ant-calendar-next-decade-btn, .ant-calendar-header .ant-calendar-next-year-btn,
+	.ant-calendar-month-panel-header .ant-calendar-month-panel-next-century-btn, .ant-calendar-month-panel-header .ant-calendar-month-panel-next-decade-btn, .ant-calendar-month-panel-header .ant-calendar-month-panel-next-year-btn {
+		left: 7px;
+		right: auto;
+	}
+	.ant-calendar-header .ant-calendar-next-month-btn {
+		left: 29px;
+		right: auto;
+	}
+	.ant-calendar-header .ant-calendar-prev-century-btn, .ant-calendar-header .ant-calendar-prev-decade-btn, .ant-calendar-header .ant-calendar-prev-year-btn,
+	.ant-calendar-month-panel-header .ant-calendar-month-panel-prev-century-btn, .ant-calendar-month-panel-header .ant-calendar-month-panel-prev-decade-btn, .ant-calendar-month-panel-header .ant-calendar-month-panel-prev-year-btn {
+		left: auto;
+		right: 7px;
+	}
+	.ant-calendar-header .ant-calendar-prev-month-btn {
+		left: auto;
+		right: 29px;
+	}
 }
 
 .Container {
@@ -113,4 +126,33 @@ body.rtl {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.to-dynamic-container {
+	position: relative;
+	width: 100%;
+	padding: 0 !important;
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: flex;
+	vertical-align: text-bottom !important;
+}
+.to-dynamic {
+	position: absolute;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-ms-text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	width: 100%;
+	min-width: 0;
+	padding: 0 0 5px 0 !important;
+	top: 0;
+	left: 0;
+}
+.to-dynamic-container:after,
+.to-dynamic:after {
+	content: '-';
+	display: inline-block;
+	visibility: hidden;
 }

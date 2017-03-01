@@ -121,7 +121,7 @@ const EntityForm = Form.create()(
 								required: true, message: formatMessage({ id: 'common.field_phone_error' }),
 							}],
 						})(
-							<Input type="number" />
+							<Input type="number"/>
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -135,7 +135,7 @@ const EntityForm = Form.create()(
 								required: true, message: formatMessage({ id: 'common.field_birth_date_error' }),
 							}],
 						})(
-							<DatePicker/>
+							<DatePicker showToday={false}/>
 						)}
 					</Form.Item> }
 					<Form.Item
@@ -250,20 +250,30 @@ class Therapists extends Component {
 		const columns = [{
 			title: formatMessage({ id: 'common.field_name' }),
 			key: 'name',
-			render: (text, record) => <span>{record.first_name} {record.last_name}</span>
+			width: '30%',
+			render: (text, record) => <div className="to-dynamic-container">
+				<span className="to-dynamic">{record.first_name} {record.last_name}</span>
+			</div>
 		}, {
 			title: formatMessage({ id: 'common.field_phone' }),
 			dataIndex: 'phone',
 			key: 'phone',
-			render: text => <a href={ `tel:${text}` }>{ text }</a>
+			width: '25%',
+			render: text => <div className="to-dynamic-container">
+				<span className="to-dynamic"><a href={ `tel:${text}` }>{ text }</a></span>
+			</div>
 		}, {
 			title: formatMessage({ id: 'common.field_email' }),
 			dataIndex: 'email',
 			key: 'email',
-			render: text => <a href={ `mailto:${text}` }>{ text }</a>
+			width: '25%',
+			render: text => <div className="to-dynamic-container">
+				<span className="to-dynamic"><a href={ `mailto:${text}` }>{ text }</a></span>
+			</div>
 		}, {
 			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
+			width: '20%',
 			render: (text, record) => (
 				<span>
 		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
