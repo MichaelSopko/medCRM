@@ -1,27 +1,41 @@
 import { SubscriptionManager } from 'graphql-subscriptions'
 import schema, { pubsub } from './schema'
 
+const compareIds = args => entity => +entity.clinic_id === +args.clinic_id;
+
 const subscriptionManager = new SubscriptionManager({
 	schema,
 	pubsub,
 	setupFunctions: {
 		patientCreated: (options, args) => ({
-			patientCreated: patient => patient.clinic_id === args.clinic_id
+			patientCreated: {
+				filter: compareIds(args)
+			}
 		}),
 		patientUpdated: (options, args) => ({
-			patientUpdated: patient => patient.clinic_id === args.clinic_id,
+			patientUpdated: {
+				filter: compareIds(args)
+			}
 		}),
 		patientDeleted: (options, args) => ({
-			patientDeleted: patient => patient.clinic_id === args.clinic_id,
+			patientDeleted: {
+				filter: compareIds(args)
+			}
 		}),
 		treatmentSeriesCreated: (options, args) => ({
-			treatmentSeriesCreated: treatmentSeries => treatmentSeries.clinic_id === args.clinic_id,
+			treatmentSeriesCreated: {
+				filter: compareIds(args)
+			}
 		}),
 		treatmentSeriesUpdated: (options, args) => ({
-			treatmentSeriesUpdated: treatmentSeries => treatmentSeries.clinic_id === args.clinic_id,
+				treatmentSeriesUpdated: {
+					filter: compareIds(args)
+				}
 		}),
 		treatmentSeriesDeleted: (options, args) => ({
-			treatmentSeriesDeleted: treatmentSeries => treatmentSeries.clinic_id === args.clinic_id,
+			treatmentSeriesDeleted: {
+				filter: compareIds(args)
+			}
 		}),
 	},
 });

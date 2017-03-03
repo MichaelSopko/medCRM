@@ -123,7 +123,6 @@ const resolvers = {
 					role: ROLES.PATIENT
 				}))
 				.then(async ([id]) => {
-					console.log(id);
 					const patient = await context.Users.findOne(id);
 					pubsub.publish('patientCreated', patient);
 					return { status: true };
@@ -170,7 +169,6 @@ const resolvers = {
 				.then(() => context.Treatments.editSeries(series))
 				.then(() => context.Treatments.findOne(series.id))
 				.then(series => {
-					console.log(series);
 					pubsub.publish('treatmentSeriesUpdated', series);
 					return { status: true };
 				})

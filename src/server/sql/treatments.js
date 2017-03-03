@@ -17,6 +17,7 @@ export default class Treatments {
 	getSeries(clinic_id) {
 		return knex('treatment_series')
 			.where('clinic_id', clinic_id)
+			.orderBy('id', 'DESC')
 			.select();
 	}
 

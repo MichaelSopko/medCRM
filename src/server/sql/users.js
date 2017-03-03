@@ -78,7 +78,9 @@ export default class Users {
 		if (clinic_id) {
 			k = k.andWhere('clinic_id', clinic_id);
 		}
-		return k.select()
+		return k
+			.orderBy('id', 'DESC')
+			.select()
 			.then(users => users.map(user => ({
 				...user,
 				files: safeParse(user.files, []),
