@@ -28,7 +28,7 @@ async function checkAccess(ctx, role) {
 	if (isOk) {
 		return user;
 	} else {
-		throw new Error('No access');
+		throw new Error('Access denied');
 	}
 }
 
@@ -43,7 +43,7 @@ function checkForNonUniqueField(e) {
 const resolvers = {
 	Query: {
 		clinics(ignored1, ignored2, context) {
-			return checkAccess(context)
+			return checkAccess(context, ROLES.SYSTEM_ADMIN)
 				.then(() => context.Clinics.getClinics());
 		},
 		administrators(ignored1, ignored2, context) {
