@@ -317,7 +317,8 @@ class Patients extends Component {
 
 	componentWillReceiveProps(nextProps) {
 		const { subscribeToMore } = this.props.data;
-		if (!this.subscriptions && !nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id) {
+		const clinicChanged = !this.props.currentClinic || (nextProps.currentClinic && (this.props.currentClinic.id !== nextProps.currentClinic.id));
+		if (!nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id && clinicChanged) {
 			this.subscriptions = [
 				subscribeToMore({
 					document: PATIENT_CREATED_SUBSCRIPTION,
@@ -594,12 +595,12 @@ const PatientsApollo = withApollo(compose(
 		props: ({ ownProps, mutate }) => ({
 			addPatient: (fields) => mutate({
 				variables: fields,
-				refetchQueries: [{
+				refetchQueries: [/*{
 					query: GET_PATIENTS_QUERY,
 					variables: {
 						clinic_id: ownProps.currentClinic.id
 					}
-				}],
+				}*/],
 			})
 		})
 	}),
@@ -607,12 +608,12 @@ const PatientsApollo = withApollo(compose(
 		props: ({ ownProps, mutate }) => ({
 			deletePatient: ({ id }) => mutate({
 				variables: { id },
-				refetchQueries: [{
+				refetchQueries: [/*{
 					query: GET_PATIENTS_QUERY,
 					variables: {
 						clinic_id: ownProps.currentClinic.id
 					}
-				}],
+				}*/],
 			})
 		})
 	}),
@@ -620,12 +621,12 @@ const PatientsApollo = withApollo(compose(
 		props: ({ ownProps, mutate }) => ({
 			editPatient: (fields) => mutate({
 				variables: fields,
-				refetchQueries: [{
+				refetchQueries: [/*{
 					query: GET_PATIENTS_QUERY,
 					variables: {
 						clinic_id: ownProps.currentClinic.id
 					}
-				}],
+				}*/],
 			})
 		})
 	}),

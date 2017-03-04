@@ -198,6 +198,15 @@ const TreatmentForm = Form.create()(
 					{ <Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'Treatments.field_therapists' })}
+						style={ { display: !isTherapist ? 'none' : 'flex' } }
+						hasFeedback
+					>
+						<div>{ (isEditing ? therapists : [currentUser]).map(user => `${user.first_name} ${user.last_name}`).join(', ') }</div>
+					</Form.Item> }
+					{ <Form.Item
+						{...formItemLayout}
+						label={formatMessage({ id: 'Treatments.field_therapists' })}
+						style={ { display: isTherapist ? 'none' : 'flex' } }
 						hasFeedback
 					>
 						{getFieldDecorator('therapist_ids', {
@@ -206,7 +215,7 @@ const TreatmentForm = Form.create()(
 								type: 'array', required: true, message: formatMessage({ id: 'Treatments.field_therapists_error' }),
 							}],
 						})(
-							<Select multiple disabled={isTherapist}>
+							<Select multiple>
 								{ therapists.map(({ first_name, last_name, id }) =>
 									<Select.Option key={id} value={id.toString()}>
 										{first_name} {last_name}
@@ -307,7 +316,9 @@ class Treatments extends Component {
 
 	componentWillReceiveProps(nextProps) {
 		const { subscribeToMore } = this.props.data;
-		if (!this.subscriptions && !nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id) {
+		const clinicChanged = !this.props.currentClinic || (nextProps.currentClinic && (this.props.currentClinic.id !== nextProps.currentClinic.id));
+
+		if (!this.subscriptions && !nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id && clinicChanged) {
 			this.subscriptions = [
 				subscribeToMore({
 					document: SERIES_CREATED_SUBSCRIPTION,
@@ -564,12 +575,12 @@ const getOptions = name => ({
 	props: ({ ownProps, mutate }) => ({
 		[name]: (fields) => mutate({
 			variables: fields,
-			refetchQueries: [{
+			refetchQueries: [/*{
 				query: GET_TREATMENTS_QUERY,
 				variables: {
 					clinic_id: ownProps.currentClinic.id
 				}
-			}],
+			}*/],
 		})
 	})
 });
