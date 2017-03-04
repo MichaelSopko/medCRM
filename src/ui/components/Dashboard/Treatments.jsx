@@ -90,7 +90,7 @@ const TreatmentForm = Form.create()(
 		const isEditing = !!Object.keys(values).length;
 		const isTherapist = currentUser.role === ROLES.THERAPIST;
 		const therapistsValue = isTherapist && !isEditing
-			? currentUser.id.toString()
+			? [currentUser.id.toString()]
 			: values.therapists && values.therapists.map(({ id }) => id.toString());
 
 		return (
@@ -316,9 +316,9 @@ class Treatments extends Component {
 
 	componentWillReceiveProps(nextProps) {
 		const { subscribeToMore } = this.props.data;
-		const clinicChanged = !this.props.currentClinic || (nextProps.currentClinic && (this.props.currentClinic.id !== nextProps.currentClinic.id));
+		// const clinicChanged = !(this.props.currentClinic && this.props.currentClinic.id) || (nextProps.currentClinic && (this.props.currentClinic.id !== nextProps.currentClinic.id));
 
-		if (!this.subscriptions && !nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id && clinicChanged) {
+		if (!this.subscriptions && !nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id) {
 			this.subscriptions = [
 				subscribeToMore({
 					document: SERIES_CREATED_SUBSCRIPTION,

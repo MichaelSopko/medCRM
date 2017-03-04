@@ -317,8 +317,8 @@ class Patients extends Component {
 
 	componentWillReceiveProps(nextProps) {
 		const { subscribeToMore } = this.props.data;
-		const clinicChanged = !this.props.currentClinic || (nextProps.currentClinic && (this.props.currentClinic.id !== nextProps.currentClinic.id));
-		if (!nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id && clinicChanged) {
+		// const clinicChanged = !this.props.currentClinic || (nextProps.currentClinic && (this.props.currentClinic.id !== nextProps.currentClinic.id));
+		if (!nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id) {
 			this.subscriptions = [
 				subscribeToMore({
 					document: PATIENT_CREATED_SUBSCRIPTION,
