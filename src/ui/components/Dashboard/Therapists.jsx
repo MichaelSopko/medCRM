@@ -42,8 +42,6 @@ const EntityForm = Form.create()(
 						{getFieldDecorator('id_number', {
 							initialValue: values.id_number,
 							validateTrigger: 'onBlur', rules: [{
-								type: 'regexp',
-								pattern: /^\d+$/,
 								required: true,
 								message: formatMessage({ id: 'common.field_id_number_error' }),
 							}],
@@ -118,10 +116,11 @@ const EntityForm = Form.create()(
 						{getFieldDecorator('phone', {
 							initialValue: values.phone,
 							validateTrigger: 'onBlur', rules: [{
+								pattern: /^\d{2,9}-?\d{2,9}?-?\d{0,9}$/,
 								required: true, message: formatMessage({ id: 'common.field_phone_error' }),
 							}],
 						})(
-							<Input type="number"/>
+							<Input/>
 						)}
 					</Form.Item> }
 					{ <Form.Item

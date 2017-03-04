@@ -67,10 +67,11 @@ const EntityForm = Form.create()(
 						{getFieldDecorator('phone', {
 							initialValue: values.phone,
 							validateTrigger: 'onBlur', rules: [{
+								pattern: /^\d{2,9}-?\d{2,9}?-?\d{0,9}$/,
 								number: true, message: formatMessage({ id: 'common.field_phone_error' })
 							}],
 						})(
-							<Input type="number" />
+							<Input/>
 						)}
 					</Form.Item>
 					<Form.Item
@@ -82,7 +83,7 @@ const EntityForm = Form.create()(
 							initialValue: values.fax,
 							validateTrigger: 'onBlur', rules: [],
 						})(
-							<Input type="number"/>
+							<Input/>
 						)}
 					</Form.Item>
 					<Form.Item
