@@ -1,0 +1,10 @@
+query getClinics {
+    clinics {
+        id
+        name
+        address
+        phone
+        fax
+        email
+    }
+}

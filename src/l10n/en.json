@@ -1,0 +1,128 @@
+{
+  "roles": {
+    "SYSTEM_ADMIN": "System administrator",
+    "CLINIC_ADMIN": "Clinic administrator",
+    "THERAPIST": "Therapist",
+    "Patient": "Patient"
+  },
+  "health_maintenance": {
+    "CLATIT": "CLATIT",
+    "MACCABI": "MACCABI",
+    "MEUHEDET": "MEUHEDET",
+    "LEUMIT": "LEUMIT",
+    "PRIVATE": "PRIVATE"
+  },
+  "related_persons": {
+    "MOTHER": "Mother",
+    "FATHER": "Father",
+    "OTHER": "Other"
+  },
+  "Login": {
+    "header": "Authentication",
+    "field_email_error": "Please input your email!",
+    "field_email": "Email",
+    "field_password": "Password",
+    "login_button": "Log in"
+  },
+  "ProfileWidget": {
+    "logout": "Log out",
+    "settings": "Settings"
+  },
+  "ClinicsSelector": {
+    "placeholder": "Please choose an active clinic"
+  },
+  "UserNavbar": {
+    "treatments": "Treatments",
+    "patients": "Patients",
+    "administrators": "Administrators",
+    "clinics": "Clinics",
+    "therapists": "Therapists"
+  },
+  "Clinics": {
+    "create_button": "Create a Clinic",
+    "create_header": "Create Clinic",
+    "edit_header": "Edit Clinic",
+    "header": "Clinics"
+  },
+  "Administrators": {
+    "create_button": "Create an Administrator",
+    "create_header": "Create Administrator",
+    "edit_header": "Edit Administrator",
+    "header": "Administrators",
+    "field_clinic": "Clinic",
+    "field_clinic_error": "Please choose a clinic"
+  },
+  "Therapists": {
+    "create_button": "Create a Therapist",
+    "create_header": "Create Therapist",
+    "edit_header": "Edit Therapist",
+    "header": "Therapists"
+  },
+  "Patients": {
+    "create_button": "Create a Patient",
+    "create_header": "Create Patient",
+    "edit_header": "Edit Patient",
+    "header": "Patients",
+    "field_related_persons": "Related persons",
+    "field_person_type": "Person type",
+    "field_person_type_error": "Please select person type",
+    "field_person_description": "Description",
+    "add_related_persons": "Add related person",
+    "upload_files": "Upload files",
+    "field_health_maintenance": "Health maintenance",
+    "field_files": "Files"
+  },
+  "Treatments": {
+    "create_treatment_button": "Add treatment",
+    "create_series_button": "Create treatments series",
+    "create_header": "Create",
+    "edit_header": "Edit",
+    "header": "Treatment series",
+    "field_treatments_number": "Number",
+    "field_treatments_number_error": "Please input treatments number",
+    "field_method": "Method",
+    "field_target": "Target",
+    "field_process": "Process",
+    "field_parents_guidance": "Parents guidance",
+    "field_next_treatment_remark": "Next treatment remark",
+    "field_datetime": "Date and time",
+    "field_patients": "Patients",
+    "field_patients_error": "Please select at least one",
+    "field_therapists": "Therapists",
+    "field_therapists_error": "Please select at least one"
+  },
+  "common": {
+    "field_name": "Name",
+    "field_name_error": "Please input name",
+    "field_first_name": "First name",
+    "field_first_name_error": "Please input first name",
+    "field_last_name": "Last name",
+    "field_last_name_error": "Please input last name",
+    "field_address": "Address",
+    "field_address_error": "Please input address",
+    "field_phone": "Phone",
+    "field_phone_error": "Please input a valid phone number",
+    "field_email": "Email",
+    "field_email_error": "Please input valid email address",
+    "field_email_error_duplicate": "Same email already exists",
+    "field_fax": "Fax",
+    "field_actions": "Actions",
+    "confirm_message": "Are you sure?",
+    "confirm_yes": "Yes",
+    "confirm_no": "No",
+    "action_delete": "Delete",
+    "action_create": "Create",
+    "action_edit": "Edit",
+    "field_new_password": "New password",
+    "field_password": "Password",
+    "field_password_error": "Please input password",
+    "field_birth_date": "Birth date",
+    "field_birth_date_error": "Please input date",
+    "field_id_number": "ID number",
+    "field_id_number_error": "Please input ID",
+    "field_id_number_error_duplicate": "Same id number already exists",
+    "field_licence": "Licence number",
+    "field_licence_error": "Please input licence",
+    "server_error": "Server error"
+  }
+}

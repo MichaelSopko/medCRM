@@ -1,0 +1,9 @@
+mutation addAdministrator(
+    $email: String!
+    $password: String!
+    $clinic_id: Int!
+) {
+    addAdministrator(email: $email, password: $password, clinic_id: $clinic_id) {
+        status
+    }
+}

@@ -1,0 +1,13 @@
+query currentUser {
+    currentUser {
+        id
+        first_name
+        last_name
+        login
+        role
+        email
+        clinic {
+            id
+        }
+    }
+}

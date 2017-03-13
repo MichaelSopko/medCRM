@@ -1,0 +1,304 @@
+scalar Date
+
+interface User {
+	id: Int!
+}
+
+enum Role {
+	SYSTEM_ADMIN
+	CLINIC_ADMIN
+	THERAPIST
+	PATIENT
+}
+
+type SystemAdministrator implements User {
+	id: Int!
+	role: Role!
+	login: String
+}
+
+type ClinicAdministrator implements User {
+	id: Int!
+	clinic: Clinic
+	first_name: String
+	last_name: String
+	email: String!
+}
+
+type Therapist implements User {
+	id: Int!
+	id_number: String
+	first_name: String
+	last_name: String
+	clinic: Clinic
+	license_number: Int
+	phone: String
+	email: String
+	birth_date: Date
+}
+
+type PatientFile {
+	name: String!
+	url: String!
+	size: Int!
+	type: String!
+}
+
+input PatientFileInput {
+	name: String!
+	url: String!
+	size: Int!
+	type: String!
+}
+
+type Patient implements User {
+	id: Int!
+	id_number: String!
+	first_name: String!
+	last_name: String!
+	birth_date: Date!
+	phone: String!
+	profile_email: String
+	clinic: Clinic
+	clinic_id: Int,
+	related_persons: [PatientRelatedPerson]
+	health_maintenance: PatientHealthMaintenance
+	files: [PatientFile]
+}
+
+input PatientInput {
+	id_number: String!
+	first_name: String!
+	last_name: String!
+	birth_date: Date!
+	phone: String!
+	profile_email: String
+	related_persons: [PatientRelatedPersonInput]
+	health_maintenance: PatientHealthMaintenance
+	files: [PatientFileInput]
+}
+
+enum PatientRelatedPersonType {
+	MOTHER
+	FATHER
+	OTHER
+}
+
+enum PatientHealthMaintenance {
+	CLATIT
+	MACCABI
+	MEUHEDET
+	LEUMIT
+	PRIVATE
+}
+
+type PatientRelatedPerson {
+	type: PatientRelatedPersonType
+	description: String
+	phone: String!
+	email: String
+}
+
+input PatientRelatedPersonInput {
+	type: PatientRelatedPersonType!
+	description: String
+	phone: String!
+	email: String
+}
+
+type TreatmentSeries {
+	id: Int!
+	name: String
+	treatments_number: Int!
+	treatments: [Treatment]
+}
+
+type Treatment {
+	id: Int!
+	target: String
+	method: String
+	process: String
+	parents_guidance: String
+	next_treatment_remark: String
+	patients: [Patient]
+	therapists: [Therapist]
+	date: Date
+}
+
+type CurrentUser implements User {
+	id: Int!
+	login: String,
+	role: Role!,
+	first_name: String,
+	last_name: String,
+	email: String,
+	clinic: Clinic
+}
+
+type Query {
+	clinics: [Clinic]
+	administrators: [ClinicAdministrator]
+	therapists(clinic_id: Int!): [Therapist]
+	patients(clinic_id: Int!): [Patient]
+	treatmentSeries(clinic_id: Int!): [TreatmentSeries]
+	currentUser: CurrentUser
+}
+
+type Clinic {
+	id: Int!,
+	name: String!
+	address: String!
+	email: String
+	fax: String
+	phone: String
+	administrators: [ClinicAdministrator]
+	patients: [Patient]
+	therapists: [Therapist]
+}
+
+type MutationStatus {
+	status: String
+}
+
+input TreatmentInput {
+	target: String
+	method: String
+	process: String
+	parents_guidance: String
+	next_treatment_remark: String
+	patient_ids: [Int]
+	therapist_ids: [Int]
+	date: Date
+}
+
+type Mutation {
+	addClinic(
+	name: String!
+	address: String!
+	phone: String
+	email: String
+	fax: String
+): MutationStatus
+
+	editClinic(
+	id: Int!
+	name: String!
+	address: String!
+	phone: String
+	email: String
+	fax: String
+): MutationStatus
+
+	deleteClinic(
+	id: Int!
+): MutationStatus
+
+	addAdministrator(
+	email: String!
+	password: String!
+	clinic_id: Int!
+): MutationStatus
+
+	editAdministrator(
+	id: Int!
+	password: String!
+): MutationStatus
+
+	deleteAdministrator(
+	id: Int!
+): MutationStatus
+
+
+	addTherapist(
+	password: String!
+	id_number: String!
+	first_name: String!
+	last_name: String!
+	clinic_id: Int!
+	license_number: Int!
+	phone: String!
+	email: String!
+	birth_date: Date!
+): MutationStatus
+
+	editTherapist(
+	id: Int!
+	password: String
+	id_number: String!
+	first_name: String!
+	last_name: String!
+	license_number: Int!
+	phone: String!
+	email: String!
+	birth_date: Date!
+): MutationStatus
+
+	deleteTherapist(
+	id: Int!
+): MutationStatus
+
+
+	addPatient(
+	clinic_id: Int!
+	patient: PatientInput
+): MutationStatus
+
+	editPatient(
+	id: Int!
+	patient: PatientInput
+): MutationStatus
+
+	deletePatient(
+	id: Int!
+): MutationStatus
+
+
+	addTreatmentSeries(
+	name: String
+	treatments_number: Int!
+	clinic_id: Int!
+): MutationStatus
+
+	editTreatmentSeries(
+	id: Int!
+	name: String
+	treatments_number: Int!
+): MutationStatus
+
+	deleteTreatmentSeries(
+	id: Int!
+): MutationStatus
+
+
+	addTreatment(
+	series_id: Int!
+	treatment: TreatmentInput
+): MutationStatus
+
+	editTreatment(
+	id: Int!
+	treatment: TreatmentInput
+): MutationStatus
+
+	deleteTreatment(
+	id: Int!
+): MutationStatus
+
+}
+
+
+
+type Subscription {
+	patientCreated(clinic_id: Int!): Patient!
+	patientUpdated(clinic_id: Int!): Patient!
+	patientDeleted(clinic_id: Int!): Patient!
+	treatmentSeriesCreated(clinic_id: Int!): TreatmentSeries!
+	treatmentSeriesUpdated(clinic_id: Int!): TreatmentSeries!
+	treatmentSeriesDeleted(clinic_id: Int!): TreatmentSeries!
+}
+
+schema {
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
+}

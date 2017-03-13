@@ -1,0 +1,24 @@
+query patients($clinic_id: Int!) {
+    patients(clinic_id: $clinic_id) {
+        id
+        id_number
+        first_name
+        last_name
+        birth_date
+        phone
+        profile_email
+        related_persons {
+            type
+            description
+            phone
+            email
+        }
+        health_maintenance
+        files {
+            name
+            url
+            size
+            type
+        }
+    }
+}

@@ -1,0 +1,11 @@
+mutation addPatient(
+$clinic_id: Int!
+$patient: PatientInput!
+) {
+    addPatient(
+        clinic_id: $clinic_id,
+        patient: $patient
+    ) {
+        status
+    }
+}
