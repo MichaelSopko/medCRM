@@ -21,15 +21,15 @@
     "npm": "3.10.10"
   },
   "scripts": {
-    "build": "babel-node tools/webpack.run build",
-    "clean": "rm -rf $npm_package_app_frontendBuildDir $npm_package_app_backendBuildDir",
-    "start": "if [ \"$NODE_ENV\" = production ]; then node --harmony $npm_package_app_backendBuildDir; else babel-node tools/webpack.run watch; fi",
-    "start:prod": "npm run clean && npm run build && npm run migrate && npm run seed && node --harmony $npm_package_app_backendBuildDir",
-    "start:dev": "babel-node tools/webpack.run watch",
-    "test": "mocha-webpack --webpack-config tools/webpack.config.js --full-trace --exit 'src/**/*.test.js' && npm run lint",
-    "lint": "eslint --fix --ext js --exty jsx src",
-    "seed": "knex seed:run",
+    "build": "babel-node tools/webpack.run",
+    "start": "node --harmony build/server",
+    "test": "mocha-webpack --webpack-config tools/webpack.config.js --full-trace --exit 'tests/**/*.test.js' && npm run lint",
+    "lint": "eslint --fix --ext js --ext jsx src",
+    "seed": "npm run migrate && knex seed:run",
     "migrate": "knex migrate:latest",
+    "rollback": "knex migrate:rollback",
+    "watch": "babel-node tools/webpack.run watch",
+    "heroku-postbuild": "rm -rf build && npm run build && npm run seed"
     "generate-schema": "apollo-codegen introspect-schema ./src/server/api/schema_def.graphqls --insecure --output graphql.schema.json",
     "postinstall": "if [ \"$NODE_ENV\" = production ]; then npm run clean && npm run build && npm run migrate && npm run seed; fi"
   },
