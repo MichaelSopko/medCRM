@@ -21,6 +21,13 @@ export default class Treatments {
 			.select();
 	}
 
+	getSeriesByPatient(patient_id) {
+		return knex('treatment_series')
+			.where('patient_id', patient_id)
+			.orderBy('id', 'DESC')
+			.select();
+	}
+
 	async findOne(id) {
 		const [series, treatments] = await Promise.all([
 			knex('treatment_series')

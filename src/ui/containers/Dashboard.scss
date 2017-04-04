@@ -1,8 +1,16 @@
 .Dashboard {
 	> .Container {
+		margin-top: 36px;
+	}
+
+	&__Actions {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	&__Content {
 		background: #ffffff;
 		padding: 12px;
-		margin-top: 36px;
 		border-radius: 3px;
 	}
 

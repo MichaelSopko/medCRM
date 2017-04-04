@@ -80,12 +80,7 @@ export default class Users {
 		}
 		return k
 			.orderBy('id', 'DESC')
-			.select()
-			.then(users => users.map(user => ({
-				...user,
-				files: safeParse(user.files, []),
-				related_persons: safeParse(user.related_persons),
-			})));
+			.select();
 	}
 
 	async checkPassword({ login, password }) {

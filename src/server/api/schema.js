@@ -52,8 +52,11 @@ const resolvers = {
 		therapists(ignored1, { clinic_id }, context) {
 			return context.Users.findByRole(ROLES.THERAPIST, clinic_id);
 		},
-		patients(ignored1, { clinic_id }, context) {
-			return context.Users.findByRole(ROLES.PATIENT, clinic_id);
+		patients(ignored1, { clinic_id, archived }, context) {
+			return context.Users.findByRole(ROLES.PATIENT, clinic_id, archived);
+		},
+		patient(_, { id }, context) {
+			return context.Users.findOne(id);
 		},
 		treatmentSeries(ignored1, { clinic_id }, context) {
 			return context.Treatments.getSeries(clinic_id);
@@ -125,7 +128,7 @@ const resolvers = {
 				.then(async ([id]) => {
 					const patient = await context.Users.findOne(id);
 					pubsub.publish('patientCreated', patient);
-					return { status: true };
+					return patient;
 				})
 				.catch(checkForNonUniqueField)
 		},
@@ -138,7 +141,7 @@ const resolvers = {
 				.then(() => context.Users.findOne(id))
 				.then(patient => {
 					pubsub.publish('patientUpdated', patient);
-					return { status: true };
+					return patient;
 				})
 				.catch(checkForNonUniqueField)
 		},
@@ -149,7 +152,7 @@ const resolvers = {
 					const res = await context.Users.deleteUser({ id });
 					if (res) {
 						pubsub.publish('patientDeleted', patient);
-						return { status: true };
+						return patient;
 					}
 				})
 				.then(res => ({ status: res }))
@@ -252,6 +255,17 @@ const resolvers = {
 	Therapist: {
 		clinic(user, _, context) {
 			return context.Clinics.findOne(user.clinic_id);
+		}
+	},
+	Patient: {
+		related_persons(user, _, ctx) {
+			return safeParse(user.related_persons);
+		},
+		files(user, _, ctx) {
+			return safeParse(user.files, []);
+		},
+		treatment_series(user, _, ctx) {
+			return ctx.Treatments.getSeriesByPatient(user.id)
 		}
 	},
 	CurrentUser: {

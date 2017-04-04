@@ -64,6 +64,7 @@ type Patient implements User {
 	related_persons: [PatientRelatedPerson]
 	health_maintenance: PatientHealthMaintenance
 	files: [PatientFile]
+	treatment_series: [TreatmentSeries]
 }
 
 input PatientInput {
@@ -111,6 +112,7 @@ type TreatmentSeries {
 	name: String
 	treatments_number: Int!
 	treatments: [Treatment]
+	patient: Patient
 }
 
 type Treatment {
@@ -120,9 +122,9 @@ type Treatment {
 	process: String
 	parents_guidance: String
 	next_treatment_remark: String
-	patients: [Patient]
 	therapists: [Therapist]
-	date: Date
+	start_date: Date
+	end_date: Date
 }
 
 type CurrentUser implements User {
@@ -139,7 +141,8 @@ type Query {
 	clinics: [Clinic]
 	administrators: [ClinicAdministrator]
 	therapists(clinic_id: Int!): [Therapist]
-	patients(clinic_id: Int!): [Patient]
+	patients(clinic_id: Int!, archived: Boolean!): [Patient]
+	patient(id: Int!): Patient
 	treatmentSeries(clinic_id: Int!): [TreatmentSeries]
 	currentUser: CurrentUser
 }
@@ -241,16 +244,16 @@ type Mutation {
 	addPatient(
 	clinic_id: Int!
 	patient: PatientInput
-): MutationStatus
+): Patient!
 
 	editPatient(
 	id: Int!
 	patient: PatientInput
-): MutationStatus
+): Patient!
 
 	deletePatient(
 	id: Int!
-): MutationStatus
+): Patient!
 
 
 	addTreatmentSeries(
@@ -285,7 +288,6 @@ type Mutation {
 ): MutationStatus
 
 }
-
 
 
 type Subscription {

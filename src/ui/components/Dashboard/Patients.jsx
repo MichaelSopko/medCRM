@@ -5,22 +5,7 @@ import { graphql, compose, withApollo } from 'react-apollo'
 import ApolloClient from 'apollo-client'
 import gql from 'graphql-tag'
 import update from 'react-addons-update'
-import GET_PATIENTS_QUERY from '../../graphql/PatientsGet.graphql'
-import ADD_PATIENT_MUTATION from '../../graphql/PatientAddMutation.graphql'
-import DELETE_PATIENT_MUTATION from '../../graphql/PatientDeleteMutaion.graphql'
-import EDIT_PATIENT_MUTATION from '../../graphql/PatientEditMutation.graphql'
-
-import PATIENT_CREATED_SUBSCRIPTION from '../../graphql/PatientCreatedSubscription.graphql'
-import PATIENT_UPDATED_SUBSCRIPTION from '../../graphql/PatientUpdatedSubscription.graphql'
-import PATIENT_DELETED_SUBSCRIPTION from '../../graphql/PatientDeletedSubscription.graphql'
-
-import ROLES from '../../../helpers/constants/roles'
-import HEALTH_MAINTENANCES from '../../../helpers/constants/health_maintenances'
-import RELATED_PERSONS from '../../../helpers/constants/related_persons'
-import ClinicsSelector from '../ClinicsSelector'
-import CheckAccess from '../helpers/CheckAccess'
-import moment from 'moment';
-import { FormattedMessage } from 'react-intl';
+import moment from 'moment'
 
 import {
 	Table,
@@ -35,279 +20,50 @@ import {
 	Select,
 	DatePicker,
 	Upload,
-	notification
+	Checkbox,
+	notification,
+	message,
 } from 'antd'
+
+
+import PATIENTS_LIST_QUERY from '../../graphql/PatientsList.graphql'
+
+import ADD_PATIENT_MUTATION from '../../graphql/PatientAddMutation.graphql'
+import DELETE_PATIENT_MUTATION from '../../graphql/PatientDeleteMutaion.graphql'
+import EDIT_PATIENT_MUTATION from '../../graphql/PatientEditMutation.graphql'
+
+import PATIENT_CREATED_SUBSCRIPTION from '../../graphql/PatientCreatedSubscription.graphql'
+import PATIENT_UPDATED_SUBSCRIPTION from '../../graphql/PatientUpdatedSubscription.graphql'
+import PATIENT_DELETED_SUBSCRIPTION from '../../graphql/PatientDeletedSubscription.graphql'
+
+import ROLES from '../../../helpers/constants/roles'
+import ClinicsSelector from '../ClinicsSelector'
+import CheckAccess from '../helpers/CheckAccess'
+import intersperse from '../../../utils/intersperse';
+import PatientForm from '../PatientForm';
+import PatientView from '../PatientView';
+import PatientSelector from '../PatientSelector';
 
 import './Patients.scss'
 
-/* intersperse: Return an array with the separator interspersed between
- * each element of the input array.
- *
- * @url http://stackoverflow.com/a/23619085
- *
- * > _([1,2,3]).intersperse(0)
- * [1,0,2,0,3]
- */
-function intersperse(arr, sep) {
-	if (arr.length === 0) {
-		return [];
-	}
-
-	return arr.slice(1).reduce(function (xs, x, i) {
-		return xs.concat([sep, x]);
-	}, [arr[0]]);
-}
-
-const EntityForm = Form.create()(
-	(props) => {
-		const {
-			visible, onCancel, onSubmit, form, loading, values = {},
-			onUploadFileChange, addRelatedPerson, removeRelatedPerson,
-			relatedPersons, formatMessage
-		} = props;
-		const { getFieldDecorator } = form;
-		const formItemLayout = {
-			labelCol: { span: 6 },
-			wrapperCol: { span: 14 },
-		};
-		const isEditing = !!Object.keys(values).length;
-		const token = localStorage.getItem('token');
-		const uploadHeaders = {
-			Authorization: `Bearer ${token}`
-		};
-		const normFile = (e) => {
-			if (Array.isArray(e)) {
-				return e;
-			}
-			return e && e.fileList;
-		};
-
-		let relatedPersonsItems = relatedPersons.map(item => (
-			<div className="Patients__RelatedPersonsItem ant-form" key={item._id}>
-				<Button
-					title={formatMessage({ id: 'common.action_delete' })}
-					shape='circle'
-					type="ghost"
-					className='Patients__RelatedPersonsRemove'
-					size="small"
-					onClick={ () => {
-						removeRelatedPerson(item._id)
-					} }>
-					<Icon type="close"/>
-				</Button>
-				<Form.Item
-					hasFeedback
-				>
-					{getFieldDecorator(`related_persons-${item._id}-type`, {
-						initialValue: item.type,
-						validateTrigger: 'onBlur',
-						rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_type_error' }) }],
-					})(
-						<Select placeholder={formatMessage({ id: 'Patients.field_person_type' })}>
-							{ Object.keys(RELATED_PERSONS).map(key => <Select.Option value={key} key={key}>
-								{formatMessage({ id: `related_persons.${RELATED_PERSONS[key]}` })}
-							</Select.Option>) }
-						</Select>
-					)}
-				</Form.Item>
-				<Form.Item
-					hasFeedback
-				>
-					{getFieldDecorator(`related_persons-${item._id}-description`, {
-						initialValue: item.description,
-						validateTrigger: 'onBlur', rules: [],
-					})(
-						<Input placeholder={formatMessage({ id: 'Patients.field_person_description' })}/>
-					)}
-				</Form.Item>
-				<Form.Item
-					hasFeedback
-				>
-					{getFieldDecorator(`related_persons-${item._id}-phone`, {
-						initialValue: item.phone,
-						validateTrigger: 'onBlur',
-						rules: [{ required: true, message: formatMessage({ id: 'common.field_phone_error' }) }],
-					})(
-						<Input type="number" placeholder={formatMessage({ id: 'common.field_phone' })}/>
-					)}
-				</Form.Item>
-				<Form.Item
-					hasFeedback
-				>
-					{getFieldDecorator(`related_persons-${item._id}-email`, {
-						initialValue: item.email,
-						validateTrigger: 'onBlur',
-						rules: [{ type: 'email', message: formatMessage({ id: 'common.field_email_error' }) }],
-					})(
-						<Input type="email" placeholder={formatMessage({ id: 'common.field_email' })}/>
-					)}
-				</Form.Item>
-			</div>));
-
-		return (
-			<Modal title={ formatMessage({ id: isEditing ? 'Patients.edit_header' : 'Patients.create_header' }) }
-			       visible={visible}
-			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
-			       onCancel={onCancel}
-			       onOk={onSubmit}
-			       width={600}
-			       confirmLoading={loading}>
-				<Form>
-					<Form.Item
-						{...formItemLayout}
-						label={formatMessage({ id: 'common.field_id_number' })}
-						hasFeedback
-					>
-						{getFieldDecorator('id_number', {
-							initialValue: values.id_number,
-							validateTrigger: 'onBlur', rules: [{
-								type: 'regexp',
-								pattern: /^\d+$/,
-								required: true,
-								message: formatMessage({ id: 'common.field_id_number_error' }),
-							}],
-						})(
-							<Input type="number"/>
-						)}
-					</Form.Item>
-					{ <Form.Item
-						{...formItemLayout}
-						label={formatMessage({ id: 'common.field_email' })}
-						hasFeedback
-					>
-						{getFieldDecorator('profile_email', {
-							initialValue: values.profile_email,
-							validateTrigger: 'onBlur', rules: [{
-								type: 'email', message: formatMessage({ id: 'common.field_email_error' }),
-							}],
-						})(
-							<Input type="email"/>
-						)}
-					</Form.Item> }
-					{ <Form.Item
-						{...formItemLayout}
-						label={formatMessage({ id: 'common.field_first_name' })}
-						hasFeedback
-					>
-						{getFieldDecorator('first_name', {
-							initialValue: values.first_name,
-							validateTrigger: 'onBlur', rules: [{
-								required: true, message: formatMessage({ id: 'common.field_first_name_error' }),
-							}],
-						})(
-							<Input />
-						)}
-					</Form.Item> }
-					{ <Form.Item
-						{...formItemLayout}
-						label={formatMessage({ id: 'common.field_last_name' })}
-						hasFeedback
-					>
-						{getFieldDecorator('last_name', {
-							initialValue: values.last_name,
-							validateTrigger: 'onBlur', rules: [{
-								required: true, message: formatMessage({ id: 'common.field_last_name_error' }),
-							}],
-						})(
-							<Input />
-						)}
-					</Form.Item> }
-					{ <Form.Item
-						{...formItemLayout}
-						label={formatMessage({ id: 'common.field_phone' })}
-						hasFeedback
-					>
-						{getFieldDecorator('phone', {
-							initialValue: values.phone,
-							validateTrigger: 'onBlur', rules: [{
-								pattern: /^\d{2,9}-?\d{2,9}?-?\d{0,9}$/,
-								required: true, message: formatMessage({ id: 'common.field_phone_error' }),
-							}],
-						})(
-							<Input/>
-						)}
-					</Form.Item> }
-					{ <Form.Item
-						{...formItemLayout}
-						label={formatMessage({ id: 'Patients.field_health_maintenance' })}
-						hasFeedback
-					>
-						{getFieldDecorator('health_maintenance', {
-							initialValue: values.health_maintenance,
-							validateTrigger: 'onBlur', rules: [],
-						})(
-							<Select>
-								{ Object.keys(HEALTH_MAINTENANCES).map(key => <Select.Option value={key} key={key}>
-									{HEALTH_MAINTENANCES[key]}
-								</Select.Option>) }
-							</Select>
-						)}
-					</Form.Item> }
-					{ <Form.Item
-						{...formItemLayout}
-						label={formatMessage({ id: 'common.field_birth_date' })}
-						hasFeedback
-					>
-						{getFieldDecorator('birth_date', {
-							initialValue: values.birth_date ? moment(values.birth_date) : null,
-							validateTrigger: 'onBlur', rules: [{
-								required: true, message: formatMessage({ id: 'common.field_birth_date_error' }),
-							}],
-						})(
-							<DatePicker showToday={false}/>
-						)}
-					</Form.Item> }
-					{ <Form.Item
-						{...formItemLayout}
-						label={formatMessage({ id: 'Patients.field_related_persons' })}
-						hasFeedback
-					>
-						{ relatedPersonsItems }
-						<Button type="dashed" onClick={ addRelatedPerson }>
-							{formatMessage({ id: 'Patients.add_related_persons' })}
-						</Button>
-					</Form.Item> }
-					{ <Form.Item
-						{...formItemLayout}
-						label={formatMessage({ id: 'Patients.field_files' })}
-						hasFeedback
-					>
-						{getFieldDecorator('files', {
-							valuePropName: 'fileList',
-							initialValue: values.files && values.files.map(f => ({ uid: f.url, ...f })),
-							normalize: normFile,
-						})(
-							<Upload
-								headers={uploadHeaders}
-								onChange={onUploadFileChange}
-								action="/api/upload-file">
-								<Button>
-									<Icon type="upload"/> {formatMessage({ id: 'Patients.upload_files' })}
-								</Button>
-							</Upload>
-						)}
-					</Form.Item> }
-				</Form>
-			</Modal>
-		);
-	}
-);
 
 class Patients extends Component {
 
 	static contextTypes = {
-		intl: PropTypes.object.isRequired
+		intl: PropTypes.object.isRequired,
 	};
 
 	static propTypes = {
-		data: PropTypes.object
+		data: PropTypes.object,
 	};
 
 	state = {
 		modalOpened: false,
 		activeEntity: {},
 		modalLoading: false,
-		relatedPersons: []
+		relatedPersons: [],
+		currentPatientId: null,
+		showArchived: false,
 	};
 
 	constructor(props) {
@@ -317,6 +73,9 @@ class Patients extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
+
+		return; // FIXME
+
 		const { subscribeToMore } = this.props.data;
 		// const clinicChanged = !this.props.currentClinic || (nextProps.currentClinic && (this.props.currentClinic.id !== nextProps.currentClinic.id));
 		if (!nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id) {
@@ -397,7 +156,7 @@ class Patients extends Component {
 				name,
 				url,
 				size,
-				type
+				type,
 			}
 		});
 		const processRelatedPersons = (relatedPersons, values) => {
@@ -425,7 +184,7 @@ class Patients extends Component {
 				if (message === 'DUPLICATE_ID_NUMBER') id = 'common.field_id_number_error_duplicate';
 			}
 			notification.error({
-				message: formatMessage({ id })
+				message: formatMessage({ id }),
 			});
 		};
 
@@ -437,28 +196,37 @@ class Patients extends Component {
 			console.log(values);
 			files = files ? processFiles(files) : [];
 			values = processRelatedPersons(this.state.relatedPersons, values);
-			isEditing ?
-				this.props.editPatient({
-					id: this.state.activeEntity.id,
-					patient: {
-						...values,
-						files
-					}
-				}).then(() => {
-					form.resetFields();
-					this.setState({ modalOpened: false, modalLoading: false, relatedPersons: [] });
-					this.resetActiveEntity();
-				}).catch(errorHandler) :
-				this.props.addPatient({
-					clinic_id: this.props.currentClinic.id,
-					patient: {
-						...values,
-						files
-					}
-				}).then(() => {
-					form.resetFields();
-					this.setState({ modalOpened: false, modalLoading: false, relatedPersons: [] });
-				}).catch(errorHandler);
+			isEditing
+
+				? this.props.editPatient({
+				id: this.state.activeEntity.id,
+				patient: {
+					...values,
+					files,
+				},
+			}).then(() => {
+				form.resetFields();
+				this.setState({ modalOpened: false, modalLoading: false, relatedPersons: [] });
+				this.resetActiveEntity();
+			}).catch(errorHandler)
+
+				: this.props.addPatient({
+				clinic_id: this.props.currentClinic.id,
+				patient: {
+					...values,
+					files,
+				},
+			}).then((res) => {
+				form.resetFields();
+				this.setState({
+					modalOpened: false,
+					modalLoading: false,
+					relatedPersons: [],
+					currentPatientId: res.data.addPatient.id,
+				});
+				message.success(this.context.intl.formatMessage({ id: 'Patients.created-message' }));
+			}).catch(errorHandler);
+
 		});
 	};
 
@@ -469,7 +237,7 @@ class Patients extends Component {
 		this.setState({
 			modalOpened: true,
 			activeEntity: entity,
-			relatedPersons
+			relatedPersons,
 		});
 	};
 
@@ -488,9 +256,18 @@ class Patients extends Component {
 		this.setState({ relatedPersons });
 	};
 
+	onPatientChange = (id) => {
+		this.setState({ currentPatientId: id })
+	}
+
+	onShowArchivedChange = (e) => {
+		this.setState({ showArchived: e.target.checked })
+	}
+
 	render() {
-		const { data: { loading, patients }, deletePatient, currentClinic } = this.props;
+		const { deletePatient, currentClinic } = this.props;
 		const formatMessage = this.context.intl.formatMessage;
+		const { modalOpened, activeEntity, modalLoading, relatedPersons, currentPatientId, showArchived } = this.state;
 
 		const columns = [{
 			title: formatMessage({ id: 'common.field_name' }),
@@ -498,7 +275,7 @@ class Patients extends Component {
 			width: '20%',
 			render: (text, record) => <div className="to-dynamic-container">
 				<span className="to-dynamic">{record.first_name} {record.last_name}</span>
-			</div>
+			</div>,
 		}, {
 			title: formatMessage({ id: 'common.field_phone' }),
 			dataIndex: 'phone',
@@ -506,7 +283,7 @@ class Patients extends Component {
 			width: '15%',
 			render: text => <div className="to-dynamic-container">
 				<span className="to-dynamic"><a href={ `tel:${text}` }>{ text }</a></span>
-			</div>
+			</div>,
 		}, {
 			title: formatMessage({ id: 'common.field_email' }),
 			dataIndex: 'profile_email',
@@ -514,7 +291,7 @@ class Patients extends Component {
 			width: '15%',
 			render: text => <div className="to-dynamic-container">
 				<span className="to-dynamic"><a href={ `mailto:${text}` }>{ text }</a></span>
-			</div>
+			</div>,
 		}, {
 			title: formatMessage({ id: 'Patients.field_files' }),
 			dataIndex: 'files',
@@ -523,7 +300,7 @@ class Patients extends Component {
 				<span className="to-dynamic">
 					{ intersperse(record.files.map(file => <a href={file.url}>{file.name}</a>), ", ") }
 					</span>
-			</div>
+			</div>,
 		}, {
 			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
@@ -533,7 +310,7 @@ class Patients extends Component {
 		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
 			      {formatMessage({ id: 'common.action_edit' })}
 		      </Button>
-					<span className="ant-divider"/>
+					<span className="ant-divider" />
 		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
 			      deletePatient(record)
 		      } } okText={formatMessage({ id: 'common.confirm_yes' })}
@@ -545,101 +322,99 @@ class Patients extends Component {
         </span>
 			),
 		}];
-		const { modalOpened, activeEntity, modalLoading, relatedPersons } = this.state;
+
 
 		return (
-			<section className="Patients">
-				<EntityForm
-					ref={ form => {
-						this.form = form
-					} }
-					visible={modalOpened}
-					loading={modalLoading}
-					onCancel={this.handleCancel}
-					onSubmit={this.handleFormSubmit}
-					formatMessage={formatMessage}
-					onUploadFileChange={this.onUploadFileChange}
-					values={activeEntity}
-					relatedPersons={relatedPersons}
-					addRelatedPerson={this.addRelatedPerson}
-					removeRelatedPerson={this.removeRelatedPerson}
-				/>
-				<div className="Dashboard__Details">
-					<h1 className="Dashboard__Header">
-						{ formatMessage({ id: 'Patients.header' }) }
-					</h1>
-					<div className="Dashboard__Actions">
-						<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
-							<ClinicsSelector/>
-						</CheckAccess>
-						<Button type="primary" onClick={ this.showModal } disabled={ !currentClinic.id }>
-							<Icon type="plus-circle-o"/>
-							{ formatMessage({ id: 'Patients.create_button' }) }
-						</Button>
+			<div className="Container">
+				<section className="Patients">
+					<PatientForm
+						ref={ form => {
+							this.form = form
+						} }
+						visible={modalOpened}
+						loading={modalLoading}
+						onCancel={this.handleCancel}
+						onSubmit={this.handleFormSubmit}
+						formatMessage={formatMessage}
+						onUploadFileChange={this.onUploadFileChange}
+						values={activeEntity}
+						relatedPersons={relatedPersons}
+						addRelatedPerson={this.addRelatedPerson}
+						removeRelatedPerson={this.removeRelatedPerson}
+					/>
+					<div>
+						{/*						<h1 className="Dashboard__Header">
+						 { formatMessage({ id: 'Patients.header' }) }
+						 </h1>*/}
+						<div className="Dashboard__Actions">
+							<div>
+								<PatientSelector showArchived={showArchived} onChange={this.onPatientChange} />
+								<Checkbox checked={showArchived} onChange={this.onShowArchivedChange}>Show archived</Checkbox>
+							</div>
+							<div>
+								<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
+									<ClinicsSelector />
+								</CheckAccess>
+								<Button size='large' type="primary" onClick={ this.showModal } disabled={ !currentClinic.id }>
+									<Icon type="plus-circle-o" />
+									{ formatMessage({ id: 'Patients.create_button' }) }
+								</Button>
+							</div>
+						</div>
 					</div>
-				</div>
-				<Table dataSource={patients} columns={columns} loading={loading} rowKey='id'/>
-			</section>
+
+					<div style={{ marginTop: 24 }}>
+						<PatientView id={currentPatientId} onEdit={this.editEntity} />
+					</div>
+					{/*<Table dataSource={patients} columns={columns} loading={loading} rowKey='id'/>*/}
+				</section>
+			</div>
 		);
 	}
 }
 
-const PatientsApollo = withApollo(compose(
-	graphql(GET_PATIENTS_QUERY, {
-		options: ({ currentClinic }) => ({
-			variables: {
-				clinic_id: currentClinic.id
-			}
-		})
-	}),
+const PatientsWithApollo = withApollo(compose(
+	connect((state) => ({ currentClinic: state.currentClinic })),
 	graphql(ADD_PATIENT_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
 			addPatient: (fields) => mutate({
 				variables: fields,
-				refetchQueries: [/*{
-					query: GET_PATIENTS_QUERY,
+				refetchQueries: [{
+					query: PATIENTS_LIST_QUERY,
 					variables: {
-						clinic_id: ownProps.currentClinic.id
-					}
-				}*/],
-			})
-		})
+						clinic_id: ownProps.currentClinic.id,
+					},
+				}],
+			}),
+		}),
 	}),
 	graphql(DELETE_PATIENT_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
 			deletePatient: ({ id }) => mutate({
 				variables: { id },
-				refetchQueries: [/*{
-					query: GET_PATIENTS_QUERY,
+				refetchQueries: [{
+					query: PATIENTS_LIST_QUERY,
 					variables: {
-						clinic_id: ownProps.currentClinic.id
-					}
-				}*/],
-			})
-		})
+						clinic_id: ownProps.currentClinic.id,
+					},
+				}],
+			}),
+		}),
 	}),
 	graphql(EDIT_PATIENT_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
 			editPatient: (fields) => mutate({
 				variables: fields,
 				refetchQueries: [/*{
-					query: GET_PATIENTS_QUERY,
-					variables: {
-						clinic_id: ownProps.currentClinic.id
-					}
-				}*/],
-			})
-		})
+				 query: GET_PATIENTS_QUERY,
+				 variables: {
+				 clinic_id: ownProps.currentClinic.id
+				 }
+				 }*/],
+			}),
+		}),
 	}),
 )(Patients));
 
 
-// TODO: migrate to clean redux connector
-@connect((state) => ({ currentClinic: state.currentClinic }))
-class CurrentClinicWrapper extends Component {
-	render() {
-		return <PatientsApollo { ...this.props }/>
-	}
-}
-
-export default CurrentClinicWrapper;
+export default PatientsWithApollo;

@@ -201,29 +201,31 @@ class Clinics extends Component {
 
 		return (
 			<section className="Clinics">
-				<EntityForm
-					ref={ form => {
-						this.form = form
-					} }
-					visible={modalOpened}
-					loading={loading}
-					onCancel={this.handleCancel}
-					onSubmit={this.handleFormSubmit}
-					values={activeEntity}
-					formatMessage={formatMessage}
-				/>
-				<div className="Dashboard__Details">
-					<h1 className="Dashboard__Header">
-						{ formatMessage({ id: 'Clinics.header' }) }
-					</h1>
-					<div className="Dashboard__Actions">
-						<Button type="primary" onClick={ this.showModal }>
-							<Icon type="plus-circle-o"/>
-							{ formatMessage({ id: 'Clinics.create_button' }) }
-						</Button>
+				<div className="Container Dashboard__Content">
+					<EntityForm
+						ref={ form => {
+							this.form = form
+						} }
+						visible={modalOpened}
+						loading={loading}
+						onCancel={this.handleCancel}
+						onSubmit={this.handleFormSubmit}
+						values={activeEntity}
+						formatMessage={formatMessage}
+					/>
+					<div className="Dashboard__Details">
+						<h1 className="Dashboard__Header">
+							{ formatMessage({ id: 'Clinics.header' }) }
+						</h1>
+						<div className="Dashboard__Actions">
+							<Button type="primary" onClick={ this.showModal }>
+								<Icon type="plus-circle-o"/>
+								{ formatMessage({ id: 'Clinics.create_button' }) }
+							</Button>
+						</div>
 					</div>
+					<Table dataSource={clinics} columns={columns} loading={loading} rowKey='id'/>
 				</div>
-				<Table dataSource={clinics} columns={columns} loading={loading} rowKey='id'/>
 			</section>
 		);
 	}

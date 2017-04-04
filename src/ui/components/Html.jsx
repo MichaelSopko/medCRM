@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { locale } from '../../../config.json';
+import { locale } from '../../../config';
 import cx from 'classnames';
 
 const Html = ({ content, state, assetMap }) => {

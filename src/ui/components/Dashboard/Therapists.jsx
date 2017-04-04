@@ -46,7 +46,7 @@ const EntityForm = Form.create()(
 								message: formatMessage({ id: 'common.field_id_number_error' }),
 							}],
 						})(
-							<Input type="number"/>
+							<Input type="number" />,
 						)}
 					</Form.Item>
 					<Form.Item
@@ -63,7 +63,7 @@ const EntityForm = Form.create()(
 								message: formatMessage({ id: 'common.field_licence_error' }),
 							}],
 						})(
-							<Input type="number"/>
+							<Input type="number" />,
 						)}
 					</Form.Item>
 					{ <Form.Item
@@ -77,7 +77,7 @@ const EntityForm = Form.create()(
 								type: 'email', required: true, message: formatMessage({ id: 'common.field_email_error' }),
 							}],
 						})(
-							<Input type="email"/>
+							<Input type="email" />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -91,7 +91,7 @@ const EntityForm = Form.create()(
 								required: true, message: formatMessage({ id: 'common.field_first_name_error' }),
 							}],
 						})(
-							<Input />
+							<Input />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -105,7 +105,7 @@ const EntityForm = Form.create()(
 								required: true, message: formatMessage({ id: 'common.field_last_name_error' }),
 							}],
 						})(
-							<Input />
+							<Input />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -120,7 +120,7 @@ const EntityForm = Form.create()(
 								required: true, message: formatMessage({ id: 'common.field_phone_error' }),
 							}],
 						})(
-							<Input/>
+							<Input />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -134,7 +134,7 @@ const EntityForm = Form.create()(
 								required: true, message: formatMessage({ id: 'common.field_birth_date_error' }),
 							}],
 						})(
-							<DatePicker showToday={false}/>
+							<DatePicker showToday={false} />,
 						)}
 					</Form.Item> }
 					<Form.Item
@@ -144,32 +144,32 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('password', {
 							validateTrigger: 'onBlur', rules: [{
-								required: !isEditing, message: formatMessage({ id: 'common.field_password_error' })
-							}
+								required: !isEditing, message: formatMessage({ id: 'common.field_password_error' }),
+							},
 							],
 						})(
-							<Input />
+							<Input />,
 						)}
 					</Form.Item>
 				</Form>
 			</Modal>
 		);
-	}
+	},
 );
 
 class Therapists extends Component {
 
 	static contextTypes = {
-		intl: PropTypes.object.isRequired
+		intl: PropTypes.object.isRequired,
 	};
 
 	static propTypes = {
-		data: PropTypes.object
+		data: PropTypes.object,
 	};
 
 	state = {
 		modalOpened: false,
-		activeEntity: {}
+		activeEntity: {},
 	};
 
 	handleOk = () => {
@@ -210,7 +210,7 @@ class Therapists extends Component {
 				if (message === 'DUPLICATE_ID_NUMBER') id = 'common.field_id_number_error_duplicate';
 			}
 			notification.error({
-				message: formatMessage({ id })
+				message: formatMessage({ id }),
 			});
 		};
 
@@ -238,7 +238,7 @@ class Therapists extends Component {
 		this.form.resetFields();
 		this.setState({
 			modalOpened: true,
-			activeEntity: entity
+			activeEntity: entity,
 		});
 	};
 
@@ -252,7 +252,7 @@ class Therapists extends Component {
 			width: '30%',
 			render: (text, record) => <div className="to-dynamic-container">
 				<span className="to-dynamic">{record.first_name} {record.last_name}</span>
-			</div>
+			</div>,
 		}, {
 			title: formatMessage({ id: 'common.field_phone' }),
 			dataIndex: 'phone',
@@ -260,7 +260,7 @@ class Therapists extends Component {
 			width: '25%',
 			render: text => <div className="to-dynamic-container">
 				<span className="to-dynamic"><a href={ `tel:${text}` }>{ text }</a></span>
-			</div>
+			</div>,
 		}, {
 			title: formatMessage({ id: 'common.field_email' }),
 			dataIndex: 'email',
@@ -268,7 +268,7 @@ class Therapists extends Component {
 			width: '25%',
 			render: text => <div className="to-dynamic-container">
 				<span className="to-dynamic"><a href={ `mailto:${text}` }>{ text }</a></span>
-			</div>
+			</div>,
 		}, {
 			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
@@ -278,7 +278,7 @@ class Therapists extends Component {
 		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
 			      {formatMessage({ id: 'common.action_edit' })}
 		      </Button>
-					<span className="ant-divider"/>
+					<span className="ant-divider" />
 		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
 			      deleteTherapist(record)
 		      } } okText={formatMessage({ id: 'common.confirm_yes' })}
@@ -294,32 +294,34 @@ class Therapists extends Component {
 
 		return (
 			<section className="Therapists">
-				<EntityForm
-					ref={ form => {
-						this.form = form
-					} }
-					visible={modalOpened}
-					loading={loading}
-					onCancel={this.handleCancel}
-					onSubmit={this.handleFormSubmit}
-					values={activeEntity}
-					formatMessage={formatMessage}
-				/>
-				<div className="Dashboard__Details">
-					<h1 className="Dashboard__Header">
-						{ formatMessage({ id: 'Therapists.header' }) }
-					</h1>
-					<div className="Dashboard__Actions">
-						<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
-							<ClinicsSelector/>
-						</CheckAccess>
-						<Button type="primary" onClick={ this.showModal } disabled={ !currentClinic.id }>
-							<Icon type="plus-circle-o"/>
-							{ formatMessage({ id: 'Therapists.create_button' }) }
-						</Button>
+				<div className="Container Dashboard__Content">
+					<EntityForm
+						ref={ form => {
+							this.form = form
+						} }
+						visible={modalOpened}
+						loading={loading}
+						onCancel={this.handleCancel}
+						onSubmit={this.handleFormSubmit}
+						values={activeEntity}
+						formatMessage={formatMessage}
+					/>
+					<div className="Dashboard__Details">
+						<h1 className="Dashboard__Header">
+							{ formatMessage({ id: 'Therapists.header' }) }
+						</h1>
+						<div className="Dashboard__Actions">
+							<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
+								<ClinicsSelector />
+							</CheckAccess>
+							<Button type="primary" onClick={ this.showModal } disabled={ !currentClinic.id }>
+								<Icon type="plus-circle-o" />
+								{ formatMessage({ id: 'Therapists.create_button' }) }
+							</Button>
+						</div>
 					</div>
+					<Table dataSource={therapists} columns={columns} loading={loading} rowKey='id' />
 				</div>
-				<Table dataSource={therapists} columns={columns} loading={loading} rowKey='id'/>
 			</section>
 		);
 	}
@@ -329,9 +331,9 @@ const TherapistsApollo = withApollo(compose(
 	graphql(GET_THERAPISTS_QUERY, {
 		options: ({ currentClinic }) => ({
 			variables: {
-				clinic_id: currentClinic.id
-			}
-		})
+				clinic_id: currentClinic.id,
+			},
+		}),
 	}),
 	graphql(ADD_THERAPIST_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
@@ -340,11 +342,11 @@ const TherapistsApollo = withApollo(compose(
 				refetchQueries: [{
 					query: GET_THERAPISTS_QUERY,
 					variables: {
-						clinic_id: ownProps.currentClinic.id
-					}
+						clinic_id: ownProps.currentClinic.id,
+					},
 				}],
-			})
-		})
+			}),
+		}),
 	}),
 	graphql(DELETE_THERAPIST_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
@@ -353,11 +355,11 @@ const TherapistsApollo = withApollo(compose(
 				refetchQueries: [{
 					query: GET_THERAPISTS_QUERY,
 					variables: {
-						clinic_id: ownProps.currentClinic.id
-					}
+						clinic_id: ownProps.currentClinic.id,
+					},
 				}],
-			})
-		})
+			}),
+		}),
 	}),
 	graphql(EDIT_THERAPIST_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
@@ -366,11 +368,11 @@ const TherapistsApollo = withApollo(compose(
 				refetchQueries: [{
 					query: GET_THERAPISTS_QUERY,
 					variables: {
-						clinic_id: ownProps.currentClinic.id
-					}
+						clinic_id: ownProps.currentClinic.id,
+					},
 				}],
-			})
-		})
+			}),
+		}),
 	}),
 )(Therapists));
 
@@ -378,7 +380,7 @@ const TherapistsApollo = withApollo(compose(
 @connect((state) => ({ currentClinic: state.currentClinic }))
 class CurrentClinicWrapper extends Component {
 	render() {
-		return <TherapistsApollo { ...this.props }/>
+		return <TherapistsApollo { ...this.props } />
 	}
 }
 
