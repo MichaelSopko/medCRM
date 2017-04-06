@@ -210,15 +210,54 @@ export default Form.create()(
 						label={formatMessage({ id: 'common.field_birth_date' })}
 						hasFeedback
 					>
-						{getFieldDecorator('birth_date', {
-							initialValue: values.birth_date ? moment(values.birth_date) : null,
-							validateTrigger: 'onBlur', rules: [{
-								required: true, message: formatMessage({ id: 'common.field_birth_date_error' }),
-							}],
-						})(
-							<DatePicker showToday={false}/>
-						)}
+						<Col span={8}>
+							{getFieldDecorator('birth_date.year', {
+								initialValue: values.birth_date ? moment(values.birth_date).year().toString() : undefined,
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*'
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_year' })}>
+									{ new Array(100).fill(new Date().getFullYear()).map((_, i) => {
+										const y = _ - i;
+										return (<Select.Option key={i} value={y.toString()}>{y}</Select.Option>)
+									}) }
+								</Select>
+							)}
+						</Col>
+						<Col span={6} offset={1}>
+							{getFieldDecorator('birth_date.day', {
+								initialValue: values.birth_date ? moment(values.birth_date).day().toString() : undefined,
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*'
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_month' })}>
+									{ new Array(31).fill(31).map((_, i) => {
+										const y = _ - i;
+										return (<Select.Option key={i} value={y.toString()}>{y}</Select.Option>)
+									}) }
+								</Select>
+							)}
+						</Col>
+						<Col span={8} offset={1}>
+							{getFieldDecorator('birth_date.month', {
+								initialValue: values.birth_date ? moment(values.birth_date).month().toString() : undefined,
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*'
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_day' })}>
+									{ new Array(12).fill(12).map((_, i) => {
+										const y = _ - i;
+										return (<Select.Option key={i} value={(y-1).toString()}>{moment.months()[y-1]}</Select.Option>)
+									}) }
+								</Select>
+							)}
+						</Col>
+
 					</Form.Item> }
+
 					{ <Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'Patients.field_related_persons' })}

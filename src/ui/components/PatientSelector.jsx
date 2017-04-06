@@ -36,6 +36,7 @@ class PatientSelector extends Component {
 		const { patients, loading } = data;
 
 		return <Select
+			autofocus
 			style={{ width: 300, marginRight: 12 }}
 			placeholder={ formatMessage({ id: 'PatientSelector.placeholder' }) }
 			optionFilterProp="children"

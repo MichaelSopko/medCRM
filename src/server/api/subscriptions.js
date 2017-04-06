@@ -1,7 +1,7 @@
 import { SubscriptionManager } from 'graphql-subscriptions'
 import schema, { pubsub } from './schema'
 
-const compareIds = args => entity => +entity.clinic_id === +args.clinic_id;
+const compareIds = args => entity => +entity.patient_id === +args.patient_id;
 
 const subscriptionManager = new SubscriptionManager({
 	schema,

@@ -35,6 +35,7 @@ type Therapist implements User {
 	phone: String
 	email: String
 	birth_date: Date
+	disabled: Boolean
 }
 
 type PatientFile {
@@ -65,6 +66,10 @@ type Patient implements User {
 	health_maintenance: PatientHealthMaintenance
 	files: [PatientFile]
 	treatment_series: [TreatmentSeries]
+	diagnoses: [String!]
+	treatment_summary: [String!]
+	archived_date: Date
+	archived: Boolean
 }
 
 input PatientInput {
@@ -77,6 +82,8 @@ input PatientInput {
 	related_persons: [PatientRelatedPersonInput]
 	health_maintenance: PatientHealthMaintenance
 	files: [PatientFileInput]
+	diagnoses: [String!]
+	treatment_summary: [String!]
 }
 
 enum PatientRelatedPersonType {
@@ -98,6 +105,7 @@ type PatientRelatedPerson {
 	description: String
 	phone: String!
 	email: String
+	receive_updates: Boolean
 }
 
 input PatientRelatedPersonInput {
@@ -108,15 +116,16 @@ input PatientRelatedPersonInput {
 }
 
 type TreatmentSeries {
-	id: Int!
+	id: ID!
 	name: String
 	treatments_number: Int!
 	treatments: [Treatment]
 	patient: Patient
+	patient_id: ID!
 }
 
 type Treatment {
-	id: Int!
+	id: ID!
 	target: String
 	method: String
 	process: String
@@ -137,16 +146,6 @@ type CurrentUser implements User {
 	clinic: Clinic
 }
 
-type Query {
-	clinics: [Clinic]
-	administrators: [ClinicAdministrator]
-	therapists(clinic_id: Int!): [Therapist]
-	patients(clinic_id: Int!, archived: Boolean!): [Patient]
-	patient(id: Int!): Patient
-	treatmentSeries(clinic_id: Int!): [TreatmentSeries]
-	currentUser: CurrentUser
-}
-
 type Clinic {
 	id: Int!,
 	name: String!
@@ -157,6 +156,11 @@ type Clinic {
 	administrators: [ClinicAdministrator]
 	patients: [Patient]
 	therapists: [Therapist]
+	treatment_duration: Int
+	patients_limit: Int!
+	archive_time: Int
+	disabled: Boolean
+	deleted: Boolean
 }
 
 type MutationStatus {
@@ -171,36 +175,49 @@ input TreatmentInput {
 	next_treatment_remark: String
 	patient_ids: [Int]
 	therapist_ids: [Int]
-	date: Date
+	start_date: Date
+	end_date: Date
+}
+
+input ClinicInput {
+	name: String!
+	address: String!
+	phone: String
+	email: String
+	fax: String
+	treatment_duration: Int
+	patients_limit: Int!
+	archive_time: Int
+	disabled: Boolean
+}
+
+type Query {
+	clinics: [Clinic]
+	administrators: [ClinicAdministrator]
+	therapists(clinic_id: Int!): [Therapist]
+	patients(clinic_id: Int!, archived: Boolean!): [Patient]
+	patient(id: Int!): Patient
+	treatmentSeries(patient_id: ID!): [TreatmentSeries]
+	currentUser: CurrentUser
 }
 
 type Mutation {
-	addClinic(
-	name: String!
-	address: String!
-	phone: String
-	email: String
-	fax: String
-): MutationStatus
+	addClinic(clinic: ClinicInput): Clinic!
 
 	editClinic(
-	id: Int!
-	name: String!
-	address: String!
-	phone: String
-	email: String
-	fax: String
-): MutationStatus
+		id: Int!
+		clinic: ClinicInput
+	): Clinic!
 
 	deleteClinic(
-	id: Int!
-): MutationStatus
+		id: Int!
+	): Clinic!
 
 	addAdministrator(
-	email: String!
-	password: String!
-	clinic_id: Int!
-): MutationStatus
+		email: String!
+		password: String!
+		clinic_id: Int!
+	): MutationStatus
 
 	editAdministrator(
 	id: Int!
@@ -259,7 +276,7 @@ type Mutation {
 	addTreatmentSeries(
 	name: String
 	treatments_number: Int!
-	clinic_id: Int!
+	patient_id: Int!
 ): MutationStatus
 
 	editTreatmentSeries(
@@ -294,9 +311,9 @@ type Subscription {
 	patientCreated(clinic_id: Int!): Patient!
 	patientUpdated(clinic_id: Int!): Patient!
 	patientDeleted(clinic_id: Int!): Patient!
-	treatmentSeriesCreated(clinic_id: Int!): TreatmentSeries!
-	treatmentSeriesUpdated(clinic_id: Int!): TreatmentSeries!
-	treatmentSeriesDeleted(clinic_id: Int!): TreatmentSeries!
+	treatmentSeriesCreated(patient_id: Int!): TreatmentSeries!
+	treatmentSeriesUpdated(patient_id: Int!): TreatmentSeries!
+	treatmentSeriesDeleted(patient_id: Int!): TreatmentSeries!
 }
 
 schema {

@@ -21,6 +21,7 @@
     "npm": "3.10.10"
   },
   "scripts": {
+    "watch": "babel-node tools/webpack.run watch",
     "build": "babel-node tools/webpack.run",
     "start": "node --harmony build/server",
     "test": "mocha-webpack --webpack-config tools/webpack.config.js --full-trace --exit 'tests/**/*.test.js' && npm run lint",
@@ -28,8 +29,7 @@
     "seed": "npm run migrate && knex seed:run",
     "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
-    "watch": "babel-node tools/webpack.run watch",
-    "heroku-postbuild": "rm -rf build && npm run build && npm run seed"
+    "heroku-postbuild": "rm -rf build && npm run build && npm run seed",
     "generate-schema": "apollo-codegen introspect-schema ./src/server/api/schema_def.graphqls --insecure --output graphql.schema.json",
     "postinstall": "if [ \"$NODE_ENV\" = production ]; then npm run clean && npm run build && npm run migrate && npm run seed; fi"
   },
@@ -48,11 +48,12 @@
     "express-jwt": "^5.1.0",
     "express-session": "^1.15.0",
     "graphql": "^0.9.0",
+    "graphql-anywhere": "^3.0.1",
     "graphql-custom-datetype": "^0.3.0",
     "graphql-server-express": "^0.6.0",
     "graphql-subscriptions": "^0.3.0",
     "graphql-tag": "^1.2.1",
-    "graphql-tools": "^0.10.0",
+    "graphql-tools": "^0.11.0",
     "graphql-type-json": "^0.1.4",
     "graphql-typings": "0.0.1-beta-2",
     "isomorphic-fetch": "^2.2.1",

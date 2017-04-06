@@ -46,7 +46,10 @@
     "create_button": "Create a Clinic",
     "create_header": "Create Clinic",
     "edit_header": "Edit Clinic",
-    "header": "Clinics"
+    "header": "Clinics",
+    "field_patients_limit": "Patients limit",
+    "field_treatment_duration": "Default treatment duration (in minutes)",
+    "field_archive_time": "Change status limit (in minutes)"
   },
   "Administrators": {
     "create_button": "Create an Administrator",
@@ -103,7 +106,9 @@
     "field_patients": "Patients",
     "field_patients_error": "Please select at least one",
     "field_therapists": "Therapists",
-    "field_therapists_error": "Please select at least one"
+    "field_therapists_error": "Please select at least one",
+    "field_start_date": "Start date",
+    "field_end_date": "End date"
   },
   "common": {
     "size": "Size",
@@ -138,6 +143,11 @@
     "field_id_number_error_duplicate": "Same id number already exists",
     "field_licence": "Licence number",
     "field_licence_error": "Please input licence",
-    "server_error": "Server error"
+    "server_error": "Server error",
+    "field_disabled": "Disabled",
+    "field_archived": "Archived",
+    "field_year": "Year",
+    "field_month": "Month",
+    "field_day": "Day"
   }
 }

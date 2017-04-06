@@ -58,8 +58,8 @@ const resolvers = {
 		patient(_, { id }, context) {
 			return context.Users.findOne(id);
 		},
-		treatmentSeries(ignored1, { clinic_id }, context) {
-			return context.Treatments.getSeries(clinic_id);
+		treatmentSeries(ignored1, { patient_id }, context) {
+			return context.Treatments.getSeries(patient_id);
 		},
 		currentUser(ignored1, ignored2, context) {
 			return context.Users.findOne(context.currentUser.id);
@@ -69,17 +69,17 @@ const resolvers = {
 		addClinic(_, clinic, context) {
 			return checkAccess(context, ROLES.SYSTEM_ADMIN)
 				.then(() => context.Clinics.addClinic(clinic))
-				.then(res => ({ status: res }))
+				.then(([id]) => context.Clinics.findOne(clinic))
 		},
-		editClinic(_, clinic, context) {
+		editClinic(_, { id, clinic }, context) {
 			return checkAccess(context, ROLES.SYSTEM_ADMIN)
-				.then(() => context.Clinics.editClinic(clinic))
-				.then(res => ({ status: res }))
+				.then(() => context.Clinics.editClinic(id, clinic))
+				.then(res => context.Clinics.findOne(id))
 		},
 		deleteClinic(_, { id }, context) {
 			return checkAccess(context, ROLES.SYSTEM_ADMIN)
 				.then(() => context.Clinics.deleteClinic({ id }))
-				.then(res => ({ status: res }))
+				.then(res => ({ id }))
 		},
 
 		addAdministrator(_, user, context) {
@@ -264,6 +264,9 @@ const resolvers = {
 		files(user, _, ctx) {
 			return safeParse(user.files, []);
 		},
+		diagnoses(user, _, ctx) {
+			return safeParse(user.diagnoses, []);
+		},
 		treatment_series(user, _, ctx) {
 			return ctx.Treatments.getSeriesByPatient(user.id)
 		}
@@ -281,9 +284,6 @@ const resolvers = {
 	Treatment: {
 		therapists(treatment, _, context) {
 			return treatment.therapists || context.Users.getUsers(safeParse(treatment.therapist_ids));
-		},
-		patients(treatment, _, context) {
-			return treatment.patients || context.Users.getUsers(safeParse(treatment.patient_ids));
 		}
 	},
 	Date: GraphQLMomentMySQL

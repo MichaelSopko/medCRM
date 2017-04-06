@@ -22,6 +22,8 @@ import {
 const TabPane = Tabs.TabPane
 import { FormattedMessage } from 'react-intl'
 
+import TreatmentsTab from './Treatments';
+
 import HEALTH_MAINTENANCES from '../../helpers/constants/health_maintenances'
 import RELATED_PERSONS from '../../helpers/constants/related_persons'
 
@@ -61,10 +63,8 @@ FilesTab.contextTypes = {
 const DetailsTab = ({ patient }, context) => {
 	const formatMessage = context.intl.formatMessage;
 
-	let date = moment(patient.birth_date);
-	let years = date.diff(moment(), 'years');
-	let months = date.diff(moment(), 'months');
-	let days = date.diff(moment(), 'days');
+	let bdate = moment(patient.birth_date);
+	let diff = moment.duration(moment().diff(bdate));
 
 	return (
 		<div className='Details'>
@@ -73,7 +73,7 @@ const DetailsTab = ({ patient }, context) => {
 					{patient.first_name} {patient.last_name}
 				</span>
 				<span className="Details__age">
-					<FormattedMessage id='Patients.age' values={{ years, months, days }} />
+					<FormattedMessage id='Patients.age' values={{ years: diff.years() || '0', months: diff.months() || '0', days: diff.days() || '0' }} />
 				</span>
 			</div>
 			<div className="Details__id">
@@ -106,7 +106,7 @@ const DetailsTab = ({ patient }, context) => {
 
 			<div className="Details__field">
 				<div className="Details__field-name">{ formatMessage({ id: 'Patients.field_health_maintenance' }) }</div>
-				<div className="Details__field-value">{patient.health_maintenance}</div>
+				<div className="Details__field-value">{ formatMessage({ id: `health_maintenance.${patient.health_maintenance}` }) }</div>
 			</div>
 
 		</div>
@@ -118,10 +118,10 @@ DetailsTab.contextTypes = {
 }
 
 @graphql(GET_PATIENT_QUERY, {
-	options: ({ id }) => ({
-		variables: { id },
+	options: ({ patientId }) => ({
+		variables: { id: patientId },
 	}),
-	skip: ({ id }) => !id,
+	skip: ({ patientId }) => !patientId,
 })
 class PatientView extends Component {
 
@@ -178,7 +178,9 @@ class PatientView extends Component {
 					<TabPane
 						className='PatientView__Tab'
 						tab={ formatMessage({ id: 'Patients.tabs.treatments' }) }
-						key="treatments">Content of Tab Pane 3</TabPane>
+						key="treatments">
+						<TreatmentsTab patient={patient} />
+					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
 						tab={ formatMessage({ id: 'Patients.tabs.treatment_summary' }) }

@@ -364,7 +364,7 @@ class Patients extends Component {
 					</div>
 
 					<div style={{ marginTop: 24 }}>
-						<PatientView id={currentPatientId} onEdit={this.editEntity} />
+						<PatientView patientId={currentPatientId} onEdit={this.editEntity} />
 					</div>
 					{/*<Table dataSource={patients} columns={columns} loading={loading} rowKey='id'/>*/}
 				</section>

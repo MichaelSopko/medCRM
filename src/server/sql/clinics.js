@@ -7,10 +7,11 @@ export default class Clinics {
 
 	addClinic(fields) {
 		return knex('clinics')
-			.insert(fields);
+			.insert(fields)
+			.returning('*');
 	}
 
-	editClinic({ id, ...fields }) {
+	editClinic(id, fields) {
 		return knex('clinics')
 			.where('id', id)
 			.update(fields);

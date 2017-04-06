@@ -14,7 +14,7 @@ import ClinicsSelector from '../ClinicsSelector'
 import CheckAccess from '../helpers/CheckAccess'
 import moment from 'moment';
 
-import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, DatePicker, notification } from 'antd'
+import { Table, Icon, Switch, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, DatePicker, notification } from 'antd'
 
 const EntityForm = Form.create()(
 	(props) => {
@@ -149,6 +149,17 @@ const EntityForm = Form.create()(
 							],
 						})(
 							<Input />,
+						)}
+					</Form.Item>
+					<Form.Item
+						{...formItemLayout}
+						label={formatMessage({ id: 'common.field_disabled' })}
+					>
+						{getFieldDecorator('disabled', {
+							initialValue: values.disabled,
+							validateTrigger: 'onBlur', rules: [],
+						})(
+							<Switch/>
 						)}
 					</Form.Item>
 				</Form>

@@ -1,10 +1,7 @@
+#import './ClinicFragment.graphql'
+
 query getClinics {
     clinics {
-        id
-        name
-        address
-        phone
-        fax
-        email
+        ...ClinicFragment
     }
 }

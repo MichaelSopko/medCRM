@@ -36,7 +36,8 @@ fragment PatientFragment on Patient {
                 first_name
                 last_name
             }
-            date
+            start_date
+            end_date
         }
     }
 }

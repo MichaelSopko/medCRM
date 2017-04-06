@@ -1,28 +1,7 @@
-subscription onSeriesUpdated($clinic_id: Int!){
-    treatmentSeriesUpdated(clinic_id: $clinic_id) {
-        id
-        name
-        treatments_number
-        treatments {
-            id
-            target
-            method
-            process
-            parents_guidance
-            next_treatment_remark
-            patients {
-                id
-                id_number
-                first_name
-                last_name
-            }
-            therapists {
-                id
-                id_number
-                first_name
-                last_name
-            }
-            date
-        }
+#import './TreatmentFragment.graphql'
+
+subscription onSeriesUpdated($patient_id: Int!){
+    treatmentSeriesUpdated(patient_id: $patient_id) {
+        ...TreatmentFragment
     }
 }

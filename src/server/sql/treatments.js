@@ -7,16 +7,16 @@ const safeParse = (json, deflt = []) => {
 		}
 		return JSON.parse(json || `${deflt}`)
 	} catch (e) {
-		log('JSON parse error', json, e);
+		console.error('JSON parse error', json, e);
 		return deflt;
 	}
 }
 
 export default class Treatments {
 
-	getSeries(clinic_id) {
+	getSeries(patient_id) {
 		return knex('treatment_series')
-			.where('clinic_id', clinic_id)
+			.where('patient_id', patient_id)
 			.orderBy('id', 'DESC')
 			.select();
 	}

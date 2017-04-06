@@ -26,11 +26,6 @@ export default class Users {
 		return knex('users')
 			.where('id', id)
 			.first()
-			.then(user => ({
-				...user,
-				files: safeParse(user.files, []),
-				related_persons: safeParse(user.related_persons)
-			}))
 	}
 
 	getByLogin(login) {

@@ -1,0 +1,11 @@
+fragment ClinicFragment on Clinic {
+    id
+    name
+    address
+    phone
+    fax
+    email
+    treatment_duration
+    patients_limit
+    archive_time
+}
