@@ -20,7 +20,7 @@ export function up(knex, Promise) {
 			table.integer('patient_id').unsigned().references('id').inTable('users');
 		}),
 		trx.schema.table('treatments', (table) => {
-			table.dropColumn('data');
+			table.dropColumn('date');
 			table.dropColumn('patient_ids');
 			table.dateTime('start_date');
 			table.dateTime('end_date');
