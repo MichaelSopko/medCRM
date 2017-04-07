@@ -36,6 +36,13 @@
 }
 
 .Details {
+	display: flex;
+	&__fields {
+		width: 60%;
+	}
+	&__related-persons {
+		width: 40%;
+	}
 	&__header {
 	}
 	&__name {

@@ -60,6 +60,43 @@ FilesTab.contextTypes = {
 }
 
 
+const RelatedPersonsTable = ({ patient }, context) => {
+	const formatMessage = context.intl.formatMessage;
+	const columns = [{
+		title: formatMessage({ id: 'Patients.field_person_type' }),
+		key: 'type',
+		width: '20%',
+		render: (text, record) => <span>{ formatMessage({ id: `related_persons.${record.type}` }) }</span>,
+	},
+		{
+			title: formatMessage({ id: 'common.field_phone' }),
+			width: '20%',
+			key: 'phone',
+			render: (text, record) => <a href={`tel:${record.phone}`}>{record.phone}</a>,
+		},
+		{
+			title: formatMessage({ id: 'common.field_email' }),
+			width: '20%',
+			key: 'email',
+			render: (text, record) => <a href={`mailto:${record.email}`}>{record.email}</a>,
+		},
+		{
+			title: formatMessage({ id: 'Patients.field_person_description' }),
+			width: '30%',
+			key: 'description',
+			render: (text, record) => <div className="to-dynamic-container">
+				<span className="to-dynamic">{record.description}</span>
+			</div>,
+		}];
+
+	return <Table dataSource={patient.related_persons} columns={columns} pagination={false} rowKey='phone' />
+};
+
+RelatedPersonsTable.contextTypes = {
+	intl: PropTypes.object.isRequired,
+}
+
+
 const DetailsTab = ({ patient }, context) => {
 	const formatMessage = context.intl.formatMessage;
 
@@ -68,46 +105,58 @@ const DetailsTab = ({ patient }, context) => {
 
 	return (
 		<div className='Details'>
-			<div className="Details__header">
+
+			<div className='Details__fields'>
+				<div className="Details__header">
 				<span className="Details__name">
 					{patient.first_name} {patient.last_name}
 				</span>
-				<span className="Details__age">
-					<FormattedMessage id='Patients.age' values={{ years: diff.years() || '0', months: diff.months() || '0', days: diff.days() || '0' }} />
+					<span className="Details__age">
+					<FormattedMessage id='Patients.age' values={{
+						years: diff.years() || '0',
+						months: diff.months() || '0',
+						days: diff.days() || '0',
+					}} />
 				</span>
-			</div>
-			<div className="Details__id">
-				#{patient.id_number}
-			</div>
-
-			<div className="Details__field">
-				<div className="Details__field-name">{ formatMessage({ id: 'common.field_first_name' }) }</div>
-				<div className="Details__field-value">{patient.first_name}</div>
-			</div>
-
-			<div className="Details__field">
-				<div className="Details__field-name">{ formatMessage({ id: 'common.field_last_name' }) }</div>
-				<div className="Details__field-value">{patient.last_name}</div>
-			</div>
-
-			<div className="Details__field">
-				<div className="Details__field-name">{ formatMessage({ id: 'common.field_phone' }) }</div>
-				<div className="Details__field-value">
-					<a href={ `tel:${patient.phone}` }>{patient.phone}</a>
 				</div>
-			</div>
-
-			<div className="Details__field">
-				<div className="Details__field-name">{ formatMessage({ id: 'common.field_email' }) }</div>
-				<div className="Details__field-value">
-					<a href={ `mailto:${patient.profile_email}` }>{patient.profile_email}</a>
+				<div className="Details__id">
+					#{patient.id_number}
 				</div>
+
+				<div className="Details__field">
+					<div className="Details__field-name">{ formatMessage({ id: 'common.field_first_name' }) }</div>
+					<div className="Details__field-value">{patient.first_name}</div>
+				</div>
+
+				<div className="Details__field">
+					<div className="Details__field-name">{ formatMessage({ id: 'common.field_last_name' }) }</div>
+					<div className="Details__field-value">{patient.last_name}</div>
+				</div>
+
+				<div className="Details__field">
+					<div className="Details__field-name">{ formatMessage({ id: 'common.field_phone' }) }</div>
+					<div className="Details__field-value">
+						<a href={ `tel:${patient.phone}` }>{patient.phone}</a>
+					</div>
+				</div>
+
+				<div className="Details__field">
+					<div className="Details__field-name">{ formatMessage({ id: 'common.field_email' }) }</div>
+					<div className="Details__field-value">
+						<a href={ `mailto:${patient.profile_email}` }>{patient.profile_email}</a>
+					</div>
+				</div>
+
+				{ !!patient.health_maintenance && <div className="Details__field">
+					<div className="Details__field-name">{ formatMessage({ id: 'Patients.field_health_maintenance' }) }</div>
+					<div
+						className="Details__field-value">{ formatMessage({ id: `health_maintenance.${patient.health_maintenance}` }) }</div>
+				</div> }
 			</div>
 
-			{ !!patient.health_maintenance && <div className="Details__field">
-				<div className="Details__field-name">{ formatMessage({ id: 'Patients.field_health_maintenance' }) }</div>
-				<div className="Details__field-value">{ formatMessage({ id: `health_maintenance.${patient.health_maintenance}` }) }</div>
-			</div> }
+			<div className="Details__related-persons">
+				<RelatedPersonsTable patient={patient} />
+			</div>
 
 		</div>
 	)
@@ -160,7 +209,7 @@ class PatientView extends Component {
 							? <Button type='dashed' icon='unlock'>Unarchive</Button>
 							: <Button ghost type='danger' icon='lock'>Archive</Button>
 						}
-						<Button icon='edit' style={{marginLeft: 8}} onClick={onEdit(patient)}>Edit</Button>
+						<Button icon='edit' style={{ marginLeft: 8 }} onClick={onEdit(patient)}>Edit</Button>
 					</div> }
 					type="card">
 					<TabPane
