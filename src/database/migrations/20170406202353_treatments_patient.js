@@ -1,8 +1,10 @@
 export function up(knex, Promise) {
 	return knex.transaction(trx => Promise.all([
 		trx.schema.table('users', (table) => {
-			table.specificType('diagnoses', 'JSON');
-			table.specificType('treatment_summary', 'JSON');
+			// table.specificType('diagnoses', 'JSON');
+			// table.specificType('treatment_summary', 'JSON');
+			table.text('diagnoses');
+			table.text('treatment_summary');
 			table.boolean('disabled').defaultTo(false);
 			table.boolean('archived').index().defaultTo(false);
 			table.dateTime('archived_date');
