@@ -1,7 +1,7 @@
 export function up(knex, Promise) {
-	return Promise.resolve(true);
 	return knex.transaction(trx => trx
 		.schema.table('users', (table) => {
+			return;
 			// table.specificType('diagnoses', 'JSON');
 			// table.specificType('treatment_summary', 'JSON');
 			table.text('diagnoses');
@@ -11,6 +11,7 @@ export function up(knex, Promise) {
 			table.dateTime('archived_date');
 		})
 		.table('clinics', (table) => {
+			return;
 			table.integer('treatment_duration').unsigned().defaultTo(60);
 			table.integer('patients_limit').unsigned().defaultTo(100);
 			table.integer('archive_time').unsigned().defaultTo(60);
@@ -18,6 +19,7 @@ export function up(knex, Promise) {
 			table.boolean('deleted').index().defaultTo(false);
 		})
 		.table('treatment_series', (table) => {
+			return;
 			table.integer('patient_id').unsigned().references('id').inTable('users');
 		})
 		.table('treatments', (table) => {
