@@ -2,7 +2,7 @@ import knex from './connector'
 
 export default class Clinics {
 	getClinics() {
-		return knex('clinics').select();
+		return knex('clinics').where('deleted', false).select();
 	}
 
 	addClinic(fields) {

@@ -1,7 +1,7 @@
 .Dashboard {
-	 .Container {
-		margin-top: 36px;
+	> .Container {
 		padding-top: 12px;
+		margin-top: 36px;
 	}
 
 	&__Actions {
@@ -11,8 +11,9 @@
 
 	&__Content {
 		background: #ffffff;
-		padding: 12px;
+		padding: 12px !important;
 		border-radius: 3px;
+		margin-top: 36px !important;
 	}
 
 	&__Details {

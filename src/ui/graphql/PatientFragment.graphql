@@ -6,6 +6,7 @@ fragment PatientFragment on Patient {
     birth_date
     phone
     profile_email
+    archived
     related_persons {
         type
         description
