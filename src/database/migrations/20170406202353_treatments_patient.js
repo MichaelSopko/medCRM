@@ -1,4 +1,5 @@
 export function up(knex, Promise) {
+	return Promise.resolve(true);
 	return knex.transaction(trx => trx
 		.schema.table('users', (table) => {
 			// table.specificType('diagnoses', 'JSON');
