@@ -104,10 +104,10 @@ const DetailsTab = ({ patient }, context) => {
 				</div>
 			</div>
 
-			<div className="Details__field">
+			{ !!patient.health_maintenance && <div className="Details__field">
 				<div className="Details__field-name">{ formatMessage({ id: 'Patients.field_health_maintenance' }) }</div>
 				<div className="Details__field-value">{ formatMessage({ id: `health_maintenance.${patient.health_maintenance}` }) }</div>
-			</div>
+			</div> }
 
 		</div>
 	)

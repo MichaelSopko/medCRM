@@ -32,6 +32,7 @@ const EntityForm = Form.create()(
 			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
 			       onCancel={onCancel}
 			       onOk={onSubmit}
+			       width={700}
 			       confirmLoading={loading}>
 				<Form>
 					<Form.Item
@@ -128,14 +129,52 @@ const EntityForm = Form.create()(
 						label={formatMessage({ id: 'common.field_birth_date' })}
 						hasFeedback
 					>
-						{getFieldDecorator('birth_date', {
-							initialValue: moment(values.birth_date),
-							validateTrigger: 'onBlur', rules: [{
-								required: true, message: formatMessage({ id: 'common.field_birth_date_error' }),
-							}],
-						})(
-							<DatePicker showToday={false} />,
-						)}
+						<Col span={8}>
+							{getFieldDecorator('birth_date.year', {
+								initialValue: values.birth_date ? moment(values.birth_date).year().toString() : undefined,
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*'
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_year' })}>
+									{ new Array(100).fill(new Date().getFullYear()).map((_, i) => {
+										const y = _ - i;
+										return (<Select.Option key={i} value={y.toString()}>{y}</Select.Option>)
+									}) }
+								</Select>
+							)}
+						</Col>
+						<Col span={6} offset={1}>
+							{getFieldDecorator('birth_date.date', {
+								initialValue: values.birth_date ? moment(values.birth_date).date().toString() : undefined,
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*'
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_day' })}>
+									{ new Array(31).fill(1).map((_, i) => {
+										const y = ++i;
+										return (<Select.Option key={y} value={y.toString()}>{y}</Select.Option>)
+									}) }
+								</Select>
+							)}
+						</Col>
+						<Col span={8} offset={1}>
+							{getFieldDecorator('birth_date.month', {
+								initialValue: values.birth_date ? moment(values.birth_date).month().toString() : undefined,
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*'
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_month' })}>
+									{ new Array(12).fill(12).map((_, i) => {
+										const y = _ - i;
+										return (<Select.Option key={i} value={(y-1).toString()}>{moment.months()[y-1]}</Select.Option>)
+									}) }
+								</Select>
+							)}
+						</Col>
+
 					</Form.Item> }
 					<Form.Item
 						{...formItemLayout}
@@ -229,6 +268,9 @@ class Therapists extends Component {
 			if (err) {
 				return;
 			}
+
+			values.birth_date = moment(values.birth_date);
+
 			isEditing ?
 				this.props.editTherapist({ id: this.state.activeEntity.id, ...values })
 					.then(() => {

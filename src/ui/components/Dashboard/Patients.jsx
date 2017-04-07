@@ -196,6 +196,9 @@ class Patients extends Component {
 			console.log(values);
 			files = files ? processFiles(files) : [];
 			values = processRelatedPersons(this.state.relatedPersons, values);
+
+			values.birth_date = moment(values.birth_date);
+
 			isEditing
 
 				? this.props.editPatient({

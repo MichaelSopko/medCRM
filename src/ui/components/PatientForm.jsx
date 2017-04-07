@@ -226,16 +226,16 @@ export default Form.create()(
 							)}
 						</Col>
 						<Col span={6} offset={1}>
-							{getFieldDecorator('birth_date.day', {
-								initialValue: values.birth_date ? moment(values.birth_date).day().toString() : undefined,
+							{getFieldDecorator('birth_date.date', {
+								initialValue: values.birth_date ? moment(values.birth_date).date().toString() : undefined,
 								validateTrigger: 'onBlur', rules: [{
 									required: true, message: '*'
 								}],
 							})(
-								<Select placeholder={formatMessage({ id: 'common.field_month' })}>
-									{ new Array(31).fill(31).map((_, i) => {
-										const y = _ - i;
-										return (<Select.Option key={i} value={y.toString()}>{y}</Select.Option>)
+								<Select placeholder={formatMessage({ id: 'common.field_day' })}>
+									{ new Array(31).fill(1).map((_, i) => {
+										const y = ++i;
+										return (<Select.Option key={y} value={y.toString()}>{y}</Select.Option>)
 									}) }
 								</Select>
 							)}
@@ -247,7 +247,7 @@ export default Form.create()(
 									required: true, message: '*'
 								}],
 							})(
-								<Select placeholder={formatMessage({ id: 'common.field_day' })}>
+								<Select placeholder={formatMessage({ id: 'common.field_month' })}>
 									{ new Array(12).fill(12).map((_, i) => {
 										const y = _ - i;
 										return (<Select.Option key={i} value={(y-1).toString()}>{moment.months()[y-1]}</Select.Option>)
