@@ -12,6 +12,7 @@ fragment PatientFragment on Patient {
         description
         phone
         email
+        receive_updates
     }
     health_maintenance
     files {

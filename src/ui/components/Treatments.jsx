@@ -461,7 +461,7 @@ class Treatments extends Component {
 	render() {
 		const {
 			data: { loading, treatmentSeries = [], therapists = [] },
-			deleteTreatment, currentClinic, deleteSeries, currentUser,
+			deleteTreatment, currentClinic, deleteSeries, currentUser, patient
 		} = this.props;
 		const formatMessage = this.context.intl.formatMessage;
 
@@ -483,7 +483,7 @@ class Treatments extends Component {
 			width: '35%',
 			render: (text, record) => (
 				<span>
-		      <Button size="small" type='primary' disabled={record.treatments_number <= record.treatments.length}
+		      <Button size="small" type='primary' disabled={record.treatments_number <= record.treatments.length || patient.archived}
 		              onClick={ this.showTreatmentModal(record) }>
 			      <Icon type="plus-circle-o" />
 			      {formatMessage({ id: 'Treatments.create_treatment_button' })}
@@ -535,7 +535,7 @@ class Treatments extends Component {
 				/>
 				<div className="Dashboard__Details" style={{ display: 'flex', justifyContent: 'flex-end' }}>
 					<div className="Dashboard__Actions">
-						<Button type="primary" size='small' onClick={ this.showSeriesModal } disabled={ !currentClinic.id }>
+						<Button type="primary" size='small' onClick={ this.showSeriesModal } disabled={ !currentClinic.id || patient.archived }>
 							<Icon type="plus-circle-o" />
 							{ formatMessage({ id: 'Treatments.create_series_button' }) }
 						</Button>

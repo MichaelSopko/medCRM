@@ -113,6 +113,7 @@ input PatientRelatedPersonInput {
 	description: String
 	phone: String!
 	email: String
+	receive_updates: Boolean
 }
 
 type TreatmentSeries {
@@ -251,6 +252,7 @@ type Mutation {
 	phone: String!
 	email: String!
 	birth_date: Date!
+	disabled: Boolean
 ): MutationStatus
 
 	deleteTherapist(
@@ -271,6 +273,9 @@ type Mutation {
 	deletePatient(
 	id: Int!
 ): Patient!
+
+	archivePatient(id: ID!): Patient!
+	unarchivePatient(id: ID!): Patient!
 
 
 	addTreatmentSeries(

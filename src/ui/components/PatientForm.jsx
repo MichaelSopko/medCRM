@@ -12,7 +12,8 @@ import {
 	Select,
 	DatePicker,
 	Upload,
-	notification
+	notification,
+	Checkbox,
 } from 'antd'
 import moment from 'moment';
 
@@ -25,7 +26,7 @@ export default Form.create()(
 		const {
 			visible, onCancel, onSubmit, form, loading, values = {},
 			onUploadFileChange, addRelatedPerson, removeRelatedPerson,
-			relatedPersons, formatMessage
+			relatedPersons, formatMessage,
 		} = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
@@ -35,7 +36,7 @@ export default Form.create()(
 		const isEditing = !!Object.keys(values).length;
 		const token = localStorage.getItem('token');
 		const uploadHeaders = {
-			Authorization: `Bearer ${token}`
+			Authorization: `Bearer ${token}`,
 		};
 		const normFile = (e) => {
 			if (Array.isArray(e)) {
@@ -55,7 +56,7 @@ export default Form.create()(
 					onClick={ () => {
 						removeRelatedPerson(item._id)
 					} }>
-					<Icon type="close"/>
+					<Icon type="close" />
 				</Button>
 				<Form.Item
 					hasFeedback
@@ -69,7 +70,7 @@ export default Form.create()(
 							{ Object.keys(RELATED_PERSONS).map(key => <Select.Option value={key} key={key}>
 								{formatMessage({ id: `related_persons.${RELATED_PERSONS[key]}` })}
 							</Select.Option>) }
-						</Select>
+						</Select>,
 					)}
 				</Form.Item>
 				<Form.Item
@@ -79,7 +80,7 @@ export default Form.create()(
 						initialValue: item.description,
 						validateTrigger: 'onBlur', rules: [],
 					})(
-						<Input placeholder={formatMessage({ id: 'Patients.field_person_description' })}/>
+						<Input placeholder={formatMessage({ id: 'Patients.field_person_description' })} />,
 					)}
 				</Form.Item>
 				<Form.Item
@@ -90,7 +91,7 @@ export default Form.create()(
 						validateTrigger: 'onBlur',
 						rules: [{ required: true, message: formatMessage({ id: 'common.field_phone_error' }) }],
 					})(
-						<Input type="number" placeholder={formatMessage({ id: 'common.field_phone' })}/>
+						<Input type="number" placeholder={formatMessage({ id: 'common.field_phone' })} />,
 					)}
 				</Form.Item>
 				<Form.Item
@@ -101,7 +102,21 @@ export default Form.create()(
 						validateTrigger: 'onBlur',
 						rules: [{ type: 'email', message: formatMessage({ id: 'common.field_email_error' }) }],
 					})(
-						<Input type="email" placeholder={formatMessage({ id: 'common.field_email' })}/>
+						<Input type="email" placeholder={formatMessage({ id: 'common.field_email' })} />,
+					)}
+				</Form.Item>
+				<Form.Item
+					hasFeedback
+				>
+					{getFieldDecorator(`related_persons-${item._id}-receive_updates`, {
+						initialValue: item.receive_updates,
+						validateTrigger: 'onBlur',
+						valuePropName: 'checked',
+						rules: [],
+					})(
+						<Checkbox>
+							{formatMessage({ id: 'Patients.field_receive_updates' })}
+						</Checkbox>,
 					)}
 				</Form.Item>
 			</div>));
@@ -129,7 +144,7 @@ export default Form.create()(
 								message: formatMessage({ id: 'common.field_id_number_error' }),
 							}],
 						})(
-							<Input type="number"/>
+							<Input type="number" />,
 						)}
 					</Form.Item>
 					{ <Form.Item
@@ -143,7 +158,7 @@ export default Form.create()(
 								type: 'email', message: formatMessage({ id: 'common.field_email_error' }),
 							}],
 						})(
-							<Input type="email"/>
+							<Input type="email" />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -157,7 +172,7 @@ export default Form.create()(
 								required: true, message: formatMessage({ id: 'common.field_first_name_error' }),
 							}],
 						})(
-							<Input />
+							<Input />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -171,7 +186,7 @@ export default Form.create()(
 								required: true, message: formatMessage({ id: 'common.field_last_name_error' }),
 							}],
 						})(
-							<Input />
+							<Input />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -186,7 +201,7 @@ export default Form.create()(
 								required: true, message: formatMessage({ id: 'common.field_phone_error' }),
 							}],
 						})(
-							<Input/>
+							<Input />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -202,7 +217,7 @@ export default Form.create()(
 								{ Object.keys(HEALTH_MAINTENANCES).map(key => <Select.Option value={key} key={key}>
 									{HEALTH_MAINTENANCES[key]}
 								</Select.Option>) }
-							</Select>
+							</Select>,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -214,7 +229,7 @@ export default Form.create()(
 							{getFieldDecorator('birth_date.year', {
 								initialValue: values.birth_date ? moment(values.birth_date).year().toString() : undefined,
 								validateTrigger: 'onBlur', rules: [{
-									required: true, message: '*'
+									required: true, message: '*',
 								}],
 							})(
 								<Select placeholder={formatMessage({ id: 'common.field_year' })}>
@@ -222,14 +237,14 @@ export default Form.create()(
 										const y = _ - i;
 										return (<Select.Option key={i} value={y.toString()}>{y}</Select.Option>)
 									}) }
-								</Select>
+								</Select>,
 							)}
 						</Col>
 						<Col span={6} offset={1}>
 							{getFieldDecorator('birth_date.date', {
 								initialValue: values.birth_date ? moment(values.birth_date).date().toString() : undefined,
 								validateTrigger: 'onBlur', rules: [{
-									required: true, message: '*'
+									required: true, message: '*',
 								}],
 							})(
 								<Select placeholder={formatMessage({ id: 'common.field_day' })}>
@@ -237,22 +252,22 @@ export default Form.create()(
 										const y = ++i;
 										return (<Select.Option key={y} value={y.toString()}>{y}</Select.Option>)
 									}) }
-								</Select>
+								</Select>,
 							)}
 						</Col>
 						<Col span={8} offset={1}>
 							{getFieldDecorator('birth_date.month', {
 								initialValue: values.birth_date ? moment(values.birth_date).month().toString() : undefined,
 								validateTrigger: 'onBlur', rules: [{
-									required: true, message: '*'
+									required: true, message: '*',
 								}],
 							})(
 								<Select placeholder={formatMessage({ id: 'common.field_month' })}>
 									{ new Array(12).fill(12).map((_, i) => {
 										const y = _ - i;
-										return (<Select.Option key={i} value={(y-1).toString()}>{moment.months()[y-1]}</Select.Option>)
+										return (<Select.Option key={i} value={(y - 1).toString()}>{moment.months()[y - 1]}</Select.Option>)
 									}) }
-								</Select>
+								</Select>,
 							)}
 						</Col>
 
@@ -283,13 +298,13 @@ export default Form.create()(
 								onChange={onUploadFileChange}
 								action="/api/upload-file">
 								<Button>
-									<Icon type="upload"/> {formatMessage({ id: 'Patients.upload_files' })}
+									<Icon type="upload" /> {formatMessage({ id: 'Patients.upload_files' })}
 								</Button>
-							</Upload>
+							</Upload>,
 						)}
 					</Form.Item> }
 				</Form>
 			</Modal>
 		);
-	}
+	},
 );

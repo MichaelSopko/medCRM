@@ -22,7 +22,9 @@
     "field_email_error": "Please input your email!",
     "field_email": "Email",
     "field_password": "Password",
-    "login_button": "Log in"
+    "login_button": "Log in",
+    "error_password": "Account with same credentials wasn't found",
+    "error_disabled": "Your account had been disabled by administrator"
   },
   "ProfileWidget": {
     "logout": "Log out",
@@ -87,7 +89,13 @@
       "files": "Files {number}"
     },
     "age": "{years} years, {months} months, {days} days",
-    "created-message": "New patient created"
+    "created-message": "New patient created",
+    "show-archived": "Show archived",
+    "archive_error_title": "Error",
+    "archive_error_content": "The clinic limit is {limit} active patients",
+    "archived_message": "Patient archived",
+    "unarchived_message": "Patient unarchived",
+    "field_receive_updates": "Receive updates to email"
   },
   "Treatments": {
     "create_treatment_button": "Add treatment",
@@ -133,6 +141,8 @@
     "action_delete": "Delete",
     "action_create": "Create",
     "action_edit": "Edit",
+    "action_archive": "Archive",
+    "action_unarchive": "Unarchive",
     "field_new_password": "New password",
     "field_password": "Password",
     "field_password_error": "Please input password",

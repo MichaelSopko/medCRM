@@ -34,6 +34,16 @@ export default class Users {
 			.orWhere('login', login)
 			.orWhere('email', login)
 			.first()
+			.then(async user => {
+				if (user.clinic_id) {
+					return {
+						...user,
+						clinic: await knex('clinics').where('id', user.clinic_id).first()
+					};
+				} else {
+					return user;
+				}
+			})
 	}
 
 	getUsers(ids) {
@@ -49,6 +59,12 @@ export default class Users {
 		}
 		if ('related_persons' in fields) {
 			fields.related_persons = JSON.stringify(fields.related_persons);
+		}
+		if ('diagnoses' in fields) {
+			fields.diagnoses = JSON.stringify(fields.diagnoses);
+		}
+		if ('treatment_summary' in fields) {
+			fields.treatment_summary = JSON.stringify(fields.treatment_summary);
 		}
 		if (password) {
 			const { salt, hash } = await pwd.hash(password);

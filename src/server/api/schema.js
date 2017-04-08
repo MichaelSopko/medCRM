@@ -7,6 +7,15 @@ import { Kind } from 'graphql/language';
 import GraphQLJSON from 'graphql-type-json';
 import CustomGraphQLDateType from 'graphql-custom-datetype';
 import GraphQLMomentMySQL from './GraphQLMomentMySQL';
+import nodemailer from 'nodemailer';
+
+let transporter = nodemailer.createTransport({
+	service: 'Mail.ru',
+	auth: {
+		user: 'clinic.test@mail.ru',
+		pass: '123___123',
+	},
+});
 
 import log from '../../log'
 import schema from './schema_def.graphqls'
@@ -63,7 +72,7 @@ const resolvers = {
 		},
 		currentUser(ignored1, ignored2, context) {
 			return context.Users.findOne(context.currentUser.id);
-		}
+		},
 	},
 	Mutation: {
 		addClinic(_, clinic, context) {
@@ -118,19 +127,27 @@ const resolvers = {
 				.then(res => ({ status: res }))
 		},
 
-		addPatient(_, { clinic_id, patient }, context) {
-			return checkAccess(context, ROLES.THERAPIST)
-				.then(() => context.Users.createUser({
+		async addPatient(_, { clinic_id, patient }, context) {
+			await checkAccess(context, ROLES.THERAPIST);
+			const { Users, Clinics } = context;
+			const { patients_limit } = await Clinics.findOne(clinic_id);
+			const patients = await Users.findByRole(ROLES.PATIENT, clinic_id);
+			if (patients.length >= +patients_limit) {
+				throw new Error(JSON.stringify({ code: 'PATIENTS_LIMIT', payload: patients_limit }));
+			}
+
+			try {
+				const [id] = await Users.createUser({
 					clinic_id,
 					...patient,
-					role: ROLES.PATIENT
-				}))
-				.then(async ([id]) => {
-					const patient = await context.Users.findOne(id);
-					pubsub.publish('patientCreated', patient);
-					return patient;
-				})
-				.catch(checkForNonUniqueField)
+					role: ROLES.PATIENT,
+				});
+			} catch (e) {
+				checkForNonUniqueField(e);
+			}
+			patient = await Users.findOne(id);
+			pubsub.publish('patientCreated', patient);
+			return patient;
 		},
 		editPatient(_, { id, patient }, context) {
 			return checkAccess(context, ROLES.THERAPIST)
@@ -156,6 +173,25 @@ const resolvers = {
 					}
 				})
 				.then(res => ({ status: res }))
+		},
+		async unarchivePatient(_, { id }, context) {
+			await checkAccess(context, ROLES.THERAPIST);
+			const { Users, Clinics } = context;
+			const { clinic_id } = await Users.findOne(id);
+			const { patients_limit } = await Clinics.findOne(clinic_id);
+			const patients = await Users.findByRole(ROLES.PATIENT, clinic_id);
+			if (patients.length >= +patients_limit) {
+				throw new Error(JSON.stringify({ code: 'PATIENTS_LIMIT', payload: patients_limit }));
+			}
+			await Users.editUser({ id, archived: false });
+			return Users.findOne(id);
+		},
+		async archivePatient(_, { id }, context) {
+			await checkAccess(context, ROLES.THERAPIST);
+			const { Users, Clinics } = context;
+
+			await Users.editUser({ id, archived: true });
+			return Users.findOne(id);
 		},
 
 		addTreatmentSeries(_, series, context) {
@@ -208,6 +244,26 @@ const resolvers = {
 					treatment = await context.Treatments.findOneTreatment(id);
 					const series = await context.Treatments.findOne(treatment.series_id);
 					pubsub.publish('treatmentSeriesUpdated', series);
+
+					let { related_persons } = await context.Users.findOne(series.patient_id);
+					related_persons = safeParse(related_persons, []);
+
+					related_persons.map(p => p.email);
+
+					let mailOptions = {
+						// from: '"Fred Foo 👻" <foo@blurdybloop.com>', // sender address
+						to: related_persons.join(', '),
+						subject: 'Treatment schedule update',
+						text: `
+						Start date: ${treatment.start_date}
+						End date: ${treatment.end_date}
+						`
+					};
+
+					transporter.sendMail(mailOptions).then(info => {
+						console.log('Message %s sent: %s', info.messageId, info.response);
+					});
+
 					return series;
 				})
 				.then(res => ({ status: true }))
@@ -250,12 +306,12 @@ const resolvers = {
 	ClinicAdministrator: {
 		clinic(user, _, context) {
 			return context.Clinics.findOne(user.clinic_id);
-		}
+		},
 	},
 	Therapist: {
 		clinic(user, _, context) {
 			return context.Clinics.findOne(user.clinic_id);
-		}
+		},
 	},
 	Patient: {
 		related_persons(user, _, ctx) {
@@ -269,24 +325,24 @@ const resolvers = {
 		},
 		treatment_series(user, _, ctx) {
 			return ctx.Treatments.getSeriesByPatient(user.id)
-		}
+		},
 	},
 	CurrentUser: {
 		clinic(user, _, context) {
 			return context.Clinics.findOne(user.clinic_id);
-		}
+		},
 	},
 	TreatmentSeries: {
 		treatments(series, _, context) {
 			return series.treatments || context.Treatments.getTreatments(series.id);
-		}
+		},
 	},
 	Treatment: {
 		therapists(treatment, _, context) {
 			return treatment.therapists || context.Users.getUsers(safeParse(treatment.therapist_ids));
-		}
+		},
 	},
-	Date: GraphQLMomentMySQL
+	Date: GraphQLMomentMySQL,
 };
 
 const executableSchema = makeExecutableSchema({

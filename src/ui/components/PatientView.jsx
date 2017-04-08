@@ -16,6 +16,7 @@ import {
 	DatePicker,
 	Upload,
 	notification,
+	message,
 	Spin,
 	Tabs,
 } from 'antd'
@@ -28,6 +29,8 @@ import HEALTH_MAINTENANCES from '../../helpers/constants/health_maintenances'
 import RELATED_PERSONS from '../../helpers/constants/related_persons'
 
 import GET_PATIENT_QUERY from '../graphql/PatientGet.graphql'
+import ARCHIVE_PATIENT_MUTATION from '../graphql/PatientArchiveMutation.graphql'
+import UNARCHIVE_PATIENT_MUTATION from '../graphql/PatientUnarchiveMutation.graphql'
 
 import './PatientView.scss'
 
@@ -166,20 +169,62 @@ DetailsTab.contextTypes = {
 	intl: PropTypes.object.isRequired,
 }
 
-@graphql(GET_PATIENT_QUERY, {
-	options: ({ patientId }) => ({
-		variables: { id: patientId },
+@compose(
+	graphql(GET_PATIENT_QUERY, {
+		options: ({ patientId }) => ({
+			variables: { id: patientId },
+		}),
+		skip: ({ patientId }) => !patientId,
 	}),
-	skip: ({ patientId }) => !patientId,
-})
+	graphql(ARCHIVE_PATIENT_MUTATION, {
+		props: ({ ownProps, mutate }) => ({
+			archivePatient: () => mutate({
+				variables: { id: ownProps.patientId },
+			}),
+		}),
+	}),
+	graphql(UNARCHIVE_PATIENT_MUTATION, {
+		props: ({ ownProps, mutate }) => ({
+			unarchivePatient: () => mutate({
+				variables: { id: ownProps.patientId },
+			}),
+		}),
+	}),
+)
 class PatientView extends Component {
 
 	static contextTypes = {
 		intl: PropTypes.object.isRequired,
 	}
 
+	state = {
+		archiveLoading: false,
+	}
+
+	onUnarchiveClick = () => {
+		const formatMessage = this.context.intl.formatMessage;
+		this.setState({ archiveLoading: true });
+		this.props.unarchivePatient().then(() => {
+			message.info(formatMessage({ id: 'Patients.unarchived_message' }));
+			this.setState({ archiveLoading: false });
+		}).catch(e => {
+			const { code, payload } = JSON.parse(e.graphQLErrors[0].message);
+			if (code) {
+				e.graphQLErrors[0].message == 'PATIENTS_LIMIT'
+				Modal.error({
+					title: formatMessage({ id: 'Patients.archive_error_title' }),
+					content: formatMessage({ id: 'Patients.archive_error_content' },  { limit: payload }),
+				});
+			} else {
+				message.error(formatMessage({ id: 'common.server_error' }));
+			}
+			this.setState({ archiveLoading: false });
+		});
+	}
+
 	render() {
 		const { data, id, onEdit } = this.props;
+		const { archiveLoading } = this.state;
 		const formatMessage = this.context.intl.formatMessage;
 
 		if (!data) {
@@ -206,10 +251,11 @@ class PatientView extends Component {
 				<Tabs
 					tabBarExtraContent={ <div>
 						{ patient.archived
-							? <Button type='dashed' icon='unlock'>Unarchive</Button>
-							: <Button ghost type='danger' icon='lock'>Archive</Button>
+							? <Button type='dashed' loading={archiveLoading} onClick={this.onUnarchiveClick} icon='unlock'>{ formatMessage({ id: 'common.action_unarchive' }) }</Button>
+							: <Button ghost type='danger' loading={archiveLoading} onClick={this.props.archivePatient} icon='lock'>{ formatMessage({ id: 'common.action_archive' }) }</Button>
 						}
-						<Button icon='edit' style={{ marginLeft: 8 }} onClick={onEdit(patient)}>Edit</Button>
+						<Button icon='edit' style={{ marginLeft: 8 }}
+						        onClick={onEdit(patient)}>{ formatMessage({ id: 'common.action_edit' }) }</Button>
 					</div> }
 					type="card">
 					<TabPane

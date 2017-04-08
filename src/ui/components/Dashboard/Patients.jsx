@@ -170,7 +170,9 @@ class Patients extends Component {
 				delete values[`related_persons-${_id}-email`];
 				const description = values[`related_persons-${_id}-description`];
 				delete values[`related_persons-${_id}-description`];
-				values.related_persons.push({ type, phone, email, description });
+				const receive_updates = values[`related_persons-${_id}-receive_updates`];
+				delete values[`related_persons-${_id}-receive_updates`];
+				values.related_persons.push({ type, phone, email, description, receive_updates });
 			})
 			return values;
 		};
@@ -352,7 +354,7 @@ class Patients extends Component {
 						<div className="Dashboard__Actions">
 							<div>
 								<PatientSelector showArchived={showArchived} onChange={this.onPatientChange} />
-								<Checkbox checked={showArchived} onChange={this.onShowArchivedChange}>Show archived</Checkbox>
+								<Checkbox checked={showArchived} onChange={this.onShowArchivedChange}>{ formatMessage({ id: 'Patients.show-archived' }) }</Checkbox>
 							</div>
 							<div>
 								<CheckAccess role={ ROLES.SYSTEM_ADMIN }>

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux';
-import { Form, Icon, Input, Button, Checkbox } from 'antd'
+import { Form, Icon, Input, Button, Checkbox, message } from 'antd'
 import './Login.scss';
 import ROLES from '../../helpers/constants/roles'
 
@@ -35,6 +35,7 @@ class Login extends Component {
 
 	handleSubmit = e => {
 		e.preventDefault();
+		const formatMessage = this.context.intl.formatMessage;
 		this.props.form.validateFields(async(err, values) => {
 			if (!err) {
 				this.setState({ loading: true });
@@ -60,13 +61,21 @@ class Login extends Component {
 								url = '/dashboard/therapists';
 								break;
 							case ROLES.THERAPIST:
-								url = '/dashboard/treatments';
+								url = '/dashboard/patients';
 								break;
 						}
 						this.props.setCurrentUser(currentUser);
 						this.props.setCurrentClinic({ id: currentUser.clinic_id });
 						this.context.currentUser.setToken(resp.token);
 						this.context.router.push(url);
+					} else {
+						if (resp.error === 'WRONG_PASSWORD') {
+							message.error(formatMessage({ id: 'Login.error_password' }));
+						} else if (resp.error === 'USER_DISABLED') {
+							message.error(formatMessage({ id: 'Login.error_disabled' }));
+						} else {
+							message.error(formatMessage({ id: 'common.server_error' }));
+						}
 					}
 				} catch (e) {
 					console.log(e);

@@ -1,0 +1,11 @@
+
+mutation archivePatient(
+    $id: ID!
+) {
+    archivePatient(
+        id: $id
+    ) {
+        id
+        archived
+    }
+}
