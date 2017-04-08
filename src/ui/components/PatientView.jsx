@@ -28,6 +28,10 @@ import TreatmentsTab from './Treatments';
 import HEALTH_MAINTENANCES from '../../helpers/constants/health_maintenances'
 import RELATED_PERSONS from '../../helpers/constants/related_persons'
 
+import PATIENT_CREATED_SUBSCRIPTION from '../graphql/PatientCreatedSubscription.graphql'
+import PATIENT_UPDATED_SUBSCRIPTION from '../graphql/PatientUpdatedSubscription.graphql'
+import PATIENT_DELETED_SUBSCRIPTION from '../graphql/PatientDeletedSubscription.graphql'
+
 import GET_PATIENT_QUERY from '../graphql/PatientGet.graphql'
 import ARCHIVE_PATIENT_MUTATION from '../graphql/PatientArchiveMutation.graphql'
 import UNARCHIVE_PATIENT_MUTATION from '../graphql/PatientUnarchiveMutation.graphql'
@@ -199,6 +203,25 @@ class PatientView extends Component {
 
 	state = {
 		archiveLoading: false,
+	}
+
+	componentWillReceiveProps(nextProps) {
+
+		if (!this.props.data) return;
+
+		const { subscribeToMore } = this.props.data;
+
+		if (!nextProps.data.loading && nextProps.data.patient && nextProps.data.patient.id && (!this.subscriptions || !this.props.data.patient || this.props.data.patient.id !== nextProps.data.patient.id)) {
+			this.subscriptions = [
+				subscribeToMore({
+					document: PATIENT_UPDATED_SUBSCRIPTION,
+					variables: { id: nextProps.data.patient.id },
+					updateQuery: (previousResult, { subscriptionData }) => {
+						console.log(subscriptionData);
+						return subscriptionData.data
+					},
+				}),];
+		}
 	}
 
 	onUnarchiveClick = () => {

@@ -14,10 +14,25 @@ const safeParse = (json, deflt = []) => {
 
 export default class Treatments {
 
-	getSeries(patient_id) {
-		return knex('treatment_series')
-			.where('patient_id', patient_id)
-			.andWhere('deleted', false)
+	async getSeries({ patient_id, clinic_id, therapist_id }) {
+		const query = knex('treatment_series');
+
+		if (patient_id) {
+			query.where('patient_id', patient_id);
+		} else if (clinic_id) {
+			query.where('clinic_id', clinic_id);
+		} else if (therapist_id) {
+			const treatments = await knex('treatments')
+				.whereRaw("JSON_CONTAINS(`therapist_ids`, ?) AND deleted = false", [therapist_id])
+				.select();
+			const series = await query.whereIn('id', treatments.map(({ series_id }) => series_id) ).select();
+			return series.map(s => ({
+				...s,
+				treatments: treatments.filter(t => +t.series_id === +s.id),
+			}));
+		}
+
+		return query.andWhere('deleted', false)
 			.orderBy('id', 'DESC')
 			.select();
 	}
@@ -40,17 +55,17 @@ export default class Treatments {
 				.where('series_id', id)
 				.andWhere('deleted', false)
 				.select()
-				.then(treatments => treatments.map(async treatment => {
+				.then(treatments => Promise.all(treatments.map(async treatment => {
 					const [therapists, patients] = await Promise.all([
 						knex('users').whereIn('id', safeParse(treatment.therapist_ids)).select(),
-						knex('users').whereIn('id', safeParse(treatment.patient_ids)).select()
+						knex('users').whereIn('id', safeParse(treatment.patient_ids)).select(),
 					]);
 					return {
 						...treatment,
 						therapists,
-						patients
+						patients,
 					};
-				}))
+				}))),
 		]);
 		series.treatments = treatments || [];
 		return series;
@@ -87,11 +102,11 @@ export default class Treatments {
 			.update('deleted', true)
 			// .delete()
 			.then(() => {
-			return knex('treatment_series')
-				.where('id', id)
-				.update('deleted', true);
+				return knex('treatment_series')
+					.where('id', id)
+					.update('deleted', true);
 				// .delete();
-		});
+			});
 	}
 
 	addTreatment(fields) {
@@ -122,8 +137,8 @@ export default class Treatments {
 		return Promise.all([
 			knex('treatments')
 				.where('id', id)
-				.update('deleted', true)
-				// .delete()
+				.update('deleted', true),
+			// .delete()
 		]);
 	}
 

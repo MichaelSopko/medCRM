@@ -394,7 +394,7 @@ class Treatments extends Component {
 					form.resetFields();
 					this.setState({ seriesModalOpened: false, modalLoading: false, activeSeries: {} });
 				}).catch(errorHandler) :
-				this.props.addSeries({ patient_id: this.props.patient.id, ...values }).then(() => {
+				this.props.addSeries({ patient_id: this.props.patient.id, clinic_id: this.props.currentClinic.id, ...values }).then(() => {
 					form.resetFields();
 					this.setState({ seriesModalOpened: false, modalLoading: false });
 				}).catch(errorHandler);

@@ -1,7 +1,7 @@
 #import './PatientFragment.graphql'
 
-subscription onPatientUpdated($clinic_id: Int!){
-    patientUpdated(clinic_id: $clinic_id) {
+subscription onPatientUpdated($id: Int!){
+    patientUpdated(id: $id) {
         ...PatientFragment
     }
 }

@@ -6,8 +6,8 @@ export function up(knex, Promise) {
 			// table.specificType('treatment_summary', 'JSON');
 			table.text('diagnoses');
 			table.text('treatment_summary');
-			table.boolean('disabled').defaultTo(false);
-			table.boolean('archived').index().defaultTo(false);
+			table.boolean('disabled').defaultTo(0);
+			table.boolean('archived').index().defaultTo(0);
 			table.dateTime('archived_date');
 		})
 		.table('clinics', (table) => {
@@ -15,8 +15,8 @@ export function up(knex, Promise) {
 			table.integer('treatment_duration').unsigned().defaultTo(60);
 			table.integer('patients_limit').unsigned().defaultTo(100);
 			table.integer('archive_time').unsigned().defaultTo(60);
-			table.boolean('disabled').defaultTo(false);
-			table.boolean('deleted').index().defaultTo(false);
+			table.boolean('disabled').defaultTo(0);
+			table.boolean('deleted').index().defaultTo(0);
 		})
 		.table('treatment_series', (table) => {
 			return;

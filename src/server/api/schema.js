@@ -8,17 +8,14 @@ import GraphQLJSON from 'graphql-type-json';
 import CustomGraphQLDateType from 'graphql-custom-datetype';
 import GraphQLMomentMySQL from './GraphQLMomentMySQL';
 import nodemailer from 'nodemailer';
+import moment from 'moment';
 
-let transporter = nodemailer.createTransport({
-	service: 'Mail.ru',
-	auth: {
-		user: 'clinic.test@mail.ru',
-		pass: '123___123',
-	},
-});
 
 import log from '../../log'
 import schema from './schema_def.graphqls'
+import mailerConfig from '../../../email.config'
+
+let transporter = nodemailer.createTransport(mailerConfig);
 
 export const pubsub = new PubSub();
 
@@ -67,8 +64,8 @@ const resolvers = {
 		patient(_, { id }, context) {
 			return context.Users.findOne(id);
 		},
-		treatmentSeries(ignored1, { patient_id }, context) {
-			return context.Treatments.getSeries(patient_id);
+		treatmentSeries(ignored1, { patient_id, clinic_id, therapist_id }, context) {
+			return context.Treatments.getSeries({ patient_id, clinic_id, therapist_id });
 		},
 		currentUser(ignored1, ignored2, context) {
 			return context.Users.findOne(context.currentUser.id);
@@ -142,12 +139,12 @@ const resolvers = {
 					...patient,
 					role: ROLES.PATIENT,
 				});
+				patient = await Users.findOne(id);
+				pubsub.publish('patientCreated', patient);
+				return patient;
 			} catch (e) {
 				checkForNonUniqueField(e);
 			}
-			patient = await Users.findOne(id);
-			pubsub.publish('patientCreated', patient);
-			return patient;
 		},
 		editPatient(_, { id, patient }, context) {
 			return checkAccess(context, ROLES.THERAPIST)
@@ -177,11 +174,14 @@ const resolvers = {
 		async unarchivePatient(_, { id }, context) {
 			await checkAccess(context, ROLES.THERAPIST);
 			const { Users, Clinics } = context;
-			const { clinic_id } = await Users.findOne(id);
-			const { patients_limit } = await Clinics.findOne(clinic_id);
+			const { clinic_id, archived_date } = await Users.findOne(id);
+			const { patients_limit, archive_time } = await Clinics.findOne(clinic_id);
 			const patients = await Users.findByRole(ROLES.PATIENT, clinic_id);
 			if (patients.length >= +patients_limit) {
 				throw new Error(JSON.stringify({ code: 'PATIENTS_LIMIT', payload: patients_limit }));
+			}
+			if (archive_time && moment(archived_date).diff(moment(), 'minutes') < archive_time) {
+				throw new Error(JSON.stringify({ code: 'TIME_LIMIT', payload: archive_time }));
 			}
 			await Users.editUser({ id, archived: false });
 			return Users.findOne(id);
@@ -190,7 +190,7 @@ const resolvers = {
 			await checkAccess(context, ROLES.THERAPIST);
 			const { Users, Clinics } = context;
 
-			await Users.editUser({ id, archived: true });
+			await Users.editUser({ id, archived: true, archived_date: moment().format('YYYY-MM-DD HH:mm:ss') });
 			return Users.findOne(id);
 		},
 
@@ -248,11 +248,9 @@ const resolvers = {
 					let { related_persons } = await context.Users.findOne(series.patient_id);
 					related_persons = safeParse(related_persons, []);
 
-					related_persons.map(p => p.email);
-
 					let mailOptions = {
-						// from: '"Fred Foo 👻" <foo@blurdybloop.com>', // sender address
-						to: related_persons.join(', '),
+						from: `"Clinic" <${mailerConfig.auth.user}>`,
+						to: related_persons.filter(p => !!p.receive_updates).map(p => p.email),
 						subject: 'Treatment schedule update',
 						text: `
 						Start date: ${treatment.start_date}
@@ -323,9 +321,6 @@ const resolvers = {
 		diagnoses(user, _, ctx) {
 			return safeParse(user.diagnoses, []);
 		},
-		treatment_series(user, _, ctx) {
-			return ctx.Treatments.getSeriesByPatient(user.id)
-		},
 	},
 	CurrentUser: {
 		clinic(user, _, context) {
@@ -334,12 +329,12 @@ const resolvers = {
 	},
 	TreatmentSeries: {
 		treatments(series, _, context) {
-			return series.treatments || context.Treatments.getTreatments(series.id);
+			return series && series.treatments || context.Treatments.getTreatments(series.id);
 		},
 	},
 	Treatment: {
 		therapists(treatment, _, context) {
-			return treatment.therapists || context.Users.getUsers(safeParse(treatment.therapist_ids));
+			return treatment && treatment.therapists || context.Users.getUsers(safeParse(treatment.therapist_ids));
 		},
 	},
 	Date: GraphQLMomentMySQL,

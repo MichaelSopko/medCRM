@@ -3,8 +3,13 @@ import { connect } from 'react-redux'
 import { Select } from 'antd'
 import gql from 'graphql-tag';
 import { graphql, compose } from 'react-apollo'
+import update from 'react-addons-update'
 
 import PATIENTS_LIST_QUERY from '../graphql/PatientsList.graphql'
+
+import PATIENT_CREATED_SUBSCRIPTION from '../graphql/PatientCreatedSubscription.graphql'
+import PATIENT_UPDATED_SUBSCRIPTION from '../graphql/PatientUpdatedSubscription.graphql'
+import PATIENT_DELETED_SUBSCRIPTION from '../graphql/PatientDeletedSubscription.graphql'
 
 @connect(
 	(state) => ({ currentClinic: state.currentClinic }),
@@ -20,6 +25,32 @@ class PatientSelector extends Component {
 	static contextTypes = {
 		intl: PropTypes.object.isRequired,
 	};
+
+	componentWillReceiveProps(nextProps) {
+
+		if (!this.props.data) return;
+
+		const { subscribeToMore } = this.props.data;
+
+		if (!nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id && (!this.subscriptions || !this.props.currentClinic || this.props.currentClinic.id !== nextProps.currentClinic.id)) {
+			this.subscriptions = [
+				subscribeToMore({
+					document: PATIENT_CREATED_SUBSCRIPTION,
+					variables: { clinic_id: nextProps.currentClinic.id },
+					updateQuery: (previousResult, { subscriptionData }) => {
+						previousResult = Object.assign({}, previousResult);
+						const newPatient = subscriptionData.data.patientCreated;
+						const newResult = update(previousResult, {
+							patients: {
+								$unshift: [newPatient],
+							},
+						});
+						return newResult;
+					},
+				}),];
+		}
+
+	}
 
 	onClinicChange = id => {
 		this.props.setCurrentClinic({ id });

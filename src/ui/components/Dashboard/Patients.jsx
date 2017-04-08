@@ -72,55 +72,6 @@ class Patients extends Component {
 		this.subscriptions = null;
 	}
 
-	componentWillReceiveProps(nextProps) {
-
-		return; // FIXME
-
-		const { subscribeToMore } = this.props.data;
-		// const clinicChanged = !this.props.currentClinic || (nextProps.currentClinic && (this.props.currentClinic.id !== nextProps.currentClinic.id));
-		if (!nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id) {
-			this.subscriptions = [
-				subscribeToMore({
-					document: PATIENT_CREATED_SUBSCRIPTION,
-					variables: { clinic_id: nextProps.currentClinic.id },
-					updateQuery: (previousResult, { subscriptionData }) => {
-						previousResult = Object.assign({}, previousResult);
-						const newPatient = subscriptionData.data.patientCreated;
-						const newResult = update(previousResult, {
-							patients: {
-								$unshift: [newPatient],
-							},
-						});
-						return newResult;
-					},
-				}),
-				subscribeToMore({
-					document: PATIENT_UPDATED_SUBSCRIPTION,
-					variables: { clinic_id: nextProps.currentClinic.id },
-					updateQuery: (previousResult, { subscriptionData }) => {
-						previousResult = Object.assign({}, previousResult);
-						previousResult.patients = previousResult.patients.map((post) => {
-							if (post.id === subscriptionData.data.patientUpdated.id) {
-								return subscriptionData.data.patientUpdated
-							} else {
-								return post
-							}
-						})
-						return previousResult
-					},
-				}),
-				subscribeToMore({
-					document: PATIENT_DELETED_SUBSCRIPTION,
-					variables: { clinic_id: nextProps.currentClinic.id },
-					updateQuery: (previousResult, { subscriptionData }) => {
-						previousResult = Object.assign({}, previousResult);
-						previousResult.patients = previousResult.patients.filter(patient => patient.id !== subscriptionData.data.patientDeleted.id)
-						return previousResult
-					},
-				})];
-		}
-	}
-
 	handleOk = () => {
 		this.setState({ modalOpened: false });
 		this.resetActiveEntity();

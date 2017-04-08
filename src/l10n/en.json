@@ -92,7 +92,8 @@
     "created-message": "New patient created",
     "show-archived": "Show archived",
     "archive_error_title": "Error",
-    "archive_error_content": "The clinic limit is {limit} active patients",
+    "archive_error_limit": "The clinic limit is {limit} active patients",
+    "archive_error_time": "This patient cannot be unarchived for {time}",
     "archived_message": "Patient archived",
     "unarchived_message": "Patient unarchived",
     "field_receive_updates": "Receive updates to email"
@@ -116,7 +117,14 @@
     "field_therapists": "Therapists",
     "field_therapists_error": "Please select at least one",
     "field_start_date": "Start date",
-    "field_end_date": "End date"
+    "field_end_date": "End date",
+    "update_email": {
+      "subject": "Schedule updated for patient: {patient}",
+      "content": "Start date: {start_date}, End date: {end_date}"
+    }
+  },
+  "Calendar": {
+    "header": "View treatments"
   },
   "common": {
     "size": "Size",

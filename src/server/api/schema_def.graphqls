@@ -195,10 +195,10 @@ input ClinicInput {
 type Query {
 	clinics: [Clinic]
 	administrators: [ClinicAdministrator]
-	therapists(clinic_id: Int!): [Therapist]
-	patients(clinic_id: Int!, archived: Boolean!): [Patient]
+	therapists(clinic_id: Int): [Therapist]
+	patients(clinic_id: Int!, archived: Boolean): [Patient]
 	patient(id: Int!): Patient
-	treatmentSeries(patient_id: ID!): [TreatmentSeries]
+	treatmentSeries(patient_id: ID, clinic_id: Int, therapist_id: ID): [TreatmentSeries]
 	currentUser: CurrentUser
 }
 
@@ -282,6 +282,7 @@ type Mutation {
 	name: String
 	treatments_number: Int!
 	patient_id: Int!
+	clinic_id: Int!
 ): MutationStatus
 
 	editTreatmentSeries(
@@ -314,7 +315,7 @@ type Mutation {
 
 type Subscription {
 	patientCreated(clinic_id: Int!): Patient!
-	patientUpdated(clinic_id: Int!): Patient!
+	patientUpdated(id: Int!): Patient!
 	patientDeleted(clinic_id: Int!): Patient!
 	treatmentSeriesCreated(patient_id: Int!): TreatmentSeries!
 	treatmentSeriesUpdated(patient_id: Int!): TreatmentSeries!
