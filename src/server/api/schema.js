@@ -321,6 +321,9 @@ const resolvers = {
 		diagnoses(user, _, ctx) {
 			return safeParse(user.diagnoses, []);
 		},
+		treatment_summary(user, _, ctx) {
+			return safeParse(user.treatment_summary, []);
+		},
 	},
 	CurrentUser: {
 		clinic(user, _, context) {

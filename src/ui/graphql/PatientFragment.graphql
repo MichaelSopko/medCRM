@@ -21,25 +21,6 @@ fragment PatientFragment on Patient {
         size
         type
     }
-    treatment_series {
-        id
-        name
-        treatments_number
-        treatments {
-            id
-            target
-            method
-            process
-            parents_guidance
-            next_treatment_remark
-            therapists {
-                id
-                id_number
-                first_name
-                last_name
-            }
-            start_date
-            end_date
-        }
-    }
+    treatment_summary
+    diagnoses
 }

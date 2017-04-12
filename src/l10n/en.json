@@ -124,7 +124,8 @@
     }
   },
   "Calendar": {
-    "header": "View treatments"
+    "header": "View treatments",
+    "show_all": "Show all"
   },
   "common": {
     "size": "Size",

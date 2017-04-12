@@ -32,19 +32,46 @@ import GET_TREATMENTS_QUERY from '../../graphql/TreatmentsGet.graphql'
 import ROLES from '../../../helpers/constants/roles'
 import ClinicsSelector from '../ClinicsSelector'
 import CheckAccess from '../helpers/CheckAccess'
+import PatientSelector from '../PatientSelector'
 
 import './Calendar.scss'
 
 BigCalendar.momentLocalizer(moment);
 
+const TreatmentsCalendar = ({ data: { loading, treatmentSeries = [], therapists = [] }, currentUser, currentClinic }) => {
 
-@connect(({ currentClinic, currentUser }) => ({ currentClinic, currentUser }))
-@graphql(GET_TREATMENTS_QUERY, {
-	options: ({ currentClinic }) => ({
-		variables: { clinic_id: currentClinic.id },
-	}),
-	skip: ({ currentClinic }) => !currentClinic,
-})
+	console.log(treatmentSeries);
+
+	let events = [];
+	treatmentSeries.forEach(series => {
+		events.push(...series.treatments.map(t => ({ series, ...t })));
+	})
+	events = events.map(treatment => ({
+		start: moment(treatment.start_date),
+		end: moment(treatment.end_date),
+		title: treatment.series.name,
+	}));
+
+
+	return (
+		<div>
+			{ currentClinic.id && <BigCalendar
+				events={events}
+			/> }
+		</div>
+	);
+}
+
+const TreatmentsCalendarWithData = compose(
+	connect(({ currentClinic, currentUser }) => ({ currentClinic, currentUser })),
+	graphql(GET_TREATMENTS_QUERY, {
+		options: ({ currentClinic, patientId }) => ({
+			variables: patientId ? { patient_id: +patientId, clinic_id: null } : { patient_id: null, clinic_id: currentClinic.id },
+		}),
+		skip: ({ currentClinic, patientId }) => !currentClinic && !patientId,
+	})
+)(TreatmentsCalendar);
+
 class Calendar extends Component {
 
 	static contextTypes = {
@@ -55,27 +82,15 @@ class Calendar extends Component {
 		data: PropTypes.object,
 	};
 
+	state = {}
 
+	onPatientChange = id => {
+		this.setState({ patientId: id });
+	}
 
 	render() {
-		const {
-			data: { loading, treatmentSeries = [], therapists = [] },
-			currentUser,
-			currentClinic
-		} = this.props;
 		const formatMessage = this.context.intl.formatMessage;
-
-		let events = [];
-		treatmentSeries.forEach(series => {
-			events.push(...series.treatments.map(t => ({ series, ...t })));
-		})
-		events = events.map(treatment => ({
-			start: moment(treatment.start_date),
-			end: moment(treatment.end_date),
-			title: treatment.series.name,
-		}));
-
-		console.log(events);
+		const { patientId } = this.state;
 
 		return (
 			<section className="Calendar">
@@ -85,17 +100,16 @@ class Calendar extends Component {
 							{ formatMessage({ id: 'Calendar.header' }) }
 						</h1>
 						<div className="Dashboard__Actions">
+							<div>
+								<PatientSelector allowClear showArchived={false} onChange={this.onPatientChange} />
+							</div>
 							<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
 								<ClinicsSelector />
 							</CheckAccess>
 						</div>
 					</div>
 
-					<div>
-						{ currentClinic.id && <BigCalendar
-							events={events}
-						/> }
-					</div>
+					<TreatmentsCalendarWithData patientId={patientId} />
 				</div>
 			</section>
 		);

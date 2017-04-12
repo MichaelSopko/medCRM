@@ -22,6 +22,7 @@ import {
 } from 'antd'
 const TabPane = Tabs.TabPane
 import { FormattedMessage } from 'react-intl'
+import nl2br from 'react-nl2br';
 
 import TreatmentsTab from './Treatments';
 
@@ -35,8 +36,56 @@ import PATIENT_DELETED_SUBSCRIPTION from '../graphql/PatientDeletedSubscription.
 import GET_PATIENT_QUERY from '../graphql/PatientGet.graphql'
 import ARCHIVE_PATIENT_MUTATION from '../graphql/PatientArchiveMutation.graphql'
 import UNARCHIVE_PATIENT_MUTATION from '../graphql/PatientUnarchiveMutation.graphql'
+import EDIT_PATIENT_MUTATION from '../graphql/PatientEditMutation.graphql'
 
 import './PatientView.scss'
+
+
+const StringsForm = Form.create()(
+	({ name, onAdd, form }) => (
+		<Form onSubmit={(e) => {
+			e.preventDefault();
+			form.validateFieldsAndScroll((err, values) => {
+				if (!err) {
+					onAdd(values.new);
+				}
+			});
+		}}>
+			<Form.Item
+				hasFeedback
+			>
+				{form.getFieldDecorator('new', {
+					rules: [{
+						type: 'string',
+					}, {
+						required: true,
+					}],
+				})(
+					<Input type='textarea' rows={4} />,
+				)}
+			</Form.Item>
+			<Form.Item>
+				<Button type="primary" htmlType="submit"
+				        size="large"><FormattedMessage id='common.action_create' /></Button>
+			</Form.Item>
+		</Form>
+	),
+);
+
+StringsForm.contextTypes = {
+	intl: PropTypes.object.isRequired,
+}
+
+const StringsTab = ({ name, strings, onAdd }) => {
+	return (
+		<div>
+			<StringsForm name={name} onAdd={onAdd} />
+			{ strings.map(item => <div style={{ lineHeight: 1.5, padding: 24 }}>
+				{nl2br(item)}
+			</div>) }
+		</div>
+	)
+};
 
 const FilesTab = ({ patient }, context) => {
 	const formatMessage = context.intl.formatMessage;
@@ -194,6 +243,14 @@ DetailsTab.contextTypes = {
 			}),
 		}),
 	}),
+	graphql(EDIT_PATIENT_MUTATION, {
+		props: ({ ownProps, mutate }) => ({
+			editPatient: ({ id, ...patient }) => mutate({
+				variables: { id, patient },
+				refetchQueries: [],
+			}),
+		}),
+	}),
 )
 class PatientView extends Component {
 
@@ -236,13 +293,27 @@ class PatientView extends Component {
 				e.graphQLErrors[0].message == 'PATIENTS_LIMIT'
 				Modal.error({
 					title: formatMessage({ id: 'Patients.archive_error_title' }),
-					content: formatMessage({ id: 'Patients.archive_error_content' },  { limit: payload }),
+					content: formatMessage({ id: 'Patients.archive_error_content' }, { limit: payload }),
 				});
 			} else {
 				message.error(formatMessage({ id: 'common.server_error' }));
 			}
 			this.setState({ archiveLoading: false });
 		});
+	}
+
+	onAddDiagnose = (diagnose) => {
+		const { archived, __typename, ...patient } = this.props.data.patient;
+		patient.related_persons = [ ...patient.related_persons.map(({ __typename, ...p }) => p) ]
+		patient.diagnoses = [ summary, ...patient.diagnoses ];
+		this.props.editPatient(patient);
+	}
+
+	onAddTreatmentSummary = (summary) => {
+		const { archived, __typename, ...patient } = this.props.data.patient;
+		patient.related_persons = [ ...patient.related_persons.map(({ __typename, ...p }) => p) ]
+		patient.treatment_summary = [ summary, ...patient.treatment_summary ];
+		this.props.editPatient(patient);
 	}
 
 	render() {
@@ -274,8 +345,10 @@ class PatientView extends Component {
 				<Tabs
 					tabBarExtraContent={ <div>
 						{ patient.archived
-							? <Button type='dashed' loading={archiveLoading} onClick={this.onUnarchiveClick} icon='unlock'>{ formatMessage({ id: 'common.action_unarchive' }) }</Button>
-							: <Button ghost type='danger' loading={archiveLoading} onClick={this.props.archivePatient} icon='lock'>{ formatMessage({ id: 'common.action_archive' }) }</Button>
+							? <Button type='dashed' loading={archiveLoading} onClick={this.onUnarchiveClick}
+							          icon='unlock'>{ formatMessage({ id: 'common.action_unarchive' }) }</Button>
+							: <Button ghost type='danger' loading={archiveLoading} onClick={this.props.archivePatient}
+							          icon='lock'>{ formatMessage({ id: 'common.action_archive' }) }</Button>
 						}
 						<Button icon='edit' style={{ marginLeft: 8 }}
 						        onClick={onEdit(patient)}>{ formatMessage({ id: 'common.action_edit' }) }</Button>
@@ -291,7 +364,7 @@ class PatientView extends Component {
 						className='PatientView__Tab'
 						tab={ formatMessage({ id: 'Patients.tabs.diagnoses' }) }
 						key="diagnoses">
-						Content of Tab Pane 2
+						<StringsTab name='' strings={patient.diagnoses} onAdd={this.onAddDiagnose} />
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
@@ -302,8 +375,8 @@ class PatientView extends Component {
 					<TabPane
 						className='PatientView__Tab'
 						tab={ formatMessage({ id: 'Patients.tabs.treatment_summary' }) }
-						key="treatment_summary">Content of Tab Pane
-						3
+						key="treatment_summary">
+						<StringsTab name='' strings={patient.treatment_summary} onAdd={this.onAddTreatmentSummary} />
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
