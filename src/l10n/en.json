@@ -3,7 +3,7 @@
     "SYSTEM_ADMIN": "System administrator",
     "CLINIC_ADMIN": "Clinic administrator",
     "THERAPIST": "Therapist",
-    "Patient": "Patient"
+    "PATIENT": "Patient"
   },
   "health_maintenance": {
     "CLATIT": "CLATIT",

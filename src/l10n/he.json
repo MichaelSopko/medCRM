@@ -3,7 +3,7 @@
     "SYSTEM_ADMIN": "מנהל מערכת",
     "CLINIC_ADMIN": "מנהל קליניקה",
     "THERAPIST": "מטפל",
-    "Patient": "מטופל"
+    "PATIENT": "מטופל"
   },
   "health_maintenance": {
     "CLATIT": "כללית",
@@ -22,7 +22,9 @@
     "field_email_error": "נא להכניס כתובת אימייל",
     "field_email": "אימייל",
     "field_password": "סיסמא",
-    "login_button": "התחברות"
+    "login_button": "התחברות",
+    "error_password": "Account with same credentials wasn't found",
+    "error_disabled": "Your account had been disabled by administrator"
   },
   "ProfileWidget": {
     "logout": "להתנתק",
@@ -31,18 +33,25 @@
   "ClinicsSelector": {
     "placeholder": "נא לבחור קליניקה"
   },
+  "PatientSelector": {
+    "placeholder": "Select patient..."
+  },
   "UserNavbar": {
     "treatments": "טיפולים",
     "patients": "מטופלים",
     "administrators": "מנהלים",
     "clinics": "קליניקות",
-    "therapists": "מטפלים"
+    "therapists": "מטפלים",
+    "calendar": "Calendar"
   },
   "Clinics": {
     "create_button": "יצירת קליניקה",
     "create_header": "יצירת קליניקה",
     "edit_header": "עריכת קליניקה",
-    "header": "קליניקות"
+    "header": "קליניקות",
+    "field_patients_limit": "Patients limit",
+    "field_treatment_duration": "Default treatment duration (in minutes)",
+    "field_archive_time": "Change status limit (in minutes)"
   },
   "Administrators": {
     "create_button": "יצירת מנהל מערכת",
@@ -70,7 +79,26 @@
     "add_related_persons": "הוספת מקורב",
     "upload_files": "העלאת קבצים",
     "field_files": "קבצים",
-    "field_health_maintenance": "קופת חולים"
+    "field_health_maintenance": "קופת חולים",
+    "field_health_maintenance": "Health maintenance",
+    "field_files": "Files",
+    "empty": "Please select a patient",
+    "tabs": {
+      "details": "Details",
+      "diagnoses": "Diagnoses",
+      "treatments": "Treatments",
+      "treatment_summary": "Treatment summary",
+      "files": "Files {number}"
+    },
+    "age": "{years} years, {months} months, {days} days",
+    "created-message": "New patient created",
+    "show-archived": "Show archived",
+    "archive_error_title": "Error",
+    "archive_error_limit": "The clinic limit is {limit} active patients",
+    "archive_error_time": "This patient cannot be unarchived for {time}",
+    "archived_message": "Patient archived",
+    "unarchived_message": "Patient unarchived",
+    "field_receive_updates": "Receive updates to email"
   },
   "Treatments": {
     "create_treatment_button": "הוספת טיפול",
@@ -89,7 +117,17 @@
     "field_patients": "מטופלים",
     "field_patients_error": "נא לבחור לפחות אחד",
     "field_therapists": "מטפלים",
-    "field_therapists_error": "נא לבחור לפחות אחד"
+    "field_therapists_error": "נא לבחור לפחות אחד",
+    "field_start_date": "Start date",
+    "field_end_date": "End date",
+    "update_email": {
+      "subject": "Schedule updated for patient: {patient}",
+      "content": "Start date: {start_date}, End date: {end_date}"
+    }
+  },
+  "Calendar": {
+    "header": "View treatments",
+    "show_all": "Show all"
   },
   "common": {
     "field_name": "שם",
@@ -123,6 +161,14 @@
     "field_licence_error": "נא להכניס מספר רשיון",
     "field_id_number_error_duplicate": "מספר זהות כבר קיים במערכת",
     "field_email_error_duplicate": "אימייל כבר קיים במערכת",
-    "server_error": "שגיאה כללית"
+    "server_error": "שגיאה כללית",
+    "field_licence": "Licence number",
+    "field_licence_error": "Please input licence",
+    "server_error": "Server error",
+    "field_disabled": "Disabled",
+    "field_archived": "Archived",
+    "field_year": "Year",
+    "field_month": "Month",
+    "field_day": "Day"
   }
 }
