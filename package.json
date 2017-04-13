@@ -17,8 +17,8 @@
     }
   },
   "engines": {
-    "node": "7.3.0",
-    "npm": "3.10.10"
+    "node": "latest",
+    "npm": "latest"
   },
   "scripts": {
     "watch": "babel-node tools/webpack.run watch",
