@@ -208,6 +208,7 @@ const resolvers = {
 				.then(() => context.Treatments.editSeries(series))
 				.then(() => context.Treatments.findOne(series.id))
 				.then(series => {
+					console.log(series);
 					pubsub.publish('treatmentSeriesUpdated', series);
 					return { status: true };
 				})

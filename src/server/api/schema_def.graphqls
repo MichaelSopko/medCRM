@@ -174,7 +174,6 @@ input TreatmentInput {
 	process: String
 	parents_guidance: String
 	next_treatment_remark: String
-	patient_ids: [Int]
 	therapist_ids: [Int]
 	start_date: Date
 	end_date: Date

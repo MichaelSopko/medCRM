@@ -56,14 +56,10 @@ export default class Treatments {
 				.andWhere('deleted', false)
 				.select()
 				.then(treatments => Promise.all(treatments.map(async treatment => {
-					const [therapists, patients] = await Promise.all([
-						knex('users').whereIn('id', safeParse(treatment.therapist_ids)).select(),
-						knex('users').whereIn('id', safeParse(treatment.patient_ids)).select(),
-					]);
+					const therapists = await knex('users').whereIn('id', safeParse(treatment.therapist_ids)).select();
 					return {
 						...treatment,
 						therapists,
-						patients,
 					};
 				}))),
 		]);

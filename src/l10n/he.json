@@ -169,6 +169,7 @@
     "field_archived": "Archived",
     "field_year": "Year",
     "field_month": "Month",
-    "field_day": "Day"
+    "field_day": "Day",
+    "size": "Size"
   }
 }
