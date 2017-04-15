@@ -23,8 +23,8 @@
     "field_email": "אימייל",
     "field_password": "סיסמא",
     "login_button": "התחברות",
-    "error_password": "Account with same credentials wasn't found",
-    "error_disabled": "Your account had been disabled by administrator"
+    "error_password": "פרטי התחברות שגויים",
+    "error_disabled": "החשבון חסום"
   },
   "ProfileWidget": {
     "logout": "להתנתק",
@@ -34,7 +34,7 @@
     "placeholder": "נא לבחור קליניקה"
   },
   "PatientSelector": {
-    "placeholder": "Select patient..."
+    "placeholder": "בחר מטופל..."
   },
   "UserNavbar": {
     "treatments": "טיפולים",
@@ -42,16 +42,16 @@
     "administrators": "מנהלים",
     "clinics": "קליניקות",
     "therapists": "מטפלים",
-    "calendar": "Calendar"
+    "calendar": "יומן עבודה"
   },
   "Clinics": {
     "create_button": "יצירת קליניקה",
     "create_header": "יצירת קליניקה",
     "edit_header": "עריכת קליניקה",
     "header": "קליניקות",
-    "field_patients_limit": "Patients limit",
-    "field_treatment_duration": "Default treatment duration (in minutes)",
-    "field_archive_time": "Change status limit (in minutes)"
+    "field_patients_limit": "מקסימום מספר מטופלים",
+    "field_treatment_duration": "משך זמן טיפול (דקות)",
+    "field_archive_time": "משך זמן חסימה (דקות)"
   },
   "Administrators": {
     "create_button": "יצירת מנהל מערכת",
@@ -62,9 +62,9 @@
     "field_clinic_error": "נא לבחור קליניקה"
   },
   "Therapists": {
-    "create_button": "יצית מטופל",
-    "create_header": "צו מטופל",
-    "edit_header": "ערכת מטופל",
+    "create_button": "מטופל חדש",
+    "create_header": "מטופל חדש",
+    "edit_header": "עריכת מטפל",
     "header": "מטפלים"
   },
   "Patients": {
@@ -80,25 +80,24 @@
     "upload_files": "העלאת קבצים",
     "field_files": "קבצים",
     "field_health_maintenance": "קופת חולים",
-    "field_health_maintenance": "Health maintenance",
-    "field_files": "Files",
-    "empty": "Please select a patient",
+    "field_files": "קבצים",
+    "empty": "בחר מטופל",
     "tabs": {
-      "details": "Details",
-      "diagnoses": "Diagnoses",
-      "treatments": "Treatments",
-      "treatment_summary": "Treatment summary",
-      "files": "Files {number}"
+      "details": "פרטים",
+      "diagnoses": "אבחונים",
+      "treatments": "טיפולים",
+      "treatment_summary": "סיכומי טיפול",
+      "files": "קבצים {number}"
     },
-    "age": "{years} years, {months} months, {days} days",
-    "created-message": "New patient created",
-    "show-archived": "Show archived",
-    "archive_error_title": "Error",
+    "age": "{years} שנים, {months} חודשים, {days} ימים",
+    "created-message": "מטופל נוצר בהצלחה",
+    "show-archived": "הראה ארכיון",
+    "archive_error_title": "שגיאה",
     "archive_error_limit": "The clinic limit is {limit} active patients",
     "archive_error_time": "This patient cannot be unarchived for {time}",
-    "archived_message": "Patient archived",
-    "unarchived_message": "Patient unarchived",
-    "field_receive_updates": "Receive updates to email"
+    "archived_message": "מטופל נשלח לארכיון",
+    "unarchived_message": "מטופל הוסר מארכיון",
+    "field_receive_updates": "מעוניין לקבל עדכונים למייל"
   },
   "Treatments": {
     "create_treatment_button": "הוספת טיפול",
@@ -108,7 +107,7 @@
     "header": "סדרת טיפולים",
     "field_treatments_number": "מספר טיפולים",
     "field_treatments_number_error": "נא להכניס מספר טיפולים",
-    "field_method": "מתהוד",
+    "field_method": "שיטת טיפול",
     "field_target": "מטרת הטיפול",
     "field_process": "מהלך הטיפול",
     "field_parents_guidance": "הדרכת הורים",
@@ -118,16 +117,16 @@
     "field_patients_error": "נא לבחור לפחות אחד",
     "field_therapists": "מטפלים",
     "field_therapists_error": "נא לבחור לפחות אחד",
-    "field_start_date": "Start date",
-    "field_end_date": "End date",
+    "field_start_date": "התחלה",
+    "field_end_date": "סוף",
     "update_email": {
-      "subject": "Schedule updated for patient: {patient}",
+      "subject": "עדכון טיפול עבור מטופל: {patient}",
       "content": "Start date: {start_date}, End date: {end_date}"
     }
   },
   "Calendar": {
-    "header": "View treatments",
-    "show_all": "Show all"
+    "header": "הראה טיפוליפ",
+    "show_all": "הראה הכל"
   },
   "common": {
     "field_name": "שם",
@@ -162,14 +161,14 @@
     "field_id_number_error_duplicate": "מספר זהות כבר קיים במערכת",
     "field_email_error_duplicate": "אימייל כבר קיים במערכת",
     "server_error": "שגיאה כללית",
-    "field_licence": "Licence number",
-    "field_licence_error": "Please input licence",
+    "field_licence": "מספר רשיון",
+    "field_licence_error": "נא להזין מספר רשיון",
     "server_error": "Server error",
-    "field_disabled": "Disabled",
-    "field_archived": "Archived",
-    "field_year": "Year",
-    "field_month": "Month",
-    "field_day": "Day",
-    "size": "Size"
+    "field_disabled": "חסום",
+    "field_archived": "נשלח לארכיון",
+    "field_year": "שנה",
+    "field_month": "חודש",
+    "field_day": "יום",
+    "size": "גודל"
   }
 }

@@ -47,8 +47,8 @@ const TreatmentsCalendar = ({ data: { loading, treatmentSeries = [], therapists 
 		events.push(...series.treatments.map(t => ({ series, ...t })));
 	})
 	events = events.map(treatment => ({
-		start: moment(treatment.start_date),
-		end: moment(treatment.end_date),
+		start: new Date(treatment.start_date),
+		end: new Date(treatment.end_date),
 		title: treatment.series.name,
 	}));
 
