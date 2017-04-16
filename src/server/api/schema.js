@@ -172,8 +172,8 @@ const resolvers = {
 				.then(res => ({ status: res }))
 		},
 		async unarchivePatient(_, { id }, context) {
-			await checkAccess(context, ROLES.THERAPIST);
-			const isAdmin = context.currentUser.role === ROLES.SYSTEM_ADMIN;
+			const currentUser = await checkAccess(context, ROLES.THERAPIST);
+			const isAdmin = currentUser.role === ROLES.SYSTEM_ADMIN;
 			const { Users, Clinics } = context;
 			const { clinic_id, archived_date } = await Users.findOne(id);
 			const { patients_limit, archive_time } = await Clinics.findOne(clinic_id);
