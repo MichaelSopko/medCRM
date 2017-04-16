@@ -380,7 +380,7 @@ class PatientView extends Component {
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
-						tab={ <FormattedMessage id='Patients.tabs.files' values={{ number: <b>({patient.files.length})</b> }} /> }
+						tab={ <FormattedMessage id='Patients.tabs.files' values={{ number: patient.files.length }} /> }
 						key="files">
 						<FilesTab patient={patient} />
 					</TabPane>

@@ -169,6 +169,8 @@
     "field_year": "שנה",
     "field_month": "חודש",
     "field_day": "יום",
-    "size": "גודל"
+    "size": "גודל",
+    "action_archive": "Archive",
+    "action_unarchive": "Unarchive"
   }
 }

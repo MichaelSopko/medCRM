@@ -36,6 +36,9 @@ import PatientSelector from '../PatientSelector'
 
 import './Calendar.scss'
 
+require('globalize/lib/cultures/globalize.culture.he');
+
+
 BigCalendar.momentLocalizer(moment);
 
 const TreatmentsCalendar = ({ data: { loading, treatmentSeries = [], therapists = [] }, currentUser, currentClinic }) => {
@@ -56,6 +59,8 @@ const TreatmentsCalendar = ({ data: { loading, treatmentSeries = [], therapists 
 	return (
 		<div>
 			{ currentClinic.id && <BigCalendar
+				culture={__DEV__ ? 'en' : 'he'}
+				rtl={!__DEV__}
 				events={events}
 			/> }
 		</div>
