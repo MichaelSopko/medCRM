@@ -345,9 +345,9 @@ class PatientView extends Component {
 				<Tabs
 					tabBarExtraContent={ <div>
 						{ patient.archived
-							? <Button type='dashed' loading={archiveLoading} onClick={this.onUnarchiveClick}
+							? <Button type='primary' style={{ backgroundColor: '#00A854' }} loading={archiveLoading} onClick={this.onUnarchiveClick}
 							          icon='unlock'>{ formatMessage({ id: 'common.action_unarchive' }) }</Button>
-							: <Button ghost type='danger' loading={archiveLoading} onClick={this.props.archivePatient}
+							: <Button type='danger' loading={archiveLoading} onClick={this.props.archivePatient}
 							          icon='lock'>{ formatMessage({ id: 'common.action_archive' }) }</Button>
 						}
 						<Button icon='edit' style={{ marginLeft: 8 }}

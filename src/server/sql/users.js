@@ -93,11 +93,9 @@ export default class Users {
 		if (clinic_id) {
 			k = k.andWhere('clinic_id', clinic_id);
 		}
-		if (!archived) {
-			k = k.andWhere('archived', false);
-		}
 		return k
 			.orderBy('id', 'DESC')
+			.andWhere('archived', archived)
 			.select();
 	}
 

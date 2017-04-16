@@ -173,14 +173,15 @@ const resolvers = {
 		},
 		async unarchivePatient(_, { id }, context) {
 			await checkAccess(context, ROLES.THERAPIST);
+			const isAdmin = context.currentUser.role === ROLES.SYSTEM_ADMIN;
 			const { Users, Clinics } = context;
 			const { clinic_id, archived_date } = await Users.findOne(id);
 			const { patients_limit, archive_time } = await Clinics.findOne(clinic_id);
 			const patients = await Users.findByRole(ROLES.PATIENT, clinic_id);
-			if (patients.length >= +patients_limit) {
+			if (!isAdmin && patients.length >= +patients_limit) {
 				throw new Error(JSON.stringify({ code: 'PATIENTS_LIMIT', payload: patients_limit }));
 			}
-			if (archive_time && moment(archived_date).diff(moment(), 'minutes') < archive_time) {
+			if (!isAdmin && archive_time && moment(archived_date).diff(moment(), 'minutes') < archive_time) {
 				throw new Error(JSON.stringify({ code: 'TIME_LIMIT', payload: archive_time }));
 			}
 			await Users.editUser({ id, archived: false });

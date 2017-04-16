@@ -96,8 +96,14 @@ const TreatmentForm = Form.create()(
 		if (!isEditing) {
 			values = {
 				...values,
-				start_date: new Date(),
-				end_date: moment().add(currentClinic.treatment_duration, 'minutes'),
+				start_date: moment(new Date()),
+				end_date: undefined,
+			}
+		} else {
+			values = {
+				...values,
+				start_date: moment(values.start_date),
+				end_date: moment(values.end_date),
 			}
 		}
 
@@ -172,18 +178,40 @@ const TreatmentForm = Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
-						label={formatMessage({ id: 'Treatments.field_datetime' })}
+						label={formatMessage({ id: 'Treatments.field_start_date' })}
 						hasFeedback
 					>
-						{getFieldDecorator('date', {
-							initialValue: [moment(values.start_date), moment(values.end_date)],
+						{getFieldDecorator('start_date', {
+							initialValue: values.start_date,
 							validateTrigger: 'onBlur', rules: [{
-								type: 'array', required: true,
+								type: 'object', required: true,
 							}],
 						})(
-							<DatePicker.RangePicker
+							<DatePicker
 								showTime
-								placeholder={[formatMessage({ id: 'Treatments.field_start_date' }), formatMessage({ id: 'Treatments.field_end_date' })]}
+								allowClear={false}
+								placeholder={formatMessage({ id: 'Treatments.field_start_date' })}
+								onChange={(start_date) => {
+									form.setFieldsValue({ end_date: moment(start_date).add(currentClinic.treatment_duration, 'minutes') })
+								}}
+								format="YYYY-MM-DD HH:mm:ss" />,
+						)}
+					</Form.Item> }
+					{ <Form.Item
+						{...formItemLayout}
+						label={formatMessage({ id: 'Treatments.field_end_date' })}
+						hasFeedback
+					>
+						{getFieldDecorator('end_date', {
+							initialValue: values.end_date,
+							validateTrigger: 'onBlur', rules: [{
+								type: 'object', required: true,
+							}],
+						})(
+							<DatePicker
+								showTime
+								disabledDate={(date) => form.getFieldValue('start_date').valueOf() > date }
+								placeholder={formatMessage({ id: 'Treatments.field_end_date' })}
 								format="YYYY-MM-DD HH:mm:ss" />,
 						)}
 					</Form.Item> }
@@ -231,17 +259,17 @@ const TreatmentsTable = ({ treatments, deleteTreatment, editTreatment, formatMes
 			</div>,
 		},
 		{
-			title: formatMessage({ id: 'Treatments.field_method' }), dataIndex: 'method', key: 'method',
+			title: formatMessage({ id: 'Treatments.field_start_date' }), dataIndex: 'start_date', key: 'start_date',
 			width: '15%',
 			render: (text, record) => <div className="to-dynamic-container">
-				<span className="to-dynamic">{text}</span>
+				<span className="to-dynamic">{moment(text).format('ddd, Do MMMM LT')}</span>
 			</div>,
 		},
 		{
-			title: formatMessage({ id: 'Treatments.field_process' }), dataIndex: 'process', key: 'process',
+			title: formatMessage({ id: 'Treatments.field_end_date' }), dataIndex: 'end_date', key: 'end_date',
 			width: '15%',
 			render: (text, record) => <div className="to-dynamic-container">
-				<span className="to-dynamic">{text}</span>
+				<span className="to-dynamic">{moment(text).format('ddd, Do MMMM LT')}</span>
 			</div>,
 		},
 		{
@@ -415,20 +443,11 @@ class Treatments extends Component {
 				message: formatMessage({ id }),
 			});
 		};
-		form.validateFields((err, sourceValues) => {
+		form.validateFields((err, values) => {
 			if (err) {
 				return;
 			}
-			console.debug(values);
 			this.setState({ modalLoading: true });
-			let { date, ...values } = sourceValues;
-			const [ start_date, end_date ] = date;
-			values = {
-				...values,
-				start_date,
-				end_date,
-			};
-			console.debug(values);
 			isEditing ?
 				this.props.editTreatment({ id: this.state.activeTreatment.id, treatment: values }).then(() => {
 					form.resetFields();
