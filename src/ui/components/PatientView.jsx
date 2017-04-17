@@ -43,7 +43,9 @@ import './PatientView.scss'
 
 const StringsForm = Form.create()(
 	({ name, onAdd, form }) => (
-		<Form onSubmit={(e) => {
+		<Form
+			className='StringsForm'
+			onSubmit={(e) => {
 			e.preventDefault();
 			form.validateFieldsAndScroll((err, values) => {
 				if (!err) {
@@ -53,6 +55,7 @@ const StringsForm = Form.create()(
 		}}>
 			<Form.Item
 				hasFeedback
+			  style={{flex:1}}
 			>
 				{form.getFieldDecorator('new', {
 					rules: [{
@@ -167,7 +170,7 @@ const DetailsTab = ({ patient }, context) => {
 				<span className="Details__name">
 					{patient.first_name} {patient.last_name}
 				</span>
-					<span className="Details__age">
+					<span className="Details__age" style={{marginRight:8}}>
 					<FormattedMessage id='Patients.age' values={{
 						years: diff.years() || '0',
 						months: diff.months() || '0',
@@ -305,7 +308,7 @@ class PatientView extends Component {
 	onAddDiagnose = (diagnose) => {
 		const { archived, __typename, ...patient } = this.props.data.patient;
 		patient.related_persons = [ ...patient.related_persons.map(({ __typename, ...p }) => p) ]
-		patient.diagnoses = [ summary, ...patient.diagnoses ];
+		patient.diagnoses = [ diagnose, ...patient.diagnoses ];
 		this.props.editPatient(patient);
 	}
 
@@ -343,15 +346,16 @@ class PatientView extends Component {
 		return (
 			<div className='PatientView'>
 				<Tabs
+					animated={false}
 					tabBarExtraContent={ <div>
+						<Button icon='edit' style={{ marginLeft: 8 }}
+						        onClick={onEdit(patient)}>{ formatMessage({ id: 'common.action_edit' }) }</Button>
 						{ patient.archived
 							? <Button type='primary' style={{ backgroundColor: '#00A854' }} loading={archiveLoading} onClick={this.onUnarchiveClick}
 							          icon='unlock'>{ formatMessage({ id: 'common.action_unarchive' }) }</Button>
 							: <Button type='danger' loading={archiveLoading} onClick={this.props.archivePatient}
 							          icon='lock'>{ formatMessage({ id: 'common.action_archive' }) }</Button>
 						}
-						<Button icon='edit' style={{ marginLeft: 8 }}
-						        onClick={onEdit(patient)}>{ formatMessage({ id: 'common.action_edit' }) }</Button>
 					</div> }
 					type="card">
 					<TabPane

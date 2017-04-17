@@ -305,13 +305,13 @@ class Patients extends Component {
 						<div className="Dashboard__Actions">
 							<div>
 								<PatientSelector showArchived={showArchived} onChange={this.onPatientChange} />
-								<Checkbox checked={showArchived} onChange={this.onShowArchivedChange}>{ formatMessage({ id: 'Patients.show-archived' }) }</Checkbox>
+								<Checkbox style={{marginRight:8}}  checked={showArchived} onChange={this.onShowArchivedChange}>{ formatMessage({ id: 'Patients.show-archived' }) }</Checkbox>
 							</div>
 							<div>
 								<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
 									<ClinicsSelector />
 								</CheckAccess>
-								<Button size='large' type="primary" onClick={ this.showModal } disabled={ !currentClinic.id }>
+								<Button size='large' style={{marginRight:8}} type="primary" onClick={ this.showModal } disabled={ !currentClinic.id }>
 									<Icon type="plus-circle-o" />
 									{ formatMessage({ id: 'Patients.create_button' }) }
 								</Button>

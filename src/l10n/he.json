@@ -93,8 +93,8 @@
     "created-message": "מטופל נוצר בהצלחה",
     "show-archived": "הראה ארכיון",
     "archive_error_title": "שגיאה",
-    "archive_error_limit": "The clinic limit is {limit} active patients",
-    "archive_error_time": "This patient cannot be unarchived for {time}",
+    "archive_error_limit": "לקליניקה מספר מקסימלי של {limit} מטופלים",
+    "archive_error_time": "המטופל יוכל להיות פעיל בעוד {time}",
     "archived_message": "מטופל נשלח לארכיון",
     "unarchived_message": "מטופל הוסר מארכיון",
     "field_receive_updates": "מעוניין לקבל עדכונים למייל"
@@ -121,7 +121,7 @@
     "field_end_date": "סוף",
     "update_email": {
       "subject": "עדכון טיפול עבור מטופל: {patient}",
-      "content": "Start date: {start_date}, End date: {end_date}"
+      "content": "תאריך התחלה: {start_date}, תאריך סיום: {end_date}"
     }
   },
   "Calendar": {
@@ -170,7 +170,7 @@
     "field_month": "חודש",
     "field_day": "יום",
     "size": "גודל",
-    "action_archive": "Archive",
-    "action_unarchive": "Unarchive"
+    "action_archive": "שלח לארכיון",
+    "action_unarchive": "הוצא מארכיון"
   }
 }

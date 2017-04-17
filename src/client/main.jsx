@@ -12,10 +12,10 @@ import moment from 'moment';
 import { LocaleProvider } from 'antd';
 import enUSAnt from 'antd/lib/locale-provider/en_US';
 import heAnt from '../l10n/ant/he';
-// import { locale } from '../../config';
+import config from '../../config';
 import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 
-const locale = __DEV__ ? 'en' : 'he'
+const locale = config.locale;
 
 moment.locale(locale);
 
