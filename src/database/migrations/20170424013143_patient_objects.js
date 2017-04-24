@@ -6,12 +6,12 @@ export function up(knex, Promise) {
 			table.integer('patient_id').unsigned().references('id').inTable('users');
 			table.dateTime('date');
 			table.integer('patient_age').unsigned();
-			table.specificType('fillers_ids', 'json');
-			// table.string('fillers_ids');
+			// table.specificType('fillers_ids', 'json');
+			table.string('fillers_ids');
 			table.text('hearing_test_remark');
 			table.date('hearing_test_date');
-			table.specificType('fields', 'json');
-			// table.text('fields');
+			// table.specificType('fields', 'json');
+			table.text('fields');
 		})
 	);
 }
