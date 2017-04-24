@@ -97,7 +97,50 @@
     "archive_error_time": "המטופל יוכל להיות פעיל בעוד {time}",
     "archived_message": "מטופל נשלח לארכיון",
     "unarchived_message": "מטופל הוסר מארכיון",
-    "field_receive_updates": "מעוניין לקבל עדכונים למייל"
+    "field_receive_updates": "מעוניין לקבל עדכונים למייל",
+    "diagnose_fillers": "Diagnose fillers",
+    "gender": "Sex",
+    "diagnose_date": "Diagnose date",
+    "print_date": "Print date",
+    "age_in_diagnose": "Age in diagnose",
+    "patient_name": "Patient name",
+    "add_filler": "Add filler"
+  },
+  "TreatmentSummaryTab": {
+    "create_title": "Generate treatment summary",
+    "treatments_length": "משך הטיפול",
+    "treatment_targets": "מטרות הטיפול",
+    "parents_involment": "שיתוף פעולה ומעורבות ההורים",
+    "treatments_progress": "התקדמות הטיפול",
+    "recommendations": "המלצות"
+  },
+  "DiagnoseTab": {
+    "hearing_test": "Hearing test",
+    "hearing_test_remarks": "Remarks for hearing test",
+    "hearing_test_date": "Date",
+    "tab1": "General and evolutionary background",
+    "tab2": "Diagnose findings",
+    "tab3": "Summary",
+    "pregnancy_and_birth": "הריון ולידה",
+    "psychomotor_progression": "התפתחות פסיכומוטורית",
+    "language_and_speech_progression": "התפתחות דיבור ושפה",
+    "eating_function": "תפקודי אכילה",
+    "family_background": "רקע משפחתי",
+    "health_background": "רקע רפואי",
+    "past_and_present_treatments": "גורמים מטפלים בעבר ובהווה",
+    "environmental_context": "הקשר סביבתי",
+    "parents_report": "דיווח הורים",
+    "kindergarten_teacher_report": "דיווח גננת",
+    "diagnose_tools": "כל אבחון",
+    "behaviour_and_general_impression": "התנהגות והתרשמות כללית",
+    "communications_skills": "מיומנויות תקשורת",
+    "gaming_skills": "מיומנויות משחק ",
+    "language_grasp": "הבנת שפה",
+    "language_expression": "הבעת שפה",
+    "speech_intelligibility": "היגוי ומובנות דיבור",
+    "speech_fluency": "שטף דיבור",
+    "summary": "סיכום",
+    "recommendations": "המלצות"
   },
   "Treatments": {
     "create_treatment_button": "הוספת טיפול",
@@ -171,6 +214,14 @@
     "field_day": "יום",
     "size": "גודל",
     "action_archive": "שלח לארכיון",
-    "action_unarchive": "הוצא מארכיון"
+    "action_unarchive": "הוצא מארכיון",
+    "gender": {
+      "field_name": "Gender",
+      "field_error": "Please set a gender",
+      "MALE": "Male",
+      "FEMALE": "Female"
+    },
+    "action_view": "View",
+    "action_print": "Print"
   }
 }

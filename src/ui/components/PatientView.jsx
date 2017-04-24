@@ -25,77 +25,35 @@ import { FormattedMessage } from 'react-intl'
 import nl2br from 'react-nl2br';
 
 import TreatmentsTab from './Treatments';
+import TreatmentSummaryTab from '../patient/containers/TreatmentSummaryTab';
 
 import HEALTH_MAINTENANCES from '../../helpers/constants/health_maintenances'
 import RELATED_PERSONS from '../../helpers/constants/related_persons'
 
-import PATIENT_CREATED_SUBSCRIPTION from '../graphql/PatientCreatedSubscription.graphql'
-import PATIENT_UPDATED_SUBSCRIPTION from '../graphql/PatientUpdatedSubscription.graphql'
-import PATIENT_DELETED_SUBSCRIPTION from '../graphql/PatientDeletedSubscription.graphql'
+import PATIENT_CREATED_SUBSCRIPTION from '../patient/graphql/PatientCreatedSubscription.graphql'
+import PATIENT_UPDATED_SUBSCRIPTION from '../patient/graphql/PatientUpdatedSubscription.graphql'
+import PATIENT_DELETED_SUBSCRIPTION from '../patient/graphql/PatientDeletedSubscription.graphql'
 
-import GET_PATIENT_QUERY from '../graphql/PatientGet.graphql'
-import ARCHIVE_PATIENT_MUTATION from '../graphql/PatientArchiveMutation.graphql'
-import UNARCHIVE_PATIENT_MUTATION from '../graphql/PatientUnarchiveMutation.graphql'
-import EDIT_PATIENT_MUTATION from '../graphql/PatientEditMutation.graphql'
+import GET_PATIENT_QUERY from '../patient/graphql/PatientGet.graphql'
+import ARCHIVE_PATIENT_MUTATION from '../patient/graphql/PatientArchiveMutation.graphql'
+import UNARCHIVE_PATIENT_MUTATION from '../patient/graphql/PatientUnarchiveMutation.graphql'
+import EDIT_PATIENT_MUTATION from '../patient/graphql/PatientEditMutation.graphql'
+import ADD_PATIENT_FILE_MUTATION from '../patient/graphql/addPatientFile.mutation.graphql'
+import DELETE_PATIENT_FILE_MUTATION from '../patient/graphql/deletePatientFile.mutation.graphql'
 
 import './PatientView.scss'
 
-
-const StringsForm = Form.create()(
-	({ name, onAdd, form }) => (
-		<Form
-			className='StringsForm'
-			onSubmit={(e) => {
-			e.preventDefault();
-			form.validateFieldsAndScroll((err, values) => {
-				if (!err) {
-					onAdd(values.new);
-				}
-			});
-		}}>
-			<Form.Item
-				hasFeedback
-			  style={{flex:1}}
-			>
-				{form.getFieldDecorator('new', {
-					rules: [{
-						type: 'string',
-					}, {
-						required: true,
-					}],
-				})(
-					<Input type='textarea' rows={4} />,
-				)}
-			</Form.Item>
-			<Form.Item>
-				<Button type="primary" htmlType="submit"
-				        size="large"><FormattedMessage id='common.action_create' /></Button>
-			</Form.Item>
-		</Form>
-	),
-);
-
-StringsForm.contextTypes = {
-	intl: PropTypes.object.isRequired,
-}
-
-const StringsTab = ({ name, strings, onAdd }) => {
-	return (
-		<div>
-			<StringsForm name={name} onAdd={onAdd} />
-			{ strings.map(item => <div style={{ lineHeight: 1.5, padding: 24 }}>
-				{nl2br(item)}
-			</div>) }
-		</div>
-	)
-};
-
-const FilesTab = ({ patient }, context) => {
+const FilesTab = ({ patient, onAddFile, onDeleteFile }, context) => {
 	const formatMessage = context.intl.formatMessage;
+	const token = localStorage.getItem('token');
+	const uploadHeaders = {
+		Authorization: `Bearer ${token}`,
+	};
 	const columns = [{
 		title: formatMessage({ id: 'common.field_name' }),
 		key: 'name',
-		width: '85%',
+		width: '70%',
+		sorter: (a, b) => a.name > b.name,
 		render: (text, record) => <div className="to-dynamic-container">
 			<span className="to-dynamic">
 				<a href={record.url}>{record.name}</a>
@@ -106,12 +64,40 @@ const FilesTab = ({ patient }, context) => {
 		dataIndex: 'size',
 		key: 'size',
 		width: '15%',
+		sorter: (a, b) => a.size > b.size,
 		render: text => <div>
 			{text}
 		</div>,
-	}];
+	}, {
+		title: formatMessage({ id: 'common.field_actions' }),
+		key: 'action',
+		width: '15%',
+		render: (text, record) => (
+			<Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
+				onDeleteFile(record.id)
+			} } okText={formatMessage({ id: 'common.confirm_yes' })}
+			            cancelText={formatMessage({ id: 'common.confirm_no' })}>
+				<a>{formatMessage({ id: 'common.action_delete' })}</a>
+			</Popconfirm>
+		),
+	},];
 
-	return <Table dataSource={patient.files} columns={columns} rowKey='id' />
+	return <div>
+		<div style={{ margin: 16, height: 160 }}>
+			<Upload.Dragger
+				multiple={false}
+				showUploadList={false}
+				headers={uploadHeaders}
+				onChange={onAddFile}
+				action="/api/upload-file">
+				<p className="ant-upload-drag-icon">
+					<Icon type="inbox" />
+				</p>
+				<p className="ant-upload-text">{formatMessage({ id: 'Patients.upload_files' })}</p>
+			</Upload.Dragger>
+		</div>
+		<Table dataSource={patient.files} columns={columns} rowKey='id' />
+	</div>
 };
 
 FilesTab.contextTypes = {
@@ -125,6 +111,7 @@ const RelatedPersonsTable = ({ patient }, context) => {
 		title: formatMessage({ id: 'Patients.field_person_type' }),
 		key: 'type',
 		width: '20%',
+		sorter: (a, b) => a.type > b.type,
 		render: (text, record) => <span>{ formatMessage({ id: `related_persons.${record.type}` }) }</span>,
 	},
 		{
@@ -170,7 +157,7 @@ const DetailsTab = ({ patient }, context) => {
 				<span className="Details__name">
 					{patient.first_name} {patient.last_name}
 				</span>
-					<span className="Details__age" style={{marginRight:8}}>
+					<span className="Details__age" style={{ marginRight: 8 }}>
 					<FormattedMessage id='Patients.age' values={{
 						years: diff.years() || '0',
 						months: diff.months() || '0',
@@ -254,6 +241,22 @@ DetailsTab.contextTypes = {
 			}),
 		}),
 	}),
+	graphql(ADD_PATIENT_FILE_MUTATION, {
+		props: ({ ownProps, mutate }) => ({
+			addFile: (file) => mutate({
+				variables: { file: { patient_id: ownProps.patientId, ...file } },
+				refetchQueries: [],
+			}),
+		}),
+	}),
+	graphql(DELETE_PATIENT_FILE_MUTATION, {
+		props: ({ ownProps, mutate }) => ({
+			deleteFile: (id) => mutate({
+				variables: { id },
+				refetchQueries: [],
+			}),
+		}),
+	}),
 )
 class PatientView extends Component {
 
@@ -307,16 +310,31 @@ class PatientView extends Component {
 
 	onAddDiagnose = (diagnose) => {
 		const { archived, __typename, ...patient } = this.props.data.patient;
-		patient.related_persons = [ ...patient.related_persons.map(({ __typename, ...p }) => p) ]
-		patient.diagnoses = [ diagnose, ...patient.diagnoses ];
+		patient.related_persons = [...patient.related_persons.map(({ __typename, ...p }) => p)]
+		patient.diagnoses = [diagnose, ...patient.diagnoses];
 		this.props.editPatient(patient);
 	}
 
 	onAddTreatmentSummary = (summary) => {
 		const { archived, __typename, ...patient } = this.props.data.patient;
-		patient.related_persons = [ ...patient.related_persons.map(({ __typename, ...p }) => p) ]
-		patient.treatment_summary = [ summary, ...patient.treatment_summary ];
+		patient.related_persons = [...patient.related_persons.map(({ __typename, ...p }) => p)]
+		patient.treatment_summary = [summary, ...patient.treatment_summary];
 		this.props.editPatient(patient);
+	}
+
+	onAddFile = (info) => {
+		const status = info.file.status;
+		if (status !== 'uploading') {
+			// console.log(info.file, info.fileList);
+		}
+		if (status === 'done') {
+			const { name, url, type, size } = info.file.response.files[0];
+			this.props.addFile({ name, url, type, size }).then(() => {
+				// message.success(`${info.file.name} file uploaded successfully.`);
+			});
+		} else if (status === 'error') {
+			message.error(`${info.file.name} file upload failed.`);
+		}
 	}
 
 	render() {
@@ -351,7 +369,8 @@ class PatientView extends Component {
 						<Button icon='edit' style={{ marginLeft: 8 }}
 						        onClick={onEdit(patient)}>{ formatMessage({ id: 'common.action_edit' }) }</Button>
 						{ patient.archived
-							? <Button type='primary' style={{ backgroundColor: '#00A854' }} loading={archiveLoading} onClick={this.onUnarchiveClick}
+							? <Button type='primary' style={{ backgroundColor: '#00A854' }} loading={archiveLoading}
+							          onClick={this.onUnarchiveClick}
 							          icon='unlock'>{ formatMessage({ id: 'common.action_unarchive' }) }</Button>
 							: <Button type='danger' loading={archiveLoading} onClick={this.props.archivePatient}
 							          icon='lock'>{ formatMessage({ id: 'common.action_archive' }) }</Button>
@@ -368,7 +387,7 @@ class PatientView extends Component {
 						className='PatientView__Tab'
 						tab={ formatMessage({ id: 'Patients.tabs.diagnoses' }) }
 						key="diagnoses">
-						<StringsTab name='' strings={patient.diagnoses} onAdd={this.onAddDiagnose} />
+						<TreatmentSummaryTab patient={patient}/>
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
@@ -380,13 +399,13 @@ class PatientView extends Component {
 						className='PatientView__Tab'
 						tab={ formatMessage({ id: 'Patients.tabs.treatment_summary' }) }
 						key="treatment_summary">
-						<StringsTab name='' strings={patient.treatment_summary} onAdd={this.onAddTreatmentSummary} />
+						<TreatmentSummaryTab patient={patient}/>
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
 						tab={ <FormattedMessage id='Patients.tabs.files' values={{ number: patient.files.length }} /> }
 						key="files">
-						<FilesTab patient={patient} />
+						<FilesTab onAddFile={this.onAddFile} onDeleteFile={this.props.deleteFile} patient={patient} />
 					</TabPane>
 				</Tabs>
 			</div>

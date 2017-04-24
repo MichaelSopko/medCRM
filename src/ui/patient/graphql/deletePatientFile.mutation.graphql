@@ -1,0 +1,8 @@
+#import './PatientFiles.fragment.graphql'
+mutation deletePatientFile($id: ID!) {
+    deletePatientFile(id: $id) {
+        files {
+            ...PatientFilesFields
+        }
+    }
+}

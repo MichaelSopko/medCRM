@@ -168,10 +168,12 @@ class Administrators extends Component {
 			title: formatMessage({ id: 'common.field_email' }),
 			dataIndex: 'email',
 			key: 'email',
+			sorter: (a, b) => a.email > b.email,
 		}, {
 			title: formatMessage({ id: 'common.field_name' }),
 			dataIndex: 'clinic.name',
 			key: 'name',
+			sorter: (a, b) => a.name > b.name,
 		}, {
 			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',

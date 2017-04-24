@@ -1,0 +1,36 @@
+fragment DiagnoseFragment on Diagnose {
+    id
+    patient_age
+    date
+    fillers {
+        id
+        first_name
+        last_name
+        license_number
+        role
+    }
+    hearing_test_date
+    hearing_test_remark
+    fields {
+        pregnancy_and_birth
+        psychomotor_progression
+        language_and_speech_progression
+        eating_function
+        family_background
+        health_background
+        past_and_present_treatments
+        environmental_context
+        parents_report
+        kindergarten_teacher_report
+        diagnose_tools
+        behaviour_and_general_impression
+        communications_skills
+        gaming_skills
+        language_grasp
+        language_expression
+        speech_intelligibility
+        speech_fluency
+        summary
+        recommendations
+    }
+}

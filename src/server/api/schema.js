@@ -282,6 +282,39 @@ const resolvers = {
 				})
 				.then(res => ({ status: true }))
 		},
+		async addPatientFile(_, { file }, ctx) {
+			await checkAccess(ctx, ROLES.THERAPIST)
+			const { Users } = ctx;
+			await Users.addPatientFile(file);
+			const patient = await Users.findOne(file.patient_id);
+			pubsub.publish('patientUpdated', patient);
+			return patient;
+		},
+		async deletePatientFile(_, { id }, ctx) {
+			await checkAccess(ctx, ROLES.THERAPIST)
+			const { Users } = ctx;
+			const file = await Users.getPatientFile(id);
+			await Users.deletePatientFile(file.id);
+			const patient = await Users.findOne(file.patient_id);
+			pubsub.publish('patientUpdated', patient);
+			return patient;
+		},
+		async addTreatmentSummary(_, { input }, ctx) {
+			await checkAccess(ctx, ROLES.THERAPIST)
+			const { Users } = ctx;
+			await Users.addTreatmentSummary(input);
+			const patient = await Users.findOne(input.patient_id);
+			pubsub.publish('patientUpdated', patient);
+			return patient;
+		},
+		async addDiagnose(_, { input }, ctx) {
+			await checkAccess(ctx, ROLES.THERAPIST)
+			const { Users } = ctx;
+			await Users.addDiagnose(input);
+			const patient = await Users.findOne(input.patient_id);
+			pubsub.publish('patientUpdated', patient);
+			return patient;
+		},
 	},
 	Subscription: {
 		patientCreated(patient) {
@@ -318,13 +351,30 @@ const resolvers = {
 			return safeParse(user.related_persons);
 		},
 		files(user, _, ctx) {
-			return safeParse(user.files, []);
+			return ctx.Users.getPatientFiles(user.id);
 		},
 		diagnoses(user, _, ctx) {
-			return safeParse(user.diagnoses, []);
+			return ctx.Users.getDiagnoses(user.id);
 		},
 		treatment_summary(user, _, ctx) {
-			return safeParse(user.treatment_summary, []);
+			return ctx.Users.getTreatmentSummary(user.id);
+		},
+	},
+	Diagnose: {
+		fillers(diagnose, _, context) {
+			return diagnose && diagnose.patient_ids || context.Users.getUsers(safeParse(diagnose.fillers_ids, '{}'));
+		},
+		fields(diagnose, _, ctx) {
+			return safeParse(diagnose.fields, '{}');
+		},
+	},
+	// TODO: union type
+	TreatmentSummary: {
+		fillers(diagnose, _, context) {
+			return diagnose && diagnose.patient_ids || context.Users.getUsers(safeParse(diagnose.fillers_ids, '{}'));
+		},
+		fields(diagnose, _, ctx) {
+			return safeParse(diagnose.fields, '{}');
 		},
 	},
 	CurrentUser: {

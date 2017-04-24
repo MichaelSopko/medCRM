@@ -5,11 +5,11 @@ import gql from 'graphql-tag';
 import { graphql, compose } from 'react-apollo'
 import update from 'react-addons-update'
 
-import PATIENTS_LIST_QUERY from '../graphql/PatientsList.graphql'
+import PATIENTS_LIST_QUERY from '../patient/graphql/PatientsList.graphql'
 
-import PATIENT_CREATED_SUBSCRIPTION from '../graphql/PatientCreatedSubscription.graphql'
-import PATIENT_UPDATED_SUBSCRIPTION from '../graphql/PatientUpdatedSubscription.graphql'
-import PATIENT_DELETED_SUBSCRIPTION from '../graphql/PatientDeletedSubscription.graphql'
+import PATIENT_CREATED_SUBSCRIPTION from '../patient/graphql/PatientCreatedSubscription.graphql'
+import PATIENT_UPDATED_SUBSCRIPTION from '../patient/graphql/PatientUpdatedSubscription.graphql'
+import PATIENT_DELETED_SUBSCRIPTION from '../patient/graphql/PatientDeletedSubscription.graphql'
 
 @connect(
 	(state) => ({ currentClinic: state.currentClinic }),

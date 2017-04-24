@@ -14,6 +14,7 @@ import {
 	Upload,
 	notification,
 	Checkbox,
+	Radio
 } from 'antd'
 import moment from 'moment';
 
@@ -34,10 +35,6 @@ export default Form.create()(
 			wrapperCol: { span: 14 },
 		};
 		const isEditing = !!Object.keys(values).length;
-		const token = localStorage.getItem('token');
-		const uploadHeaders = {
-			Authorization: `Bearer ${token}`,
-		};
 		const normFile = (e) => {
 			if (Array.isArray(e)) {
 				return e;
@@ -222,6 +219,23 @@ export default Form.create()(
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
+						label={formatMessage({ id: 'common.gender.field_name' })}
+						hasFeedback
+					>
+						{getFieldDecorator('gender', {
+							initialValue: values.gender,
+							validateTrigger: 'onBlur', rules: [{
+								required: true, message: formatMessage({ id: 'common.gender.field_error' }),
+							}],
+						})(
+							<Radio.Group>
+								<Radio value='MALE'>{formatMessage({ id: 'common.gender.MALE' })}</Radio>
+								<Radio value='FEMALE'>{formatMessage({ id: 'common.gender.FEMALE' })}</Radio>
+							</Radio.Group>,
+						)}
+					</Form.Item> }
+					{ <Form.Item
+						{...formItemLayout}
 						label={formatMessage({ id: 'common.field_birth_date' })}
 						hasFeedback
 					>
@@ -282,26 +296,6 @@ export default Form.create()(
 						<Button type="dashed" onClick={ addRelatedPerson }>
 							{formatMessage({ id: 'Patients.add_related_persons' })}
 						</Button>
-					</Form.Item> }
-					{ <Form.Item
-						{...formItemLayout}
-						label={formatMessage({ id: 'Patients.field_files' })}
-						hasFeedback
-					>
-						{getFieldDecorator('files', {
-							valuePropName: 'fileList',
-							initialValue: values.files && values.files.map(f => ({ uid: f.url, ...f })),
-							normalize: normFile,
-						})(
-							<Upload
-								headers={uploadHeaders}
-								onChange={onUploadFileChange}
-								action="/api/upload-file">
-								<Button>
-									<Icon type="upload" /> {formatMessage({ id: 'Patients.upload_files' })}
-								</Button>
-							</Upload>,
-						)}
 					</Form.Item> }
 				</Form>
 			</Modal>

@@ -54,9 +54,6 @@ export default class Users {
 	}
 
 	async editUser({ id, password, ...fields }) {
-		if ('files' in fields) {
-			fields.files = JSON.stringify(fields.files);
-		}
 		if ('related_persons' in fields) {
 			fields.related_persons = JSON.stringify(fields.related_persons);
 		}
@@ -84,6 +81,58 @@ export default class Users {
 			.where('id', id)
 			.update('archived', true)
 			// .delete()
+	}
+
+	addPatientFile(file) {
+		return knex('files')
+			.insert(file, '*')
+			.then(([row]) => row); // return inserted id
+	}
+
+	getPatientFile(id) {
+		return knex('files')
+			.where('id', id)
+			.first()
+	}
+
+	deletePatientFile(id) {
+		return knex('files')
+			.where('id', id)
+			.del()
+			.then(() => id);
+	}
+
+	getPatientFiles(patient_id) {
+		return knex('files')
+			.where('patient_id', patient_id)
+			.orderBy('id', 'DESC')
+			.select();
+	}
+
+	getDiagnoses(patient_id) {
+		return knex('patient_objects')
+			.where('patient_id', patient_id)
+			.andWhere('type', 'DIAGNOSE')
+			.select();
+	}
+
+	addDiagnose(diagnose) {
+		return knex('patient_objects')
+			.insert({ ...diagnose, type: 'DIAGNOSE' }, '*')
+			.then(([row]) => row); // return inserted id
+	}
+
+	addTreatmentSummary(diagnose) {
+		return knex('patient_objects')
+			.insert({ ...diagnose, type: 'TREATMENT_SUMMARY' }, '*')
+			.then(([row]) => row); // return inserted id
+	}
+
+	getTreatmentSummary(patient_id) {
+		return knex('patient_objects')
+			.where('patient_id', patient_id)
+			.andWhere('type', 'TREATMENT_SUMMARY')
+			.select();
 	}
 
 	findByRole(role, clinic_id, archived = false) {

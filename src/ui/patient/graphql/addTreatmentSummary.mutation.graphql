@@ -1,0 +1,8 @@
+#import './TreatmentSummary.fragment.graphql'
+mutation addTreatmentSummary($input: TreatmentSummaryInput!) {
+    addTreatmentSummary(input: $input) {
+        treatment_summary {
+            ...TreatmentSummaryFragment
+        }
+    }
+}

@@ -304,6 +304,7 @@ class Therapists extends Component {
 			title: formatMessage({ id: 'common.field_name' }),
 			key: 'name',
 			width: '30%',
+			sorter: (a, b) => a.name > b.name,
 			render: (text, record) => <div className="to-dynamic-container">
 				<span className="to-dynamic">{record.first_name} {record.last_name}</span>
 			</div>,
@@ -312,6 +313,7 @@ class Therapists extends Component {
 			dataIndex: 'phone',
 			key: 'phone',
 			width: '25%',
+			sorter: (a, b) => a.phone > b.phone,
 			render: text => <div className="to-dynamic-container">
 				<span className="to-dynamic"><a href={ `tel:${text}` }>{ text }</a></span>
 			</div>,
@@ -320,6 +322,7 @@ class Therapists extends Component {
 			dataIndex: 'email',
 			key: 'email',
 			width: '25%',
+			sorter: (a, b) => a.email > b.email,
 			render: text => <div className="to-dynamic-container">
 				<span className="to-dynamic"><a href={ `mailto:${text}` }>{ text }</a></span>
 			</div>,

@@ -1,0 +1,8 @@
+fragment PatientFilesFields on PatientFile {
+    id
+    patient_id
+    type
+    url
+    name
+    size
+}

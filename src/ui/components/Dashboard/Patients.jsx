@@ -26,15 +26,15 @@ import {
 } from 'antd'
 
 
-import PATIENTS_LIST_QUERY from '../../graphql/PatientsList.graphql'
+import PATIENTS_LIST_QUERY from '../../patient/graphql/PatientsList.graphql'
 
-import ADD_PATIENT_MUTATION from '../../graphql/PatientAddMutation.graphql'
-import DELETE_PATIENT_MUTATION from '../../graphql/PatientDeleteMutaion.graphql'
-import EDIT_PATIENT_MUTATION from '../../graphql/PatientEditMutation.graphql'
+import ADD_PATIENT_MUTATION from '../../patient/graphql/PatientAddMutation.graphql'
+import DELETE_PATIENT_MUTATION from '../../patient/graphql/PatientDeleteMutaion.graphql'
+import EDIT_PATIENT_MUTATION from '../../patient/graphql/PatientEditMutation.graphql'
 
-import PATIENT_CREATED_SUBSCRIPTION from '../../graphql/PatientCreatedSubscription.graphql'
-import PATIENT_UPDATED_SUBSCRIPTION from '../../graphql/PatientUpdatedSubscription.graphql'
-import PATIENT_DELETED_SUBSCRIPTION from '../../graphql/PatientDeletedSubscription.graphql'
+import PATIENT_CREATED_SUBSCRIPTION from '../../patient/graphql/PatientCreatedSubscription.graphql'
+import PATIENT_UPDATED_SUBSCRIPTION from '../../patient/graphql/PatientUpdatedSubscription.graphql'
+import PATIENT_DELETED_SUBSCRIPTION from '../../patient/graphql/PatientDeletedSubscription.graphql'
 
 import ROLES from '../../../helpers/constants/roles'
 import ClinicsSelector from '../ClinicsSelector'
@@ -100,16 +100,6 @@ class Patients extends Component {
 		const formatMessage = this.context.intl.formatMessage;
 		const form = this.form;
 		const isEditing = !!Object.keys(this.state.activeEntity).length;
-		const processFiles = files => files.map(file => {
-			file = file.response ? file.response.files[0] : file; // Handle new uploaded files
-			const { name, url, size, type } = file;
-			return {
-				name,
-				url,
-				size,
-				type,
-			}
-		});
 		const processRelatedPersons = (relatedPersons, values) => {
 			values.related_persons = [];
 			relatedPersons.forEach(({ _id }) => {
@@ -141,13 +131,12 @@ class Patients extends Component {
 			});
 		};
 
-		form.validateFields((err, { files, ...values }) => {
+		form.validateFields((err, values) => {
 			if (err) {
 				return;
 			}
 			this.setState({ modalLoading: true });
-			console.log(values);
-			files = files ? processFiles(files) : [];
+
 			values = processRelatedPersons(this.state.relatedPersons, values);
 
 			values.birth_date = moment(values.birth_date);
@@ -156,10 +145,7 @@ class Patients extends Component {
 
 				? this.props.editPatient({
 				id: this.state.activeEntity.id,
-				patient: {
-					...values,
-					files,
-				},
+				patient: values,
 			}).then(() => {
 				form.resetFields();
 				this.setState({ modalOpened: false, modalLoading: false, relatedPersons: [] });
@@ -168,10 +154,7 @@ class Patients extends Component {
 
 				: this.props.addPatient({
 				clinic_id: this.props.currentClinic.id,
-				patient: {
-					...values,
-					files,
-				},
+				patient: values,
 			}).then((res) => {
 				form.resetFields();
 				this.setState({
@@ -292,7 +275,6 @@ class Patients extends Component {
 						onCancel={this.handleCancel}
 						onSubmit={this.handleFormSubmit}
 						formatMessage={formatMessage}
-						onUploadFileChange={this.onUploadFileChange}
 						values={activeEntity}
 						relatedPersons={relatedPersons}
 						addRelatedPerson={this.addRelatedPerson}
@@ -305,13 +287,15 @@ class Patients extends Component {
 						<div className="Dashboard__Actions">
 							<div>
 								<PatientSelector showArchived={showArchived} onChange={this.onPatientChange} />
-								<Checkbox style={{marginRight:8}}  checked={showArchived} onChange={this.onShowArchivedChange}>{ formatMessage({ id: 'Patients.show-archived' }) }</Checkbox>
+								<Checkbox style={{ marginRight: 8 }} checked={showArchived}
+								          onChange={this.onShowArchivedChange}>{ formatMessage({ id: 'Patients.show-archived' }) }</Checkbox>
 							</div>
 							<div>
 								<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
 									<ClinicsSelector />
 								</CheckAccess>
-								<Button size='large' style={{marginRight:8}} type="primary" onClick={ this.showModal } disabled={ !currentClinic.id }>
+								<Button size='large' style={{ marginRight: 8 }} type="primary" onClick={ this.showModal }
+								        disabled={ !currentClinic.id }>
 									<Icon type="plus-circle-o" />
 									{ formatMessage({ id: 'Patients.create_button' }) }
 								</Button>

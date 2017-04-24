@@ -214,19 +214,23 @@ class Clinics extends Component {
 			title: formatMessage({ id: 'common.field_name' }),
 			dataIndex: 'name',
 			key: 'name',
+			sorter: (a, b) => a.name > b.name,
 		}, {
 			title: formatMessage({ id: 'common.field_address' }),
 			dataIndex: 'address',
 			key: 'address',
+			sorter: (a, b) => a.address > b.address,
 		}, {
 			title: formatMessage({ id: 'common.field_phone' }),
 			dataIndex: 'phone',
 			key: 'phone',
+			sorter: (a, b) => a.phone > b.phone,
 			render: text => <a href={ `tel:${text}` }>{ text }</a>
 		}, {
 			title: formatMessage({ id: 'common.field_email' }),
 			dataIndex: 'email',
 			key: 'email',
+			sorter: (a, b) => a.email > b.email,
 			render: text => <a href={ `mailto:${text}` }>{ text }</a>
 		}, {
 			title: formatMessage({ id: 'common.field_actions' }),

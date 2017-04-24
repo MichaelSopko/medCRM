@@ -26,7 +26,7 @@ import {
 } from 'antd'
 
 
-import PATIENTS_LIST_QUERY from '../../graphql/PatientsList.graphql'
+import PATIENTS_LIST_QUERY from '../../patient/graphql/PatientsList.graphql'
 import GET_TREATMENTS_QUERY from '../../graphql/TreatmentsGet.graphql'
 
 import ROLES from '../../../helpers/constants/roles'
