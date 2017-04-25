@@ -80,7 +80,7 @@ class DiagnoseTab extends Component {
 		};
 
 		return (
-			<Tabs>
+			<Tabs animated={false}>
 				<Tabs.TabPane key={1} tab={formatMessage({ id: 'DiagnoseTab.tab1' })}>
 					<Form.Item
 						{...formItemLayout}
