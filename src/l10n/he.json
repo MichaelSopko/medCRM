@@ -99,7 +99,6 @@
     "unarchived_message": "מטופל הוסר מארכיון",
     "field_receive_updates": "מעוניין לקבל עדכונים למייל",
     "diagnose_fillers": "Diagnose fillers",
-    "gender": "Sex",
     "diagnose_date": "Diagnose date",
     "print_date": "Print date",
     "age_in_diagnose": "Age in diagnose",
@@ -115,6 +114,7 @@
     "recommendations": "המלצות"
   },
   "DiagnoseTab": {
+    "create_title": "Generate diagnose",
     "hearing_test": "Hearing test",
     "hearing_test_remarks": "Remarks for hearing test",
     "hearing_test_date": "Date",
@@ -163,7 +163,7 @@
     "field_start_date": "התחלה",
     "field_end_date": "סוף",
     "update_email": {
-      "subject": "עדכון טיפול עבור מטופל: {patient}",
+      "subject": "עדכון טיפול עבור מטופל",
       "content": "תאריך התחלה: {start_date}, תאריך סיום: {end_date}"
     }
   },
@@ -222,6 +222,7 @@
       "FEMALE": "Female"
     },
     "action_view": "View",
-    "action_print": "Print"
+    "action_print": "Print",
+    "action_cancel": "Cancel"
   }
 }

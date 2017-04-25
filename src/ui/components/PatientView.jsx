@@ -26,6 +26,7 @@ import nl2br from 'react-nl2br';
 
 import TreatmentsTab from './Treatments';
 import TreatmentSummaryTab from '../patient/containers/TreatmentSummaryTab';
+import DiagnoseTab from '../patient/containers/DiagnoseTab';
 
 import HEALTH_MAINTENANCES from '../../helpers/constants/health_maintenances'
 import RELATED_PERSONS from '../../helpers/constants/related_persons'
@@ -387,7 +388,7 @@ class PatientView extends Component {
 						className='PatientView__Tab'
 						tab={ formatMessage({ id: 'Patients.tabs.diagnoses' }) }
 						key="diagnoses">
-						<TreatmentSummaryTab patient={patient}/>
+						<DiagnoseTab patient={patient}/>
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'

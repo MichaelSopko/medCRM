@@ -8,7 +8,7 @@ import withCurrentUser from '../../../utils/withCurrentUser';
 
 const PatientObjectForm = (props, context) => {
 	const formatMessage = context.intl.formatMessage;
-	const { patient, visible, onSubmit, onClose, form, loading, title, therapists, currentUser, showHearingTest, renderFields } = props;
+	const { patient, visible, onSubmit, onCancel, form, loading, title, therapists, currentUser, showHearingTest, renderFields } = props;
 	const { getFieldDecorator } = form;
 	const formItemLayout = {
 		labelCol: { span: 6 },
@@ -20,7 +20,7 @@ const PatientObjectForm = (props, context) => {
 		       visible={visible}
 		       okText={ formatMessage({ id: 'common.action_create' }) }
 		       onOk={onSubmit}
-		       onCancel={onClose}
+		       onCancel={onCancel}
 		       width={1000}
 		       confirmLoading={loading}>
 			<Form className='PatientObjectForm'>
@@ -77,7 +77,7 @@ const PatientObjectForm = (props, context) => {
 						<Input />,
 					)}
 				</Form.Item>
-				{ true && <Form.Item
+				{ showHearingTest && <Form.Item
 					{...formItemLayout}
 					label={formatMessage({ id: 'DiagnoseTab.hearing_test' })}
 					hasFeedback

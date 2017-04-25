@@ -1,6 +1,7 @@
 #import './PatientFiles.fragment.graphql'
 mutation addPatientFile($file: PatientFileInput!) {
     addPatientFile(file: $file) {
+        id
         files {
             ...PatientFilesFields
         }

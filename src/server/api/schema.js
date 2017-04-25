@@ -13,7 +13,10 @@ import moment from 'moment';
 
 import log from '../../log'
 import schema from './schema_def.graphqls'
-import mailerConfig from '../../../email.config'
+import emailConfig from '../../../email.config'
+import heMessages from '../../l10n/he.json'
+
+const { template: emailTemplate, ...mailerConfig } = emailConfig;
 
 let transporter = nodemailer.createTransport(mailerConfig);
 
@@ -253,11 +256,8 @@ const resolvers = {
 					let mailOptions = {
 						from: `"Clinic" <${mailerConfig.auth.user}>`,
 						to: related_persons.filter(p => !!p.receive_updates).map(p => p.email),
-						subject: 'Treatment schedule update',
-						text: `
-						Start date: ${treatment.start_date}
-						End date: ${treatment.end_date}
-						`
+						subject: heMessages.Treatments.update_email.subject,
+						html: emailTemplate(treatment)
 					};
 
 					transporter.sendMail(mailOptions).then(info => {
@@ -299,18 +299,18 @@ const resolvers = {
 			pubsub.publish('patientUpdated', patient);
 			return patient;
 		},
-		async addTreatmentSummary(_, { input }, ctx) {
-			await checkAccess(ctx, ROLES.THERAPIST)
-			const { Users } = ctx;
-			await Users.addTreatmentSummary(input);
-			const patient = await Users.findOne(input.patient_id);
-			pubsub.publish('patientUpdated', patient);
-			return patient;
-		},
 		async addDiagnose(_, { input }, ctx) {
 			await checkAccess(ctx, ROLES.THERAPIST)
 			const { Users } = ctx;
 			await Users.addDiagnose(input);
+			const patient = await Users.findOne(input.patient_id);
+			pubsub.publish('patientUpdated', patient);
+			return patient;
+		},
+		async addTreatmentSummary(_, { input }, ctx) {
+			await checkAccess(ctx, ROLES.THERAPIST)
+			const { Users } = ctx;
+			await Users.addTreatmentSummary(input);
 			const patient = await Users.findOne(input.patient_id);
 			pubsub.publish('patientUpdated', patient);
 			return patient;

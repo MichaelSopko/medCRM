@@ -1,7 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import { Table, Button, message, Form, Input, notification } from 'antd';
+import { Table, Button, message, Form, Input, notification, Col } from 'antd';
 import moment from 'moment';
 import { graphql } from 'react-apollo';
+import { FormattedMessage } from 'react-intl';
 
 import PatientObjectForm from '../components/PatientObjectForm';
 import PatientObjectView from '../components/PatientObjectView';
@@ -12,7 +13,7 @@ import './PatientObjectTab.scss';
 
 @graphql(ADD_TREATMENT_SUMMARY_MUTATION, {
 	props: ({ ownProps, mutate }) => ({
-		addTreatmentSummary: (values) => mutate({
+		addDiagnose: (values) => mutate({
 			variables: { input: { patient_id: ownProps.patient.id, ...values } },
 		}),
 	}),
@@ -26,7 +27,7 @@ class TreatmentSummaryTab extends Component {
 	state = {
 		formOpened: false,
 		viewOpened: false,
-		selectedItem: null,
+		selectedItem: {},
 	}
 
 	openForm = () => {
@@ -45,7 +46,7 @@ class TreatmentSummaryTab extends Component {
 	}
 
 	closeView = () => {
-		this.setState({ viewOpened: false, selectedItem: null });
+		this.setState({ viewOpened: false, selectedItem: {} });
 	}
 
 
@@ -60,7 +61,7 @@ class TreatmentSummaryTab extends Component {
 
 			console.log(values);
 
-			this.props.addTreatmentSummary(values).then((res) => {
+			this.props.addDiagnose(values).then((res) => {
 				this.closeForm();
 			}).catch(e => {
 				console.error(e);
@@ -70,7 +71,7 @@ class TreatmentSummaryTab extends Component {
 		});
 	};
 
-	renderFields = (form) => {
+	renderFormFields = (form) => {
 		const formatMessage = this.context.intl.formatMessage;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
@@ -85,7 +86,7 @@ class TreatmentSummaryTab extends Component {
 					hasFeedback
 					label={formatMessage({ id: 'TreatmentSummaryTab.treatments_length' })}
 				>
-					{getFieldDecorator('treatments_length', {
+					{getFieldDecorator('fields.treatments_length', {
 						rules: [],
 					})(
 						<Input type='textarea' />,
@@ -96,7 +97,7 @@ class TreatmentSummaryTab extends Component {
 					hasFeedback
 					label={formatMessage({ id: 'TreatmentSummaryTab.treatment_targets' })}
 				>
-					{getFieldDecorator('treatment_targets', {
+					{getFieldDecorator('fields.treatment_targets', {
 						rules: [],
 					})(
 						<Input type='textarea' />,
@@ -107,7 +108,7 @@ class TreatmentSummaryTab extends Component {
 					hasFeedback
 					label={formatMessage({ id: 'TreatmentSummaryTab.parents_involment' })}
 				>
-					{getFieldDecorator('parents_involment', {
+					{getFieldDecorator('fields.parents_involment', {
 						rules: [],
 					})(
 						<Input type='textarea' />,
@@ -118,7 +119,7 @@ class TreatmentSummaryTab extends Component {
 					hasFeedback
 					label={formatMessage({ id: 'TreatmentSummaryTab.treatments_progress' })}
 				>
-					{getFieldDecorator('treatments_progress', {
+					{getFieldDecorator('fields.treatments_progress', {
 						rules: [],
 					})(
 						<Input type='textarea' />,
@@ -129,7 +130,7 @@ class TreatmentSummaryTab extends Component {
 					hasFeedback
 					label={formatMessage({ id: 'TreatmentSummaryTab.recommendations' })}
 				>
-					{getFieldDecorator('recommendations', {
+					{getFieldDecorator('fields.recommendations', {
 						rules: [],
 					})(
 						<Input type='textarea' />,
@@ -139,6 +140,25 @@ class TreatmentSummaryTab extends Component {
 		);
 	}
 
+	renderViewFields = (fields) => {
+		return fields && (
+			<Col style={{margin: 12}}>
+				{Object.keys(fields).map(key => fields[key] && (
+					 <div style={{marginTop: 12}}>
+						<h4>
+							<FormattedMessage id={`TreatmentSummaryTab.${key}`} />
+						</h4>
+						<p>{fields[key]}</p>
+					</div>
+				))}
+			</Col>
+		);
+	}
+
+	print() {
+		window.print();
+	}
+
 	render() {
 		const { patient, addTreatmentSummary } = this.props;
 		const { formOpened, viewOpened, selectedItem } = this.state;
@@ -146,11 +166,11 @@ class TreatmentSummaryTab extends Component {
 
 		const columns = [{
 			title: formatMessage({ id: 'Treatments.field_datetime' }),
-			key: 'name',
+			key: 'date',
 			width: '80%',
 			sorter: (a, b) => moment(a.date) > moment(b.date),
 			render: (text, record) => <span>
-				{moment(text).format('LLL')}
+				{moment(record.date).format('LLL')}
 			</span>,
 		}, {
 			title: formatMessage({ id: 'common.field_actions' }),
@@ -170,13 +190,18 @@ class TreatmentSummaryTab extends Component {
 						this.form = form
 					} }
 					patient={patient}
-					onClose={this.closeForm}
+					onCancel={this.closeForm}
 					title={formatMessage({ id: 'TreatmentSummaryTab.create_title' })}
 					visible={formOpened}
-					renderFields={this.renderFields}
-					onSubmit={this.handleFormSubmit}
-					showHearingTest />
-				<PatientObjectView />
+					renderFields={this.renderFormFields}
+					onSubmit={this.handleFormSubmit} />
+				<PatientObjectView
+					patient={patient}
+					object={selectedItem}
+					onCancel={this.closeView}
+					visible={viewOpened}
+					onOk={this.print}
+					renderFields={this.renderViewFields} />
 				<div className='PatientObjectTab__Actions'>
 					<Button onClick={this.openForm} type='primary'>{formatMessage({ id: 'common.action_create' })}</Button>
 				</div>

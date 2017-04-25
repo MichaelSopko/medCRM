@@ -117,12 +117,18 @@ export default class Users {
 	}
 
 	addDiagnose(diagnose) {
+		if ('fields' in diagnose) {
+			diagnose.fields = JSON.stringify(diagnose.fields);
+		}
 		return knex('patient_objects')
 			.insert({ ...diagnose, type: 'DIAGNOSE' }, '*')
 			.then(([row]) => row); // return inserted id
 	}
 
 	addTreatmentSummary(diagnose) {
+		if ('fields' in diagnose) {
+			diagnose.fields = JSON.stringify(diagnose.fields);
+		}
 		return knex('patient_objects')
 			.insert({ ...diagnose, type: 'TREATMENT_SUMMARY' }, '*')
 			.then(([row]) => row); // return inserted id
