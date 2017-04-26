@@ -8,15 +8,17 @@ import './PatientObjectView.scss';
 const PatientObjectView = (props, context) => {
 	const formatMessage = context.intl.formatMessage;
 	const { object, patient, renderFields, showHearingTest, ...modalProps } = props;
-	const ageDiff = object && moment.duration(object.patient_age);
+	const ageDiff = object && moment.duration(parseInt(object.patient_age));
+
+	console.log(ageDiff);
 
 	const { __typename, ...fields } = object.fields || {};
 
 	return (
 		<Modal
 			className='PatientObjectView'
-			cancelText={formatMessage({id: 'common.action_cancel'})}
-			okText={formatMessage({id: 'common.action_print'})}
+			cancelText={formatMessage({ id: 'common.action_cancel' })}
+			okText={formatMessage({ id: 'common.action_print' })}
 			closable={false}
 			width={1024}
 			{...modalProps}>
@@ -24,12 +26,12 @@ const PatientObjectView = (props, context) => {
 				<Col span={12}>
 					<table className='PatientObjectView__Table'>
 						<tr>
-							<td>{formatMessage({id: 'Patients.patient_name'})}:</td>
+							<td>{formatMessage({ id: 'Patients.patient_name' })}:</td>
 							<td>{patient.first_name} {patient.last_name}</td>
 						</tr>
 						<tr>
-							<td>{formatMessage({id: 'Patients.field_health_maintenance'})}:</td>
-							<td>{formatMessage({id: `health_maintenance.${patient.health_maintenance}`})}</td>
+							<td>{formatMessage({ id: 'Patients.field_health_maintenance' })}:</td>
+							<td>{formatMessage({ id: `health_maintenance.${patient.health_maintenance}` })}</td>
 						</tr>
 						<tr>
 							<td>ID#:</td>
@@ -37,14 +39,14 @@ const PatientObjectView = (props, context) => {
 						</tr>
 						<tr>
 							<td>{formatMessage({ id: 'common.gender.field_name' })}:</td>
-							<td>{formatMessage({id: `common.gender.${patient.gender}`})}</td>
+							<td>{formatMessage({ id: `common.gender.${patient.gender}` })}</td>
 						</tr>
 						<tr>
 							<td>Relatives</td>
 							<td>
-								<ol>
+								<ol style={{listStyleType: 'decimal'}}>
 									{patient.related_persons.map(prsn => (
-										<li>{formatMessage({id: `related_persons.${prsn.type}`})}, {prsn.description}</li>
+										<li>{formatMessage({ id: `related_persons.${prsn.type}` })}, {prsn.description}</li>
 									))}
 								</ol>
 							</td>
@@ -52,9 +54,12 @@ const PatientObjectView = (props, context) => {
 						<tr>
 							<td>{formatMessage({ id: 'Patients.diagnose_fillers' })}:</td>
 							<td>
-								<ul>
+								<ul style={{listStyleType: 'disc'}}>
 									{object.fillers.map(flr => (
-										<li>{flr.first_name} {flr.last_name}, {formatMessage({id: 'common.field_licence'})} {flr.license_number}, {formatMessage({id: `roles.${flr.role}`})}</li>
+										<li>{flr.first_name} {flr.last_name}
+											{!!flr.role &&
+											<span>, {formatMessage({ id: 'common.field_licence' })} {flr.license_number}, {formatMessage({ id: `roles.${flr.role}` })}
+										</span>} </li>
 									))}
 								</ul>
 							</td>

@@ -64,7 +64,7 @@ input PatientFileInput {
 interface PatientObject {
 	id: ID!
 	patient: Patient
-	patient_age: Int
+	patient_age: String # duration in milliseconds
 	date: Date
 	fillers: [Therapist]
 }
@@ -80,7 +80,7 @@ type TreatmentSummaryFields {
 type TreatmentSummary implements PatientObject {
 	id: ID!
 	patient: Patient
-	patient_age: Int
+	patient_age: String
 	date: Date
 	fillers: [Therapist]
 	fields: TreatmentSummaryFields
@@ -96,9 +96,9 @@ input TreatmentSummaryFieldsInput {
 
 input TreatmentSummaryInput {
 	patient_id: ID!
-	patient_age: Int!
+	patient_age: String!
 	date: Date!
-	fillers_ids: [ID!]!
+	fillers_ids: [String!]!
 	fields: TreatmentSummaryFieldsInput!
 }
 
@@ -128,7 +128,7 @@ type DiagnoseFields {
 type Diagnose implements PatientObject {
 	id: ID!
 	patient: Patient
-	patient_age: Int
+	patient_age: String
 	date: Date
 	fillers: [Therapist]
 	fields: DiagnoseFields
@@ -162,9 +162,9 @@ input DiagnoseFieldsInput {
 
 input DiagnoseInput {
 	patient_id: ID!
-	patient_age: Int!
+	patient_age: String!
 	date: Date!
-	fillers_ids: [ID!]!
+	fillers_ids: [String!]!
 	fields: DiagnoseFieldsInput!
 	hearing_test_remark: String
 	hearing_test_date: Date

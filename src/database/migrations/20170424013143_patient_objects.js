@@ -5,7 +5,7 @@ export function up(knex, Promise) {
 			table.enum('type', ['DIAGNOSE','TREATMENT_SUMMARY'])
 			table.integer('patient_id').unsigned().references('id').inTable('users');
 			table.dateTime('date');
-			table.integer('patient_age').unsigned();
+			table.string('patient_age');
 			// table.specificType('fillers_ids', 'json');
 			table.string('fillers_ids');
 			table.text('hearing_test_remark');

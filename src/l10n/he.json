@@ -223,6 +223,11 @@
     },
     "action_view": "View",
     "action_print": "Print",
-    "action_cancel": "Cancel"
+    "action_cancel": "Cancel",
+    "age": {
+      "years": "years",
+      "months": "months",
+      "days": "days"
+    }
   }
 }

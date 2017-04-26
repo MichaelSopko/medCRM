@@ -15,6 +15,14 @@ const PatientObjectForm = (props, context) => {
 		wrapperCol: { span: 14 },
 	};
 
+	let bdate = moment(patient.birth_date);
+	let diff = moment.duration(moment().diff(bdate));
+	const age = {
+		years: diff.years() || '0',
+		months: diff.months() || '0',
+		days: diff.days() || '0',
+	};
+
 	return (
 		<Modal title={title}
 		       visible={visible}
@@ -51,7 +59,7 @@ const PatientObjectForm = (props, context) => {
 							required: true,
 						}],
 					})(
-						<Select multiple>
+						<Select mode="tags">
 							{therapists.map(trp => (
 								<Select.Option
 									key={trp.id.toString()}
@@ -64,18 +72,39 @@ const PatientObjectForm = (props, context) => {
 				</Form.Item>
 				<Form.Item
 					{...formItemLayout}
-					label={formatMessage({ id: 'Patients.age_in_diagnose' })}
-					hasFeedback
-				>
-					{getFieldDecorator('patient_age', { // TODO: select age
-						initialValue: '',
-						validateTrigger: 'onBlur',
-						rules: [{
-							required: true,
-						}],
-					})(
-						<Input />,
-					)}
+					label={formatMessage({ id: 'Patients.age_in_diagnose' })}>
+					<Row>
+						<Col span={4}>
+							{getFieldDecorator('patient_age.years', {
+								initialValue: age.years,
+								validateTrigger: 'onBlur',
+								rules: [{ required: true }],
+							})(
+								<Input type='number' />,
+							)}
+							<span>{formatMessage({ id: 'common.age.years' })}</span>
+						</Col>
+						<Col span={4} offset={1}>
+							{getFieldDecorator('patient_age.months', {
+								initialValue: age.months,
+								validateTrigger: 'onBlur',
+								rules: [{ required: true }],
+							})(
+								<Input type='number' />,
+							)}
+							<span>{formatMessage({ id: 'common.age.months' })}</span>
+						</Col>
+						<Col span={4} offset={1}>
+							{getFieldDecorator('patient_age.days', {
+								initialValue: age.days,
+								validateTrigger: 'onBlur',
+								rules: [{ required: true }],
+							})(
+								<Input type='number' />,
+							)}
+							<span>{formatMessage({ id: 'common.age.days' })}</span>
+						</Col>
+					</Row>
 				</Form.Item>
 				{ showHearingTest && <Form.Item
 					{...formItemLayout}
@@ -100,7 +129,7 @@ const PatientObjectForm = (props, context) => {
 					{getFieldDecorator('hearing_test_remark', {
 						rules: [],
 					})(
-						<Input type='textarea' />
+						<Input type='textarea' />,
 					)}
 				</Form.Item> }
 				{ form.getFieldValue('hearing_test_trigger') === 'YES' && <Form.Item
@@ -112,7 +141,7 @@ const PatientObjectForm = (props, context) => {
 						initialValue: moment(),
 						rules: [],
 					})(
-						<DatePicker />
+						<DatePicker />,
 					)}
 				</Form.Item> }
 				{ renderFields(form) }

@@ -59,6 +59,8 @@ class DiagnoseTab extends Component {
 				return;
 			}
 
+			values.patient_age =  moment.duration(values.patient_age).asMilliseconds();
+
 			console.log(values);
 
 			this.props.addDiagnose(values).then((res) => {
@@ -268,7 +270,7 @@ class DiagnoseTab extends Component {
 			title: formatMessage({ id: 'Treatments.field_datetime' }),
 			key: 'date',
 			width: '80%',
-			sorter: (a, b) => moment(a.date) > moment(b.date),
+			sorter: (a, b) => moment(a.date).valueOf() > moment(b.date).valueOf(),
 			render: (text, record) => <span>
 				{moment(record.date).format('LLL')}
 			</span>,

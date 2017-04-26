@@ -113,12 +113,16 @@ export default class Users {
 		return knex('patient_objects')
 			.where('patient_id', patient_id)
 			.andWhere('type', 'DIAGNOSE')
+			.orderBy('id', 'DESC')
 			.select();
 	}
 
 	addDiagnose(diagnose) {
 		if ('fields' in diagnose) {
 			diagnose.fields = JSON.stringify(diagnose.fields);
+		}
+		if ('fillers_ids' in diagnose) {
+			diagnose.fillers_ids = JSON.stringify(diagnose.fillers_ids);
 		}
 		return knex('patient_objects')
 			.insert({ ...diagnose, type: 'DIAGNOSE' }, '*')
@@ -129,6 +133,9 @@ export default class Users {
 		if ('fields' in diagnose) {
 			diagnose.fields = JSON.stringify(diagnose.fields);
 		}
+		if ('fillers_ids' in diagnose) {
+			diagnose.fillers_ids = JSON.stringify(diagnose.fillers_ids);
+		}
 		return knex('patient_objects')
 			.insert({ ...diagnose, type: 'TREATMENT_SUMMARY' }, '*')
 			.then(([row]) => row); // return inserted id
@@ -138,6 +145,7 @@ export default class Users {
 		return knex('patient_objects')
 			.where('patient_id', patient_id)
 			.andWhere('type', 'TREATMENT_SUMMARY')
+			.orderBy('id', 'DESC')
 			.select();
 	}
 

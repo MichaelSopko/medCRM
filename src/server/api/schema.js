@@ -361,8 +361,16 @@ const resolvers = {
 		},
 	},
 	Diagnose: {
-		fillers(diagnose, _, context) {
-			return diagnose && diagnose.patient_ids || context.Users.getUsers(safeParse(diagnose.fillers_ids, '{}'));
+		async fillers(diagnose, _, context) {
+			if (!diagnose || !diagnose.fillers_ids) return [];
+			const fillers = safeParse(diagnose.fillers_ids, '[]') || [];
+			const customFillers = fillers.filter(flr => isNaN(parseInt(flr))).map(flr => ({
+				id: -1,
+				first_name: flr,
+			}));
+			const realFillers = await context.Users.getUsers(fillers);
+			console.log([...realFillers, ...customFillers]);
+			return [...realFillers, ...customFillers];
 		},
 		fields(diagnose, _, ctx) {
 			return safeParse(diagnose.fields, '{}');
@@ -370,8 +378,16 @@ const resolvers = {
 	},
 	// TODO: union type
 	TreatmentSummary: {
-		fillers(diagnose, _, context) {
-			return diagnose && diagnose.patient_ids || context.Users.getUsers(safeParse(diagnose.fillers_ids, '{}'));
+		async fillers(diagnose, _, context) {
+			if (!diagnose || !diagnose.fillers_ids) return [];
+			const fillers = safeParse(diagnose.fillers_ids, '[]') || [];
+			const customFillers = fillers.filter(flr => isNaN(parseInt(flr))).map(flr => ({
+				id: -1,
+				first_name: flr,
+			}));
+			const realFillers = await context.Users.getUsers(fillers);
+			console.log([...realFillers, ...customFillers]);
+			return [...realFillers, ...customFillers];
 		},
 		fields(diagnose, _, ctx) {
 			return safeParse(diagnose.fields, '{}');
