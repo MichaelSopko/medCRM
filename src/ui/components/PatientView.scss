@@ -5,7 +5,11 @@
 }
 
 .PatientView {
-
+	.ant-tabs-bar {
+		display: flex;
+		justify-content: space-between;
+		flex-direction: row-reverse;
+	}
 	.ant-tabs-card > .ant-tabs-content {
 		margin-top: -16px !important;
 	}

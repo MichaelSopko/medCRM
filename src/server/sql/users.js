@@ -129,6 +129,18 @@ export default class Users {
 			.then(([row]) => row); // return inserted id
 	}
 
+	editDiagnose(id, diagnose) {
+		if ('fields' in diagnose) {
+			diagnose.fields = JSON.stringify(diagnose.fields);
+		}
+		if ('fillers_ids' in diagnose) {
+			diagnose.fillers_ids = JSON.stringify(diagnose.fillers_ids);
+		}
+		return knex('patient_objects')
+			.where('id', id)
+			.update(diagnose);
+	}
+
 	addTreatmentSummary(diagnose) {
 		if ('fields' in diagnose) {
 			diagnose.fields = JSON.stringify(diagnose.fields);
@@ -139,6 +151,18 @@ export default class Users {
 		return knex('patient_objects')
 			.insert({ ...diagnose, type: 'TREATMENT_SUMMARY' }, '*')
 			.then(([row]) => row); // return inserted id
+	}
+
+	editTreatmentSummary(id, diagnose) {
+		if ('fields' in diagnose) {
+			diagnose.fields = JSON.stringify(diagnose.fields);
+		}
+		if ('fillers_ids' in diagnose) {
+			diagnose.fillers_ids = JSON.stringify(diagnose.fillers_ids);
+		}
+		return knex('patient_objects')
+			.where('id', id)
+			.update(diagnose);
 	}
 
 	getTreatmentSummary(patient_id) {

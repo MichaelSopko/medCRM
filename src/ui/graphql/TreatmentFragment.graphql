@@ -2,6 +2,11 @@ fragment TreatmentFragment on TreatmentSeries {
     id
     name
     treatments_number
+    patient {
+        id
+        first_name
+        last_name
+    }
     treatments {
         id
         target

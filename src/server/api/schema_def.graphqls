@@ -433,6 +433,8 @@ type Mutation {
 
 	addTreatmentSummary(input: TreatmentSummaryInput!): Patient!
 	addDiagnose(input: DiagnoseInput!): Patient!
+	editTreatmentSummary(id: ID!, input: TreatmentSummaryInput!): Patient!
+	editDiagnose(id: ID!, input: DiagnoseInput!): Patient!
 
 }
 

@@ -24,6 +24,7 @@ import {
 	notification,
 	message,
 } from 'antd'
+import ColorHash from 'color-hash'
 
 
 import PATIENTS_LIST_QUERY from '../../patient/graphql/PatientsList.graphql'
@@ -38,9 +39,14 @@ import './Calendar.scss'
 
 BigCalendar.momentLocalizer(moment);
 
+const colorHash = new ColorHash();
+
+const getColorForEvent = (event) => ({
+	style: { backgroundColor: colorHash.hex(event.patient.id) }
+})
+
 const TreatmentsCalendar = ({ data: { loading, treatmentSeries = [], therapists = [] }, currentUser, currentClinic }) => {
 
-	console.log(treatmentSeries);
 
 	let events = [];
 	treatmentSeries.forEach(series => {
@@ -49,15 +55,18 @@ const TreatmentsCalendar = ({ data: { loading, treatmentSeries = [], therapists 
 	events = events.map(treatment => ({
 		start: new Date(treatment.start_date),
 		end: new Date(treatment.end_date),
-		title: treatment.series.name,
+		title: `${treatment.series.patient.first_name} ${treatment.series.patient.last_name}`,
+		patient: treatment.series.patient,
 	}));
 
+	console.log(events);
 
 	return (
 		<div>
 			{ currentClinic.id && <BigCalendar
 				rtl={!__DEV__}
 				events={events}
+				eventPropGetter={getColorForEvent}
 			/> }
 		</div>
 	);
@@ -83,10 +92,16 @@ class Calendar extends Component {
 		data: PropTypes.object,
 	};
 
-	state = {}
+	state = {
+		patientId: undefined
+	}
 
 	onPatientChange = id => {
 		this.setState({ patientId: id });
+	}
+
+	resetFilter = () => {
+		this.onPatientChange(undefined);
 	}
 
 	render() {
@@ -102,7 +117,9 @@ class Calendar extends Component {
 						</h1>
 						<div className="Dashboard__Actions">
 							<div>
-								<PatientSelector allowClear showArchived={false} onChange={this.onPatientChange} />
+								<Checkbox style={{ marginRight: 8 }} checked={!patientId}
+								          onChange={this.resetFilter}>{ formatMessage({ id: 'Calendar.show_all' }) }</Checkbox>
+								<PatientSelector value={patientId} allowClear showArchived={false} onChange={this.onPatientChange} />
 							</div>
 							<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
 								<ClinicsSelector />

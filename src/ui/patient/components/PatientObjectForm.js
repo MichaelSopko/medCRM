@@ -8,12 +8,13 @@ import withCurrentUser from '../../../utils/withCurrentUser';
 
 const PatientObjectForm = (props, context) => {
 	const formatMessage = context.intl.formatMessage;
-	const { patient, visible, onSubmit, onCancel, form, loading, title, therapists, currentUser, showHearingTest, renderFields } = props;
+	const { patient, visible, onSubmit, onCancel, form, loading, title, therapists, currentUser, showHearingTest, renderFields, object } = props;
 	const { getFieldDecorator } = form;
 	const formItemLayout = {
 		labelCol: { span: 6 },
 		wrapperCol: { span: 14 },
 	};
+	const isEditing = !!Object.keys(object).length;
 
 	let bdate = moment(patient.birth_date);
 	let diff = moment.duration(moment().diff(bdate));
@@ -23,10 +24,18 @@ const PatientObjectForm = (props, context) => {
 		days: diff.days() || '0',
 	};
 
+	let selectedFillers = [];
+	if (currentUser.role === 'THERAPIST' && !isEditing) {
+		selectedFillers.push(currentUser.id.toString());
+	}
+	if (isEditing) {
+		selectedFillers = object.fillers.map(t => t.id == -1 ? t.first_name : t.id.toString());
+	}
+
 	return (
 		<Modal title={title}
 		       visible={visible}
-		       okText={ formatMessage({ id: 'common.action_create' }) }
+		       okText={ isEditing ? formatMessage({ id: 'common.action_edit' }) : formatMessage({ id: 'common.action_create' }) }
 		       onOk={onSubmit}
 		       onCancel={onCancel}
 		       width={1000}
@@ -38,7 +47,7 @@ const PatientObjectForm = (props, context) => {
 					hasFeedback
 				>
 					{getFieldDecorator('date', {
-						initialValue: moment(),
+						initialValue: moment(object.date || new Date),
 						validateTrigger: 'onBlur',
 						rules: [{
 							required: true,
@@ -53,7 +62,7 @@ const PatientObjectForm = (props, context) => {
 					hasFeedback
 				>
 					{getFieldDecorator('fillers_ids', {
-						initialValue: currentUser.role === 'THERAPIST' ? [currentUser.id.toString()] : [],
+						initialValue: selectedFillers,
 						validateTrigger: 'onBlur',
 						rules: [{
 							required: true,
@@ -127,6 +136,7 @@ const PatientObjectForm = (props, context) => {
 					label={formatMessage({ id: 'DiagnoseTab.hearing_test_remarks' })}
 				>
 					{getFieldDecorator('hearing_test_remark', {
+						initialValue: object.hearing_test_remark,
 						rules: [],
 					})(
 						<Input type='textarea' />,
@@ -138,13 +148,13 @@ const PatientObjectForm = (props, context) => {
 					label={formatMessage({ id: 'DiagnoseTab.hearing_test_date' })}
 				>
 					{getFieldDecorator('hearing_test_date', {
-						initialValue: moment(),
+						initialValue: moment(object.hearing_test_date || new Date()),
 						rules: [],
 					})(
 						<DatePicker />,
 					)}
 				</Form.Item> }
-				{ renderFields(form) }
+				{ object.fields && renderFields(form, object.fields) }
 			</Form>
 		</Modal>
 	);

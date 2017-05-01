@@ -315,6 +315,22 @@ const resolvers = {
 			pubsub.publish('patientUpdated', patient);
 			return patient;
 		},
+		async editDiagnose(_, { id, input }, ctx) {
+			await checkAccess(ctx, ROLES.THERAPIST)
+			const { Users } = ctx;
+			await Users.editDiagnose(id, input);
+			const patient = await Users.findOne(input.patient_id);
+			pubsub.publish('patientUpdated', patient);
+			return patient;
+		},
+		async editTreatmentSummary(_, { id, input }, ctx) {
+			await checkAccess(ctx, ROLES.THERAPIST)
+			const { Users } = ctx;
+			await Users.editTreatmentSummary(id, input);
+			const patient = await Users.findOne(input.patient_id);
+			pubsub.publish('patientUpdated', patient);
+			return patient;
+		},
 	},
 	Subscription: {
 		patientCreated(patient) {
@@ -402,6 +418,9 @@ const resolvers = {
 		treatments(series, _, context) {
 			return series && series.treatments || context.Treatments.getTreatments(series.id);
 		},
+		patient(series, _, ctx) {
+			return ctx.Users.findOne(series.patient_id);
+		}
 	},
 	Treatment: {
 		therapists(treatment, _, context) {

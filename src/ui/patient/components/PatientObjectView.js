@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Modal, Button, Col, Row } from 'antd';
+import { Modal, Button, Col, Row, Spin } from 'antd';
 import moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 
@@ -7,7 +7,7 @@ import './PatientObjectView.scss';
 
 const PatientObjectView = (props, context) => {
 	const formatMessage = context.intl.formatMessage;
-	const { object, patient, renderFields, showHearingTest, ...modalProps } = props;
+	const { object, patient, renderFields, showHearingTest, loading } = props;
 	const ageDiff = object && moment.duration(parseInt(object.patient_age));
 
 	console.log(ageDiff);
@@ -15,14 +15,37 @@ const PatientObjectView = (props, context) => {
 	const { __typename, ...fields } = object.fields || {};
 
 	return (
-		<Modal
-			className='PatientObjectView'
-			cancelText={formatMessage({ id: 'common.action_cancel' })}
-			okText={formatMessage({ id: 'common.action_print' })}
-			closable={false}
-			width={1024}
-			{...modalProps}>
-			{ object && Object.keys(object).length && <Row>
+		<Spin spinning={loading}>
+			{ !!patient && object && Object.keys(object).length && <Row>
+				<Col span={12}>
+					<table className='PatientObjectView__Table'>
+						<tr>
+							<td>{formatMessage({ id: 'Patients.diagnose_date' })}:</td>
+							<td>{moment(object.date).format('L')}</td>
+						</tr>
+						<tr>
+							<td>{formatMessage({ id: 'Patients.age_in_diagnose' })}:</td>
+							<td>
+								<FormattedMessage id='Patients.age' values={{
+									years: ageDiff.years() || '0',
+									months: ageDiff.months() || '0',
+									days: ageDiff.days() || '0',
+								}} />
+							</td>
+						</tr>
+						{ showHearingTest && !!object.hearing_test_date && <tr>
+							<td>{formatMessage({ id: 'Patients.hearing_test' })}:</td>
+							<td>
+								<p>{object.hearing_test_remark}</p>
+								<strong>{moment(object.hearing_test_date).format('L')}</strong>
+							</td>
+						</tr> }
+						<tr>
+							<td>{formatMessage({ id: 'Patients.print_date' })}:</td>
+							<td>{moment().format('L')}</td>
+						</tr>
+					</table>
+				</Col>
 				<Col span={12}>
 					<table className='PatientObjectView__Table'>
 						<tr>
@@ -66,40 +89,11 @@ const PatientObjectView = (props, context) => {
 						</tr>
 					</table>
 				</Col>
-				<Col span={12}>
-					<table className='PatientObjectView__Table'>
-						<tr>
-							<td>{formatMessage({ id: 'Patients.diagnose_date' })}:</td>
-							<td>{moment(object.date).format('L')}</td>
-						</tr>
-						<tr>
-							<td>{formatMessage({ id: 'Patients.age_in_diagnose' })}:</td>
-							<td>
-								<FormattedMessage id='Patients.age' values={{
-									years: ageDiff.years() || '0',
-									months: ageDiff.months() || '0',
-									days: ageDiff.days() || '0',
-								}} />
-							</td>
-						</tr>
-						{ showHearingTest && <tr>
-							<td>{formatMessage({ id: 'Patients.hearing_test' })}:</td>
-							<td>
-								<p>{object.hearing_test_remark}</p>
-								<strong>{moment(object.hearing_test_date).format('L')}</strong>
-							</td>
-						</tr> }
-						<tr>
-							<td>{formatMessage({ id: 'Patients.print_date' })}:</td>
-							<td>{moment().format('L')}</td>
-						</tr>
-					</table>
-				</Col>
 			</Row> }
 			<Row>
 				{renderFields && fields && renderFields(fields)}
 			</Row>
-		</Modal>
+		</Spin>
 	);
 };
 
