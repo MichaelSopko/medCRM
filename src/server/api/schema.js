@@ -75,7 +75,7 @@ const resolvers = {
 		},
 	},
 	Mutation: {
-		addClinic(_, clinic, context) {
+		addClinic(_, { clinic }, context) {
 			return checkAccess(context, ROLES.SYSTEM_ADMIN)
 				.then(() => context.Clinics.addClinic(clinic))
 				.then(([id]) => context.Clinics.findOne(clinic))
