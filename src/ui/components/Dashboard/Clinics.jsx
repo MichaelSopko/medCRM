@@ -149,9 +149,7 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('disabled', {
 							initialValue: values.disabled,
-							validateTrigger: 'onBlur', rules: [{
-								required: true
-							}],
+							validateTrigger: 'onBlur', rules: [],
 						})(
 							<Switch/>
 						)}
