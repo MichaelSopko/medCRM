@@ -78,7 +78,7 @@ const resolvers = {
 		addClinic(_, { clinic }, context) {
 			return checkAccess(context, ROLES.SYSTEM_ADMIN)
 				.then(() => context.Clinics.addClinic(clinic))
-				.then(([id]) => context.Clinics.findOne(clinic))
+				.then(([id]) => context.Clinics.findOne(id))
 		},
 		editClinic(_, { id, clinic }, context) {
 			return checkAccess(context, ROLES.SYSTEM_ADMIN)
