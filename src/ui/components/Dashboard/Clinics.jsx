@@ -108,7 +108,9 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('treatment_duration', {
 							initialValue: values.treatment_duration,
-							validateTrigger: 'onBlur', rules: [],
+							validateTrigger: 'onBlur', rules: [{
+								required: true
+							}],
 						})(
 							<Input type='number' />
 						)}
@@ -120,7 +122,9 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('patients_limit', {
 							initialValue: values.patients_limit,
-							validateTrigger: 'onBlur', rules: [],
+							validateTrigger: 'onBlur', rules: [{
+								required: true
+							}],
 						})(
 							<Input type='number' />
 						)}
@@ -132,7 +136,9 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('archive_time', {
 							initialValue: values.archive_time,
-							validateTrigger: 'onBlur', rules: [],
+							validateTrigger: 'onBlur', rules: [{
+								required: true
+							}],
 						})(
 							<Input type='number' />
 						)}
@@ -143,7 +149,9 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('disabled', {
 							initialValue: values.disabled,
-							validateTrigger: 'onBlur', rules: [],
+							validateTrigger: 'onBlur', rules: [{
+								required: true
+							}],
 						})(
 							<Switch/>
 						)}
