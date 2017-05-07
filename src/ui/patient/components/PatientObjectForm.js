@@ -154,7 +154,7 @@ const PatientObjectForm = (props, context) => {
 						<DatePicker />,
 					)}
 				</Form.Item> }
-				{ object.fields && renderFields(form, object.fields) }
+				{ renderFields(form, object.fields || {}) }
 			</Form>
 		</Modal>
 	);
