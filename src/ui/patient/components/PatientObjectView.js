@@ -24,6 +24,10 @@ const PatientObjectView = (props, context) => {
 							<td>{moment(object.date).format('L')}</td>
 						</tr>
 						<tr>
+							<td>{formatMessage({ id: 'common.field_birth_date' })}:</td>
+							<td>{moment(patient.birth_date).format('L')}</td>
+						</tr>
+						<tr>
 							<td>{formatMessage({ id: 'Patients.age_in_diagnose' })}:</td>
 							<td>
 								<FormattedMessage id='Patients.age' values={{
@@ -81,7 +85,7 @@ const PatientObjectView = (props, context) => {
 									{object.fillers.map(flr => (
 										<li>{flr.first_name} {flr.last_name}
 											{!!flr.role &&
-											<span>, {formatMessage({ id: 'common.field_licence' })} {flr.license_number}, {formatMessage({ id: `roles.${flr.role}` })}
+											<span>, {formatMessage({ id: 'common.field_licence' })} {flr.license_number}
 										</span>} </li>
 									))}
 								</ul>

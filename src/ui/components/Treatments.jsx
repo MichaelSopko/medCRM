@@ -203,7 +203,7 @@ const TreatmentForm = Form.create()(
 						hasFeedback
 					>
 						{getFieldDecorator('end_date', {
-							initialValue: values.end_date,
+							initialValue: values.end_date || moment().add(currentClinic.treatment_duration, 'minutes'),
 							validateTrigger: 'onBlur', rules: [{
 								type: 'object', required: true,
 							}],
@@ -254,24 +254,26 @@ const TreatmentsTable = ({ treatments, deleteTreatment, editTreatment, formatMes
 		{
 			title: formatMessage({ id: 'Treatments.field_target' }), dataIndex: 'target', key: 'target',
 			width: '15%',
+			sorter: (a, b) => a.field_target > b.field_target,
 			render: (text, record) => <div className="to-dynamic-container">
 				<span className="to-dynamic">{text}</span>
 			</div>,
 		},
 		{
-			title: formatMessage({ id: 'Treatments.field_start_date' }), dataIndex: 'start_date', key: 'start_date',
-			width: '15%',
+			title: formatMessage({ id: 'Treatments.field_start_date_header' }), dataIndex: 'start_date', key: 'start_date',
+			width: '30%',
+			sorter: (a, b) => moment(a.start_date).valueOf() > moment(b.start_date).valueOf(),
 			render: (text, record) => <div className="to-dynamic-container">
 				<span className="to-dynamic">{moment(text).format('ddd, Do MMMM LT')}</span>
 			</div>,
 		},
-		{
+/*		{
 			title: formatMessage({ id: 'Treatments.field_end_date' }), dataIndex: 'end_date', key: 'end_date',
 			width: '15%',
 			render: (text, record) => <div className="to-dynamic-container">
 				<span className="to-dynamic">{moment(text).format('ddd, Do MMMM LT')}</span>
 			</div>,
-		},
+		},*/
 		{
 			title: formatMessage({ id: 'Treatments.field_therapists' }),
 			dataIndex: 'therapists',
@@ -488,6 +490,7 @@ class Treatments extends Component {
 			title: formatMessage({ id: 'common.field_name' }),
 			key: 'name',
 			dataIndex: 'name',
+			sorter: (a, b) => a.name > b.name,
 			render: text => <div className="to-dynamic-container">
 				<span className="to-dynamic">{ text }</span>
 			</div>,
@@ -496,6 +499,7 @@ class Treatments extends Component {
 			title: formatMessage({ id: 'Treatments.field_treatments_number' }),
 			key: 'treatments_number',
 			dataIndex: 'treatments_number',
+			sorter: (a, b) => a.treatments_number > b.treatments_number,
 		}, {
 			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',

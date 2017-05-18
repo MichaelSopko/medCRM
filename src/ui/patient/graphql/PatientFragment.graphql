@@ -19,6 +19,8 @@ fragment PatientFragment on Patient {
         receive_updates
     }
     health_maintenance
+    archived_date
+
     files {
         ...PatientFilesFields
     }

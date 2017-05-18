@@ -24,7 +24,7 @@ class PatientObjectPrintPage extends Component {
 		if (newProps.data && newProps.data.patient && !newProps.data.loading && !this.printed) {
 			setTimeout(() => {
 				window.print();
-			}, 500);
+			}, 1000);
 			this.printed = true;
 		}
 	}
@@ -47,21 +47,23 @@ class PatientObjectPrintPage extends Component {
 	renderDiagnoseFields = (fields) => {
 		return fields && (
 				<Col style={{ margin: 12 }}>
-					{Object.keys(fields).map((key, i) => fields[key] && (
+					{Object.keys(fields).map((key, i) => (
 						<div style={{ marginTop: 12 }}>
 							{ i === 0 && <h3>
-								<FormattedMessage id={`DiagnoseTab.tab1`} />
+								<FormattedMessage id={`DiagnoseTab.tab1`} />:
 							</h3> }
 							{ i === 9 && <h3>
-								<FormattedMessage id={`DiagnoseTab.tab2`} />
+								<FormattedMessage id={`DiagnoseTab.tab2`} />:
 							</h3> }
 							{ i === 17 && <h3>
-								<FormattedMessage id={`DiagnoseTab.tab3`} />
+								<FormattedMessage id={`DiagnoseTab.tab3`} />:
 							</h3> }
 							<h4>
-								<FormattedMessage id={`DiagnoseTab.${key}`} />
+								<FormattedMessage id={`DiagnoseTab.${key}`} />:
 							</h4>
-							<p>{fields[key]}</p>
+							<p>{fields[key] || <span style={{ fontStyle: 'italic' }}>
+								<FormattedMessage id={`Patients.field_empty`} />
+							</span>}</p>
 						</div>
 					))}
 				</Col>

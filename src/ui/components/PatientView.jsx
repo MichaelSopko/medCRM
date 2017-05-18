@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { graphql, compose, withApollo } from 'react-apollo'
 import moment from 'moment';
+import { connect } from 'react-redux';
 
 import {
 	Table,
@@ -19,6 +20,8 @@ import {
 	message,
 	Spin,
 	Tabs,
+	Tooltip,
+	Checkbox,
 } from 'antd'
 const TabPane = Tabs.TabPane
 import { FormattedMessage } from 'react-intl'
@@ -43,6 +46,84 @@ import ADD_PATIENT_FILE_MUTATION from '../patient/graphql/addPatientFile.mutatio
 import DELETE_PATIENT_FILE_MUTATION from '../patient/graphql/deletePatientFile.mutation.graphql'
 
 import './PatientView.scss'
+
+const RelatedPersonForm = Form.create()(
+	({ form: { getFieldDecorator }, loading, visible, onSubmit, onCancel, formatMessage }) => {
+		const formItemLayout = {
+			labelCol: { span: 6 },
+			wrapperCol: { span: 14 },
+		};
+
+		return (
+			<Modal title={ formatMessage({ id: 'Patients.add_related_persons' }) }
+			       visible={visible}
+			       okText={ formatMessage({ id: 'common.action_create' }) }
+			       onCancel={onCancel}
+			       onOk={onSubmit}
+			       width={340}
+			       confirmLoading={loading}>
+				<Form>
+					<Form.Item
+						hasFeedback
+					>
+						{getFieldDecorator(`type`, {
+							validateTrigger: 'onBlur',
+							rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_type_error' }) }],
+						})(
+							<Select placeholder={formatMessage({ id: 'Patients.field_person_type' })}>
+								{ Object.keys(RELATED_PERSONS).map(key => <Select.Option value={key} key={key}>
+									{formatMessage({ id: `related_persons.${RELATED_PERSONS[key]}` })}
+								</Select.Option>) }
+							</Select>,
+						)}
+					</Form.Item>
+					<Form.Item
+						hasFeedback
+					>
+						{getFieldDecorator(`description`, {
+							validateTrigger: 'onBlur', rules: [],
+						})(
+							<Input placeholder={formatMessage({ id: 'Patients.field_person_description' })} />,
+						)}
+					</Form.Item>
+					<Form.Item
+						hasFeedback
+					>
+						{getFieldDecorator(`phone`, {
+							validateTrigger: 'onBlur',
+							rules: [{ required: true, message: formatMessage({ id: 'common.field_phone_error' }) }],
+						})(
+							<Input type="number" placeholder={formatMessage({ id: 'common.field_phone' })} />,
+						)}
+					</Form.Item>
+					<Form.Item
+						hasFeedback
+					>
+						{getFieldDecorator(`email`, {
+							validateTrigger: 'onBlur',
+							rules: [{ type: 'email', message: formatMessage({ id: 'common.field_email_error' }) }],
+						})(
+							<Input type="email" placeholder={formatMessage({ id: 'common.field_email' })} />,
+						)}
+					</Form.Item>
+					<Form.Item
+						hasFeedback
+					>
+						{getFieldDecorator(`receive_updates`, {
+							validateTrigger: 'onBlur',
+							valuePropName: 'checked',
+							rules: [],
+						})(
+							<Checkbox>
+								{formatMessage({ id: 'Patients.field_receive_updates' })}
+							</Checkbox>,
+						)}
+					</Form.Item>
+				</Form>
+			</Modal>
+		);
+	},
+);
 
 const FilesTab = ({ patient, onAddFile, onDeleteFile }, context) => {
 	const formatMessage = context.intl.formatMessage;
@@ -106,7 +187,7 @@ FilesTab.contextTypes = {
 }
 
 
-const RelatedPersonsTable = ({ patient }, context) => {
+const RelatedPersonsTable = ({ patient, showRelatedPersonForm }, context) => {
 	const formatMessage = context.intl.formatMessage;
 	const columns = [{
 		title: formatMessage({ id: 'Patients.field_person_type' }),
@@ -136,7 +217,14 @@ const RelatedPersonsTable = ({ patient }, context) => {
 			</div>,
 		}];
 
-	return <Table dataSource={patient.related_persons} columns={columns} pagination={false} rowKey='phone' />
+	return (
+		<div>
+			<Table dataSource={patient.related_persons} columns={columns} pagination={false} rowKey='phone' />
+			<br />
+			<Button onClick={showRelatedPersonForm}
+			        type='dashed'>{formatMessage({ id: 'Patients.add_related_persons' })}</Button>
+		</div>
+	);
 };
 
 RelatedPersonsTable.contextTypes = {
@@ -144,7 +232,7 @@ RelatedPersonsTable.contextTypes = {
 }
 
 
-const DetailsTab = ({ patient }, context) => {
+const DetailsTab = ({ patient, showRelatedPersonForm }, context) => {
 	const formatMessage = context.intl.formatMessage;
 
 	let bdate = moment(patient.birth_date);
@@ -181,6 +269,11 @@ const DetailsTab = ({ patient }, context) => {
 				</div>
 
 				<div className="Details__field">
+					<div className="Details__field-name">{ formatMessage({ id: 'common.field_birth_date' }) }</div>
+					<div className="Details__field-value">{moment(patient.birth_date).format('L')}</div>
+				</div>
+
+				<div className="Details__field">
 					<div className="Details__field-name">{ formatMessage({ id: 'common.field_phone' }) }</div>
 					<div className="Details__field-value">
 						<a href={ `tel:${patient.phone}` }>{patient.phone}</a>
@@ -202,7 +295,7 @@ const DetailsTab = ({ patient }, context) => {
 			</div>
 
 			<div className="Details__related-persons">
-				<RelatedPersonsTable patient={patient} />
+				<RelatedPersonsTable showRelatedPersonForm={showRelatedPersonForm} patient={patient} />
 			</div>
 
 		</div>
@@ -214,6 +307,7 @@ DetailsTab.contextTypes = {
 }
 
 @compose(
+	connect(({ currentClinic, currentUser }) => ({ currentClinic, currentUser })),
 	graphql(GET_PATIENT_QUERY, {
 		options: ({ patientId }) => ({
 			variables: { id: patientId },
@@ -267,6 +361,8 @@ class PatientView extends Component {
 
 	state = {
 		archiveLoading: false,
+		formLoading: false,
+		showRelatedPersonForm: false,
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -311,14 +407,14 @@ class PatientView extends Component {
 
 	onAddDiagnose = (diagnose) => {
 		const { archived, __typename, ...patient } = this.props.data.patient;
-		patient.related_persons = [...patient.related_persons.map(({ __typename, ...p }) => p)]
+		// patient.related_persons = [...patient.related_persons.map(({ __typename, ...p }) => p)]
 		patient.diagnoses = [diagnose, ...patient.diagnoses];
 		this.props.editPatient(patient);
 	}
 
 	onAddTreatmentSummary = (summary) => {
 		const { archived, __typename, ...patient } = this.props.data.patient;
-		patient.related_persons = [...patient.related_persons.map(({ __typename, ...p }) => p)]
+		// patient.related_persons = [...patient.related_persons.map(({ __typename, ...p }) => p)]
 		patient.treatment_summary = [summary, ...patient.treatment_summary];
 		this.props.editPatient(patient);
 	}
@@ -338,9 +434,52 @@ class PatientView extends Component {
 		}
 	}
 
+	onRelatedPersonSubmit = () => {
+		const form = this.relatedPersonForm;
+
+		form.validateFields((err, values) => {
+			if (err) {
+				return;
+			}
+			this.setState({ formLoading: true });
+			const { __typename, archived, archived_date, files, ...patient } = this.props.data.patient;
+			patient.related_persons = [...patient.related_persons.map(({ __typename, ...p }) => p), values];
+			this.props.editPatient(patient)
+				.then(() => {
+					this.setState({ formLoading: false, showRelatedPersonForm: false });
+				})
+				.catch((e) => {
+					this.setState({ formLoading: false });
+					console.error(e);
+					notification.error(e);
+				})
+		});
+	}
+
+	showRelatedPersonForm = () => {
+		this.setState({ showRelatedPersonForm: true });
+	}
+
+	hideRelatedPersonForm = () => {
+		this.setState({ showRelatedPersonForm: false });
+	}
+
+	deleteRelatedPerson = idx => () => {
+		const { __typename, archived, archived_date, files, ...patient } = this.props.data.patient;
+		patient.related_persons = patient.related_persons.map(({ __typename, ...p }) => p).splice(idx, 1);
+		this.props.editPatient(patient)
+			.then(() => {
+				// success
+			})
+			.catch((e) => {
+				console.error(e);
+				notification.error(e);
+			})
+	}
+
 	render() {
-		const { data, id, onEdit } = this.props;
-		const { archiveLoading } = this.state;
+		const { data, id, onEdit, currentUser, currentClinic } = this.props;
+		const { archiveLoading, formLoading, showRelatedPersonForm } = this.state;
 		const formatMessage = this.context.intl.formatMessage;
 
 		if (!data) {
@@ -362,19 +501,50 @@ class PatientView extends Component {
 			</div>
 		}
 
+		const archivedForNow = moment(patient.archived_date).diff(moment(), 'minutes');
+		const minutes = currentClinic.archive_time - archivedForNow;
+		const canUnarchive = !(currentUser.role !== 'SYSTEM_ADMIN' && !currentClinic.archive_time && minutes > 0)
+
 		return (
 			<div className='PatientView'>
+				<RelatedPersonForm
+					loading={formLoading}
+					onCancel={this.hideRelatedPersonForm}
+					onSubmit={this.onRelatedPersonSubmit}
+					visible={showRelatedPersonForm}
+					formatMessage={formatMessage}
+					ref={ form => {
+						this.relatedPersonForm = form
+					} }
+				/>
 				<Tabs
 					animated={false}
 					tabBarExtraContent={ <div>
 						<Button icon='edit' style={{ marginLeft: 8 }}
 						        onClick={onEdit(patient)}>{ formatMessage({ id: 'common.action_edit' }) }</Button>
 						{ patient.archived
-							? <Button type='primary' style={{ backgroundColor: '#00A854' }} loading={archiveLoading}
-							          onClick={this.onUnarchiveClick}
-							          icon='unlock'>{ formatMessage({ id: 'common.action_unarchive' }) }</Button>
-							: <Button type='danger' loading={archiveLoading} onClick={this.props.archivePatient}
-							          icon='lock'>{ formatMessage({ id: 'common.action_archive' }) }</Button>
+							? (<Tooltip
+								title={ !canUnarchive && formatMessage({ id: 'Patients.archive_error_time' }, { time: minutes })}>
+								<Button
+									type='primary'
+									style={{ backgroundColor: '#00A854' }}
+									loading={archiveLoading}
+									onClick={this.onUnarchiveClick}
+									disabled={!canUnarchive}
+									icon='unlock'>
+									{ formatMessage({ id: 'common.action_unarchive' }) }
+								</Button>
+							</Tooltip> )
+							: (
+								<Popconfirm
+									title={formatMessage({ id: 'common.confirm_message' })}
+									onConfirm={this.props.archivePatient}
+									okText={formatMessage({ id: 'common.confirm_yes' })}
+									cancelText={formatMessage({ id: 'common.confirm_no' })}>
+									<Button type='danger' loading={archiveLoading}
+									        icon='lock'>{ formatMessage({ id: 'common.action_archive' }) }</Button>
+								</Popconfirm>
+							)
 						}
 					</div> }
 					type="card">
@@ -382,13 +552,13 @@ class PatientView extends Component {
 						className='PatientView__Tab'
 						tab={ formatMessage({ id: 'Patients.tabs.details' }) }
 						key="details">
-						<DetailsTab patient={patient} />
+						<DetailsTab patient={patient} showRelatedPersonForm={this.showRelatedPersonForm} />
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
 						tab={ formatMessage({ id: 'Patients.tabs.diagnoses' }) }
 						key="diagnoses">
-						<DiagnoseTab patient={patient}/>
+						<DiagnoseTab patient={patient} />
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
@@ -400,7 +570,7 @@ class PatientView extends Component {
 						className='PatientView__Tab'
 						tab={ formatMessage({ id: 'Patients.tabs.treatment_summary' }) }
 						key="treatment_summary">
-						<TreatmentSummaryTab patient={patient}/>
+						<TreatmentSummaryTab patient={patient} />
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'

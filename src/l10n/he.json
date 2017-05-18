@@ -103,7 +103,8 @@
     "print_date": "Print date",
     "age_in_diagnose": "Age in diagnose",
     "patient_name": "Patient name",
-    "add_filler": "Add filler"
+    "add_filler": "Add filler",
+    "field_empty": "<מידע ריק>"
   },
   "TreatmentSummaryTab": {
     "create_title": "Generate treatment summary",
@@ -118,9 +119,9 @@
     "hearing_test": "Hearing test",
     "hearing_test_remarks": "Remarks for hearing test",
     "hearing_test_date": "Date",
-    "tab1": "General and evolutionary background",
-    "tab2": "Diagnose findings",
-    "tab3": "Summary",
+    "tab1": "רקע כללי והתפתחותי",
+    "tab2": "אבחון וממצאיו",
+    "tab3": "סיכום",
     "pregnancy_and_birth": "הריון ולידה",
     "psychomotor_progression": "התפתחות פסיכומוטורית",
     "language_and_speech_progression": "התפתחות דיבור ושפה",
@@ -131,7 +132,7 @@
     "environmental_context": "הקשר סביבתי",
     "parents_report": "דיווח הורים",
     "kindergarten_teacher_report": "דיווח גננת",
-    "diagnose_tools": "כל אבחון",
+    "diagnose_tools": "אבחון כלי",
     "behaviour_and_general_impression": "התנהגות והתרשמות כללית",
     "communications_skills": "מיומנויות תקשורת",
     "gaming_skills": "מיומנויות משחק ",
@@ -161,6 +162,7 @@
     "field_therapists": "מטפלים",
     "field_therapists_error": "נא לבחור לפחות אחד",
     "field_start_date": "התחלה",
+    "field_start_date_header": "ושעה תאריך",
     "field_end_date": "סוף",
     "update_email": {
       "subject": "עדכון טיפול עבור מטופל",

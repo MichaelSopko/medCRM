@@ -23,6 +23,7 @@ import {
 	Checkbox,
 	notification,
 	message,
+	Tooltip,
 } from 'antd'
 
 
@@ -45,6 +46,8 @@ import PatientView from '../PatientView';
 import PatientSelector from '../PatientSelector';
 
 import './Patients.scss'
+
+
 
 
 class Patients extends Component {
@@ -170,9 +173,9 @@ class Patients extends Component {
 	};
 
 	editEntity = entity => () => {
-		this.form.resetFields();
+		this.form.resetFields();/*
 		let relatedPersons = entity.related_persons || [];
-		relatedPersons = relatedPersons.map(person => ({ ...person, _id: Math.random().toString(36).substring(7) }));
+		relatedPersons = relatedPersons.map(person => ({ ...person, _id: Math.random().toString(36).substring(7) }));*/
 		this.setState({
 			modalOpened: true,
 			activeEntity: entity,
@@ -204,7 +207,7 @@ class Patients extends Component {
 	}
 
 	render() {
-		const { deletePatient, currentClinic } = this.props;
+		const { deletePatient, currentClinic, currentUser, data } = this.props;
 		const formatMessage = this.context.intl.formatMessage;
 		const { modalOpened, activeEntity, modalLoading, relatedPersons, currentPatientId, showArchived } = this.state;
 
@@ -262,6 +265,7 @@ class Patients extends Component {
 			),
 		}];
 
+		const canAddPatient = currentClinic.id && (currentUser.role === 'SYSTEM_ADMIN' || !currentClinic.patients_limit || (data && data.patients && data.patients.length < currentClinic.patients_limit));
 
 		return (
 			<div className="Container">
@@ -294,11 +298,13 @@ class Patients extends Component {
 								<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
 									<ClinicsSelector />
 								</CheckAccess>
-								<Button size='large' style={{ marginRight: 8 }} type="primary" onClick={ this.showModal }
-								        disabled={ !currentClinic.id }>
-									<Icon type="plus-circle-o" />
-									{ formatMessage({ id: 'Patients.create_button' }) }
-								</Button>
+								<Tooltip title={ !canAddPatient && formatMessage({ id: 'Patients.archive_error_limit' }, { limit: currentClinic.patients_limit }) }>
+									<Button size='large' style={{ marginRight: 8 }} type="primary" onClick={ this.showModal }
+									        disabled={ !canAddPatient }>
+										<Icon type="plus-circle-o" />
+										{ formatMessage({ id: 'Patients.create_button' }) }
+									</Button>
+								</Tooltip>
 							</div>
 						</div>
 					</div>
@@ -314,7 +320,19 @@ class Patients extends Component {
 }
 
 const PatientsWithApollo = withApollo(compose(
-	connect((state) => ({ currentClinic: state.currentClinic })),
+	connect(({ currentClinic, currentUser }) => ({ currentClinic, currentUser })),
+	graphql(gql`
+		query patients($clinic_id: Int!) {
+				patients(clinic_id: $clinic_id) {
+						id
+				}
+		}
+	`, {
+		options: ({ currentClinic, showArchived }) => ({
+			variables: { clinic_id: currentClinic.id, archived: showArchived },
+		}),
+		skip: ({ currentClinic }) => !(currentClinic && currentClinic.id),
+	}),
 	graphql(ADD_PATIENT_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
 			addPatient: (fields) => mutate({

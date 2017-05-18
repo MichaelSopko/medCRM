@@ -26,8 +26,7 @@ export default Form.create()(
 	(props) => {
 		const {
 			visible, onCancel, onSubmit, form, loading, values = {},
-			onUploadFileChange, addRelatedPerson, removeRelatedPerson,
-			relatedPersons, formatMessage,
+			onUploadFileChange, formatMessage,
 		} = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
@@ -41,82 +40,6 @@ export default Form.create()(
 			}
 			return e && e.fileList;
 		};
-
-		let relatedPersonsItems = relatedPersons.map(item => (
-			<div className="Patients__RelatedPersonsItem ant-form" key={item._id}>
-				<Button
-					title={formatMessage({ id: 'common.action_delete' })}
-					shape='circle'
-					type="ghost"
-					className='Patients__RelatedPersonsRemove'
-					size="small"
-					onClick={ () => {
-						removeRelatedPerson(item._id)
-					} }>
-					<Icon type="close" />
-				</Button>
-				<Form.Item
-					hasFeedback
-				>
-					{getFieldDecorator(`related_persons-${item._id}-type`, {
-						initialValue: item.type,
-						validateTrigger: 'onBlur',
-						rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_type_error' }) }],
-					})(
-						<Select placeholder={formatMessage({ id: 'Patients.field_person_type' })}>
-							{ Object.keys(RELATED_PERSONS).map(key => <Select.Option value={key} key={key}>
-								{formatMessage({ id: `related_persons.${RELATED_PERSONS[key]}` })}
-							</Select.Option>) }
-						</Select>,
-					)}
-				</Form.Item>
-				<Form.Item
-					hasFeedback
-				>
-					{getFieldDecorator(`related_persons-${item._id}-description`, {
-						initialValue: item.description,
-						validateTrigger: 'onBlur', rules: [],
-					})(
-						<Input placeholder={formatMessage({ id: 'Patients.field_person_description' })} />,
-					)}
-				</Form.Item>
-				<Form.Item
-					hasFeedback
-				>
-					{getFieldDecorator(`related_persons-${item._id}-phone`, {
-						initialValue: item.phone,
-						validateTrigger: 'onBlur',
-						rules: [{ required: true, message: formatMessage({ id: 'common.field_phone_error' }) }],
-					})(
-						<Input type="number" placeholder={formatMessage({ id: 'common.field_phone' })} />,
-					)}
-				</Form.Item>
-				<Form.Item
-					hasFeedback
-				>
-					{getFieldDecorator(`related_persons-${item._id}-email`, {
-						initialValue: item.email,
-						validateTrigger: 'onBlur',
-						rules: [{ type: 'email', message: formatMessage({ id: 'common.field_email_error' }) }],
-					})(
-						<Input type="email" placeholder={formatMessage({ id: 'common.field_email' })} />,
-					)}
-				</Form.Item>
-				<Form.Item
-					hasFeedback
-				>
-					{getFieldDecorator(`related_persons-${item._id}-receive_updates`, {
-						initialValue: item.receive_updates,
-						validateTrigger: 'onBlur',
-						valuePropName: 'checked',
-						rules: [],
-					})(
-						<Checkbox>
-							{formatMessage({ id: 'Patients.field_receive_updates' })}
-						</Checkbox>,
-					)}
-				</Form.Item>
-			</div>));
 
 		return (
 			<Modal title={ formatMessage({ id: isEditing ? 'Patients.edit_header' : 'Patients.create_header' }) }
@@ -280,23 +203,13 @@ export default Form.create()(
 									{ new Array(12).fill(12).map((_, i) => {
 										const y = _ - i;
 										return (<Select.Option key={i} value={(y - 1).toString()}>{moment.months()[y - 1]}</Select.Option>)
-									}) }
+									}).reverse() }
 								</Select>,
 							)}
 						</Col>
 
 					</Form.Item> }
 
-					{ <Form.Item
-						{...formItemLayout}
-						label={formatMessage({ id: 'Patients.field_related_persons' })}
-						hasFeedback
-					>
-						{ relatedPersonsItems }
-						<Button type="dashed" onClick={ addRelatedPerson }>
-							{formatMessage({ id: 'Patients.add_related_persons' })}
-						</Button>
-					</Form.Item> }
 				</Form>
 			</Modal>
 		);
