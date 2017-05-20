@@ -187,33 +187,39 @@ FilesTab.contextTypes = {
 }
 
 
-const RelatedPersonsTable = ({ patient, showRelatedPersonForm }, context) => {
+const RelatedPersonsTable = ({ patient, showRelatedPersonForm, deleteRelatedPerson }, context) => {
 	const formatMessage = context.intl.formatMessage;
 	const columns = [{
 		title: formatMessage({ id: 'Patients.field_person_type' }),
 		key: 'type',
-		width: '20%',
+		width: '22%',
 		sorter: (a, b) => a.type > b.type,
 		render: (text, record) => <span>{ formatMessage({ id: `related_persons.${record.type}` }) }</span>,
 	},
 		{
 			title: formatMessage({ id: 'common.field_phone' }),
-			width: '20%',
+			width: '22%',
 			key: 'phone',
 			render: (text, record) => <a href={`tel:${record.phone}`}>{record.phone}</a>,
 		},
 		{
 			title: formatMessage({ id: 'common.field_email' }),
-			width: '20%',
+			width: '22%',
 			key: 'email',
 			render: (text, record) => <a href={`mailto:${record.email}`}>{record.email}</a>,
 		},
 		{
 			title: formatMessage({ id: 'Patients.field_person_description' }),
-			width: '30%',
+			width: '22%',
 			key: 'description',
 			render: (text, record) => <div className="to-dynamic-container">
 				<span className="to-dynamic">{record.description}</span>
+			</div>,
+		},
+		{
+			width: '12%',
+			render: (text, record) => <div>
+				<Button onClick={deleteRelatedPerson(record.id)} icon='delete' type='circle' />
 			</div>,
 		}];
 
@@ -232,7 +238,7 @@ RelatedPersonsTable.contextTypes = {
 }
 
 
-const DetailsTab = ({ patient, showRelatedPersonForm }, context) => {
+const DetailsTab = ({ patient, showRelatedPersonForm, deleteRelatedPerson }, context) => {
 	const formatMessage = context.intl.formatMessage;
 
 	let bdate = moment(patient.birth_date);
@@ -295,7 +301,7 @@ const DetailsTab = ({ patient, showRelatedPersonForm }, context) => {
 			</div>
 
 			<div className="Details__related-persons">
-				<RelatedPersonsTable showRelatedPersonForm={showRelatedPersonForm} patient={patient} />
+				<RelatedPersonsTable showRelatedPersonForm={showRelatedPersonForm} patient={patient} deleteRelatedPerson={deleteRelatedPerson} />
 			</div>
 
 		</div>
@@ -552,7 +558,7 @@ class PatientView extends Component {
 						className='PatientView__Tab'
 						tab={ formatMessage({ id: 'Patients.tabs.details' }) }
 						key="details">
-						<DetailsTab patient={patient} showRelatedPersonForm={this.showRelatedPersonForm} />
+						<DetailsTab patient={patient} showRelatedPersonForm={this.showRelatedPersonForm} deleteRelatedPerson={this.deleteRelatedPerson} />
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'

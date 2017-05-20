@@ -26,7 +26,7 @@ import { withCurrentUser } from './helpers/withCurrentUser';
 import './Treatments.scss'
 
 import {
-	Table, Icon, Button, Modal, Input, Form, Popconfirm, Select, DatePicker, InputNumber, notification,
+	Table, Icon, Button, Modal, Input, Form, Popconfirm, Select, DatePicker, InputNumber, notification, Col,
 } from 'antd'
 
 const SeriesForm = Form.create()(
@@ -107,6 +107,23 @@ const TreatmentForm = Form.create()(
 			}
 		}
 
+		const onStartDateChange = () => {
+			setTimeout(() => {
+				const m = moment(form.getFieldValue('start_date')).add(currentClinic.treatment_duration, 'minutes');
+				console.log(m);
+				form.setFieldsValue({ end_date: {
+					year: m.year().toString(),
+					date: m.date().toString(),
+					month: m.month().toString(),
+					hours: m.hours().toString(),
+					minutes: m.minutes().toString(),
+				} })
+			}, 1);
+		}
+
+		const defaultStartMoment = moment(values.start_date || undefined);
+		const defaultEndMoment = moment(values.start_date || undefined).add(currentClinic.treatment_duration, 'minutes')
+
 		return (
 			<Modal title={ formatMessage({ id: isEditing ? 'Treatments.edit_header' : 'Treatments.create_header' }) }
 			       visible={visible}
@@ -176,7 +193,7 @@ const TreatmentForm = Form.create()(
 							<Input type="textarea" rows={3} />,
 						)}
 					</Form.Item> }
-					{ <Form.Item
+					{/*<Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'Treatments.field_start_date' })}
 						hasFeedback
@@ -196,25 +213,182 @@ const TreatmentForm = Form.create()(
 								}}
 								format="YYYY-MM-DD HH:mm:ss" />,
 						)}
+					</Form.Item>*/}
+
+					{ <Form.Item
+						{...formItemLayout}
+						label={formatMessage({ id: 'Treatments.field_start_date' })}
+					>
+						<Col span={4}>
+							{getFieldDecorator('start_date.year', {
+								initialValue: defaultStartMoment.year().toString(),
+								onChange: onStartDateChange,
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*',
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_year' })}>
+									{ new Array(100).fill(new Date().getFullYear()).map((_, i) => {
+										const y = _ - i;
+										return (<Select.Option key={i} value={y.toString()}>{y}</Select.Option>)
+									}) }
+								</Select>,
+							)}
+						</Col>
+						<Col span={4} offset={1}>
+							{getFieldDecorator('start_date.date', {
+								initialValue: defaultStartMoment.date().toString(),
+								onChange: onStartDateChange,
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*',
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_day' })}>
+									{ new Array(31).fill(1).map((_, i) => {
+										const y = ++i;
+										return (<Select.Option key={y} value={y.toString()}>{y}</Select.Option>)
+									}) }
+								</Select>,
+							)}
+						</Col>
+						<Col span={6} offset={1}>
+							{getFieldDecorator('start_date.month', {
+								initialValue: defaultStartMoment.month().toString(),
+								onChange: onStartDateChange,
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*',
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_month' })}>
+									{ new Array(12).fill(12).map((_, i) => {
+										const y = _ - i;
+										return (<Select.Option key={i} value={(y - 1).toString()}>{moment.months()[y - 1]}</Select.Option>)
+									}).reverse() }
+								</Select>,
+							)}
+						</Col>
+						<Col span={3} offset={1}>
+							{getFieldDecorator('start_date.hours', {
+								initialValue: defaultStartMoment.hours().toString(),
+								onChange: onStartDateChange,
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*',
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_hours' })}>
+									{ new Array(24).fill(24).map((_, i) => {
+										const y = _ - i;
+										return (<Select.Option key={i} value={(y - 1).toString()}>{(y - 1).toString().length === 1 && '0'}{y-1}</Select.Option>)
+									}).reverse() }
+								</Select>,
+							)}
+						</Col>
+						<Col span={1} style={{textAlign: 'center'}}>:</Col>
+						<Col span={3}>
+							{getFieldDecorator('start_date.minutes', {
+								initialValue: defaultStartMoment.minutes().toString(),
+								onChange: onStartDateChange,
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*',
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_minutes' })}>
+									{ new Array(60).fill(60).map((_, i) => {
+										const y = _ - i;
+										const val = (y-1).toString();
+										return (<Select.Option key={i} value={val}>{val.length === 1 && '0'}{val}</Select.Option>);
+									}).reverse() }
+								</Select>,
+							)}
+						</Col>
+
 					</Form.Item> }
+
+
 					{ <Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'Treatments.field_end_date' })}
-						hasFeedback
 					>
-						{getFieldDecorator('end_date', {
-							initialValue: values.end_date || moment().add(currentClinic.treatment_duration, 'minutes'),
-							validateTrigger: 'onBlur', rules: [{
-								type: 'object', required: true,
-							}],
-						})(
-							<DatePicker
-								showTime
-								disabledDate={(date) => form.getFieldValue('start_date').valueOf() > date }
-								placeholder={formatMessage({ id: 'Treatments.field_end_date' })}
-								format="YYYY-MM-DD HH:mm:ss" />,
-						)}
+						<Col span={4}>
+							{getFieldDecorator('end_date.year', {
+								initialValue: defaultEndMoment.year().toString(),
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*',
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_year' })}>
+									{ new Array(100).fill(new Date().getFullYear()).map((_, i) => {
+										const y = _ - i;
+										return (<Select.Option key={i} value={y.toString()}>{y}</Select.Option>)
+									}) }
+								</Select>,
+							)}
+						</Col>
+						<Col span={4} offset={1}>
+							{getFieldDecorator('end_date.date', {
+								initialValue: defaultEndMoment.date().toString(),
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*',
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_day' })}>
+									{ new Array(31).fill(1).map((_, i) => {
+										const y = ++i;
+										return (<Select.Option key={y} value={y.toString()}>{y}</Select.Option>)
+									}) }
+								</Select>,
+							)}
+						</Col>
+						<Col span={6} offset={1}>
+							{getFieldDecorator('end_date.month', {
+								initialValue: defaultEndMoment.month().toString(),
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*',
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_month' })}>
+									{ new Array(12).fill(12).map((_, i) => {
+										const y = _ - i;
+										return (<Select.Option key={i} value={(y - 1).toString()}>{moment.months()[y - 1]}</Select.Option>)
+									}).reverse() }
+								</Select>,
+							)}
+						</Col>
+						<Col span={3} offset={1}>
+							{getFieldDecorator('end_date.hours', {
+								initialValue: defaultEndMoment.hours().toString(),
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*',
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_hours' })}>
+									{ new Array(24).fill(24).map((_, i) => {
+										const y = _ - i;
+										return (<Select.Option key={i} value={(y - 1).toString()}>{(y - 1).toString().length === 1 && '0'}{y-1}</Select.Option>)
+									}).reverse() }
+								</Select>,
+							)}
+						</Col>
+						<Col span={1} style={{textAlign: 'center'}}>:</Col>
+						<Col span={3}>
+							{getFieldDecorator('end_date.minutes', {
+								initialValue: defaultEndMoment.minutes().toString(),
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*',
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_minutes' })}>
+									{ new Array(60).fill(60).map((_, i) => {
+										const y = _ - i;
+										const val = (y-1).toString();
+										return (<Select.Option key={i} value={val}>{val.length === 1 && '0'}{val}</Select.Option>);
+									}).reverse() }
+								</Select>,
+							)}
+						</Col>
+
 					</Form.Item> }
+
 					{ <Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'Treatments.field_therapists' })}
@@ -418,6 +592,10 @@ class Treatments extends Component {
 			if (err) {
 				return;
 			}
+			
+			values.start_date = moment(values.start_date);
+			values.end_date = moment(values.end_date);
+			
 			this.setState({ modalLoading: true });
 			isEditing ?
 				this.props.editSeries({ id: this.state.activeSeries.id, ...values }).then(() => {

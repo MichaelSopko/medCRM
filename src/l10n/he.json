@@ -170,8 +170,16 @@
     }
   },
   "Calendar": {
-    "header": "הראה טיפוליפ",
-    "show_all": "הראה הכל"
+    "header": "הראה טיפולים",
+    "show_all": "הראה הכל",
+    "allDay": "All day",
+    "previous": "הקודם",
+    "next": "הבא",
+    "today": "היום",
+    "month": "חודש",
+    "week": "שבוע",
+    "day": "יום",
+    "agenda": "רשימה"
   },
   "common": {
     "field_name": "שם",
@@ -214,6 +222,8 @@
     "field_year": "שנה",
     "field_month": "חודש",
     "field_day": "יום",
+    "field_hours": "hours",
+    "field_minutes": "minutes",
     "size": "גודל",
     "action_archive": "שלח לארכיון",
     "action_unarchive": "הוצא מארכיון",

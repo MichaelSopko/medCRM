@@ -25,7 +25,7 @@ import {
 	message,
 } from 'antd'
 import ColorHash from 'color-hash'
-
+import { FormattedMessage } from 'react-intl'
 
 import PATIENTS_LIST_QUERY from '../../patient/graphql/PatientsList.graphql'
 import GET_TREATMENTS_QUERY from '../../graphql/TreatmentsGet.graphql'
@@ -67,6 +67,22 @@ const TreatmentsCalendar = ({ data: { loading, treatmentSeries = [], therapists 
 				rtl={!__DEV__}
 				events={events}
 				eventPropGetter={getColorForEvent}
+				formats={{
+					eventTimeRangeFormat: ({ start, end }, culture, local) =>
+					`${moment(start).format('H:mm')} — ${moment(end).format('H:mm')}`,
+					agendaTimeRangeFormat: ({ start, end }, culture, local) =>
+					`${moment(start).format('H:mm')} — ${moment(end).format('H:mm')}`
+				}}
+			  messages={{
+				  allDay: <FormattedMessage id='Calendar.allDay' />,
+				  previous: <FormattedMessage id='Calendar.previous' />,
+				  next: <FormattedMessage id='Calendar.next' />,
+				  today: <FormattedMessage id='Calendar.today' />,
+				  month: <FormattedMessage id='Calendar.month' />,
+				  week: <FormattedMessage id='Calendar.week' />,
+				  day: <FormattedMessage id='Calendar.day' />,
+				  agenda: <FormattedMessage id='Calendar.agenda' />,
+			  }}
 			/> }
 		</div>
 	);

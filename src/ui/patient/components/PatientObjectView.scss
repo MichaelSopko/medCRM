@@ -23,6 +23,10 @@
 	}
 }
 
+p {
+	word-break: break-word;
+}
+
 @media print {
 
 	@page { margin: 0; }

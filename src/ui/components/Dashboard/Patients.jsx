@@ -103,7 +103,7 @@ class Patients extends Component {
 		const formatMessage = this.context.intl.formatMessage;
 		const form = this.form;
 		const isEditing = !!Object.keys(this.state.activeEntity).length;
-		const processRelatedPersons = (relatedPersons, values) => {
+/*		const processRelatedPersons = (relatedPersons, values) => {
 			values.related_persons = [];
 			relatedPersons.forEach(({ _id }) => {
 				const type = values[`related_persons-${_id}-type`];
@@ -119,7 +119,7 @@ class Patients extends Component {
 				values.related_persons.push({ type, phone, email, description, receive_updates });
 			})
 			return values;
-		};
+		};*/
 		const errorHandler = e => {
 			this.setState({ modalLoading: false });
 			console.error(e);
@@ -140,7 +140,7 @@ class Patients extends Component {
 			}
 			this.setState({ modalLoading: true });
 
-			values = processRelatedPersons(this.state.relatedPersons, values);
+			// values = processRelatedPersons(this.state.relatedPersons, values);
 
 			values.birth_date = moment(values.birth_date);
 
