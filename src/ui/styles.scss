@@ -116,6 +116,9 @@ body.rtl {
 	.ant-tabs-nav.ant-tabs-nav-animated {
 		float: right;
 	}
+	.ant-form-item-control-wrapper:first-child {
+		flex: 1;
+	}
 }
 
 .Container {

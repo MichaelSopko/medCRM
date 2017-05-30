@@ -48,11 +48,13 @@ import DELETE_PATIENT_FILE_MUTATION from '../patient/graphql/deletePatientFile.m
 import './PatientView.scss'
 
 const RelatedPersonForm = Form.create()(
-	({ form: { getFieldDecorator }, loading, visible, onSubmit, onCancel, formatMessage }) => {
+	({ form: { getFieldDecorator }, loading, visible, onSubmit, onCancel, formatMessage, values }) => {
 		const formItemLayout = {
 			labelCol: { span: 6 },
 			wrapperCol: { span: 14 },
 		};
+		const isEditing = !!values;
+		values = values || {};
 
 		return (
 			<Modal title={ formatMessage({ id: 'Patients.add_related_persons' }) }
@@ -68,6 +70,7 @@ const RelatedPersonForm = Form.create()(
 					>
 						{getFieldDecorator(`type`, {
 							validateTrigger: 'onBlur',
+							initialValue: values.type,
 							rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_type_error' }) }],
 						})(
 							<Select placeholder={formatMessage({ id: 'Patients.field_person_type' })}>
@@ -81,6 +84,7 @@ const RelatedPersonForm = Form.create()(
 						hasFeedback
 					>
 						{getFieldDecorator(`description`, {
+							initialValue: values.description,
 							validateTrigger: 'onBlur', rules: [],
 						})(
 							<Input placeholder={formatMessage({ id: 'Patients.field_person_description' })} />,
@@ -89,18 +93,9 @@ const RelatedPersonForm = Form.create()(
 					<Form.Item
 						hasFeedback
 					>
-						{getFieldDecorator(`phone`, {
-							validateTrigger: 'onBlur',
-							rules: [{ required: true, message: formatMessage({ id: 'common.field_phone_error' }) }],
-						})(
-							<Input type="number" placeholder={formatMessage({ id: 'common.field_phone' })} />,
-						)}
-					</Form.Item>
-					<Form.Item
-						hasFeedback
-					>
 						{getFieldDecorator(`email`, {
 							validateTrigger: 'onBlur',
+							initialValue: values.email,
 							rules: [{ type: 'email', message: formatMessage({ id: 'common.field_email_error' }) }],
 						})(
 							<Input type="email" placeholder={formatMessage({ id: 'common.field_email' })} />,
@@ -109,8 +104,18 @@ const RelatedPersonForm = Form.create()(
 					<Form.Item
 						hasFeedback
 					>
+						{getFieldDecorator(`phone`, {
+							validateTrigger: 'onBlur',
+							initialValue: values.phone,
+							rules: [{ required: true, message: formatMessage({ id: 'common.field_phone_error' }) }],
+						})(
+							<Input type="number" placeholder={formatMessage({ id: 'common.field_phone' })} />,
+						)}
+					</Form.Item>
+					<Form.Item>
 						{getFieldDecorator(`receive_updates`, {
 							validateTrigger: 'onBlur',
+							initialValue: values.receive_updates,
 							valuePropName: 'checked',
 							rules: [],
 						})(
@@ -187,7 +192,7 @@ FilesTab.contextTypes = {
 }
 
 
-const RelatedPersonsTable = ({ patient, showRelatedPersonForm, deleteRelatedPerson }, context) => {
+const RelatedPersonsTable = ({ patient, showRelatedPersonForm, deleteRelatedPerson, editRelatedPerson }, context) => {
 	const formatMessage = context.intl.formatMessage;
 	const columns = [{
 		title: formatMessage({ id: 'Patients.field_person_type' }),
@@ -219,13 +224,14 @@ const RelatedPersonsTable = ({ patient, showRelatedPersonForm, deleteRelatedPers
 		{
 			width: '12%',
 			render: (text, record) => <div>
-				<Button onClick={deleteRelatedPerson(record.id)} icon='delete' type='circle' />
+				<Button onClick={editRelatedPerson(record)} icon='edit' type='circle' />
+				<Button onClick={deleteRelatedPerson(record._id)} icon='delete' type='circle' />
 			</div>,
 		}];
 
 	return (
 		<div>
-			<Table dataSource={patient.related_persons} columns={columns} pagination={false} rowKey='phone' />
+			<Table dataSource={patient.related_persons.map((p, _id) => ({ ...p, _id }))} columns={columns} pagination={false} rowKey='phone' />
 			<br />
 			<Button onClick={showRelatedPersonForm}
 			        type='dashed'>{formatMessage({ id: 'Patients.add_related_persons' })}</Button>
@@ -238,7 +244,7 @@ RelatedPersonsTable.contextTypes = {
 }
 
 
-const DetailsTab = ({ patient, showRelatedPersonForm, deleteRelatedPerson }, context) => {
+const DetailsTab = ({ patient, showRelatedPersonForm, deleteRelatedPerson, editRelatedPerson }, context) => {
 	const formatMessage = context.intl.formatMessage;
 
 	let bdate = moment(patient.birth_date);
@@ -301,7 +307,11 @@ const DetailsTab = ({ patient, showRelatedPersonForm, deleteRelatedPerson }, con
 			</div>
 
 			<div className="Details__related-persons">
-				<RelatedPersonsTable showRelatedPersonForm={showRelatedPersonForm} patient={patient} deleteRelatedPerson={deleteRelatedPerson} />
+				<RelatedPersonsTable
+					showRelatedPersonForm={showRelatedPersonForm}
+					editRelatedPerson={editRelatedPerson}
+					patient={patient}
+					deleteRelatedPerson={deleteRelatedPerson} />
 			</div>
 
 		</div>
@@ -365,10 +375,21 @@ class PatientView extends Component {
 		intl: PropTypes.object.isRequired,
 	}
 
+	constructor(props) {
+		super(props);
+
+		setInterval(this.forceUpdate, 60000);
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.forceUpdate);
+	}
+
 	state = {
 		archiveLoading: false,
 		formLoading: false,
 		showRelatedPersonForm: false,
+		activeRelatedPerson: null,
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -444,15 +465,25 @@ class PatientView extends Component {
 		const form = this.relatedPersonForm;
 
 		form.validateFields((err, values) => {
+			const { activeRelatedPerson } = this.state;
+			const isEditing = !!activeRelatedPerson;
+			console.log(activeRelatedPerson)
 			if (err) {
 				return;
 			}
 			this.setState({ formLoading: true });
 			const { __typename, archived, archived_date, files, ...patient } = this.props.data.patient;
-			patient.related_persons = [...patient.related_persons.map(({ __typename, ...p }) => p), values];
+			patient.related_persons = !isEditing
+				? [...patient.related_persons.map(({ __typename, ...p }) => p), values]
+				: patient.related_persons.map(({ __typename, ...p }, idx) => {
+					console.log(activeRelatedPerson, idx, activeRelatedPerson._id);
+					return idx === activeRelatedPerson._id ? values : p;
+				});
 			this.props.editPatient(patient)
 				.then(() => {
-					this.setState({ formLoading: false, showRelatedPersonForm: false });
+					this.setState({ formLoading: false, showRelatedPersonForm: false, activeRelatedPerson: null }, () => {
+						form.resetFields();
+					});
 				})
 				.catch((e) => {
 					this.setState({ formLoading: false });
@@ -466,13 +497,18 @@ class PatientView extends Component {
 		this.setState({ showRelatedPersonForm: true });
 	}
 
+	editRelatedPerson = (activeRelatedPerson) => () => {
+		this.setState({ showRelatedPersonForm: true, activeRelatedPerson });
+	}
+
 	hideRelatedPersonForm = () => {
-		this.setState({ showRelatedPersonForm: false });
+		this.setState({ showRelatedPersonForm: false, activeRelatedPerson: null });
 	}
 
 	deleteRelatedPerson = idx => () => {
 		const { __typename, archived, archived_date, files, ...patient } = this.props.data.patient;
-		patient.related_persons = patient.related_persons.map(({ __typename, ...p }) => p).splice(idx, 1);
+		patient.related_persons = patient.related_persons.map(({ __typename, ...p }) => p);
+		patient.related_persons.splice(idx, 1);
 		this.props.editPatient(patient)
 			.then(() => {
 				// success
@@ -485,7 +521,7 @@ class PatientView extends Component {
 
 	render() {
 		const { data, id, onEdit, currentUser, currentClinic } = this.props;
-		const { archiveLoading, formLoading, showRelatedPersonForm } = this.state;
+		const { archiveLoading, formLoading, showRelatedPersonForm, activeRelatedPerson } = this.state;
 		const formatMessage = this.context.intl.formatMessage;
 
 		if (!data) {
@@ -508,8 +544,10 @@ class PatientView extends Component {
 		}
 
 		const archivedForNow = moment(patient.archived_date).diff(moment(), 'minutes');
-		const minutes = currentClinic.archive_time - archivedForNow;
-		const canUnarchive = !(currentUser.role !== 'SYSTEM_ADMIN' && !currentClinic.archive_time && minutes > 0)
+		const minutes = currentClinic.archive_time - (-archivedForNow);
+		const canUnarchive = currentUser.role === 'SYSTEM_ADMIN' || (!currentClinic.archive_time || minutes <= 0);
+
+		console.log(archivedForNow, minutes, canUnarchive, currentClinic);
 
 		return (
 			<div className='PatientView'>
@@ -519,6 +557,7 @@ class PatientView extends Component {
 					onSubmit={this.onRelatedPersonSubmit}
 					visible={showRelatedPersonForm}
 					formatMessage={formatMessage}
+					values={activeRelatedPerson}
 					ref={ form => {
 						this.relatedPersonForm = form
 					} }
@@ -558,7 +597,11 @@ class PatientView extends Component {
 						className='PatientView__Tab'
 						tab={ formatMessage({ id: 'Patients.tabs.details' }) }
 						key="details">
-						<DetailsTab patient={patient} showRelatedPersonForm={this.showRelatedPersonForm} deleteRelatedPerson={this.deleteRelatedPerson} />
+						<DetailsTab
+							patient={patient}
+							showRelatedPersonForm={this.showRelatedPersonForm}
+							editRelatedPerson={this.editRelatedPerson}
+							deleteRelatedPerson={this.deleteRelatedPerson} />
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'

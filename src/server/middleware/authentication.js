@@ -32,6 +32,7 @@ export default (req, res, next) => {
 							id,
 							role,
 							clinic_id,
+							clinic,
 						},
 					}));
 				}

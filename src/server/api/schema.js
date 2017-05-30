@@ -411,6 +411,7 @@ const resolvers = {
 	},
 	CurrentUser: {
 		clinic(user, _, context) {
+			console.log(user);
 			return context.Clinics.findOne(user.clinic_id);
 		},
 	},

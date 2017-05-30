@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import { withApollo, graphql } from 'react-apollo'
-import GET_CURRENT_USER_QUERY from '../graphql/UserGetCurrent.graphql'
+import GET_CURRENT_USER_QUERY from '../graphql/CurrentUser.graphql'
 import { connect } from 'react-redux';
 
 
