@@ -55,7 +55,7 @@ const TreatmentsCalendar = ({ data: { loading, treatmentSeries = [], therapists 
 	events = events.map(treatment => ({
 		start: new Date(treatment.start_date),
 		end: new Date(treatment.end_date),
-		title: `${treatment.series.patient.first_name} ${treatment.series.patient.last_name} (${moment(treatment.start_date).format('H:mm')} — ${moment(treatment.end_date).format('H:mm')})`,
+		title: `${treatment.series.patient.first_name} ${treatment.series.patient.last_name} (${moment(treatment.end_date).format('H:mm')} — ${moment(treatment.start_date).format('H:mm')})`,
 		patient: treatment.series.patient,
 	}));
 

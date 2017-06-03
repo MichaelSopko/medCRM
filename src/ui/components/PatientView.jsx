@@ -197,41 +197,53 @@ const RelatedPersonsTable = ({ patient, showRelatedPersonForm, deleteRelatedPers
 	const columns = [{
 		title: formatMessage({ id: 'Patients.field_person_type' }),
 		key: 'type',
-		width: '22%',
+		width: '20%',
 		sorter: (a, b) => a.type > b.type,
 		render: (text, record) => <span>{ formatMessage({ id: `related_persons.${record.type}` }) }</span>,
 	},
 		{
-			title: formatMessage({ id: 'common.field_phone' }),
-			width: '22%',
-			key: 'phone',
-			render: (text, record) => <a href={`tel:${record.phone}`}>{record.phone}</a>,
-		},
-		{
-			title: formatMessage({ id: 'common.field_email' }),
-			width: '22%',
-			key: 'email',
-			render: (text, record) => <a href={`mailto:${record.email}`}>{record.email}</a>,
-		},
-		{
 			title: formatMessage({ id: 'Patients.field_person_description' }),
-			width: '22%',
+			width: '20%',
 			key: 'description',
 			render: (text, record) => <div className="to-dynamic-container">
 				<span className="to-dynamic">{record.description}</span>
 			</div>,
 		},
 		{
-			width: '12%',
+			title: formatMessage({ id: 'common.field_email' }),
+			width: '20%',
+			key: 'email',
+			render: (text, record) => <a href={`mailto:${record.email}`}>{record.email}</a>,
+		},
+		{
+			title: formatMessage({ id: 'common.field_phone' }),
+			width: '20%',
+			key: 'phone',
+			render: (text, record) => <a href={`tel:${record.phone}`}>{record.phone}</a>,
+		},
+		{
+			width: '20%',
 			render: (text, record) => <div>
-				<Button onClick={editRelatedPerson(record)} icon='edit' type='circle' />
-				<Button onClick={deleteRelatedPerson(record._id)} icon='delete' type='circle' />
+				<Button size="small" type='ghost' onClick={editRelatedPerson(record)}>
+					{formatMessage({ id: 'common.action_edit' })}
+				</Button>
+				<span className="ant-divider"></span>
+				<Popconfirm
+					title={formatMessage({ id: 'common.confirm_message' })}
+					onConfirm={deleteRelatedPerson(record._id)}
+					okText={formatMessage({ id: 'common.confirm_yes' })}
+					cancelText={formatMessage({ id: 'common.confirm_no' })}>
+					<Button size="small" type='ghost'>
+						{formatMessage({ id: 'common.action_delete' })}
+					</Button>
+				</Popconfirm>
 			</div>,
 		}];
 
 	return (
 		<div>
-			<Table dataSource={patient.related_persons.map((p, _id) => ({ ...p, _id }))} columns={columns} pagination={false} rowKey='phone' />
+			<Table dataSource={patient.related_persons.map((p, _id) => ({ ...p, _id }))} columns={columns} pagination={false}
+			       rowKey='phone' />
 			<br />
 			<Button onClick={showRelatedPersonForm}
 			        type='dashed'>{formatMessage({ id: 'Patients.add_related_persons' })}</Button>

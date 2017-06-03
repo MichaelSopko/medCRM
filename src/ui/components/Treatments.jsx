@@ -142,7 +142,7 @@ const TreatmentForm = Form.create()(
 							initialValue: values.target,
 							validateTrigger: 'onBlur', rules: [],
 						})(
-							<Input />,
+							<Input type="textarea" />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -154,7 +154,7 @@ const TreatmentForm = Form.create()(
 							initialValue: values.method,
 							validateTrigger: 'onBlur', rules: [],
 						})(
-							<Input />,
+							<Input type="textarea" />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -166,7 +166,7 @@ const TreatmentForm = Form.create()(
 							initialValue: values.process,
 							validateTrigger: 'onBlur', rules: [],
 						})(
-							<Input />,
+							<Input type="textarea" />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
