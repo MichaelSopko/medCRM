@@ -217,12 +217,12 @@ const RelatedPersonsTable = ({ patient, showRelatedPersonForm, deleteRelatedPers
 		},
 		{
 			title: formatMessage({ id: 'common.field_phone' }),
-			width: '20%',
+			width: '15%',
 			key: 'phone',
 			render: (text, record) => <a href={`tel:${record.phone}`}>{record.phone}</a>,
 		},
 		{
-			width: '20%',
+			width: '25%',
 			render: (text, record) => <div>
 				<Button size="small" type='ghost' onClick={editRelatedPerson(record)}>
 					{formatMessage({ id: 'common.action_edit' })}
