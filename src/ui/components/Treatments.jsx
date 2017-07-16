@@ -26,7 +26,7 @@ import { withCurrentUser } from './helpers/withCurrentUser';
 import './Treatments.scss'
 
 import {
-	Table, Icon, Button, Modal, Input, Form, Popconfirm, Select, DatePicker, InputNumber, notification, Col,
+	Table, Icon, Button, Modal, Input, Form, Popconfirm, Select, DatePicker, InputNumber, notification, Col, Switch,
 } from 'antd'
 
 const SeriesForm = Form.create()(
@@ -179,6 +179,43 @@ const TreatmentForm = Form.create()(
 							validateTrigger: 'onBlur', rules: [],
 						})(
 							<Input type="textarea" rows={3} />,
+						)}
+					</Form.Item> }
+					{ <Form.Item
+						{...formItemLayout}
+						label={formatMessage({ id: 'Treatments.field_next_treatment_remark' })}
+						hasFeedback
+					>
+						{getFieldDecorator('next_treatment_remark', {
+							initialValue: values.next_treatment_remark,
+							validateTrigger: 'onBlur', rules: [],
+						})(
+							<Input type="textarea" rows={3} />,
+						)}
+					</Form.Item> }
+					{ !isEditing && <Form.Item
+						{...formItemLayout}
+						label={formatMessage({ id: 'Treatments.repeat_weeks' })}
+					>
+						{getFieldDecorator('repeat_weeks_trigger', {
+							initialValue: false,
+							validateTrigger: 'onBlur',
+							rules: [],
+							valuePropName: 'checked'
+						})(
+							<Switch />,
+						)}
+					</Form.Item> }
+					{ form.getFieldValue('repeat_weeks_trigger') && <Form.Item
+						wrapperCol={{ span: 12, offset: 6 }}
+						label=''
+					>
+						{getFieldDecorator('repeat_weeks', {
+							initialValue: 1,
+							validateTrigger: 'onBlur',
+							rules: [],
+						})(
+							<InputNumber min={1} />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -623,7 +660,7 @@ class Treatments extends Component {
 				message: formatMessage({ id }),
 			});
 		};
-		form.validateFields((err, values) => {
+		form.validateFields((err, { repeat_weeks_trigger, ...values }) => {
 			if (err) {
 				return;
 			}

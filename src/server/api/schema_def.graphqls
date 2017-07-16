@@ -296,6 +296,7 @@ input TreatmentInput {
 	therapist_ids: [Int]
 	start_date: Date
 	end_date: Date
+	repeat_weeks: Int
 }
 
 input ClinicInput {

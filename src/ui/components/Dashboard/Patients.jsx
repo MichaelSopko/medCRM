@@ -173,9 +173,9 @@ class Patients extends Component {
 	};
 
 	editEntity = entity => () => {
-		this.form.resetFields();/*
+		this.form.resetFields();
 		let relatedPersons = entity.related_persons || [];
-		relatedPersons = relatedPersons.map(person => ({ ...person, _id: Math.random().toString(36).substring(7) }));*/
+		relatedPersons = relatedPersons.map(person => ({ ...person, _id: Math.random().toString(36).substring(7) }));
 		this.setState({
 			modalOpened: true,
 			activeEntity: entity,

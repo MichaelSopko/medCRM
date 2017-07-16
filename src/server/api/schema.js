@@ -229,15 +229,23 @@ const resolvers = {
 				})
 		},
 
-		addTreatment(_, { series_id, treatment }, context) {
-			return checkAccess(context, ROLES.THERAPIST)
-				.then(() => context.Treatments.addTreatment({ series_id, ...treatment }))
-				.then(async () => {
-					const series = await context.Treatments.findOne(series_id);
-					pubsub.publish('treatmentSeriesUpdated', series);
-					return series;
-				})
-				.then(res => ({ status: true }))
+		async addTreatment(_, { series_id, treatment: { repeat_weeks, ...treatment } }, ctx) {
+			await checkAccess(ctx, ROLES.THERAPIST);
+			const { Treatments } = ctx;
+			if (repeat_weeks) {
+				while (repeat_weeks--) {
+					let { start_date, end_date, ...fields } = treatment;
+					start_date = moment(start_date).add(repeat_weeks, 'weeks').format('YYYY-MM-DD HH:mm:ss');
+					end_date = moment(end_date).add(repeat_weeks, 'weeks').format('YYYY-MM-DD HH:mm:ss');
+					console.log(start_date, end_date)
+					await Treatments.addTreatment({ series_id, start_date, end_date, ...fields });
+				}
+			} else {
+				await Treatments.addTreatment({ series_id, ...treatment });
+			}
+			const series = await Treatments.findOne(series_id);
+			pubsub.publish('treatmentSeriesUpdated', series);
+			return { status: true };
 		},
 		editTreatment(_, { id, treatment }, context) {
 			return checkAccess(context, ROLES.THERAPIST)
@@ -257,7 +265,7 @@ const resolvers = {
 						from: `"Clinic" <${mailerConfig.auth.user}>`,
 						to: related_persons.filter(p => !!p.receive_updates).map(p => p.email),
 						subject: heMessages.Treatments.update_email.subject,
-						html: emailTemplate(treatment)
+						html: emailTemplate(treatment),
 					};
 
 					transporter.sendMail(mailOptions).then(info => {
@@ -421,7 +429,7 @@ const resolvers = {
 		},
 		patient(series, _, ctx) {
 			return ctx.Users.findOne(series.patient_id);
-		}
+		},
 	},
 	Treatment: {
 		therapists(treatment, _, context) {
