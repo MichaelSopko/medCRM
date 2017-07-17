@@ -423,7 +423,7 @@ type Mutation {
 	editTreatment(
 	id: Int!
 	treatment: TreatmentInput
-): MutationStatus
+): Treatment!
 
 	deleteTreatment(
 	id: Int!

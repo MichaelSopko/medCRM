@@ -79,7 +79,7 @@ const SeriesForm = Form.create()(
 	},
 );
 
-const TreatmentForm = Form.create()(
+export const TreatmentForm = Form.create()(
 	(props) => {
 		let { visible, onCancel, onSubmit, form, loading, therapists, values = {}, formatMessage, currentUser, currentClinic } = props;
 		const { getFieldDecorator } = form;

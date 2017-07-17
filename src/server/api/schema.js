@@ -237,7 +237,6 @@ const resolvers = {
 					let { start_date, end_date, ...fields } = treatment;
 					start_date = moment(start_date).add(repeat_weeks, 'weeks').format('YYYY-MM-DD HH:mm:ss');
 					end_date = moment(end_date).add(repeat_weeks, 'weeks').format('YYYY-MM-DD HH:mm:ss');
-					console.log(start_date, end_date)
 					await Treatments.addTreatment({ series_id, start_date, end_date, ...fields });
 				}
 			} else {
@@ -272,9 +271,8 @@ const resolvers = {
 						console.log('Message %s sent: %s', info.messageId, info.response);
 					});
 
-					return series;
-				})
-				.then(res => ({ status: true }))
+					return treatment;
+				});
 		},
 		deleteTreatment(_, { id }, context) {
 			let series_id;
