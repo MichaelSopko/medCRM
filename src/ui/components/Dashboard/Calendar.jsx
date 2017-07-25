@@ -118,14 +118,19 @@ class TreatmentsCalendar extends Component {
 		treatmentSeries.forEach(series => {
 			events.push(...series.treatments.map(t => ({ series, ...t })));
 		})
-		events = events.map(treatment => ({
-			start: new Date(treatment.start_date),
-			end: new Date(treatment.end_date),
-			title: `${treatment.series.patient.first_name} ${treatment.series.patient.last_name} (${moment(treatment.end_date).format('H:mm')} — ${moment(treatment.start_date).format('H:mm')})`,
-			patient: treatment.series.patient,
-			id: treatment.id,
-			treatment,
-		}));
+		events = events.map(treatment => {
+			const startDate = new Date(treatment.start_date);
+			const userTimezoneOffset = startDate.getTimezoneOffset() * 60000;
+			const endDate = new Date(treatment.end_date);
+			return {
+				start: new Date(startDate.getTime() + userTimezoneOffset),
+				end: new Date(endDate.getTime() + userTimezoneOffset),
+				title: `${treatment.series.patient.first_name} ${treatment.series.patient.last_name} (${moment(startDate).format('H:mm')} — ${moment(endDate).format('H:mm')})`,
+				patient: treatment.series.patient,
+				id: treatment.id,
+				treatment,
+			};
+		});
 
 		const getProps = (event) => ({
 			style: { backgroundColor: colorHash.hex(event && event.patient.id) },

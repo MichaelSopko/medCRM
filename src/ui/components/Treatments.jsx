@@ -205,30 +205,13 @@ export const TreatmentForm = Form.create()(
 						})(
 							<Switch />,
 						)}
-					</Form.Item> }
-					{ form.getFieldValue('repeat_weeks_trigger') && <Form.Item
-						wrapperCol={{ span: 12, offset: 6 }}
-						label=''
-					>
-						{getFieldDecorator('repeat_weeks', {
-							initialValue: 1,
-							validateTrigger: 'onBlur',
-							rules: [],
-						})(
-							<InputNumber min={1} />,
-						)}
-					</Form.Item> }
-					{ <Form.Item
-						{...formItemLayout}
-						label={formatMessage({ id: 'Treatments.field_next_treatment_remark' })}
-						hasFeedback
-					>
-						{getFieldDecorator('next_treatment_remark', {
-							initialValue: values.next_treatment_remark,
-							validateTrigger: 'onBlur', rules: [],
-						})(
-							<Input type="textarea" rows={3} />,
-						)}
+						{ form.getFieldValue('repeat_weeks_trigger') && getFieldDecorator('repeat_weeks', {
+								initialValue: 1,
+								validateTrigger: 'onBlur',
+								rules: [],
+							})(
+								<InputNumber style={{marginLeft: 12}} min={1} />,
+							)}
 					</Form.Item> }
 					{/*<Form.Item
 						{...formItemLayout}
@@ -629,10 +612,10 @@ class Treatments extends Component {
 			if (err) {
 				return;
 			}
-			
-			values.start_date = moment(values.start_date);
-			values.end_date = moment(values.end_date);
-			
+
+			values.start_date = moment(values.start_date).toISOString();
+			values.end_date = moment(values.end_date).toISOString();
+
 			this.setState({ modalLoading: true });
 			isEditing ?
 				this.props.editSeries({ id: this.state.activeSeries.id, ...values }).then(() => {
