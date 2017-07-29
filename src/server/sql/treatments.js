@@ -7,16 +7,25 @@ const safeParse = (json, deflt = []) => {
 		}
 		return JSON.parse(json || `${deflt}`)
 	} catch (e) {
-		log('JSON parse error', json, e);
+		console.error('JSON parse error', json, e);
 		return deflt;
 	}
 }
 
 export default class Treatments {
 
-	getSeries(clinic_id) {
+	getSeries(patient_id) {
 		return knex('treatment_series')
-			.where('clinic_id', clinic_id)
+			.where('patient_id', patient_id)
+			.andWhere('deleted', false)
+			.orderBy('id', 'DESC')
+			.select();
+	}
+
+	getSeriesByPatient(patient_id) {
+		return knex('treatment_series')
+			.where('patient_id', patient_id)
+			.andWhere('deleted', false)
 			.orderBy('id', 'DESC')
 			.select();
 	}
@@ -25,9 +34,11 @@ export default class Treatments {
 		const [series, treatments] = await Promise.all([
 			knex('treatment_series')
 				.where('id', id)
+				.andWhere('deleted', false)
 				.first(),
 			knex('treatments')
 				.where('series_id', id)
+				.andWhere('deleted', false)
 				.select()
 				.then(treatments => treatments.map(async treatment => {
 					const [therapists, patients] = await Promise.all([
@@ -54,6 +65,7 @@ export default class Treatments {
 	getTreatments(series_id) {
 		return knex('treatments')
 			.where('series_id', series_id)
+			.andWhere('deleted', false)
 			.select();
 	}
 
@@ -70,8 +82,15 @@ export default class Treatments {
 	}
 
 	deleteSeries({ id }) {
-		return knex('treatments').where('series_id', id).delete().then(() => {
-			return knex('treatment_series').where('id', id).delete();
+		return knex('treatments')
+			.where('series_id', id)
+			.update('deleted', true)
+			// .delete()
+			.then(() => {
+			return knex('treatment_series')
+				.where('id', id)
+				.update('deleted', true);
+				// .delete();
 		});
 	}
 
@@ -103,7 +122,8 @@ export default class Treatments {
 		return Promise.all([
 			knex('treatments')
 				.where('id', id)
-				.delete()
+				.update('deleted', true)
+				// .delete()
 		]);
 	}
 

@@ -6,27 +6,27 @@ import ApolloClient from 'apollo-client'
 import gql from 'graphql-tag'
 import update from 'react-addons-update'
 
-import GET_TREATMENTS_QUERY from '../../graphql/TreatmentsGet.graphql'
-import ADD_TREATMENT_MUTATION from '../../graphql/TreatmentAddMutation.graphql'
-import DELETE_TREATMENT_MUTATION from '../../graphql/TreatmentDeleteMutaion.graphql'
-import EDIT_TREATMENT_MUTATION from '../../graphql/TreatmentEditMutation.graphql'
-import ADD_SERIES_MUTATION from '../../graphql/TreatmentSeriesAddMutation.graphql'
-import DELETE_SERIES_MUTATION from '../../graphql/TreatmentSeriesDeleteMutaion.graphql'
-import EDIT_SERIES_MUTATION from '../../graphql/TreatmentSeriesEditMutation.graphql'
+import GET_TREATMENTS_QUERY from '../graphql/TreatmentsGet.graphql'
+import ADD_TREATMENT_MUTATION from '../graphql/TreatmentAddMutation.graphql'
+import DELETE_TREATMENT_MUTATION from '../graphql/TreatmentDeleteMutaion.graphql'
+import EDIT_TREATMENT_MUTATION from '../graphql/TreatmentEditMutation.graphql'
+import ADD_SERIES_MUTATION from '../graphql/TreatmentSeriesAddMutation.graphql'
+import DELETE_SERIES_MUTATION from '../graphql/TreatmentSeriesDeleteMutaion.graphql'
+import EDIT_SERIES_MUTATION from '../graphql/TreatmentSeriesEditMutation.graphql'
 
-import SERIES_CREATED_SUBSCRIPTION from '../../graphql/SeriesCreatedSubscription.graphql'
-import SERIES_UPDATED_SUBSCRIPTION from '../../graphql/SeriesUpdatedSubscription.graphql'
-import SERIES_DELETED_SUBSCRIPTION from '../../graphql/SeriesDeletedSubscription.graphql'
+import SERIES_CREATED_SUBSCRIPTION from '../graphql/SeriesCreatedSubscription.graphql'
+import SERIES_UPDATED_SUBSCRIPTION from '../graphql/SeriesUpdatedSubscription.graphql'
+import SERIES_DELETED_SUBSCRIPTION from '../graphql/SeriesDeletedSubscription.graphql'
 
-import ROLES from '../../../helpers/constants/roles'
-import ClinicsSelector from '../ClinicsSelector'
-import CheckAccess from '../helpers/CheckAccess'
+import ROLES from '../../helpers/constants/roles'
 import moment from 'moment'
+
+import { withCurrentUser } from './helpers/withCurrentUser';
 
 import './Treatments.scss'
 
 import {
-	Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, DatePicker, InputNumber, notification
+	Table, Icon, Button, Modal, Input, Form, Popconfirm, Select, DatePicker, InputNumber, notification,
 } from 'antd'
 
 const SeriesForm = Form.create()(
@@ -56,7 +56,7 @@ const SeriesForm = Form.create()(
 							initialValue: values.name,
 							validateTrigger: 'onBlur', rules: [],
 						})(
-							<Input/>
+							<Input />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -67,31 +67,39 @@ const SeriesForm = Form.create()(
 						{getFieldDecorator('treatments_number', {
 							initialValue: values.treatments_number || 1,
 							rules: [{
-								required: true, message: formatMessage({ id: 'Treatments.field_treatments_number_error' })
+								required: true, message: formatMessage({ id: 'Treatments.field_treatments_number_error' }),
 							}],
 						})(
-							<InputNumber min={1}/>
+							<InputNumber min={1} />,
 						)}
 					</Form.Item> }
 				</Form>
 			</Modal>
 		);
-	}
+	},
 );
 
 const TreatmentForm = Form.create()(
 	(props) => {
-		const { visible, onCancel, onSubmit, form, loading, therapists, patients, values = {}, formatMessage, currentUser } = props;
+		let { visible, onCancel, onSubmit, form, loading, therapists, values = {}, formatMessage, currentUser, currentClinic } = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
 			labelCol: { span: 6 },
 			wrapperCol: { span: 14 },
 		};
-		const isEditing = !!Object.keys(values).length;
+		const isEditing = !!values.id;
 		const isTherapist = currentUser.role === ROLES.THERAPIST;
 		const therapistsValue = isTherapist && !isEditing
 			? [currentUser.id.toString()]
 			: values.therapists && values.therapists.map(({ id }) => id.toString());
+
+		if (!isEditing) {
+			values = {
+				...values,
+				start_date: new Date(),
+				end_date: moment().add(currentClinic.treatment_duration, 'minutes'),
+			}
+		}
 
 		return (
 			<Modal title={ formatMessage({ id: isEditing ? 'Treatments.edit_header' : 'Treatments.create_header' }) }
@@ -99,7 +107,7 @@ const TreatmentForm = Form.create()(
 			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
 			       onCancel={onCancel}
 			       onOk={onSubmit}
-			       width={600}
+			       width={800}
 			       confirmLoading={loading}>
 				<Form>
 					{ <Form.Item
@@ -111,7 +119,7 @@ const TreatmentForm = Form.create()(
 							initialValue: values.target,
 							validateTrigger: 'onBlur', rules: [],
 						})(
-							<Input />
+							<Input />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -123,7 +131,7 @@ const TreatmentForm = Form.create()(
 							initialValue: values.method,
 							validateTrigger: 'onBlur', rules: [],
 						})(
-							<Input />
+							<Input />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -135,7 +143,7 @@ const TreatmentForm = Form.create()(
 							initialValue: values.process,
 							validateTrigger: 'onBlur', rules: [],
 						})(
-							<Input />
+							<Input />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -147,7 +155,7 @@ const TreatmentForm = Form.create()(
 							initialValue: values.parents_guidance,
 							validateTrigger: 'onBlur', rules: [],
 						})(
-							<Input type="textarea" rows={3}/>
+							<Input type="textarea" rows={3} />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -159,7 +167,7 @@ const TreatmentForm = Form.create()(
 							initialValue: values.next_treatment_remark,
 							validateTrigger: 'onBlur', rules: [],
 						})(
-							<Input type="textarea" rows={3}/>
+							<Input type="textarea" rows={3} />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -168,31 +176,15 @@ const TreatmentForm = Form.create()(
 						hasFeedback
 					>
 						{getFieldDecorator('date', {
-							initialValue: moment(values.date),
-							validateTrigger: 'onBlur', rules: [],
-						})(
-							<DatePicker
-								showTime
-								format="YYYY-MM-DD HH:mm:ss"/>
-						)}
-					</Form.Item> }
-					{ <Form.Item
-						{...formItemLayout}
-						label={formatMessage({ id: 'Treatments.field_patients' })}
-						hasFeedback
-					>
-						{getFieldDecorator('patient_ids', {
-							initialValue: values.patients && values.patients.map(({ id }) => id.toString()),
+							initialValue: [moment(values.start_date), moment(values.end_date)],
 							validateTrigger: 'onBlur', rules: [{
-								type: 'array', required: true, message: formatMessage({ id: 'Treatments.field_patients_error' }),
+								type: 'array', required: true,
 							}],
 						})(
-							<Select multiple>
-								{ patients.map(({ first_name, last_name, id }) =>
-									<Select.Option key={id} value={id.toString()}>
-										{first_name} {last_name}
-									</Select.Option>) }
-							</Select>
+							<DatePicker.RangePicker
+								showTime
+								placeholder={[formatMessage({ id: 'Treatments.field_start_date' }), formatMessage({ id: 'Treatments.field_end_date' })]}
+								format="YYYY-MM-DD HH:mm:ss" />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -220,13 +212,13 @@ const TreatmentForm = Form.create()(
 									<Select.Option key={id} value={id.toString()}>
 										{first_name} {last_name}
 									</Select.Option>) }
-							</Select>
+							</Select>,
 						)}
 					</Form.Item> }
 				</Form>
 			</Modal>
 		);
-	}
+	},
 );
 
 const TreatmentsTable = ({ treatments, deleteTreatment, editTreatment, formatMessage }) => {
@@ -236,38 +228,30 @@ const TreatmentsTable = ({ treatments, deleteTreatment, editTreatment, formatMes
 			width: '15%',
 			render: (text, record) => <div className="to-dynamic-container">
 				<span className="to-dynamic">{text}</span>
-			</div>
+			</div>,
 		},
 		{
 			title: formatMessage({ id: 'Treatments.field_method' }), dataIndex: 'method', key: 'method',
 			width: '15%',
 			render: (text, record) => <div className="to-dynamic-container">
 				<span className="to-dynamic">{text}</span>
-			</div>
+			</div>,
 		},
 		{
 			title: formatMessage({ id: 'Treatments.field_process' }), dataIndex: 'process', key: 'process',
 			width: '15%',
 			render: (text, record) => <div className="to-dynamic-container">
 				<span className="to-dynamic">{text}</span>
-			</div>
-		},
-		{
-			title: formatMessage({ id: 'Treatments.field_patients' }),
-			dataIndex: 'patients',
-			width: '15%',
-			render: (text, record) => <div className="to-dynamic-container">
-				<span
-					className="to-dynamic">{ record.patients.map(user => `${user.first_name} ${user.last_name}`).join(', ') }</span>
-			</div>
+			</div>,
 		},
 		{
 			title: formatMessage({ id: 'Treatments.field_therapists' }),
 			dataIndex: 'therapists',
 			width: '20%',
 			render: (text, record) => <div className="to-dynamic-container">
-				<span className="to-dynamic">{ record.therapists.map(user => `${user.first_name} ${user.last_name}`).join(', ') }</span>
-			</div>
+				<span
+					className="to-dynamic">{ record.therapists.map(user => `${user.first_name} ${user.last_name}`).join(', ') }</span>
+			</div>,
 		},
 		{
 			title: formatMessage({ id: 'common.field_actions' }),
@@ -290,18 +274,17 @@ const TreatmentsTable = ({ treatments, deleteTreatment, editTreatment, formatMes
 	return <Table
 		dataSource={treatments}
 		columns={columns}
-		rowKey='id'/>
+		rowKey='id' />
 };
-
 
 class Treatments extends Component {
 
 	static contextTypes = {
-		intl: PropTypes.object.isRequired
+		intl: PropTypes.object.isRequired,
 	};
 
 	static propTypes = {
-		data: PropTypes.object
+		data: PropTypes.object,
 	};
 
 	state = {
@@ -309,20 +292,19 @@ class Treatments extends Component {
 		treatmentModalOpened: false,
 		activeTreatment: {},
 		activeSeries: {},
-		modalLoading: false
+		modalLoading: false,
 	};
 
 	subscriptions = null;
 
 	componentWillReceiveProps(nextProps) {
 		const { subscribeToMore } = this.props.data;
-		// const clinicChanged = !(this.props.currentClinic && this.props.currentClinic.id) || (nextProps.currentClinic && (this.props.currentClinic.id !== nextProps.currentClinic.id));
 
-		if (!this.subscriptions && !nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id) {
+		if (!this.subscriptions && nextProps.patient) {
 			this.subscriptions = [
 				subscribeToMore({
 					document: SERIES_CREATED_SUBSCRIPTION,
-					variables: { clinic_id: nextProps.currentClinic.id },
+					variables: { patient_id: nextProps.patient.id },
 					updateQuery: (previousResult, { subscriptionData }) => {
 						previousResult = Object.assign({}, previousResult);
 						const newSeries = subscriptionData.data.treatmentSeriesCreated;
@@ -336,7 +318,7 @@ class Treatments extends Component {
 				}),
 				subscribeToMore({
 					document: SERIES_UPDATED_SUBSCRIPTION,
-					variables: { clinic_id: nextProps.currentClinic.id },
+					variables: { patient_id: nextProps.patient.id },
 					updateQuery: (previousResult, { subscriptionData }) => {
 						previousResult = Object.assign({}, previousResult);
 						previousResult.treatmentSeries = previousResult.treatmentSeries.map((series) => {
@@ -351,7 +333,7 @@ class Treatments extends Component {
 				}),
 				subscribeToMore({
 					document: SERIES_DELETED_SUBSCRIPTION,
-					variables: { clinic_id: nextProps.currentClinic.id },
+					variables: { patient_id: nextProps.patient.id },
 					updateQuery: (previousResult, { subscriptionData }) => {
 						previousResult = Object.assign({}, previousResult);
 						previousResult.treatmentSeries = previousResult.treatmentSeries.filter(series => series.id !== subscriptionData.data.treatmentSeriesDeleted.id)
@@ -399,7 +381,7 @@ class Treatments extends Component {
 			console.error(e);
 			let id = 'common.server_error';
 			notification.error({
-				message: formatMessage({ id })
+				message: formatMessage({ id }),
 			});
 		};
 		form.validateFields((err, values) => {
@@ -412,7 +394,7 @@ class Treatments extends Component {
 					form.resetFields();
 					this.setState({ seriesModalOpened: false, modalLoading: false, activeSeries: {} });
 				}).catch(errorHandler) :
-				this.props.addSeries({ clinic_id: this.props.currentClinic.id, ...values }).then(() => {
+				this.props.addSeries({ patient_id: this.props.patient.id, ...values }).then(() => {
 					form.resetFields();
 					this.setState({ seriesModalOpened: false, modalLoading: false });
 				}).catch(errorHandler);
@@ -423,20 +405,30 @@ class Treatments extends Component {
 	handleTreatmentSubmit = () => {
 		const form = this.treatmentForm;
 		const isEditing = !!Object.keys(this.state.activeTreatment).length;
+		console.log(this.state.activeTreatment);
 		const formatMessage = this.context.intl.formatMessage;
 		const errorHandler = e => {
 			this.setState({ modalLoading: false });
 			console.error(e);
 			let id = 'common.server_error';
 			notification.error({
-				message: formatMessage({ id })
+				message: formatMessage({ id }),
 			});
 		};
-		form.validateFields((err, values) => {
+		form.validateFields((err, sourceValues) => {
 			if (err) {
 				return;
 			}
+			console.debug(values);
 			this.setState({ modalLoading: true });
+			let { date, ...values } = sourceValues;
+			const [ start_date, end_date ] = date;
+			values = {
+				...values,
+				start_date,
+				end_date,
+			};
+			console.debug(values);
 			isEditing ?
 				this.props.editTreatment({ id: this.state.activeTreatment.id, treatment: values }).then(() => {
 					form.resetFields();
@@ -454,7 +446,7 @@ class Treatments extends Component {
 		this.seriesForm.resetFields();
 		this.setState({
 			seriesModalOpened: true,
-			activeSeries: entity
+			activeSeries: entity,
 		});
 	};
 
@@ -462,14 +454,14 @@ class Treatments extends Component {
 		this.treatmentForm.resetFields();
 		this.setState({
 			treatmentModalOpened: true,
-			activeTreatment: entity
+			activeTreatment: entity,
 		});
 	};
 
 	render() {
 		const {
-			data: { loading, treatmentSeries = [], patients = [], therapists = [] },
-			deleteTreatment, currentClinic, deleteSeries, currentUser
+			data: { loading, treatmentSeries = [], therapists = [] },
+			deleteTreatment, currentClinic, deleteSeries, currentUser,
 		} = this.props;
 		const formatMessage = this.context.intl.formatMessage;
 
@@ -480,11 +472,11 @@ class Treatments extends Component {
 			render: text => <div className="to-dynamic-container">
 				<span className="to-dynamic">{ text }</span>
 			</div>,
-			width: '40%'
+			width: '40%',
 		}, {
 			title: formatMessage({ id: 'Treatments.field_treatments_number' }),
 			key: 'treatments_number',
-			dataIndex: 'treatments_number'
+			dataIndex: 'treatments_number',
 		}, {
 			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
@@ -493,7 +485,7 @@ class Treatments extends Component {
 				<span>
 		      <Button size="small" type='primary' disabled={record.treatments_number <= record.treatments.length}
 		              onClick={ this.showTreatmentModal(record) }>
-			      <Icon type="plus-circle-o"/>
+			      <Icon type="plus-circle-o" />
 			      {formatMessage({ id: 'Treatments.create_treatment_button' })}
 		      </Button>
 					<span className="ant-divider"></span>
@@ -536,21 +528,15 @@ class Treatments extends Component {
 					onCancel={this.handleCancel}
 					onSubmit={this.handleTreatmentSubmit}
 					values={activeTreatment}
-					patients={patients}
 					therapists={therapists}
 					formatMessage={formatMessage}
 					currentUser={currentUser}
+					currentClinic={currentClinic}
 				/>
-				<div className="Dashboard__Details">
-					<h1 className="Dashboard__Header">
-						{ formatMessage({ id: 'Treatments.header' }) }
-					</h1>
+				<div className="Dashboard__Details" style={{ display: 'flex', justifyContent: 'flex-end' }}>
 					<div className="Dashboard__Actions">
-						<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
-							<ClinicsSelector/>
-						</CheckAccess>
-						<Button type="primary" onClick={ this.showSeriesModal } disabled={ !currentClinic.id }>
-							<Icon type="plus-circle-o"/>
+						<Button type="primary" size='small' onClick={ this.showSeriesModal } disabled={ !currentClinic.id }>
+							<Icon type="plus-circle-o" />
 							{ formatMessage({ id: 'Treatments.create_series_button' }) }
 						</Button>
 					</div>
@@ -560,12 +546,12 @@ class Treatments extends Component {
 						treatments={record.treatments}
 						editTreatment={this.editTreatment}
 						formatMessage={formatMessage}
-						deleteTreatment={deleteTreatment}/>
+						deleteTreatment={deleteTreatment} />
 					}
 					dataSource={treatmentSeries}
 					columns={columns}
 					loading={loading}
-					rowKey='id'/>
+					rowKey='id' />
 			</section>
 		);
 	}
@@ -576,22 +562,24 @@ const getOptions = name => ({
 		[name]: (fields) => mutate({
 			variables: fields,
 			refetchQueries: [/*{
-				query: GET_TREATMENTS_QUERY,
-				variables: {
-					clinic_id: ownProps.currentClinic.id
-				}
-			}*/],
-		})
-	})
+			 query: GET_TREATMENTS_QUERY,
+			 variables: {
+			 clinic_id: ownProps.currentClinic.id
+			 }
+			 }*/],
+		}),
+	}),
 });
 
-const TreatmentsApollo = withApollo(compose(
+const TreatmentsWithApollo = withApollo(compose(
+	connect(({ currentClinic, currentUser }) => ({ currentClinic, currentUser })),
 	graphql(GET_TREATMENTS_QUERY, {
-		options: ({ currentClinic }) => ({
+		options: ({ patient, currentClinic }) => ({
 			variables: {
-				clinic_id: currentClinic.id
-			}
-		})
+				patient_id: patient.id,
+				clinic_id: currentClinic.id,
+			},
+		}),
 	}),
 	graphql(ADD_SERIES_MUTATION, getOptions('addSeries')),
 	graphql(DELETE_SERIES_MUTATION, getOptions('deleteSeries')),
@@ -600,14 +588,7 @@ const TreatmentsApollo = withApollo(compose(
 	graphql(ADD_TREATMENT_MUTATION, getOptions('addTreatment')),
 	graphql(DELETE_TREATMENT_MUTATION, getOptions('deleteTreatment')),
 	graphql(EDIT_TREATMENT_MUTATION, getOptions('editTreatment')),
+	// withCurrentUser
 )(Treatments));
 
-
-@connect(({ currentClinic, currentUser }) => ({ currentClinic, currentUser }))
-class CurrentClinicWrapper extends Component {
-	render() {
-		return <TreatmentsApollo { ...this.props }/>
-	}
-}
-
-export default CurrentClinicWrapper;
+export default TreatmentsWithApollo;

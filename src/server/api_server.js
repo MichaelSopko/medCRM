@@ -29,7 +29,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/', express.static(settings.frontendBuildDir, {maxAge: '180 days'}));
-app.use('/uploads', express.static(settings.uploadsDir));
+app.use('/uploads', express.static(settings.uploadsDir, {
+  setHeaders(res) {
+	  res.attachment();
+  }
+}));
 if (__DEV__) {
   app.use('/assets', express.static(path.join(settings.backendBuildDir, 'assets'), {maxAge: '180 days'}));
 } else {

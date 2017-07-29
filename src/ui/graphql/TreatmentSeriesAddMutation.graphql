@@ -1,12 +1,12 @@
 mutation addTreatmentSeries(
 $name: String
 $treatments_number: Int!
-$clinic_id: Int!
+$patient_id: Int!
 ) {
     addTreatmentSeries(
         name: $name
         treatments_number: $treatments_number
-        clinic_id: $clinic_id
+        patient_id: $patient_id
     ) {
         status
     }

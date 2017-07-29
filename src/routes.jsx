@@ -5,7 +5,7 @@ import { connect } from 'react-router';
 import Login from './ui/containers/Login'
 import Dashboard from './ui/containers/Dashboard'
 import App from './ui/components/App'
-import { Clinics, Treatments, Patients, Therapists, Administrators } from './ui/components/Dashboard'
+import { Clinics, Patients, Therapists, Administrators } from './ui/components/Dashboard'
 
 function authCheck(router, replace) {
 	if (__CLIENT__) {
@@ -22,7 +22,6 @@ export default (
 		<Route path="login" component={Login}/>
 		<Route path="dashboard" component={Dashboard}>
 			<Route path="clinics" component={Clinics}/>
-			<Route path="treatments" component={Treatments}/>
 			<Route path="patients" component={Patients}/>
 			<Route path="therapists" component={Therapists}/>
 			<Route path="administrators" component={Administrators}/>

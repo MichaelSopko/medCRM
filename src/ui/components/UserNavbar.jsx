@@ -43,8 +43,8 @@ class UserNavbar extends Component {
 						{ checkAccessLogic(currentUser.role, ROLES.THERAPIST) && <Menu.Item key="patients">
 							<Link to="/dashboard/patients">{ formatMessage({ id: 'UserNavbar.patients' }) }</Link>
 						</Menu.Item> }
-						{ checkAccessLogic(currentUser.role, ROLES.THERAPIST) && <Menu.Item key="treatments">
-							<Link to="/dashboard/treatments">{ formatMessage({ id: 'UserNavbar.treatments' }) }</Link>
+						{ checkAccessLogic(currentUser.role, ROLES.THERAPIST) && <Menu.Item key="calendar">
+							<Link to="/dashboard/calendar">{ formatMessage({ id: 'UserNavbar.calendar' }) }</Link>
 						</Menu.Item> }
 					</Menu>
 					<ProfileWidget/>

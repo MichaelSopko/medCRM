@@ -4,14 +4,10 @@ import { Select } from 'antd'
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo'
 
-@graphql(gql`
-    query clinics {
-        clinics {
-		    	id
-		    	name
-    	}
-    }
-`)
+
+import GET_CLINICS_QUERY from '../graphql/ClinicsGet.graphql'
+
+@graphql(GET_CLINICS_QUERY)
 @connect(
 	(state) => ({ currentClinic: state.currentClinic }),
 	(dispatch) => ({
@@ -31,7 +27,7 @@ class ClinicSelector extends Component {
 	};
 
 	onClinicChange = id => {
-		this.props.setCurrentClinic({ id });
+		this.props.setCurrentClinic(this.props.data.clinics.find(c => c.id === +id));
 	}
 
 	render() {
@@ -40,7 +36,7 @@ class ClinicSelector extends Component {
 
 		return <Select
 			style={{ width: 250, marginRight: 12 }}
-			value={ id }
+			value={ id && id.toString() }
 			onChange={this.onClinicChange}
 			placeholder={ formatMessage({ id: 'ClinicsSelector.placeholder' }) }
 			optionFilterProp="children"

@@ -12,8 +12,10 @@ import moment from 'moment';
 import { LocaleProvider } from 'antd';
 import enUSAnt from 'antd/lib/locale-provider/en_US';
 import heAnt from '../l10n/ant/he';
-import { locale } from '../../config.json';
+// import { locale } from '../../config';
 import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
+
+const locale = __DEV__ ? 'en' : 'he'
 
 moment.locale(locale);
 
@@ -58,7 +60,7 @@ let networkInterface = createBatchingNetworkInterface({
 
 
 networkInterface.use([{
-	applyMiddleware(req, next) {
+	applyBatchMiddleware(req, next) {
 		if (!req.options.headers) {
 			req.options.headers = {};
 		}

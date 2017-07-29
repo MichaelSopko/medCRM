@@ -26,11 +26,6 @@ export default class Users {
 		return knex('users')
 			.where('id', id)
 			.first()
-			.then(user => ({
-				...user,
-				files: safeParse(user.files, []),
-				related_persons: safeParse(user.related_persons)
-			}))
 	}
 
 	getByLogin(login) {
@@ -44,6 +39,7 @@ export default class Users {
 	getUsers(ids) {
 		return knex('users')
 			.whereIn('id', ids)
+			.andWhere('archived', false)
 			.select();
 	}
 
@@ -70,22 +66,23 @@ export default class Users {
 	deleteUser({ id }) {
 		return knex('users')
 			.where('id', id)
-			.delete()
+			.update('archived', true)
+			// .delete()
 	}
 
-	findByRole(role, clinic_id) {
-		let k = knex('users').where('role', role).orderBy('id', 'desc');
+	findByRole(role, clinic_id, archived = false) {
+		let k = knex('users')
+			.where('role', role)
+			.orderBy('id', 'desc');
 		if (clinic_id) {
 			k = k.andWhere('clinic_id', clinic_id);
 		}
+		if (!archived) {
+			k = k.andWhere('archived', false);
+		}
 		return k
 			.orderBy('id', 'DESC')
-			.select()
-			.then(users => users.map(user => ({
-				...user,
-				files: safeParse(user.files, []),
-				related_persons: safeParse(user.related_persons),
-			})));
+			.select();
 	}
 
 	async checkPassword({ login, password }) {

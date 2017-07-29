@@ -52,11 +52,14 @@ const resolvers = {
 		therapists(ignored1, { clinic_id }, context) {
 			return context.Users.findByRole(ROLES.THERAPIST, clinic_id);
 		},
-		patients(ignored1, { clinic_id }, context) {
-			return context.Users.findByRole(ROLES.PATIENT, clinic_id);
+		patients(ignored1, { clinic_id, archived }, context) {
+			return context.Users.findByRole(ROLES.PATIENT, clinic_id, archived);
 		},
-		treatmentSeries(ignored1, { clinic_id }, context) {
-			return context.Treatments.getSeries(clinic_id);
+		patient(_, { id }, context) {
+			return context.Users.findOne(id);
+		},
+		treatmentSeries(ignored1, { patient_id }, context) {
+			return context.Treatments.getSeries(patient_id);
 		},
 		currentUser(ignored1, ignored2, context) {
 			return context.Users.findOne(context.currentUser.id);
@@ -66,17 +69,17 @@ const resolvers = {
 		addClinic(_, clinic, context) {
 			return checkAccess(context, ROLES.SYSTEM_ADMIN)
 				.then(() => context.Clinics.addClinic(clinic))
-				.then(res => ({ status: res }))
+				.then(([id]) => context.Clinics.findOne(clinic))
 		},
-		editClinic(_, clinic, context) {
+		editClinic(_, { id, clinic }, context) {
 			return checkAccess(context, ROLES.SYSTEM_ADMIN)
-				.then(() => context.Clinics.editClinic(clinic))
-				.then(res => ({ status: res }))
+				.then(() => context.Clinics.editClinic(id, clinic))
+				.then(res => context.Clinics.findOne(id))
 		},
 		deleteClinic(_, { id }, context) {
 			return checkAccess(context, ROLES.SYSTEM_ADMIN)
 				.then(() => context.Clinics.deleteClinic({ id }))
-				.then(res => ({ status: res }))
+				.then(res => ({ id }))
 		},
 
 		addAdministrator(_, user, context) {
@@ -125,7 +128,7 @@ const resolvers = {
 				.then(async ([id]) => {
 					const patient = await context.Users.findOne(id);
 					pubsub.publish('patientCreated', patient);
-					return { status: true };
+					return patient;
 				})
 				.catch(checkForNonUniqueField)
 		},
@@ -138,7 +141,7 @@ const resolvers = {
 				.then(() => context.Users.findOne(id))
 				.then(patient => {
 					pubsub.publish('patientUpdated', patient);
-					return { status: true };
+					return patient;
 				})
 				.catch(checkForNonUniqueField)
 		},
@@ -149,7 +152,7 @@ const resolvers = {
 					const res = await context.Users.deleteUser({ id });
 					if (res) {
 						pubsub.publish('patientDeleted', patient);
-						return { status: true };
+						return patient;
 					}
 				})
 				.then(res => ({ status: res }))
@@ -254,6 +257,20 @@ const resolvers = {
 			return context.Clinics.findOne(user.clinic_id);
 		}
 	},
+	Patient: {
+		related_persons(user, _, ctx) {
+			return safeParse(user.related_persons);
+		},
+		files(user, _, ctx) {
+			return safeParse(user.files, []);
+		},
+		diagnoses(user, _, ctx) {
+			return safeParse(user.diagnoses, []);
+		},
+		treatment_series(user, _, ctx) {
+			return ctx.Treatments.getSeriesByPatient(user.id)
+		}
+	},
 	CurrentUser: {
 		clinic(user, _, context) {
 			return context.Clinics.findOne(user.clinic_id);
@@ -267,9 +284,6 @@ const resolvers = {
 	Treatment: {
 		therapists(treatment, _, context) {
 			return treatment.therapists || context.Users.getUsers(safeParse(treatment.therapist_ids));
-		},
-		patients(treatment, _, context) {
-			return treatment.patients || context.Users.getUsers(safeParse(treatment.patient_ids));
 		}
 	},
 	Date: GraphQLMomentMySQL

@@ -10,7 +10,7 @@ import ADD_CLINIC_MUTATION from '../../graphql/ClinicAddMutation.graphql'
 import DELETE_CLINIC_MUTATION from '../../graphql/ClinicDeleteMutaion.graphql'
 import EDIT_CLINIC_MUTATION from '../../graphql/ClinicEditMutation.graphql'
 
-import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm } from 'antd'
+import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Switch } from 'antd'
 
 const EntityForm = Form.create()(
 	(props) => {
@@ -28,6 +28,7 @@ const EntityForm = Form.create()(
 			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
 			       onCancel={onCancel}
 			       onOk={onSubmit}
+			       width={800}
 			       confirmLoading={loading}>
 				<Form>
 					<Form.Item
@@ -92,11 +93,59 @@ const EntityForm = Form.create()(
 						hasFeedback
 					>
 						{getFieldDecorator('email', {
+							initialValue: values.email,
 							validateTrigger: 'onBlur', rules: [{
 								type: 'email', message: formatMessage({ id: 'common.field_email_error' }),
 							}],
 						})(
 							<Input type='email' />
+						)}
+					</Form.Item>
+					<Form.Item
+						{...formItemLayout}
+						label={formatMessage({ id: 'Clinics.field_treatment_duration' })}
+						hasFeedback
+					>
+						{getFieldDecorator('treatment_duration', {
+							initialValue: values.treatment_duration,
+							validateTrigger: 'onBlur', rules: [],
+						})(
+							<Input type='number' />
+						)}
+					</Form.Item>
+					<Form.Item
+						{...formItemLayout}
+						label={formatMessage({ id: 'Clinics.field_patients_limit' })}
+						hasFeedback
+					>
+						{getFieldDecorator('patients_limit', {
+							initialValue: values.patients_limit,
+							validateTrigger: 'onBlur', rules: [],
+						})(
+							<Input type='number' />
+						)}
+					</Form.Item>
+					<Form.Item
+						{...formItemLayout}
+						label={formatMessage({ id: 'Clinics.field_archive_time' })}
+						hasFeedback
+					>
+						{getFieldDecorator('archive_time', {
+							initialValue: values.archive_time,
+							validateTrigger: 'onBlur', rules: [],
+						})(
+							<Input type='number' />
+						)}
+					</Form.Item>
+					<Form.Item
+						{...formItemLayout}
+						label={formatMessage({ id: 'common.field_disabled' })}
+					>
+						{getFieldDecorator('disabled', {
+							initialValue: values.disabled,
+							validateTrigger: 'onBlur', rules: [],
+						})(
+							<Switch/>
 						)}
 					</Form.Item>
 				</Form>
@@ -141,7 +190,9 @@ class Clinics extends Component {
 			if (err) {
 				return;
 			}
-			isEditing ? this.props.editClinic({ id: this.state.activeEntity.id, ...values }) : this.props.addClinic(values);
+			isEditing
+				? this.props.editClinic({ id: this.state.activeEntity.id, clinic: values })
+				: this.props.addClinic({ clinic: values });
 			console.log('Adding new clinic', values);
 			form.resetFields();
 			this.setState({ modalOpened: false, activeEntity: {} });
@@ -201,29 +252,31 @@ class Clinics extends Component {
 
 		return (
 			<section className="Clinics">
-				<EntityForm
-					ref={ form => {
-						this.form = form
-					} }
-					visible={modalOpened}
-					loading={loading}
-					onCancel={this.handleCancel}
-					onSubmit={this.handleFormSubmit}
-					values={activeEntity}
-					formatMessage={formatMessage}
-				/>
-				<div className="Dashboard__Details">
-					<h1 className="Dashboard__Header">
-						{ formatMessage({ id: 'Clinics.header' }) }
-					</h1>
-					<div className="Dashboard__Actions">
-						<Button type="primary" onClick={ this.showModal }>
-							<Icon type="plus-circle-o"/>
-							{ formatMessage({ id: 'Clinics.create_button' }) }
-						</Button>
+				<div className="Container Dashboard__Content">
+					<EntityForm
+						ref={ form => {
+							this.form = form
+						} }
+						visible={modalOpened}
+						loading={loading}
+						onCancel={this.handleCancel}
+						onSubmit={this.handleFormSubmit}
+						values={activeEntity}
+						formatMessage={formatMessage}
+					/>
+					<div className="Dashboard__Details">
+						<h1 className="Dashboard__Header">
+							{ formatMessage({ id: 'Clinics.header' }) }
+						</h1>
+						<div className="Dashboard__Actions">
+							<Button type="primary" onClick={ this.showModal }>
+								<Icon type="plus-circle-o"/>
+								{ formatMessage({ id: 'Clinics.create_button' }) }
+							</Button>
+						</div>
 					</div>
+					<Table dataSource={clinics} columns={columns} loading={loading} rowKey='id'/>
 				</div>
-				<Table dataSource={clinics} columns={columns} loading={loading} rowKey='id'/>
 			</section>
 		);
 	}

@@ -1,37 +1,10 @@
-query treatments($clinic_id: Int!) {
-    treatmentSeries(clinic_id: $clinic_id) {
-        id
-        name
-        treatments_number
-        treatments {
-            id
-            target
-            method
-            process
-            parents_guidance
-            next_treatment_remark
-            patients {
-                id
-                id_number
-                first_name
-                last_name
-            }
-            therapists {
-                id
-                id_number
-                first_name
-                last_name
-            }
-            date
-        }
+#import './TreatmentFragment.graphql'
+
+query treatments($patient_id: ID!, $clinic_id: Int!) {
+    treatmentSeries(patient_id: $patient_id) {
+        ...TreatmentFragment
     }
     therapists(clinic_id: $clinic_id) {
-        id
-        id_number
-        first_name
-        last_name
-    }
-    patients(clinic_id: $clinic_id) {
         id
         id_number
         first_name

@@ -31,18 +31,25 @@
   "ClinicsSelector": {
     "placeholder": "Please choose an active clinic"
   },
+  "PatientSelector": {
+    "placeholder": "Select patient..."
+  },
   "UserNavbar": {
     "treatments": "Treatments",
     "patients": "Patients",
     "administrators": "Administrators",
     "clinics": "Clinics",
-    "therapists": "Therapists"
+    "therapists": "Therapists",
+    "calendar": "Calendar"
   },
   "Clinics": {
     "create_button": "Create a Clinic",
     "create_header": "Create Clinic",
     "edit_header": "Edit Clinic",
-    "header": "Clinics"
+    "header": "Clinics",
+    "field_patients_limit": "Patients limit",
+    "field_treatment_duration": "Default treatment duration (in minutes)",
+    "field_archive_time": "Change status limit (in minutes)"
   },
   "Administrators": {
     "create_button": "Create an Administrator",
@@ -70,7 +77,17 @@
     "add_related_persons": "Add related person",
     "upload_files": "Upload files",
     "field_health_maintenance": "Health maintenance",
-    "field_files": "Files"
+    "field_files": "Files",
+    "empty": "Please select a patient",
+    "tabs": {
+      "details": "Details",
+      "diagnoses": "Diagnoses",
+      "treatments": "Treatments",
+      "treatment_summary": "Treatment summary",
+      "files": "Files {number}"
+    },
+    "age": "{years} years, {months} months, {days} days",
+    "created-message": "New patient created"
   },
   "Treatments": {
     "create_treatment_button": "Add treatment",
@@ -89,9 +106,12 @@
     "field_patients": "Patients",
     "field_patients_error": "Please select at least one",
     "field_therapists": "Therapists",
-    "field_therapists_error": "Please select at least one"
+    "field_therapists_error": "Please select at least one",
+    "field_start_date": "Start date",
+    "field_end_date": "End date"
   },
   "common": {
+    "size": "Size",
     "field_name": "Name",
     "field_name_error": "Please input name",
     "field_first_name": "First name",
@@ -123,6 +143,11 @@
     "field_id_number_error_duplicate": "Same id number already exists",
     "field_licence": "Licence number",
     "field_licence_error": "Please input licence",
-    "server_error": "Server error"
+    "server_error": "Server error",
+    "field_disabled": "Disabled",
+    "field_archived": "Archived",
+    "field_year": "Year",
+    "field_month": "Month",
+    "field_day": "Day"
   }
 }

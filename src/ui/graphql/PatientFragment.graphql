@@ -1,0 +1,44 @@
+fragment PatientFragment on Patient {
+    id
+    id_number
+    first_name
+    last_name
+    birth_date
+    phone
+    profile_email
+    archived
+    related_persons {
+        type
+        description
+        phone
+        email
+    }
+    health_maintenance
+    files {
+        name
+        url
+        size
+        type
+    }
+    treatment_series {
+        id
+        name
+        treatments_number
+        treatments {
+            id
+            target
+            method
+            process
+            parents_guidance
+            next_treatment_remark
+            therapists {
+                id
+                id_number
+                first_name
+                last_name
+            }
+            start_date
+            end_date
+        }
+    }
+}

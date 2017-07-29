@@ -1,0 +1,7 @@
+#import './PatientFragment.graphql'
+
+query patient($id: Int!) {
+    patient(id: $id) {
+        ...PatientFragment
+    }
+}
