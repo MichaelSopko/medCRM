@@ -5,7 +5,7 @@ export function up(knex, Promise) {
 		knex.schema.createTable('users', (table) => {
 			table.increments();
 			table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
-			table.timestamp('updated_at').notNullable();
+			table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now());
 			table.string('login').unique();
 			table.string('hash');
 			table.string('salt');
