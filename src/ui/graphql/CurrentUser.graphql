@@ -1,0 +1,15 @@
+#import './ClinicFragment.graphql'
+
+query currentUser {
+    currentUser {
+        id
+        login
+        role
+        first_name
+        last_name
+        email
+        clinic {
+            ...ClinicFragment
+        }
+    }
+}

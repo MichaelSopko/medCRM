@@ -1,6 +1,7 @@
 import { app as settings } from '../../../package.json'
 import jwt from 'jsonwebtoken';
 import User from '../sql/users';
+import Clinic from '../sql/clinics';
 import log from '../../log'
 
 function generateToken(req, user) {
@@ -18,24 +19,31 @@ export default (req, res, next) => {
 	user.checkPassword(req.body).then(async isValid => {
 		if (isValid) {
 			try {
-				const { id, role, clinic_id } = await user.getByLogin(req.body.login);
-				const token = generateToken(req, { id });
-				next(res.json({
-					token,
-					currentUser: {
-						id,
-						role,
-						clinic_id
-					}
-				}));
+				const { id, role, clinic_id, disabled, clinic } = await user.getByLogin(req.body.login);
+				if (disabled || (clinic_id && role === 'THERAPIST' && clinic.disabled)) {
+					next(res.status(401).json({
+						error: 'USER_DISABLED',
+					}));
+				} else {
+					const token = generateToken(req, { id });
+					next(res.json({
+						token,
+						currentUser: {
+							id,
+							role,
+							clinic_id,
+							clinic,
+						},
+					}));
+				}
 			} catch (e) {
 				res.status(400);
 			}
 		} else {
 			next(res.status(400).json(
 				{
-					error: 'Invalid user data'
-				}
+					error: 'WRONG_PASSWORD',
+				},
 			));
 		}
 	})

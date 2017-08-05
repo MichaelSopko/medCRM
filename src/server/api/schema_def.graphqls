@@ -11,6 +11,11 @@ enum Role {
 	PATIENT
 }
 
+enum GENDER {
+	MALE
+	FEMALE
+}
+
 type SystemAdministrator implements User {
 	id: Int!
 	role: Role!
@@ -35,9 +40,13 @@ type Therapist implements User {
 	phone: String
 	email: String
 	birth_date: Date
+	disabled: Boolean
+	role: Role
 }
 
 type PatientFile {
+	id: ID!
+	patient_id: ID!
 	name: String!
 	url: String!
 	size: Int!
@@ -45,10 +54,120 @@ type PatientFile {
 }
 
 input PatientFileInput {
+	patient_id: ID!
 	name: String!
 	url: String!
 	size: Int!
 	type: String!
+}
+
+interface PatientObject {
+	id: ID!
+	patient: Patient
+	patient_age: String # duration in milliseconds
+	date: Date
+	fillers: [Therapist]
+}
+
+type TreatmentSummaryFields {
+	treatments_length: String
+	treatment_targets: String
+	parents_involment: String
+	treatments_progress: String
+	recommendations: String
+}
+
+type TreatmentSummary implements PatientObject {
+	id: ID!
+	patient: Patient
+	patient_age: String
+	date: Date
+	fillers: [Therapist]
+	fields: TreatmentSummaryFields
+}
+
+input TreatmentSummaryFieldsInput {
+	treatments_length: String
+	treatment_targets: String
+	parents_involment: String
+	treatments_progress: String
+	recommendations: String
+}
+
+input TreatmentSummaryInput {
+	patient_id: ID!
+	patient_age: String!
+	date: Date!
+	fillers_ids: [String!]!
+	fields: TreatmentSummaryFieldsInput!
+}
+
+type DiagnoseFields {
+	pregnancy_and_birth: String
+	psychomotor_progression: String
+	language_and_speech_progression: String
+	eating_function: String
+	family_background: String
+	health_background: String
+	past_and_present_treatments: String
+	environmental_context: String
+	parents_report: String
+	kindergarten_teacher_report: String
+	diagnose_tools: String
+	behaviour_and_general_impression: String
+	communications_skills: String
+	gaming_skills: String
+	language_grasp: String
+	language_expression: String
+	speech_intelligibility: String
+	speech_fluency: String
+	summary: String
+	recommendations: String
+}
+
+type Diagnose implements PatientObject {
+	id: ID!
+	patient: Patient
+	patient_age: String
+	date: Date
+	fillers: [Therapist]
+	fields: DiagnoseFields
+	hearing_test_remark: String
+	hearing_test_date: Date
+}
+
+#killmepls
+input DiagnoseFieldsInput {
+	pregnancy_and_birth: String
+	psychomotor_progression: String
+	language_and_speech_progression: String
+	eating_function: String
+	family_background: String
+	health_background: String
+	past_and_present_treatments: String
+	environmental_context: String
+	parents_report: String
+	kindergarten_teacher_report: String
+	diagnose_tools: String
+	behaviour_and_general_impression: String
+	communications_skills: String
+	gaming_skills: String
+	language_grasp: String
+	language_expression: String
+	speech_intelligibility: String
+	speech_fluency: String
+	summary: String
+	recommendations: String
+}
+
+input DiagnoseInput {
+	patient_id: ID!
+	patient_age: String!
+	date: Date!
+	fillers_ids: [String!]!
+	fields: DiagnoseFieldsInput!
+	hearing_test_remark: String
+	hearing_test_date: Date
 }
 
 type Patient implements User {
@@ -64,6 +183,12 @@ type Patient implements User {
 	related_persons: [PatientRelatedPerson]
 	health_maintenance: PatientHealthMaintenance
 	files: [PatientFile]
+	treatment_series: [TreatmentSeries]
+	diagnoses: [Diagnose]
+	treatment_summary: [TreatmentSummary]
+	archived_date: Date
+	archived: Boolean
+	gender: GENDER
 }
 
 input PatientInput {
@@ -75,7 +200,9 @@ input PatientInput {
 	profile_email: String
 	related_persons: [PatientRelatedPersonInput]
 	health_maintenance: PatientHealthMaintenance
-	files: [PatientFileInput]
+	diagnoses: [String!]
+	treatment_summary: [String!]
+	gender: GENDER
 }
 
 enum PatientRelatedPersonType {
@@ -97,6 +224,7 @@ type PatientRelatedPerson {
 	description: String
 	phone: String!
 	email: String
+	receive_updates: Boolean
 }
 
 input PatientRelatedPersonInput {
@@ -104,25 +232,28 @@ input PatientRelatedPersonInput {
 	description: String
 	phone: String!
 	email: String
+	receive_updates: Boolean
 }
 
 type TreatmentSeries {
-	id: Int!
+	id: ID!
 	name: String
 	treatments_number: Int!
 	treatments: [Treatment]
+	patient: Patient
+	patient_id: ID!
 }
 
 type Treatment {
-	id: Int!
+	id: ID!
 	target: String
 	method: String
 	process: String
 	parents_guidance: String
 	next_treatment_remark: String
-	patients: [Patient]
 	therapists: [Therapist]
-	date: Date
+	start_date: Date
+	end_date: Date
 }
 
 type CurrentUser implements User {
@@ -135,15 +266,6 @@ type CurrentUser implements User {
 	clinic: Clinic
 }
 
-type Query {
-	clinics: [Clinic]
-	administrators: [ClinicAdministrator]
-	therapists(clinic_id: Int!): [Therapist]
-	patients(clinic_id: Int!): [Patient]
-	treatmentSeries(clinic_id: Int!): [TreatmentSeries]
-	currentUser: CurrentUser
-}
-
 type Clinic {
 	id: Int!,
 	name: String!
@@ -154,6 +276,11 @@ type Clinic {
 	administrators: [ClinicAdministrator]
 	patients: [Patient]
 	therapists: [Therapist]
+	treatment_duration: Int
+	patients_limit: Int!
+	archive_time: Int
+	disabled: Boolean
+	deleted: Boolean
 }
 
 type MutationStatus {
@@ -166,38 +293,51 @@ input TreatmentInput {
 	process: String
 	parents_guidance: String
 	next_treatment_remark: String
-	patient_ids: [Int]
 	therapist_ids: [Int]
-	date: Date
+	start_date: Date
+	end_date: Date
+	repeat_weeks: Int
+}
+
+input ClinicInput {
+	name: String!
+	address: String!
+	phone: String
+	email: String
+	fax: String
+	treatment_duration: Int
+	patients_limit: Int!
+	archive_time: Int
+	disabled: Boolean
+}
+
+type Query {
+	clinics: [Clinic]
+	administrators: [ClinicAdministrator]
+	therapists(clinic_id: Int): [Therapist]
+	patients(clinic_id: Int!, archived: Boolean): [Patient]
+	patient(id: Int!): Patient
+	treatmentSeries(patient_id: ID, clinic_id: Int, therapist_id: ID): [TreatmentSeries]
+	currentUser: CurrentUser
 }
 
 type Mutation {
-	addClinic(
-	name: String!
-	address: String!
-	phone: String
-	email: String
-	fax: String
-): MutationStatus
+	addClinic(clinic: ClinicInput): Clinic!
 
 	editClinic(
-	id: Int!
-	name: String!
-	address: String!
-	phone: String
-	email: String
-	fax: String
-): MutationStatus
+		id: Int!
+		clinic: ClinicInput
+	): Clinic!
 
 	deleteClinic(
-	id: Int!
-): MutationStatus
+		id: Int!
+	): Clinic!
 
 	addAdministrator(
-	email: String!
-	password: String!
-	clinic_id: Int!
-): MutationStatus
+		email: String!
+		password: String!
+		clinic_id: Int!
+	): MutationStatus
 
 	editAdministrator(
 	id: Int!
@@ -231,6 +371,7 @@ type Mutation {
 	phone: String!
 	email: String!
 	birth_date: Date!
+	disabled: Boolean
 ): MutationStatus
 
 	deleteTherapist(
@@ -241,21 +382,25 @@ type Mutation {
 	addPatient(
 	clinic_id: Int!
 	patient: PatientInput
-): MutationStatus
+): Patient!
 
 	editPatient(
 	id: Int!
 	patient: PatientInput
-): MutationStatus
+): Patient!
 
 	deletePatient(
 	id: Int!
-): MutationStatus
+): Patient!
+
+	archivePatient(id: ID!): Patient!
+	unarchivePatient(id: ID!): Patient!
 
 
 	addTreatmentSeries(
 	name: String
 	treatments_number: Int!
+	patient_id: Int!
 	clinic_id: Int!
 ): MutationStatus
 
@@ -278,23 +423,30 @@ type Mutation {
 	editTreatment(
 	id: Int!
 	treatment: TreatmentInput
-): MutationStatus
+): Treatment!
 
 	deleteTreatment(
 	id: Int!
 ): MutationStatus
 
-}
+	addPatientFile(file: PatientFileInput!): Patient!
+	deletePatientFile(id: ID!): Patient!
 
+	addTreatmentSummary(input: TreatmentSummaryInput!): Patient!
+	addDiagnose(input: DiagnoseInput!): Patient!
+	editTreatmentSummary(id: ID!, input: TreatmentSummaryInput!): Patient!
+	editDiagnose(id: ID!, input: DiagnoseInput!): Patient!
+
+}
 
 
 type Subscription {
 	patientCreated(clinic_id: Int!): Patient!
-	patientUpdated(clinic_id: Int!): Patient!
+	patientUpdated(id: Int!): Patient!
 	patientDeleted(clinic_id: Int!): Patient!
-	treatmentSeriesCreated(clinic_id: Int!): TreatmentSeries!
-	treatmentSeriesUpdated(clinic_id: Int!): TreatmentSeries!
-	treatmentSeriesDeleted(clinic_id: Int!): TreatmentSeries!
+	treatmentSeriesCreated(patient_id: Int!): TreatmentSeries!
+	treatmentSeriesUpdated(patient_id: Int!): TreatmentSeries!
+	treatmentSeriesDeleted(patient_id: Int!): TreatmentSeries!
 }
 
 schema {

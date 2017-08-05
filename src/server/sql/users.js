@@ -26,11 +26,6 @@ export default class Users {
 		return knex('users')
 			.where('id', id)
 			.first()
-			.then(user => ({
-				...user,
-				files: safeParse(user.files, []),
-				related_persons: safeParse(user.related_persons)
-			}))
 	}
 
 	getByLogin(login) {
@@ -39,20 +34,34 @@ export default class Users {
 			.orWhere('login', login)
 			.orWhere('email', login)
 			.first()
+			.then(async user => {
+				if (user.clinic_id) {
+					return {
+						...user,
+						clinic: await knex('clinics').where('id', user.clinic_id).first()
+					};
+				} else {
+					return user;
+				}
+			})
 	}
 
 	getUsers(ids) {
 		return knex('users')
 			.whereIn('id', ids)
+			.andWhere('archived', false)
 			.select();
 	}
 
 	async editUser({ id, password, ...fields }) {
-		if ('files' in fields) {
-			fields.files = JSON.stringify(fields.files);
-		}
 		if ('related_persons' in fields) {
 			fields.related_persons = JSON.stringify(fields.related_persons);
+		}
+		if ('diagnoses' in fields) {
+			fields.diagnoses = JSON.stringify(fields.diagnoses);
+		}
+		if ('treatment_summary' in fields) {
+			fields.treatment_summary = JSON.stringify(fields.treatment_summary);
 		}
 		if (password) {
 			const { salt, hash } = await pwd.hash(password);
@@ -70,22 +79,111 @@ export default class Users {
 	deleteUser({ id }) {
 		return knex('users')
 			.where('id', id)
-			.delete()
+			.update('archived', true)
+			// .delete()
 	}
 
-	findByRole(role, clinic_id) {
-		let k = knex('users').where('role', role).orderBy('id', 'desc');
+	addPatientFile(file) {
+		return knex('files')
+			.insert(file, '*')
+			.then(([row]) => row); // return inserted id
+	}
+
+	getPatientFile(id) {
+		return knex('files')
+			.where('id', id)
+			.first()
+	}
+
+	deletePatientFile(id) {
+		return knex('files')
+			.where('id', id)
+			.del()
+			.then(() => id);
+	}
+
+	getPatientFiles(patient_id) {
+		return knex('files')
+			.where('patient_id', patient_id)
+			.orderBy('id', 'DESC')
+			.select();
+	}
+
+	getDiagnoses(patient_id) {
+		return knex('patient_objects')
+			.where('patient_id', patient_id)
+			.andWhere('type', 'DIAGNOSE')
+			.orderBy('id', 'DESC')
+			.select();
+	}
+
+	addDiagnose(diagnose) {
+		if ('fields' in diagnose) {
+			diagnose.fields = JSON.stringify(diagnose.fields);
+		}
+		if ('fillers_ids' in diagnose) {
+			diagnose.fillers_ids = JSON.stringify(diagnose.fillers_ids);
+		}
+		return knex('patient_objects')
+			.insert({ ...diagnose, type: 'DIAGNOSE' }, '*')
+			.then(([row]) => row); // return inserted id
+	}
+
+	editDiagnose(id, diagnose) {
+		if ('fields' in diagnose) {
+			diagnose.fields = JSON.stringify(diagnose.fields);
+		}
+		if ('fillers_ids' in diagnose) {
+			diagnose.fillers_ids = JSON.stringify(diagnose.fillers_ids);
+		}
+		return knex('patient_objects')
+			.where('id', id)
+			.update(diagnose);
+	}
+
+	addTreatmentSummary(diagnose) {
+		if ('fields' in diagnose) {
+			diagnose.fields = JSON.stringify(diagnose.fields);
+		}
+		if ('fillers_ids' in diagnose) {
+			diagnose.fillers_ids = JSON.stringify(diagnose.fillers_ids);
+		}
+		return knex('patient_objects')
+			.insert({ ...diagnose, type: 'TREATMENT_SUMMARY' }, '*')
+			.then(([row]) => row); // return inserted id
+	}
+
+	editTreatmentSummary(id, diagnose) {
+		if ('fields' in diagnose) {
+			diagnose.fields = JSON.stringify(diagnose.fields);
+		}
+		if ('fillers_ids' in diagnose) {
+			diagnose.fillers_ids = JSON.stringify(diagnose.fillers_ids);
+		}
+		return knex('patient_objects')
+			.where('id', id)
+			.update(diagnose);
+	}
+
+	getTreatmentSummary(patient_id) {
+		return knex('patient_objects')
+			.where('patient_id', patient_id)
+			.andWhere('type', 'TREATMENT_SUMMARY')
+			.orderBy('id', 'DESC')
+			.select();
+	}
+
+	findByRole(role, clinic_id, archived = false) {
+		let k = knex('users')
+			.where('role', role)
+			.orderBy('id', 'desc');
 		if (clinic_id) {
 			k = k.andWhere('clinic_id', clinic_id);
 		}
 		return k
 			.orderBy('id', 'DESC')
-			.select()
-			.then(users => users.map(user => ({
-				...user,
-				files: safeParse(user.files, []),
-				related_persons: safeParse(user.related_persons),
-			})));
+			.andWhere('archived', archived)
+			.select();
 	}
 
 	async checkPassword({ login, password }) {

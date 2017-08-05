@@ -7,6 +7,9 @@ import jwt from 'express-jwt';
 
 import { app as settings } from '../../package.json'
 import log from '../log'
+import Clinics from './sql/clinics';
+import Users from './sql/users';
+import Treatments from './sql/treatments';
 
 // Hot reloadable modules
 let websiteMiddleware = require('./middleware/website').default;
@@ -29,7 +32,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/', express.static(settings.frontendBuildDir, {maxAge: '180 days'}));
-app.use('/uploads', express.static(settings.uploadsDir));
+app.use('/uploads', express.static(settings.uploadsDir, {
+  setHeaders(res) {
+	  res.attachment();
+  }
+}));
 if (__DEV__) {
   app.use('/assets', express.static(path.join(settings.backendBuildDir, 'assets'), {maxAge: '180 days'}));
 } else {
@@ -45,7 +52,15 @@ app.use((...args) => websiteMiddleware(...args));
 server = http.createServer(app);
 
 new SubscriptionServer({
-  subscriptionManager
+  subscriptionManager,
+	onConnect: async (connectionParams, webSocket) => {
+		return {
+			Clinics: new Clinics(),
+			Users: new Users(),
+			Treatments: new Treatments(),
+			currentUser: false, // TODO: implement security here
+		};
+	}
 }, {
 	server,
 	path: '/'

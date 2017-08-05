@@ -8,5 +8,6 @@ query therapists($clinic_id: Int!) {
         phone
         birth_date
         id_number
+        disabled
     }
 }

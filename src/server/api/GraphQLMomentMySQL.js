@@ -9,11 +9,11 @@ export default new GraphQLScalarType({
 	 * @return {String} date as string
 	 */
 	serialize: function (value) {
-		let date = moment(value);
+		let date = moment.utc(value);
 		if(!date.isValid()) {
 			throw new GraphQLError('Field serialize error: value is an invalid Date');
 		}
-		return date.format();
+		return date.toISOString();
 	},
 	/**
 	 * Parse value into date

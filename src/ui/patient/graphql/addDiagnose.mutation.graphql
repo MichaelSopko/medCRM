@@ -1,0 +1,9 @@
+#import './Diagnose.fragment.graphql'
+mutation addDiagnose($input: DiagnoseInput!) {
+    addDiagnose(input: $input) {
+        id
+        diagnoses {
+            ...DiagnoseFragment
+        }
+    }
+}

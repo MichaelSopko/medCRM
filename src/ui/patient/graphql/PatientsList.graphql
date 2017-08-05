@@ -1,0 +1,8 @@
+query patients($clinic_id: Int!, $archived: Boolean) {
+    patients(clinic_id: $clinic_id, archived: $archived) {
+        id
+        id_number
+        first_name
+        last_name
+    }
+}

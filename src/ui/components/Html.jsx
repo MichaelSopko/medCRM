@@ -1,11 +1,11 @@
 import React, { PropTypes } from 'react'
-import { locale } from '../../../config.json';
+import config from '../../../config';
 import cx from 'classnames';
 
 const Html = ({ content, state, assetMap }) => {
-	const isRtl = locale === 'he';
+	const isRtl = config.locale === 'he';
 	return (
-		<html lang={locale}>
+		<html lang={config.locale}>
 		<head>
 			<meta charSet="utf-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1"/>

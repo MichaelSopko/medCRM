@@ -26,7 +26,7 @@ class Dashboard extends Component {
 					router.push('/dashboard/therapists');
 					break;
 				case ROLES.THERAPIST:
-					router.push('/dashboard/treatments');
+					router.push('/patients');
 					break;
 			}
 		}
@@ -46,9 +46,7 @@ class Dashboard extends Component {
 					<Spin size="large"/>
 				</div> }
 				{ !showSpinner && <UserNavbar currentUser={currentUser}/> }
-				{ !showSpinner && <div className="Container">
-					{ currentUser && children }
-				</div> }
+				{ !showSpinner && currentUser && children }
 			</main>
 		);
 	}

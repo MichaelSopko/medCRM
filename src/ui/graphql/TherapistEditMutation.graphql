@@ -8,6 +8,7 @@ $license_number: Int!
 $phone: String!
 $email: String!
 $birth_date: Date!
+    $disabled: Boolean
 ) {
     editTherapist(
         id: $id
@@ -19,6 +20,7 @@ $birth_date: Date!
         phone: $phone,
         email: $email,
         birth_date: $birth_date
+        disabled: $disabled
     ) {
         status
     }

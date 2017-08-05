@@ -1,0 +1,33 @@
+#import './PatientFiles.fragment.graphql'
+#import './Diagnose.fragment.graphql'
+#import './TreatmentSummary.fragment.graphql'
+fragment PatientFragment on Patient {
+    id
+    id_number
+    first_name
+    last_name
+    birth_date
+    phone
+    profile_email
+    archived
+    gender
+    related_persons {
+        type
+        description
+        phone
+        email
+        receive_updates
+    }
+    health_maintenance
+    archived_date
+
+    files {
+        ...PatientFilesFields
+    }
+    treatment_summary {
+        ...TreatmentSummaryFragment
+    }
+    diagnoses {
+        ...DiagnoseFragment
+    }
+}

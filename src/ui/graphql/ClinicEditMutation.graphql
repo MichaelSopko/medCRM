@@ -1,12 +1,13 @@
+#import './ClinicFragment.graphql'
+
 mutation editClinic(
     $id: Int!
-    $name: String!
-    $address: String!
-    $phone: String
-    $email: String
-    $fax: String
+    $clinic: ClinicInput!
 ) {
-    editClinic(id: $id, name: $name, address: $address, phone: $phone, email: $email, fax: $fax) {
-        status
+    editClinic(
+        id: $id,
+        clinic: $clinic
+    ) {
+        ...ClinicFragment
     }
 }

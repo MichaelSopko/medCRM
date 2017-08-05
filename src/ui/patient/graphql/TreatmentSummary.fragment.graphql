@@ -1,0 +1,19 @@
+fragment TreatmentSummaryFragment on TreatmentSummary {
+    id
+    patient_age
+    date
+    fillers {
+        id
+        first_name
+        last_name
+        license_number
+        role
+    }
+    fields {
+        treatments_length
+        treatment_targets
+        parents_involment
+        treatments_progress
+        recommendations
+    }
+}

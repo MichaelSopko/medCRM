@@ -1,0 +1,85 @@
+.StringsForm {
+	.ant-form-item-control-wrapper {
+		flex: 1;
+	}
+}
+
+.PatientView {
+	.ant-tabs-bar {
+		display: flex;
+		justify-content: space-between;
+		flex-direction: row-reverse;
+	}
+	.ant-tabs-card > .ant-tabs-content {
+		margin-top: -16px !important;
+	}
+
+	.ant-tabs-card > .ant-tabs-content > .ant-tabs-tabpane {
+		background: #fff;
+		padding: 16px !important;
+	}
+
+	.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab {
+		border-color: transparent !important;
+	}
+
+	.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {
+		border-color: #fff !important;
+	}
+
+	&__Tab {
+		background: #ffffff;
+		padding: 24px;
+	}
+
+	&__Empty {
+		background: #ffffff;
+		border-radius: 2px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 24px;
+		color: #eee;
+		padding: 36px;
+	}
+
+}
+
+.Details {
+	display: flex;
+	&__fields {
+		width: 40%;
+	}
+	&__related-persons {
+		width: 60%;
+	}
+	&__header {
+	}
+	&__name {
+		display: inline-block;
+		font-weight: 600;
+		font-size: 28px;
+	}
+	&__age {
+		font-size: 20px;
+		margin-left: 12px;
+	}
+	&__id {
+		color: #b7b7b7;
+		font-weight: 300;
+		font-size: 20px;
+		margin-bottom: 36px;
+	}
+	&__field {
+		display: flex;
+		line-height: 2;
+		font-size: 16px;
+	}
+	&__field-name {
+		width: 200px;
+		font-weight: 300;
+		&::after {
+			content: ':';
+		}
+	}
+}

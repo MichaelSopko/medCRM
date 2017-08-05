@@ -14,7 +14,7 @@ import ClinicsSelector from '../ClinicsSelector'
 import CheckAccess from '../helpers/CheckAccess'
 import moment from 'moment';
 
-import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, DatePicker, notification } from 'antd'
+import { Table, Icon, Switch, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, DatePicker, notification } from 'antd'
 
 const EntityForm = Form.create()(
 	(props) => {
@@ -32,6 +32,7 @@ const EntityForm = Form.create()(
 			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
 			       onCancel={onCancel}
 			       onOk={onSubmit}
+			       width={700}
 			       confirmLoading={loading}>
 				<Form>
 					<Form.Item
@@ -46,7 +47,7 @@ const EntityForm = Form.create()(
 								message: formatMessage({ id: 'common.field_id_number_error' }),
 							}],
 						})(
-							<Input type="number"/>
+							<Input type="number" />,
 						)}
 					</Form.Item>
 					<Form.Item
@@ -63,7 +64,7 @@ const EntityForm = Form.create()(
 								message: formatMessage({ id: 'common.field_licence_error' }),
 							}],
 						})(
-							<Input type="number"/>
+							<Input type="number" />,
 						)}
 					</Form.Item>
 					{ <Form.Item
@@ -77,7 +78,7 @@ const EntityForm = Form.create()(
 								type: 'email', required: true, message: formatMessage({ id: 'common.field_email_error' }),
 							}],
 						})(
-							<Input type="email"/>
+							<Input type="email" />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -91,7 +92,7 @@ const EntityForm = Form.create()(
 								required: true, message: formatMessage({ id: 'common.field_first_name_error' }),
 							}],
 						})(
-							<Input />
+							<Input />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -105,7 +106,7 @@ const EntityForm = Form.create()(
 								required: true, message: formatMessage({ id: 'common.field_last_name_error' }),
 							}],
 						})(
-							<Input />
+							<Input />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -120,7 +121,7 @@ const EntityForm = Form.create()(
 								required: true, message: formatMessage({ id: 'common.field_phone_error' }),
 							}],
 						})(
-							<Input/>
+							<Input />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -128,14 +129,52 @@ const EntityForm = Form.create()(
 						label={formatMessage({ id: 'common.field_birth_date' })}
 						hasFeedback
 					>
-						{getFieldDecorator('birth_date', {
-							initialValue: moment(values.birth_date),
-							validateTrigger: 'onBlur', rules: [{
-								required: true, message: formatMessage({ id: 'common.field_birth_date_error' }),
-							}],
-						})(
-							<DatePicker showToday={false}/>
-						)}
+						<Col span={8}>
+							{getFieldDecorator('birth_date.year', {
+								initialValue: values.birth_date ? moment(values.birth_date).year().toString() : undefined,
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*'
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_year' })}>
+									{ new Array(100).fill(new Date().getFullYear()).map((_, i) => {
+										const y = _ - i;
+										return (<Select.Option key={i} value={y.toString()}>{y}</Select.Option>)
+									}) }
+								</Select>
+							)}
+						</Col>
+						<Col span={6} offset={1}>
+							{getFieldDecorator('birth_date.date', {
+								initialValue: values.birth_date ? moment(values.birth_date).date().toString() : undefined,
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*'
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_day' })}>
+									{ new Array(31).fill(1).map((_, i) => {
+										const y = ++i;
+										return (<Select.Option key={y} value={y.toString()}>{y}</Select.Option>)
+									}) }
+								</Select>
+							)}
+						</Col>
+						<Col span={8} offset={1}>
+							{getFieldDecorator('birth_date.month', {
+								initialValue: values.birth_date ? moment(values.birth_date).month().toString() : undefined,
+								validateTrigger: 'onBlur', rules: [{
+									required: true, message: '*'
+								}],
+							})(
+								<Select placeholder={formatMessage({ id: 'common.field_month' })}>
+									{ new Array(12).fill(12).map((_, i) => {
+										const y = _ - i;
+										return (<Select.Option key={i} value={(y-1).toString()}>{moment.months()[y-1]}</Select.Option>)
+									}) }
+								</Select>
+							)}
+						</Col>
+
 					</Form.Item> }
 					<Form.Item
 						{...formItemLayout}
@@ -144,32 +183,44 @@ const EntityForm = Form.create()(
 					>
 						{getFieldDecorator('password', {
 							validateTrigger: 'onBlur', rules: [{
-								required: !isEditing, message: formatMessage({ id: 'common.field_password_error' })
-							}
+								required: !isEditing, message: formatMessage({ id: 'common.field_password_error' }),
+							},
 							],
 						})(
-							<Input />
+							<Input />,
+						)}
+					</Form.Item>
+					<Form.Item
+						{...formItemLayout}
+						label={formatMessage({ id: 'common.field_disabled' })}
+					>
+						{getFieldDecorator('disabled', {
+							initialValue: values.disabled,
+							valuePropName: 'checked',
+							validateTrigger: 'onBlur', rules: [],
+						})(
+							<Switch/>
 						)}
 					</Form.Item>
 				</Form>
 			</Modal>
 		);
-	}
+	},
 );
 
 class Therapists extends Component {
 
 	static contextTypes = {
-		intl: PropTypes.object.isRequired
+		intl: PropTypes.object.isRequired,
 	};
 
 	static propTypes = {
-		data: PropTypes.object
+		data: PropTypes.object,
 	};
 
 	state = {
 		modalOpened: false,
-		activeEntity: {}
+		activeEntity: {},
 	};
 
 	handleOk = () => {
@@ -210,7 +261,7 @@ class Therapists extends Component {
 				if (message === 'DUPLICATE_ID_NUMBER') id = 'common.field_id_number_error_duplicate';
 			}
 			notification.error({
-				message: formatMessage({ id })
+				message: formatMessage({ id }),
 			});
 		};
 
@@ -218,6 +269,9 @@ class Therapists extends Component {
 			if (err) {
 				return;
 			}
+
+			values.birth_date = moment(values.birth_date);
+
 			isEditing ?
 				this.props.editTherapist({ id: this.state.activeEntity.id, ...values })
 					.then(() => {
@@ -238,7 +292,7 @@ class Therapists extends Component {
 		this.form.resetFields();
 		this.setState({
 			modalOpened: true,
-			activeEntity: entity
+			activeEntity: entity,
 		});
 	};
 
@@ -250,25 +304,28 @@ class Therapists extends Component {
 			title: formatMessage({ id: 'common.field_name' }),
 			key: 'name',
 			width: '30%',
+			sorter: (a, b) => a.name > b.name,
 			render: (text, record) => <div className="to-dynamic-container">
 				<span className="to-dynamic">{record.first_name} {record.last_name}</span>
-			</div>
+			</div>,
 		}, {
 			title: formatMessage({ id: 'common.field_phone' }),
 			dataIndex: 'phone',
 			key: 'phone',
 			width: '25%',
+			sorter: (a, b) => a.phone > b.phone,
 			render: text => <div className="to-dynamic-container">
 				<span className="to-dynamic"><a href={ `tel:${text}` }>{ text }</a></span>
-			</div>
+			</div>,
 		}, {
 			title: formatMessage({ id: 'common.field_email' }),
 			dataIndex: 'email',
 			key: 'email',
 			width: '25%',
+			sorter: (a, b) => a.email > b.email,
 			render: text => <div className="to-dynamic-container">
 				<span className="to-dynamic"><a href={ `mailto:${text}` }>{ text }</a></span>
-			</div>
+			</div>,
 		}, {
 			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
@@ -278,7 +335,7 @@ class Therapists extends Component {
 		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
 			      {formatMessage({ id: 'common.action_edit' })}
 		      </Button>
-					<span className="ant-divider"/>
+					<span className="ant-divider" />
 		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
 			      deleteTherapist(record)
 		      } } okText={formatMessage({ id: 'common.confirm_yes' })}
@@ -294,32 +351,34 @@ class Therapists extends Component {
 
 		return (
 			<section className="Therapists">
-				<EntityForm
-					ref={ form => {
-						this.form = form
-					} }
-					visible={modalOpened}
-					loading={loading}
-					onCancel={this.handleCancel}
-					onSubmit={this.handleFormSubmit}
-					values={activeEntity}
-					formatMessage={formatMessage}
-				/>
-				<div className="Dashboard__Details">
-					<h1 className="Dashboard__Header">
-						{ formatMessage({ id: 'Therapists.header' }) }
-					</h1>
-					<div className="Dashboard__Actions">
-						<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
-							<ClinicsSelector/>
-						</CheckAccess>
-						<Button type="primary" onClick={ this.showModal } disabled={ !currentClinic.id }>
-							<Icon type="plus-circle-o"/>
-							{ formatMessage({ id: 'Therapists.create_button' }) }
-						</Button>
+				<div className="Container Dashboard__Content">
+					<EntityForm
+						ref={ form => {
+							this.form = form
+						} }
+						visible={modalOpened}
+						loading={loading}
+						onCancel={this.handleCancel}
+						onSubmit={this.handleFormSubmit}
+						values={activeEntity}
+						formatMessage={formatMessage}
+					/>
+					<div className="Dashboard__Details">
+						<h1 className="Dashboard__Header">
+							{ formatMessage({ id: 'Therapists.header' }) }
+						</h1>
+						<div className="Dashboard__Actions">
+							<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
+								<ClinicsSelector />
+							</CheckAccess>
+							<Button type="primary" onClick={ this.showModal } disabled={ !currentClinic.id }>
+								<Icon type="plus-circle-o" />
+								{ formatMessage({ id: 'Therapists.create_button' }) }
+							</Button>
+						</div>
 					</div>
+					<Table dataSource={therapists} columns={columns} loading={loading} rowKey='id' />
 				</div>
-				<Table dataSource={therapists} columns={columns} loading={loading} rowKey='id'/>
 			</section>
 		);
 	}
@@ -329,9 +388,9 @@ const TherapistsApollo = withApollo(compose(
 	graphql(GET_THERAPISTS_QUERY, {
 		options: ({ currentClinic }) => ({
 			variables: {
-				clinic_id: currentClinic.id
-			}
-		})
+				clinic_id: currentClinic.id,
+			},
+		}),
 	}),
 	graphql(ADD_THERAPIST_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
@@ -340,11 +399,11 @@ const TherapistsApollo = withApollo(compose(
 				refetchQueries: [{
 					query: GET_THERAPISTS_QUERY,
 					variables: {
-						clinic_id: ownProps.currentClinic.id
-					}
+						clinic_id: ownProps.currentClinic.id,
+					},
 				}],
-			})
-		})
+			}),
+		}),
 	}),
 	graphql(DELETE_THERAPIST_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
@@ -353,11 +412,11 @@ const TherapistsApollo = withApollo(compose(
 				refetchQueries: [{
 					query: GET_THERAPISTS_QUERY,
 					variables: {
-						clinic_id: ownProps.currentClinic.id
-					}
+						clinic_id: ownProps.currentClinic.id,
+					},
 				}],
-			})
-		})
+			}),
+		}),
 	}),
 	graphql(EDIT_THERAPIST_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
@@ -366,11 +425,11 @@ const TherapistsApollo = withApollo(compose(
 				refetchQueries: [{
 					query: GET_THERAPISTS_QUERY,
 					variables: {
-						clinic_id: ownProps.currentClinic.id
-					}
+						clinic_id: ownProps.currentClinic.id,
+					},
 				}],
-			})
-		})
+			}),
+		}),
 	}),
 )(Therapists));
 
@@ -378,7 +437,7 @@ const TherapistsApollo = withApollo(compose(
 @connect((state) => ({ currentClinic: state.currentClinic }))
 class CurrentClinicWrapper extends Component {
 	render() {
-		return <TherapistsApollo { ...this.props }/>
+		return <TherapistsApollo { ...this.props } />
 	}
 }
 

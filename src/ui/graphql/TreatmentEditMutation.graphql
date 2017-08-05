@@ -6,6 +6,19 @@ $treatment: TreatmentInput
         id: $id
         treatment: $treatment
     ) {
-        status
+        id
+        target
+        method
+        process
+        parents_guidance
+        next_treatment_remark
+        therapists {
+            id
+            id_number
+            first_name
+            last_name
+        }
+        start_date
+        end_date
     }
 }

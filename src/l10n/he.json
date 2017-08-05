@@ -3,7 +3,7 @@
     "SYSTEM_ADMIN": "מנהל מערכת",
     "CLINIC_ADMIN": "מנהל קליניקה",
     "THERAPIST": "מטפל",
-    "Patient": "מטופל"
+    "PATIENT": "מטופל"
   },
   "health_maintenance": {
     "CLATIT": "כללית",
@@ -22,7 +22,9 @@
     "field_email_error": "נא להכניס כתובת אימייל",
     "field_email": "אימייל",
     "field_password": "סיסמא",
-    "login_button": "התחברות"
+    "login_button": "התחברות",
+    "error_password": "פרטי התחברות שגויים",
+    "error_disabled": "החשבון חסום"
   },
   "ProfileWidget": {
     "logout": "להתנתק",
@@ -31,18 +33,25 @@
   "ClinicsSelector": {
     "placeholder": "נא לבחור קליניקה"
   },
+  "PatientSelector": {
+    "placeholder": "בחר מטופל..."
+  },
   "UserNavbar": {
     "treatments": "טיפולים",
     "patients": "מטופלים",
     "administrators": "מנהלים",
     "clinics": "קליניקות",
-    "therapists": "מטפלים"
+    "therapists": "מטפלים",
+    "calendar": "יומן עבודה"
   },
   "Clinics": {
     "create_button": "יצירת קליניקה",
     "create_header": "יצירת קליניקה",
     "edit_header": "עריכת קליניקה",
-    "header": "קליניקות"
+    "header": "קליניקות",
+    "field_patients_limit": "מקסימום מספר מטופלים",
+    "field_treatment_duration": "משך זמן טיפול (דקות)",
+    "field_archive_time": "משך זמן חסימה (דקות)"
   },
   "Administrators": {
     "create_button": "יצירת מנהל מערכת",
@@ -53,9 +62,9 @@
     "field_clinic_error": "נא לבחור קליניקה"
   },
   "Therapists": {
-    "create_button": "יצית מטופל",
-    "create_header": "צו מטופל",
-    "edit_header": "ערכת מטופל",
+    "create_button": "מטופל חדש",
+    "create_header": "מטופל חדש",
+    "edit_header": "עריכת מטפל",
     "header": "מטפלים"
   },
   "Patients": {
@@ -70,7 +79,69 @@
     "add_related_persons": "הוספת מקורב",
     "upload_files": "העלאת קבצים",
     "field_files": "קבצים",
-    "field_health_maintenance": "קופת חולים"
+    "field_health_maintenance": "קופת חולים",
+    "field_files": "קבצים",
+    "empty": "בחר מטופל",
+    "tabs": {
+      "details": "פרטים",
+      "diagnoses": "אבחונים",
+      "treatments": "טיפולים",
+      "treatment_summary": "סיכומי טיפול",
+      "files": "קבצים {number}"
+    },
+    "age": "{years} שנים, {months} חודשים, {days} ימים",
+    "created-message": "מטופל נוצר בהצלחה",
+    "show-archived": "הראה ארכיון",
+    "archive_error_title": "שגיאה",
+    "archive_error_limit": "לקליניקה מספר מקסימלי של {limit} מטופלים",
+    "archive_error_time": "המטופל יוכל להיות פעיל בעוד {time}",
+    "archived_message": "מטופל נשלח לארכיון",
+    "unarchived_message": "מטופל הוסר מארכיון",
+    "field_receive_updates": "מעוניין לקבל עדכונים למייל",
+    "diagnose_fillers": "Diagnose fillers",
+    "diagnose_date": "Diagnose date",
+    "print_date": "Print date",
+    "age_in_diagnose": "Age in diagnose",
+    "patient_name": "Patient name",
+    "add_filler": "Add filler",
+    "field_empty": "<מידע ריק>"
+  },
+  "TreatmentSummaryTab": {
+    "create_title": "Generate treatment summary",
+    "treatments_length": "משך הטיפול",
+    "treatment_targets": "מטרות הטיפול",
+    "parents_involment": "שיתוף פעולה ומעורבות ההורים",
+    "treatments_progress": "התקדמות הטיפול",
+    "recommendations": "המלצות"
+  },
+  "DiagnoseTab": {
+    "create_title": "Generate diagnose",
+    "hearing_test": "Hearing test",
+    "hearing_test_remarks": "Remarks for hearing test",
+    "hearing_test_date": "Date",
+    "tab1": "רקע כללי והתפתחותי",
+    "tab2": "כלי אבחון",
+    "tab3": "סיכום",
+    "pregnancy_and_birth": "הריון ולידה",
+    "psychomotor_progression": "התפתחות פסיכומוטורית",
+    "language_and_speech_progression": "התפתחות דיבור ושפה",
+    "eating_function": "תפקודי אכילה",
+    "family_background": "רקע משפחתי",
+    "health_background": "רקע רפואי",
+    "past_and_present_treatments": "גורמים מטפלים בעבר ובהווה",
+    "environmental_context": "הקשר סביבתי",
+    "parents_report": "דיווח הורים",
+    "kindergarten_teacher_report": "דיווח גננת",
+    "diagnose_tools": "אבחון כלי",
+    "behaviour_and_general_impression": "התנהגות והתרשמות כללית",
+    "communications_skills": "מיומנויות תקשורת",
+    "gaming_skills": "מיומנויות משחק ",
+    "language_grasp": "הבנת שפה",
+    "language_expression": "הבעת שפה",
+    "speech_intelligibility": "היגוי ומובנות דיבור",
+    "speech_fluency": "שטף דיבור",
+    "summary": "סיכום",
+    "recommendations": "המלצות"
   },
   "Treatments": {
     "create_treatment_button": "הוספת טיפול",
@@ -80,7 +151,7 @@
     "header": "סדרת טיפולים",
     "field_treatments_number": "מספר טיפולים",
     "field_treatments_number_error": "נא להכניס מספר טיפולים",
-    "field_method": "מתהוד",
+    "field_method": "שיטת טיפול",
     "field_target": "מטרת הטיפול",
     "field_process": "מהלך הטיפול",
     "field_parents_guidance": "הדרכת הורים",
@@ -89,7 +160,27 @@
     "field_patients": "מטופלים",
     "field_patients_error": "נא לבחור לפחות אחד",
     "field_therapists": "מטפלים",
-    "field_therapists_error": "נא לבחור לפחות אחד"
+    "field_therapists_error": "נא לבחור לפחות אחד",
+    "field_start_date": "התחלה",
+    "field_start_date_header": "ושעה תאריך",
+    "field_end_date": "סוף",
+    "update_email": {
+      "subject": "עדכון טיפול עבור מטופל",
+      "content": "תאריך התחלה: {start_date}, תאריך סיום: {end_date}"
+    },
+    "repeat_weeks": "Repeat this treatment for X weeks"
+  },
+  "Calendar": {
+    "header": "הראה טיפולים",
+    "show_all": "הראה הכל",
+    "allDay": "All day",
+    "previous": "הקודם",
+    "next": "הבא",
+    "today": "היום",
+    "month": "חודש",
+    "week": "שבוע",
+    "day": "יום",
+    "agenda": "רשימה"
   },
   "common": {
     "field_name": "שם",
@@ -123,6 +214,33 @@
     "field_licence_error": "נא להכניס מספר רשיון",
     "field_id_number_error_duplicate": "מספר זהות כבר קיים במערכת",
     "field_email_error_duplicate": "אימייל כבר קיים במערכת",
-    "server_error": "שגיאה כללית"
+    "server_error": "שגיאה כללית",
+    "field_licence": "מספר רשיון",
+    "field_licence_error": "נא להזין מספר רשיון",
+    "server_error": "Server error",
+    "field_disabled": "חסום",
+    "field_archived": "נשלח לארכיון",
+    "field_year": "שנה",
+    "field_month": "חודש",
+    "field_day": "יום",
+    "field_hours": "hours",
+    "field_minutes": "minutes",
+    "size": "גודל",
+    "action_archive": "שלח לארכיון",
+    "action_unarchive": "הוצא מארכיון",
+    "gender": {
+      "field_name": "Gender",
+      "field_error": "Please set a gender",
+      "MALE": "Male",
+      "FEMALE": "Female"
+    },
+    "action_view": "View",
+    "action_print": "Print",
+    "action_cancel": "Cancel",
+    "age": {
+      "years": "years",
+      "months": "months",
+      "days": "days"
+    }
   }
 }

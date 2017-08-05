@@ -1,0 +1,7 @@
+#import './PatientFragment.graphql'
+
+subscription onPatientCreated($clinic_id: Int!){
+    patientCreated(clinic_id: $clinic_id) {
+        ...PatientFragment
+    }
+}

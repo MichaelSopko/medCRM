@@ -1,4 +1,7 @@
 @import "~antd/dist/antd.css";
+@import "~react-big-calendar/lib/css/react-big-calendar.css";
+@import "~react-big-calendar/lib/addons/dragAndDrop/styles.css";
+
 
 $primary-color: #191654;
 
@@ -111,6 +114,12 @@ body.rtl {
 	.ant-calendar-header .ant-calendar-prev-month-btn {
 		left: auto;
 		right: 29px;
+	}
+	.ant-tabs-nav.ant-tabs-nav-animated {
+		float: right;
+	}
+	.ant-form-item-control-wrapper:first-child {
+		flex: 1;
 	}
 }
 
