@@ -22,12 +22,18 @@ const EntityForm = Form.create()(
 			wrapperCol: { span: 14 },
 		};
 		const isEditing = !!Object.keys(values).length;
+		const checkForConfirm = () => form.isFieldsTouched() ? Modal.confirm({
+			title: formatMessage({ id: 'common.modal_save_confirm.title' }),
+			onOk: onCancel,
+			okText: formatMessage({ id: 'common.modal_save_confirm.ok' }),
+			cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' })
+		}) : onCancel();
 
 		return (
 			<Modal title={ formatMessage({ id: isEditing ? 'Administrators.edit_header' : 'Administrators.create_header' }) }
 			       visible={visible}
 			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
-			       onCancel={onCancel}
+			       onCancel={checkForConfirm}
 			       onOk={onSubmit}
 			       confirmLoading={loading}>
 				<Form>

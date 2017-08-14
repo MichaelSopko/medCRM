@@ -241,6 +241,11 @@
       "years": "years",
       "months": "months",
       "days": "days"
+    },
+    "modal_save_confirm": {
+      "ok": "Close",
+      "cancel": "Return to editing",
+      "title": "You have unsaved changes"
     }
   }
 }

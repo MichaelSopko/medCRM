@@ -167,6 +167,11 @@
     "field_archived": "Archived",
     "field_year": "Year",
     "field_month": "Month",
-    "field_day": "Day"
+    "field_day": "Day",
+    "modal_save_confirm": {
+      "ok": "Close",
+      "cancel": "Return to editing",
+      "title": "You have unsaved changes"
+    }
   }
 }

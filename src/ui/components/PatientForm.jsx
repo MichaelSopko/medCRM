@@ -14,7 +14,7 @@ import {
 	Upload,
 	notification,
 	Checkbox,
-	Radio
+	Radio,
 } from 'antd'
 import moment from 'moment';
 
@@ -40,12 +40,18 @@ export default Form.create()(
 			}
 			return e && e.fileList;
 		};
+		const checkForConfirm = () => form.isFieldsTouched() ? Modal.confirm({
+			title: formatMessage({ id: 'common.modal_save_confirm.title' }),
+			onOk: onCancel,
+			okText: formatMessage({ id: 'common.modal_save_confirm.ok' }),
+			cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' })
+		}) : onCancel();
 
 		return (
 			<Modal title={ formatMessage({ id: isEditing ? 'Patients.edit_header' : 'Patients.create_header' }) }
 			       visible={visible}
 			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
-			       onCancel={onCancel}
+			       onCancel={checkForConfirm}
 			       onOk={onSubmit}
 			       width={600}
 			       confirmLoading={loading}>
