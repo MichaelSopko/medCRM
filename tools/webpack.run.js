@@ -191,15 +191,25 @@ function startWebpackDevServer(clientConfig, reporter) {
 	waitForPort('localhost', pkg.app.apiPort, function(err) {
 		if (err) throw new Error(err);
 
+		const sslOptions = __SSL__ ? {
+			https: ['http/1.1', 'http/1.0'],
+			key: fs.readFileSync("keys/key.pem"),
+			cert: fs.readFileSync("keys/cert.pem"),
+		} : {};
+
 		const app = new WebpackDevServer(compiler, {
 			hot: true,
 			contentBase: '/',
 			publicPath: clientConfig.output.publicPath,
 			headers: { 'Access-Control-Allow-Origin': '*' },
 			proxy: {
-				'*': `http://localhost:${pkg.app.apiPort}`
+				'*': {
+					target: __SSL__ ? `https://localhost:${pkg.app.apiPort}` : `http://localhost:${pkg.app.apiPort}`,
+					secure: false,
+				},
 			},
 			noInfo: true,
+			...sslOptions,
 			reporter: ({state, stats}) => {
 				if (state) {
 					logFront("bundle is now VALID.");

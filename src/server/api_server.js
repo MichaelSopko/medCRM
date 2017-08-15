@@ -2,8 +2,10 @@ import express from 'express';
 import bodyParser from 'body-parser'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 import http from 'http'
+import https from 'https'
 import path from 'path'
 import jwt from 'express-jwt';
+import fs from 'fs';
 
 import { app as settings } from '../../package.json'
 import log from '../log'
@@ -49,7 +51,10 @@ app.use('/api/authentication', (...args) => authenticationMiddleware(...args));
 app.use('/api/upload-file', jwt({ secret: settings.secret }), (...args) => uploadsMiddleware(...args));
 app.use((...args) => websiteMiddleware(...args));
 
-server = http.createServer(app);
+server = !__SSH__ ? http.createServer(app) : https.createServer({
+	key: fs.readFileSync('keys/key.pem'),
+	cert: fs.readFileSync('keys/cert.pem')
+}, app);
 
 new SubscriptionServer({
   subscriptionManager,

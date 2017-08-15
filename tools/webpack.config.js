@@ -58,6 +58,7 @@ let serverPlugins = [
 	new webpack.BannerPlugin('require("source-map-support").install();',
 		{ raw: true, entryOnly: false }),
 	new webpack.DefinePlugin(Object.assign({__CLIENT__: false, __SERVER__: true, __SSR__: pkg.app.ssr,
+		__SSH__: !!process.env.USE_SSH,
 		__DEV__: __DEV__, 'process.env.NODE_ENV': `"${buildNodeEnv}"`}))
 ];
 
@@ -101,6 +102,7 @@ let clientPlugins = [
 		fileName: 'assets.json'
 	}),
 	new webpack.DefinePlugin(Object.assign({__CLIENT__: true, __SERVER__: false, __SSR__: pkg.app.ssr,
+		__SSH__: !!process.env.USE_SSH,
 		__DEV__: __DEV__, 'process.env.NODE_ENV': `"${buildNodeEnv}"`})),
 ];
 
