@@ -28,6 +28,7 @@ const EntityForm = Form.create()(
 			cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' })
 		}) : onCancel();
 
+
 		return (
 			<Modal title={ formatMessage({ id: isEditing ? 'Clinics.edit_header' : 'Clinics.create_header' }) }
 			       visible={visible}

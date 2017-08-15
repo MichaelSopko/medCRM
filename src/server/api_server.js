@@ -51,7 +51,7 @@ app.use('/api/authentication', (...args) => authenticationMiddleware(...args));
 app.use('/api/upload-file', jwt({ secret: settings.secret }), (...args) => uploadsMiddleware(...args));
 app.use((...args) => websiteMiddleware(...args));
 
-server = !__SSH__ ? http.createServer(app) : https.createServer({
+server = !__SSL__ ? http.createServer(app) : https.createServer({
 	key: fs.readFileSync('keys/key.pem'),
 	cert: fs.readFileSync('keys/cert.pem')
 }, app);

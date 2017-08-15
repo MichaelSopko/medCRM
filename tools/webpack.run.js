@@ -95,7 +95,7 @@ function startClient() {
 
 		if (__DEV__) {
 			clientConfig.entry.bundle.push('webpack/hot/dev-server',
-				`webpack-dev-server/client?http://localhost:${pkg.app.webpackDevPort}/`);
+				`webpack-dev-server/client?http${process.env.USE_SSL ? 's' : ''}://localhost:${pkg.app.webpackDevPort}/`);
 			clientConfig.plugins.push(new webpack.optimize.OccurenceOrderPlugin(),
 				new webpack.HotModuleReplacementPlugin(),
 				new webpack.NoErrorsPlugin());
@@ -191,7 +191,7 @@ function startWebpackDevServer(clientConfig, reporter) {
 	waitForPort('localhost', pkg.app.apiPort, function(err) {
 		if (err) throw new Error(err);
 
-		const sslOptions = __SSL__ ? {
+		const sslOptions = process.env.USE_SSL ? {
 			https: ['http/1.1', 'http/1.0'],
 			key: fs.readFileSync("keys/key.pem"),
 			cert: fs.readFileSync("keys/cert.pem"),
@@ -204,7 +204,7 @@ function startWebpackDevServer(clientConfig, reporter) {
 			headers: { 'Access-Control-Allow-Origin': '*' },
 			proxy: {
 				'*': {
-					target: __SSL__ ? `https://localhost:${pkg.app.apiPort}` : `http://localhost:${pkg.app.apiPort}`,
+					target: process.env.USE_SSL ? `https://localhost:${pkg.app.apiPort}` : `http://localhost:${pkg.app.apiPort}`,
 					secure: false,
 				},
 			},
