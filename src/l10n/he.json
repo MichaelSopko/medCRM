@@ -168,7 +168,8 @@
       "subject": "עדכון טיפול עבור מטופל",
       "content": "תאריך התחלה: {start_date}, תאריך סיום: {end_date}"
     },
-    "repeat_weeks": "Repeat this treatment for X weeks"
+    "repeat_weeks": "Repeat this treatment for X weeks",
+    "treatment_collided_error": "This patient already has a treatment for selected time"
   },
   "Calendar": {
     "header": "הראה טיפולים",

@@ -62,14 +62,24 @@ class TreatmentsCalendar extends Component {
 	}
 
 	moveEvent = ({ event, start, end }) => {
-		this.props.mutate({
-			variables: {
-				id: event.id,
-				treatment: {
-					start_date: start, end_date: end,
-				},
+		const formatMessage = this.context.intl.formatMessage;
+		const errorHandler = e => {
+			console.error(e);
+			let id = 'common.server_error';
+			if (e.graphQLErrors) {
+				id = e.graphQLErrors[0].message;
+			}
+			notification.error({
+				message: formatMessage({ id }),
+			});
+		};
+
+		this.props.mutate({ variables: {
+			id: event.id,
+			treatment: {
+				start_date: start, end_date: end,
 			},
-		})
+		}}).catch(errorHandler);
 	}
 
 	editTreatment = (e) => {
@@ -90,6 +100,9 @@ class TreatmentsCalendar extends Component {
 			this.setState({ modalLoading: false });
 			console.error(e);
 			let id = 'common.server_error';
+			if (e.graphQLErrors) {
+				id = e.graphQLErrors[0].message;
+			}
 			notification.error({
 				message: formatMessage({ id }),
 			});

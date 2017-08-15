@@ -73,6 +73,20 @@ export default class Treatments {
 			.first();
 	}
 
+	async isTreatmentExistsByTime(start_date, end_date, id) {
+		const res =  await knex('treatments')
+			.where(function () {
+				if (id) this.whereNot('id', id);
+				this.whereBetween('start_date', [start_date, end_date]);
+			})
+			.orWhere(function () {
+				if (id) this.whereNot('id', id);
+				this.whereBetween('end_date', [start_date, end_date]);
+			})
+			.count();
+		return res[0]['count(*)'];
+	}
+
 	getTreatments(series_id) {
 		return knex('treatments')
 			.where('series_id', series_id)

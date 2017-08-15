@@ -652,7 +652,11 @@ class Treatments extends Component {
 		const errorHandler = e => {
 			this.setState({ modalLoading: false });
 			console.error(e);
+			console.dir(e)
 			let id = 'common.server_error';
+			if (e.graphQLErrors) {
+				id = e.graphQLErrors[0].message;
+			}
 			notification.error({
 				message: formatMessage({ id }),
 			});

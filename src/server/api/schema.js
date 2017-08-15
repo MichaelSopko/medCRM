@@ -231,6 +231,10 @@ const resolvers = {
 
 		async addTreatment(_, { series_id, treatment: { repeat_weeks, ...treatment } }, ctx) {
 			await checkAccess(ctx, ROLES.THERAPIST);
+			const isExists = await ctx.Treatments.isTreatmentExistsByTime(treatment.start_date, treatment.end_date);
+			if (isExists) {
+				throw new Error('Treatments.treatment_collided_error');
+			}
 			const { Treatments } = ctx;
 			if (repeat_weeks) {
 				while (repeat_weeks--) {
@@ -246,7 +250,11 @@ const resolvers = {
 			pubsub.publish('treatmentSeriesUpdated', series);
 			return { status: true };
 		},
-		editTreatment(_, { id, treatment }, context) {
+		async editTreatment(_, { id, treatment }, context) {
+			const isExists = await context.Treatments.isTreatmentExistsByTime(treatment.start_date, treatment.end_date, id);
+			if (isExists) {
+				throw new Error('Treatments.treatment_collided_error');
+			}
 			return checkAccess(context, ROLES.THERAPIST)
 				.then(() => context.Treatments.editTreatment({
 					id,

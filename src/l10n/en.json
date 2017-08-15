@@ -121,7 +121,8 @@
     "update_email": {
       "subject": "Schedule updated for patient: {patient}",
       "content": "Start date: {start_date}, End date: {end_date}"
-    }
+    },
+    "treatment_collided_error": "This patient already has a treatment for selected time"
   },
   "Calendar": {
     "header": "View treatments",
