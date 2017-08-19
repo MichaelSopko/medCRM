@@ -168,8 +168,8 @@
       "subject": "עדכון טיפול עבור מטופל",
       "content": "תאריך התחלה: {start_date}, תאריך סיום: {end_date}"
     },
-    "repeat_weeks": "Repeat this treatment for X weeks",
-    "treatment_collided_error": "This patient already has a treatment for selected time"
+    "repeat_weeks": "חזור על הטיפול מספר שבועות",
+    "treatment_collided_error": "מועד הטיפול מתנגש עם טיפולים אחרים"
   },
   "Calendar": {
     "header": "הראה טיפולים",
@@ -224,16 +224,16 @@
     "field_year": "שנה",
     "field_month": "חודש",
     "field_day": "יום",
-    "field_hours": "hours",
-    "field_minutes": "minutes",
+    "field_hours": "שעות",
+    "field_minutes": "דקות",
     "size": "גודל",
     "action_archive": "שלח לארכיון",
     "action_unarchive": "הוצא מארכיון",
     "gender": {
-      "field_name": "Gender",
-      "field_error": "Please set a gender",
-      "MALE": "Male",
-      "FEMALE": "Female"
+      "field_name": "מין",
+      "field_error": "נא לבחור מין",
+      "MALE": "זכר",
+      "FEMALE": "נקבה"
     },
     "action_view": "View",
     "action_print": "Print",
@@ -244,9 +244,9 @@
       "days": "days"
     },
     "modal_save_confirm": {
-      "ok": "Close",
-      "cancel": "Return to editing",
-      "title": "You have unsaved changes"
+      "ok": "סגירה",
+      "cancel": "חזרה לעריכה",
+      "title": "שינויים שלא נשמרו"
     }
   }
 }
