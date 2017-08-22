@@ -52,8 +52,8 @@ app.use('/api/upload-file', jwt({ secret: settings.secret }), (...args) => uploa
 app.use((...args) => websiteMiddleware(...args));
 
 server = !__SSL__ ? http.createServer(app) : https.createServer({
-	key: fs.readFileSync('keys/key.pem'),
-	cert: fs.readFileSync('keys/cert.pem'),
+	key: fs.readFileSync('keys/private.key'),
+	cert: fs.readFileSync('keys/certificate.crt')
 }, app);
 
 if (__SSL__ && process.env.HTTP_PORT) {
