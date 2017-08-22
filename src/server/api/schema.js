@@ -239,8 +239,8 @@ const resolvers = {
 			if (repeat_weeks) {
 				while (repeat_weeks--) {
 					let { start_date, end_date, ...fields } = treatment;
-					start_date = moment(start_date).add(repeat_weeks, 'weeks').format('YYYY-MM-DD HH:mm:ss');
-					end_date = moment(end_date).add(repeat_weeks, 'weeks').format('YYYY-MM-DD HH:mm:ss');
+					start_date = moment.utc(start_date).add(repeat_weeks, 'weeks').format('YYYY-MM-DD HH:mm:ss');
+					end_date = moment.utc(end_date).add(repeat_weeks, 'weeks').format('YYYY-MM-DD HH:mm:ss');
 					await Treatments.addTreatment({ series_id, start_date, end_date, ...fields });
 				}
 			} else {
