@@ -4,7 +4,7 @@ export default {
 		user: 'clinic.test@mail.ru',
 		pass: '123___123',
 	},
-	template: ({ start_date, end_date }) => `
+	template: ({ old_date, old_time, new_date, new_time, relative_name, patient_name, therapist_name }) => `
 <!doctype html>
 <html>
   <head>
@@ -15,11 +15,14 @@ export default {
     </style>
     </head>
     <body>
-    <p>
-      Treatment has been updated
-    </p>
-    <p> Start date: ${start_date} </p>
-    <p> End date: ${end_date} </p>
+		    שלום ${relative_name},
+		
+		המפגש המתוכנן עבור ${patient_name} עודכן 
+		מתאריך ${old_date} בשעה ${old_time}
+		לתאריך ${new_date} בשעה ${new_time}
+		
+		בברכה,
+		${therapist_name}
     </body>
 </html>
 `,

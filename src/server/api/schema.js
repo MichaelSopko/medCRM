@@ -255,6 +255,7 @@ const resolvers = {
 			if (isExists) {
 				throw new Error('Treatments.treatment_collided_error');
 			}
+			const oldTreatment = await context.Treatments.findOneTreatment(id);
 			return checkAccess(context, ROLES.THERAPIST)
 				.then(() => context.Treatments.editTreatment({
 					id,
@@ -265,18 +266,31 @@ const resolvers = {
 					const series = await context.Treatments.findOne(treatment.series_id);
 					pubsub.publish('treatmentSeriesUpdated', series);
 
-					let { related_persons } = await context.Users.findOne(series.patient_id);
+					let { related_persons, first_name, last_name } = await context.Users.findOne(series.patient_id);
 					related_persons = safeParse(related_persons, []);
 
-					let mailOptions = {
-						from: `"Clinic" <${mailerConfig.auth.user}>`,
-						to: related_persons.filter(p => !!p.receive_updates).map(p => p.email),
-						subject: heMessages.Treatments.update_email.subject,
-						html: emailTemplate(treatment),
-					};
+					related_persons.forEach(person => {
 
-					transporter.sendMail(mailOptions).then(info => {
-						console.log('Message %s sent: %s', info.messageId, info.response);
+						const templateConfig = {
+							old_date: moment(oldTreatment.start_date).format('DD.MM.YYYY'),
+							old_time: moment(oldTreatment.start_date).format('HH:mm'),
+							new_time: moment(treatment.start_date).format('HH:mm'),
+							new_date: moment(treatment.start_date).format('DD.MM.YYYY'),
+							therapist_name: `${context.currentUser.first_name} ${context.currentUser.last_name}`,
+							relative_name: person.description,
+							patient_name: `${first_name} ${last_name}`,
+						};
+
+						let mailOptions = {
+							from: `"Clinic" <${mailerConfig.auth.user}>`,
+							to: person.email,
+							subject: heMessages.Treatments.update_email.subject,
+							html: emailTemplate(templateConfig),
+						};
+
+						transporter.sendMail(mailOptions).then(info => {
+							console.log('Message %s sent: %s', info.messageId, info.response);
+						});
 					});
 
 					return treatment;
