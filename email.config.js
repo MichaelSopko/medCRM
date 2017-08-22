@@ -15,12 +15,12 @@ export default {
     </style>
     </head>
     <body>
-		    שלום ${relative_name},
+		    שלום ${relative_name}, <br>
 		
-		המפגש המתוכנן עבור ${patient_name} עודכן 
-		מתאריך ${old_date} בשעה ${old_time}
-		לתאריך ${new_date} בשעה ${new_time}
-		
+		 המפגש המתוכנן עבור ${patient_name} עודכן 
+		 מתאריך <br>  ${old_date} בשעה ${old_time} <br>
+		 לתאריך  ${new_date} בשעה ${new_time} <br>
+		 <br> <br>
 		בברכה,
 		${therapist_name}
     </body>

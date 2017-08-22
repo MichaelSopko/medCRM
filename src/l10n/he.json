@@ -76,6 +76,7 @@
     "field_person_type": "קרבה",
     "field_person_type_error": "נא לבחור סוג קרבה",
     "field_person_description": "תיאור",
+    "field_person_name": "Name",
     "add_related_persons": "הוספת מקורב",
     "upload_files": "העלאת קבצים",
     "field_files": "קבצים",

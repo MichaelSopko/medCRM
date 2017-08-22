@@ -68,6 +68,16 @@ const RelatedPersonForm = Form.create()(
 					<Form.Item
 						hasFeedback
 					>
+						{getFieldDecorator(`name`, {
+							initialValue: values.name,
+							validateTrigger: 'onBlur', rules: [],
+						})(
+							<Input placeholder={formatMessage({ id: 'Patients.field_person_name' })} />,
+						)}
+					</Form.Item>
+					<Form.Item
+						hasFeedback
+					>
 						{getFieldDecorator(`type`, {
 							validateTrigger: 'onBlur',
 							initialValue: values.type,

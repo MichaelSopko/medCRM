@@ -225,6 +225,7 @@ type PatientRelatedPerson {
 	phone: String!
 	email: String
 	receive_updates: Boolean
+	name: String
 }
 
 input PatientRelatedPersonInput {
@@ -233,6 +234,7 @@ input PatientRelatedPersonInput {
 	phone: String!
 	email: String
 	receive_updates: Boolean
+	name: String
 }
 
 type TreatmentSeries {

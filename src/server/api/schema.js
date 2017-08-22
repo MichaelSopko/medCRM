@@ -256,11 +256,11 @@ const resolvers = {
 				throw new Error('Treatments.treatment_collided_error');
 			}
 			const oldTreatment = await context.Treatments.findOneTreatment(id);
-			return checkAccess(context, ROLES.THERAPIST)
-				.then(() => context.Treatments.editTreatment({
-					id,
-					...treatment
-				}))
+			const currentUser = await checkAccess(context, ROLES.THERAPIST);
+			return context.Treatments.editTreatment({
+				id,
+				...treatment
+			})
 				.then(async () => {
 					treatment = await context.Treatments.findOneTreatment(id);
 					const series = await context.Treatments.findOne(treatment.series_id);
@@ -276,8 +276,8 @@ const resolvers = {
 							old_time: moment(oldTreatment.start_date).format('HH:mm'),
 							new_time: moment(treatment.start_date).format('HH:mm'),
 							new_date: moment(treatment.start_date).format('DD.MM.YYYY'),
-							therapist_name: `${context.currentUser.first_name} ${context.currentUser.last_name}`,
-							relative_name: person.description,
+							therapist_name: `${currentUser.first_name} ${currentUser.last_name}`,
+							relative_name: person.name,
 							patient_name: `${first_name} ${last_name}`,
 						};
 
