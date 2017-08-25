@@ -99,16 +99,16 @@
     "archived_message": "מטופל נשלח לארכיון",
     "unarchived_message": "מטופל הוסר מארכיון",
     "field_receive_updates": "מעוניין לקבל עדכונים למייל",
-    "diagnose_fillers": "Diagnose fillers",
-    "diagnose_date": "Diagnose date",
-    "print_date": "Print date",
-    "age_in_diagnose": "Age in diagnose",
-    "patient_name": "Patient name",
-    "add_filler": "Add filler",
+    "diagnose_fillers": "כותבי האבחון",
+    "diagnose_date": "תאריך האבחון",
+    "print_date": "תאריך הדפסה",
+    "age_in_diagnose": "גיל בזמן האבחון",
+    "patient_name": "שם המטופל",
+    "add_filler": "הוספה ממלא אבחון",
     "field_empty": "<מידע ריק>"
   },
   "TreatmentSummaryTab": {
-    "create_title": "Generate treatment summary",
+    "create_title": "סיכום טיפול חדש",
     "treatments_length": "משך הטיפול",
     "treatment_targets": "מטרות הטיפול",
     "parents_involment": "שיתוף פעולה ומעורבות ההורים",
@@ -116,10 +116,10 @@
     "recommendations": "המלצות"
   },
   "DiagnoseTab": {
-    "create_title": "Generate diagnose",
-    "hearing_test": "Hearing test",
-    "hearing_test_remarks": "Remarks for hearing test",
-    "hearing_test_date": "Date",
+    "create_title": "אבחון חדש",
+    "hearing_test": "האם נערכה בדיקת שמיעה",
+    "hearing_test_remarks": "הערות לבדיקת שמיעה",
+    "hearing_test_date": "תאריך",
     "tab1": "רקע כללי והתפתחותי",
     "tab2": "כלי אבחון",
     "tab3": "סיכום",
@@ -175,7 +175,7 @@
   "Calendar": {
     "header": "הראה טיפולים",
     "show_all": "הראה הכל",
-    "allDay": "All day",
+    "allDay": "כל היום",
     "previous": "הקודם",
     "next": "הבא",
     "today": "היום",
@@ -198,7 +198,7 @@
     "field_email": "אימייל",
     "field_email_error": "נא להכניס אימייל",
     "field_fax": "פקס",
-    "field_actions": "אקשנים",
+    "field_actions": "פעולות",
     "confirm_message": "האם אתה בטוח?",
     "confirm_yes": "כן",
     "confirm_no": "לא",
@@ -236,13 +236,13 @@
       "MALE": "זכר",
       "FEMALE": "נקבה"
     },
-    "action_view": "View",
-    "action_print": "Print",
-    "action_cancel": "Cancel",
+    "action_view": "צפיה",
+    "action_print": "הדפסה",
+    "action_cancel": "ביטול",
     "age": {
-      "years": "years",
-      "months": "months",
-      "days": "days"
+      "years": "שנים",
+      "months": "חודשים",
+      "days": "ימים"
     },
     "modal_save_confirm": {
       "ok": "סגירה",
