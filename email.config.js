@@ -11,17 +11,17 @@ export default {
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style>
-      body { direction: rtl; }
+      body, div { direction: rtl; text-align:right, float:right, align:right }
     </style>
     </head>
     <body>
-		    שלום ${relative_name}, <br>
-		
-		 המפגש המתוכנן עבור ${patient_name} עודכן 
-		 מתאריך <br>  ${old_date} בשעה ${old_time} <br>
-		 לתאריך  ${new_date} בשעה ${new_time} <br>
-		 <br> <br>
-		בברכה,
+		<div>    
+			<div>שלום ${relative_name},</div><br>
+			<div>המפגש המתוכנן עבור ${patient_name} עודכן </div><br>
+			<div>מתאריך   ${old_date} בשעה ${old_time} </div>
+			<div>לתאריך  ${new_date} בשעה ${new_time} </div><br>
+		 </div>
+		בברכה,<br>
 		${therapist_name}
     </body>
 </html>
