@@ -13,3 +13,5 @@ set `ADMIN_PASSWORD` to yours
 ### Use https
 
 set `USE_SSL` env var to true, and create `keys/key.pem` and `keys/cert.pem`
+set HTTP_PORT=80
+set PORT=443
