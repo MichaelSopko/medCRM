@@ -27,6 +27,9 @@ const app = express();
 
 const port = process.env.PORT || settings.apiPort;
 
+console.log('PORT: ' + process.env.PORT);
+console.log('HTTP_PORT: ' + process.env.HTTP_PORT);
+
 // Don't rate limit heroku
 app.enable('trust proxy');
 
@@ -57,6 +60,7 @@ server = !__SSL__ ? http.createServer(app) : https.createServer({
 }, app);
 
 if (__SSL__ && process.env.HTTP_PORT) {
+	console.log("Running secured server");
 	http.createServer(function (req, res) {
 		res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
 		res.end();
