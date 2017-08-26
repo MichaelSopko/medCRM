@@ -19,16 +19,15 @@ const Html = ({ content, state, assetMap }) => {
 			<link rel="shortcut icon" href={`/${assetMap["favicon.ico"]}`} />
 			<meta name="msapplication-config" content={`/${assetMap["browserconfig.xml"]}`} />
 			<meta name="theme-color" content="#ffffff"/>
-			<script>
-				(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+			<script>{`
+			  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-				ga('create', 'UA-105369200-1', 'auto');
-				ga('send', 'pageview');
-
-			</script>
+			  ga('create', 'UA-105369200-1', 'auto');
+			  ga('send', 'pageview');
+			`}</script>
 			{!__DEV__ && <link rel="stylesheet" type="text/css" href={`/${assetMap['bundle.css']}`} />}
 			{__DEV__ &&
 			<style dangerouslySetInnerHTML={{ __html:
