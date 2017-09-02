@@ -288,8 +288,9 @@ const DetailsTab = ({ patient, showRelatedPersonForm, deleteRelatedPerson, editR
 					}} />
 				</span>
 				</div>
-				<div className="Details__id">
-					#{patient.id_number}
+				<div className="Details__field">
+					<div className="Details__field-name">{ formatMessage({ id: 'common.field_id_number' }) }</div>
+					<div className="Details__field-value">{patient.id_number}</div>
 				</div>
 
 				<div className="Details__field">
