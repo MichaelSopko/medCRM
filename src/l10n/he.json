@@ -27,7 +27,7 @@
     "error_disabled": "החשבון חסום"
   },
   "ProfileWidget": {
-    "logout": "להתנתק",
+    "logout": "יציאה",
     "settings": "הגדרות"
   },
   "ClinicsSelector": {
@@ -62,8 +62,8 @@
     "field_clinic_error": "נא לבחור קליניקה"
   },
   "Therapists": {
-    "create_button": "מטופל חדש",
-    "create_header": "מטופל חדש",
+    "create_button": "מטפל חדש",
+    "create_header": "מטפל חדש",
     "edit_header": "עריכת מטפל",
     "header": "מטפלים"
   },
@@ -76,7 +76,8 @@
     "field_person_type": "קרבה",
     "field_person_type_error": "נא לבחור סוג קרבה",
     "field_person_description": "תיאור",
-    "field_person_name": "Name",
+    "field_person_name": "שם",
+    "field_person_name_error": "נא לציין שם",
     "add_related_persons": "הוספת מקורב",
     "upload_files": "העלאת קבצים",
     "field_files": "קבצים",
@@ -121,7 +122,7 @@
     "hearing_test_remarks": "הערות לבדיקת שמיעה",
     "hearing_test_date": "תאריך",
     "tab1": "רקע כללי והתפתחותי",
-    "tab2": "כלי אבחון",
+    "tab2": "ממצאי אבחון",
     "tab3": "סיכום",
     "pregnancy_and_birth": "הריון ולידה",
     "psychomotor_progression": "התפתחות פסיכומוטורית",
@@ -133,7 +134,7 @@
     "environmental_context": "הקשר סביבתי",
     "parents_report": "דיווח הורים",
     "kindergarten_teacher_report": "דיווח גננת",
-    "diagnose_tools": "אבחון כלי",
+    "diagnose_tools": "כלי אבחון",
     "behaviour_and_general_impression": "התנהגות והתרשמות כללית",
     "communications_skills": "מיומנויות תקשורת",
     "gaming_skills": "מיומנויות משחק ",
