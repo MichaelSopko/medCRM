@@ -14,6 +14,7 @@ fragment PatientFragment on Patient {
     related_persons {
         type
         description
+        name
         phone
         email
         receive_updates

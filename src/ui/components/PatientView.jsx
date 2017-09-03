@@ -68,26 +68,28 @@ const RelatedPersonForm = Form.create()(
 					<Form.Item
 						hasFeedback
 					>
-						{getFieldDecorator(`name`, {
-							initialValue: values.name,
-							validateTrigger: 'onBlur', rules: [],
-						})(
-							<Input placeholder={formatMessage({ id: 'Patients.field_person_name' })} />,
-						)}
+                        {getFieldDecorator(`type`, {
+                            validateTrigger: 'onBlur',
+                            initialValue: values.type,
+                            rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_type_error' }) }],
+                        })(
+							<Select placeholder={formatMessage({ id: 'Patients.field_person_type' })}>
+                                { Object.keys(RELATED_PERSONS).map(key => <Select.Option value={key} key={key}>
+                                    {formatMessage({ id: `related_persons.${RELATED_PERSONS[key]}` })}
+								</Select.Option>) }
+							</Select>,
+                        )}
 					</Form.Item>
 					<Form.Item
 						hasFeedback
 					>
-						{getFieldDecorator(`type`, {
+						{getFieldDecorator(`name`, {
+							initialValue: values.name,
 							validateTrigger: 'onBlur',
-							initialValue: values.type,
-							rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_type_error' }) }],
+                            rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_name_error' }) }],
+
 						})(
-							<Select placeholder={formatMessage({ id: 'Patients.field_person_type' })}>
-								{ Object.keys(RELATED_PERSONS).map(key => <Select.Option value={key} key={key}>
-									{formatMessage({ id: `related_persons.${RELATED_PERSONS[key]}` })}
-								</Select.Option>) }
-							</Select>,
+							<Input placeholder={formatMessage({ id: 'Patients.field_person_name' })} />,
 						)}
 					</Form.Item>
 					<Form.Item
@@ -205,34 +207,42 @@ FilesTab.contextTypes = {
 const RelatedPersonsTable = ({ patient, showRelatedPersonForm, deleteRelatedPerson, editRelatedPerson }, context) => {
 	const formatMessage = context.intl.formatMessage;
 	const columns = [{
-		title: formatMessage({ id: 'Patients.field_person_type' }),
-		key: 'type',
-		width: '20%',
-		sorter: (a, b) => a.type > b.type,
-		render: (text, record) => <span>{ formatMessage({ id: `related_persons.${record.type}` }) }</span>,
-	},
+			title: formatMessage({ id: 'Patients.field_person_type' }),
+			key: 'type',
+			width: '10%',
+			sorter: (a, b) => a.type > b.type,
+			render: (text, record) => <span>{ formatMessage({ id: `related_persons.${record.type}` }) }</span>,
+		},
 		{
-			title: formatMessage({ id: 'Patients.field_person_description' }),
+			title: formatMessage({ id: 'Patients.field_person_name' }),
 			width: '20%',
-			key: 'description',
+			key: 'name',
 			render: (text, record) => <div className="to-dynamic-container">
-				<span className="to-dynamic">{record.description}</span>
+				<span className="to-dynamic">{record.name}</span>
 			</div>,
 		},
+        {
+            title: formatMessage({ id: 'common.field_phone' }),
+            width: '13%',
+            key: 'phone',
+            render: (text, record) => <a href={`tel:${record.phone}`}>{record.phone}</a>,
+        },
 		{
 			title: formatMessage({ id: 'common.field_email' }),
 			width: '20%',
 			key: 'email',
 			render: (text, record) => <a href={`mailto:${record.email}`}>{record.email}</a>,
 		},
+        {
+            title: formatMessage({ id: 'Patients.field_person_description' }),
+            width: '20%',
+            key: 'description',
+            render: (text, record) => <div className="to-dynamic-container">
+				<span className="to-dynamic">{record.description}</span>
+			</div>,
+        },
 		{
-			title: formatMessage({ id: 'common.field_phone' }),
-			width: '20%',
-			key: 'phone',
-			render: (text, record) => <a href={`tel:${record.phone}`}>{record.phone}</a>,
-		},
-		{
-			width: '20%',
+			width: '17%',
 			render: (text, record) => <div>
 				<Button size="small" type='ghost' onClick={editRelatedPerson(record)}>
 					{formatMessage({ id: 'common.action_edit' })}
