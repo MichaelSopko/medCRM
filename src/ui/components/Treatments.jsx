@@ -459,33 +459,19 @@ export const TreatmentForm = Form.create()(
 
 const TreatmentsTable = ({ treatments, deleteTreatment, editTreatment, formatMessage }) => {
 	const columns = [
-		{
-			title: formatMessage({ id: 'Treatments.field_target' }), dataIndex: 'target', key: 'target',
-			width: '15%',
-			sorter: (a, b) => a.field_target > b.field_target,
-			render: (text, record) => <div className="to-dynamic-container">
-				<span className="to-dynamic">{text}</span>
-			</div>,
-		},
+
 		{
 			title: formatMessage({ id: 'Treatments.field_start_date_header' }), dataIndex: 'start_date', key: 'start_date',
-			width: '30%',
+			width: '50%',
 			sorter: (a, b) => moment(a.start_date).valueOf() > moment(b.start_date).valueOf(),
 			render: (text, record) => <div className="to-dynamic-container">
 				<span className="to-dynamic">{moment(text).format('ddd, Do MMMM LT')}</span>
 			</div>,
 		},
-/*		{
-			title: formatMessage({ id: 'Treatments.field_end_date' }), dataIndex: 'end_date', key: 'end_date',
-			width: '15%',
-			render: (text, record) => <div className="to-dynamic-container">
-				<span className="to-dynamic">{moment(text).format('ddd, Do MMMM LT')}</span>
-			</div>,
-		},*/
 		{
 			title: formatMessage({ id: 'Treatments.field_therapists' }),
 			dataIndex: 'therapists',
-			width: '20%',
+			width: '25%',
 			render: (text, record) => <div className="to-dynamic-container">
 				<span
 					className="to-dynamic">{ record.therapists.map(user => `${user.first_name} ${user.last_name}`).join(', ') }</span>
@@ -494,7 +480,7 @@ const TreatmentsTable = ({ treatments, deleteTreatment, editTreatment, formatMes
 		{
 			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
-			width: '15%',
+			width: '25%',
 			render: (text, record) => (
 				<span>
 		      <a onClick={ editTreatment(record) }>{formatMessage({ id: 'common.action_edit' })}</a>
