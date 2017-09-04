@@ -75,20 +75,6 @@ export default Form.create()(
 					</Form.Item>
 					{ <Form.Item
 						{...formItemLayout}
-						label={formatMessage({ id: 'common.field_email' })}
-						hasFeedback
-					>
-						{getFieldDecorator('profile_email', {
-							initialValue: values.profile_email,
-							validateTrigger: 'onBlur', rules: [{
-								type: 'email', message: formatMessage({ id: 'common.field_email_error' }),
-							}],
-						})(
-							<Input type="email" />,
-						)}
-					</Form.Item> }
-					{ <Form.Item
-						{...formItemLayout}
 						label={formatMessage({ id: 'common.field_first_name' })}
 						hasFeedback
 					>
@@ -124,7 +110,7 @@ export default Form.create()(
 							initialValue: values.phone,
 							validateTrigger: 'onBlur', rules: [{
 								pattern: /^\d{2,9}-?\d{2,9}?-?\d{0,9}$/,
-								required: true, message: formatMessage({ id: 'common.field_phone_error' }),
+								required: false, message: formatMessage({ id: 'common.field_phone_error' }),
 							}],
 						})(
 							<Input />,
