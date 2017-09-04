@@ -121,6 +121,14 @@ body.rtl {
 	.ant-form-item-control-wrapper:first-child {
 		flex: 1;
 	}
+	.ant-notification-notice-with-icon {
+		display: flex;
+		flex-direction: row-reverse;
+	}
+	.ant-notification-notice-with-icon .ant-notification-notice-message {
+		margin-right: 0;
+		padding: 0;
+	}
 }
 
 .Container {

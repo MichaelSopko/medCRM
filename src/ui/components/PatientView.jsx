@@ -521,7 +521,7 @@ class PatientView extends Component {
 				.catch((e) => {
 					this.setState({ formLoading: false });
 					console.error(e);
-					notification.error(e);
+					notification.error({ message: e.message });
 				})
 		});
 	}
