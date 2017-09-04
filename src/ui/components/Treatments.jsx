@@ -801,17 +801,43 @@ const TreatmentsWithApollo = withApollo(compose(
 	graphql(GET_TREATMENTS_QUERY, {
 		options: ({ patient, currentClinic }) => ({
 			variables: {
-				patient_id: patient.id,
+				patient_id: +patient.id,
 				clinic_id: currentClinic.id,
 			},
 		}),
 	}),
 	graphql(ADD_SERIES_MUTATION, getOptions('addSeries')),
-	graphql(DELETE_SERIES_MUTATION, getOptions('deleteSeries')),
+	graphql(DELETE_SERIES_MUTATION, {
+		props: ({ ownProps: { patient, currentClinic }, mutate }) => ({
+			deleteSeries: (fields) => mutate({
+				variables: fields,
+				refetchQueries: [{
+					query: GET_TREATMENTS_QUERY,
+					variables: patient ? { patient_id: +patient.id, clinic_id: null } : {
+						patient_id: null,
+						clinic_id: currentClinic.id,
+					},
+				}],
+			}),
+		}),
+	}),
 	graphql(EDIT_SERIES_MUTATION, getOptions('editSeries')),
 
 	graphql(ADD_TREATMENT_MUTATION, getOptions('addTreatment')),
-	graphql(DELETE_TREATMENT_MUTATION, getOptions('deleteTreatment')),
+	graphql(DELETE_TREATMENT_MUTATION, {
+		props: ({ ownProps: { patient, currentClinic }, mutate }) => ({
+			deleteTreatment: (fields) => mutate({
+				variables: fields,
+				refetchQueries: [{
+					query: GET_TREATMENTS_QUERY,
+					variables: patient ? { patient_id: +patient.id, clinic_id: null } : {
+						patient_id: null,
+						clinic_id: currentClinic.id,
+					},
+				}],
+			}),
+		}),
+	}),
 	graphql(EDIT_TREATMENT_MUTATION, getOptions('editTreatment')),
 	// withCurrentUser
 )(Treatments));
