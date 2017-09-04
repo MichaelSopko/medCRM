@@ -48,7 +48,7 @@ import DELETE_PATIENT_FILE_MUTATION from '../patient/graphql/deletePatientFile.m
 import './PatientView.scss'
 
 const RelatedPersonForm = Form.create()(
-	({ form: { getFieldDecorator }, loading, visible, onSubmit, onCancel, formatMessage, values }) => {
+	({ form: { getFieldDecorator, isFieldsTouched }, loading, visible, onSubmit, onCancel, formatMessage, values }) => {
 		const formItemLayout = {
 			labelCol: { span: 6 },
 			wrapperCol: { span: 14 },
@@ -56,11 +56,18 @@ const RelatedPersonForm = Form.create()(
 		const isEditing = !!values;
 		values = values || {};
 
+		const checkForConfirm = () => isFieldsTouched() ? Modal.confirm({
+			title: formatMessage({ id: 'common.modal_save_confirm.title' }),
+			onOk: onCancel,
+			okText: formatMessage({ id: 'common.modal_save_confirm.ok' }),
+			cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' })
+		}) : onCancel();
+
 		return (
 			<Modal title={ formatMessage({ id: 'Patients.add_related_persons' }) }
 			       visible={visible}
 			       okText={ formatMessage({ id: 'common.action_create' }) }
-			       onCancel={onCancel}
+			       onCancel={checkForConfirm}
 			       onOk={onSubmit}
 			       width={340}
 			       confirmLoading={loading}>
