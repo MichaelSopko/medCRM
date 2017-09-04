@@ -11,7 +11,7 @@ export default {
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style>
-      body, div { direction: rtl; text-align:right, float:right, align:right }
+      body, div { direction: rtl; }
     </style>
     </head>
     <body>
