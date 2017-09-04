@@ -413,7 +413,6 @@ const resolvers = {
 				first_name: flr,
 			}));
 			const realFillers = await context.Users.getUsers(fillers);
-			console.log([...realFillers, ...customFillers]);
 			return [...realFillers, ...customFillers];
 		},
 		fields(diagnose, _, ctx) {
@@ -430,7 +429,6 @@ const resolvers = {
 				first_name: flr,
 			}));
 			const realFillers = await context.Users.getUsers(fillers);
-			console.log([...realFillers, ...customFillers]);
 			return [...realFillers, ...customFillers];
 		},
 		fields(diagnose, _, ctx) {

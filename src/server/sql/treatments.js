@@ -77,10 +77,12 @@ export default class Treatments {
 		const res =  await knex('treatments')
 			.where(function () {
 				if (id) this.whereNot('id', id);
+				this.whereNot('deleted', true);
 				this.whereBetween('start_date', [start_date, end_date]);
 			})
 			.orWhere(function () {
 				if (id) this.whereNot('id', id);
+				this.whereNot('deleted', true);
 				this.whereBetween('end_date', [start_date, end_date]);
 			})
 			.count();

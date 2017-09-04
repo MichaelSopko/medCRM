@@ -708,7 +708,7 @@ class Treatments extends Component {
 			width: '35%',
 			render: (text, record) => (
 				<span>
-		      <Button size="small" type='primary' disabled={record.treatments_number <= record.treatments.length || patient.archived}
+		      <Button size="small" type='primary' disabled={patient.archived}
 		              onClick={ this.showTreatmentModal(record) }>
 			      <Icon type="plus-circle-o" />
 			      {formatMessage({ id: 'Treatments.create_treatment_button' })}
