@@ -48,14 +48,14 @@ class PatientObjectPrintPage extends Component {
 		return fields && (
 				<Col style={{ margin: 12 }}>
 					{Object.keys(fields).map((key, i) => (
-						<div style={{ marginTop: 12 }}>
-							{ i === 0 && <h3>
+						<div style={{ marginTop: 16 }}>
+							{ i === 0 && <h3 style={{ marginBottom: 16 }}>
 								<FormattedMessage id={`DiagnoseTab.tab1`} />:
 							</h3> }
-							{ i === 9 && <h3>
+							{ i === 9 && <h3 style={{ marginBottom: 16 }}>
 								<FormattedMessage id={`DiagnoseTab.tab2`} />:
 							</h3> }
-							{ i === 17 && <h3>
+							{ i === 17 && <h3 style={{ marginBottom: 16 }}>
 								<FormattedMessage id={`DiagnoseTab.tab3`} />:
 							</h3> }
 							<h4>
