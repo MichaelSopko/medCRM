@@ -222,7 +222,7 @@ enum PatientHealthMaintenance {
 type PatientRelatedPerson {
 	type: PatientRelatedPersonType
 	description: String
-	phone: String!
+	phone: String
 	email: String
 	receive_updates: Boolean
 	name: String
@@ -231,7 +231,7 @@ type PatientRelatedPerson {
 input PatientRelatedPersonInput {
 	type: PatientRelatedPersonType!
 	description: String
-	phone: String!
+	phone: String
 	email: String
 	receive_updates: Boolean
 	name: String

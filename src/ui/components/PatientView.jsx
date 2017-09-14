@@ -23,6 +23,7 @@ import {
 	Tooltip,
 	Checkbox,
 } from 'antd'
+
 const TabPane = Tabs.TabPane
 import { FormattedMessage } from 'react-intl'
 import nl2br from 'react-nl2br';
@@ -60,13 +61,13 @@ const RelatedPersonForm = Form.create()(
 			title: formatMessage({ id: 'common.modal_save_confirm.title' }),
 			onOk: onCancel,
 			okText: formatMessage({ id: 'common.modal_save_confirm.ok' }),
-			cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' })
+			cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' }),
 		}) : onCancel();
 
 		return (
-			<Modal title={ formatMessage({ id: 'Patients.add_related_persons' }) }
+			<Modal title={formatMessage({ id: 'Patients.add_related_persons' })}
 			       visible={visible}
-			       okText={ formatMessage({ id: 'common.action_create' }) }
+			       okText={formatMessage({ id: 'common.action_create' })}
 			       onCancel={checkForConfirm}
 			       onOk={onSubmit}
 			       width={340}
@@ -75,17 +76,17 @@ const RelatedPersonForm = Form.create()(
 					<Form.Item
 						hasFeedback
 					>
-                        {getFieldDecorator(`type`, {
-                            validateTrigger: 'onBlur',
-                            initialValue: values.type,
-                            rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_type_error' }) }],
-                        })(
+						{getFieldDecorator(`type`, {
+							validateTrigger: 'onBlur',
+							initialValue: values.type,
+							rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_type_error' }) }],
+						})(
 							<Select placeholder={formatMessage({ id: 'Patients.field_person_type' })}>
-                                { Object.keys(RELATED_PERSONS).map(key => <Select.Option value={key} key={key}>
-                                    {formatMessage({ id: `related_persons.${RELATED_PERSONS[key]}` })}
-								</Select.Option>) }
+								{Object.keys(RELATED_PERSONS).map(key => <Select.Option value={key} key={key}>
+									{formatMessage({ id: `related_persons.${RELATED_PERSONS[key]}` })}
+								</Select.Option>)}
 							</Select>,
-                        )}
+						)}
 					</Form.Item>
 					<Form.Item
 						hasFeedback
@@ -93,7 +94,7 @@ const RelatedPersonForm = Form.create()(
 						{getFieldDecorator(`name`, {
 							initialValue: values.name,
 							validateTrigger: 'onBlur',
-                            rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_name_error' }) }],
+							rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_name_error' }) }],
 
 						})(
 							<Input placeholder={formatMessage({ id: 'Patients.field_person_name' })} />,
@@ -117,7 +118,7 @@ const RelatedPersonForm = Form.create()(
 							initialValue: values.email,
 							rules: [{ type: 'email', message: formatMessage({ id: 'common.field_email_error' }) }],
 						})(
-							<Input type="email" placeholder={formatMessage({ id: 'common.field_email' })} />,
+							<Input type='email' placeholder={formatMessage({ id: 'common.field_email' })} />,
 						)}
 					</Form.Item>
 					<Form.Item
@@ -126,9 +127,9 @@ const RelatedPersonForm = Form.create()(
 						{getFieldDecorator(`phone`, {
 							validateTrigger: 'onBlur',
 							initialValue: values.phone,
-							rules: [{ required: true, message: formatMessage({ id: 'common.field_phone_error' }) }],
+							rules: [{ message: formatMessage({ id: 'common.field_phone_error' }) }],
 						})(
-							<Input type="number" placeholder={formatMessage({ id: 'common.field_phone' })} />,
+							<Input type='number' placeholder={formatMessage({ id: 'common.field_phone' })} />,
 						)}
 					</Form.Item>
 					<Form.Item>
@@ -160,8 +161,8 @@ const FilesTab = ({ patient, onAddFile, onDeleteFile }, context) => {
 		key: 'name',
 		width: '70%',
 		sorter: (a, b) => a.name > b.name,
-		render: (text, record) => <div className="to-dynamic-container">
-			<span className="to-dynamic">
+		render: (text, record) => <div className='to-dynamic-container'>
+			<span className='to-dynamic'>
 				<a href={record.url}>{record.name}</a>
 			</span>
 		</div>,
@@ -179,9 +180,9 @@ const FilesTab = ({ patient, onAddFile, onDeleteFile }, context) => {
 		key: 'action',
 		width: '15%',
 		render: (text, record) => (
-			<Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
+			<Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={() => {
 				onDeleteFile(record.id)
-			} } okText={formatMessage({ id: 'common.confirm_yes' })}
+			}} okText={formatMessage({ id: 'common.confirm_yes' })}
 			            cancelText={formatMessage({ id: 'common.confirm_no' })}>
 				<a>{formatMessage({ id: 'common.action_delete' })}</a>
 			</Popconfirm>
@@ -195,11 +196,11 @@ const FilesTab = ({ patient, onAddFile, onDeleteFile }, context) => {
 				showUploadList={false}
 				headers={uploadHeaders}
 				onChange={onAddFile}
-				action="/api/upload-file">
-				<p className="ant-upload-drag-icon">
-					<Icon type="inbox" />
+				action='/api/upload-file'>
+				<p className='ant-upload-drag-icon'>
+					<Icon type='inbox' />
 				</p>
-				<p className="ant-upload-text">{formatMessage({ id: 'Patients.upload_files' })}</p>
+				<p className='ant-upload-text'>{formatMessage({ id: 'Patients.upload_files' })}</p>
 			</Upload.Dragger>
 		</div>
 		<Table dataSource={patient.files} columns={columns} rowKey='id' />
@@ -214,53 +215,53 @@ FilesTab.contextTypes = {
 const RelatedPersonsTable = ({ patient, showRelatedPersonForm, deleteRelatedPerson, editRelatedPerson }, context) => {
 	const formatMessage = context.intl.formatMessage;
 	const columns = [{
-			title: formatMessage({ id: 'Patients.field_person_type' }),
-			key: 'type',
-			width: '10%',
-			sorter: (a, b) => a.type > b.type,
-			render: (text, record) => <span>{ formatMessage({ id: `related_persons.${record.type}` }) }</span>,
-		},
+		title: formatMessage({ id: 'Patients.field_person_type' }),
+		key: 'type',
+		width: '10%',
+		sorter: (a, b) => a.type > b.type,
+		render: (text, record) => <span>{formatMessage({ id: `related_persons.${record.type}` })}</span>,
+	},
 		{
 			title: formatMessage({ id: 'Patients.field_person_name' }),
 			width: '20%',
 			key: 'name',
-			render: (text, record) => <div className="to-dynamic-container">
-				<span className="to-dynamic">{record.name}</span>
+			render: (text, record) => <div className='to-dynamic-container'>
+				<span className='to-dynamic'>{record.name}</span>
 			</div>,
 		},
-        {
-            title: formatMessage({ id: 'common.field_phone' }),
-            width: '13%',
-            key: 'phone',
-            render: (text, record) => <a href={`tel:${record.phone}`}>{record.phone}</a>,
-        },
+		{
+			title: formatMessage({ id: 'common.field_phone' }),
+			width: '13%',
+			key: 'phone',
+			render: (text, record) => <a href={`tel:${record.phone}`}>{record.phone}</a>,
+		},
 		{
 			title: formatMessage({ id: 'common.field_email' }),
 			width: '20%',
 			key: 'email',
 			render: (text, record) => <a href={`mailto:${record.email}`}>{record.email}</a>,
 		},
-        {
-            title: formatMessage({ id: 'Patients.field_person_description' }),
-            width: '20%',
-            key: 'description',
-            render: (text, record) => <div className="to-dynamic-container">
-				<span className="to-dynamic">{record.description}</span>
+		{
+			title: formatMessage({ id: 'Patients.field_person_description' }),
+			width: '20%',
+			key: 'description',
+			render: (text, record) => <div className='to-dynamic-container'>
+				<span className='to-dynamic'>{record.description}</span>
 			</div>,
-        },
+		},
 		{
 			width: '17%',
 			render: (text, record) => <div>
-				<Button size="small" type='ghost' onClick={editRelatedPerson(record)}>
+				<Button size='small' type='ghost' onClick={editRelatedPerson(record)}>
 					{formatMessage({ id: 'common.action_edit' })}
 				</Button>
-				<span className="ant-divider"></span>
+				<span className='ant-divider'></span>
 				<Popconfirm
 					title={formatMessage({ id: 'common.confirm_message' })}
 					onConfirm={deleteRelatedPerson(record._id)}
 					okText={formatMessage({ id: 'common.confirm_yes' })}
 					cancelText={formatMessage({ id: 'common.confirm_no' })}>
-					<Button size="small" type='ghost'>
+					<Button size='small' type='ghost'>
 						{formatMessage({ id: 'common.action_delete' })}
 					</Button>
 				</Popconfirm>
@@ -270,7 +271,7 @@ const RelatedPersonsTable = ({ patient, showRelatedPersonForm, deleteRelatedPers
 	return (
 		<div>
 			<Table dataSource={patient.related_persons.map((p, _id) => ({ ...p, _id }))} columns={columns} pagination={false}
-			       rowKey='phone' />
+			       rowKey='_id' />
 			<br />
 			<Button onClick={showRelatedPersonForm}
 			        type='dashed'>{formatMessage({ id: 'Patients.add_related_persons' })}</Button>
@@ -293,11 +294,11 @@ const DetailsTab = ({ patient, showRelatedPersonForm, deleteRelatedPerson, editR
 		<div className='Details'>
 
 			<div className='Details__fields'>
-				<div className="Details__header">
-				<span className="Details__name">
+				<div className='Details__header'>
+				<span className='Details__name'>
 					{patient.first_name} {patient.last_name}
 				</span>
-					<span className="Details__age" style={{ marginRight: 8 }}>
+					<span className='Details__age' style={{ marginRight: 8 }}>
 					<FormattedMessage id='Patients.age' values={{
 						years: diff.years() || '0',
 						months: diff.months() || '0',
@@ -305,48 +306,48 @@ const DetailsTab = ({ patient, showRelatedPersonForm, deleteRelatedPerson, editR
 					}} />
 				</span>
 				</div>
-				<div className="Details__field">
-					<div className="Details__field-name">{ formatMessage({ id: 'common.field_id_number' }) }</div>
-					<div className="Details__field-value">{patient.id_number}</div>
+				<div className='Details__field'>
+					<div className='Details__field-name'>{formatMessage({ id: 'common.field_id_number' })}</div>
+					<div className='Details__field-value'>{patient.id_number}</div>
 				</div>
 
-				<div className="Details__field">
-					<div className="Details__field-name">{ formatMessage({ id: 'common.field_first_name' }) }</div>
-					<div className="Details__field-value">{patient.first_name}</div>
+				<div className='Details__field'>
+					<div className='Details__field-name'>{formatMessage({ id: 'common.field_first_name' })}</div>
+					<div className='Details__field-value'>{patient.first_name}</div>
 				</div>
 
-				<div className="Details__field">
-					<div className="Details__field-name">{ formatMessage({ id: 'common.field_last_name' }) }</div>
-					<div className="Details__field-value">{patient.last_name}</div>
+				<div className='Details__field'>
+					<div className='Details__field-name'>{formatMessage({ id: 'common.field_last_name' })}</div>
+					<div className='Details__field-value'>{patient.last_name}</div>
 				</div>
 
-				<div className="Details__field">
-					<div className="Details__field-name">{ formatMessage({ id: 'common.field_birth_date' }) }</div>
-					<div className="Details__field-value">{moment(patient.birth_date).format('L')}</div>
+				<div className='Details__field'>
+					<div className='Details__field-name'>{formatMessage({ id: 'common.field_birth_date' })}</div>
+					<div className='Details__field-value'>{moment(patient.birth_date).format('L')}</div>
 				</div>
 
-				<div className="Details__field">
-					<div className="Details__field-name">{ formatMessage({ id: 'common.field_phone' }) }</div>
-					<div className="Details__field-value">
-						<a href={ `tel:${patient.phone}` }>{patient.phone}</a>
+				<div className='Details__field'>
+					<div className='Details__field-name'>{formatMessage({ id: 'common.field_phone' })}</div>
+					<div className='Details__field-value'>
+						<a href={`tel:${patient.phone}`}>{patient.phone}</a>
 					</div>
 				</div>
 
-				<div className="Details__field">
-					<div className="Details__field-name">{ formatMessage({ id: 'common.field_email' }) }</div>
-					<div className="Details__field-value">
-						<a href={ `mailto:${patient.profile_email}` }>{patient.profile_email}</a>
+				<div className='Details__field'>
+					<div className='Details__field-name'>{formatMessage({ id: 'common.field_email' })}</div>
+					<div className='Details__field-value'>
+						<a href={`mailto:${patient.profile_email}`}>{patient.profile_email}</a>
 					</div>
 				</div>
 
-				{ !!patient.health_maintenance && <div className="Details__field">
-					<div className="Details__field-name">{ formatMessage({ id: 'Patients.field_health_maintenance' }) }</div>
+				{!!patient.health_maintenance && <div className='Details__field'>
+					<div className='Details__field-name'>{formatMessage({ id: 'Patients.field_health_maintenance' })}</div>
 					<div
-						className="Details__field-value">{ formatMessage({ id: `health_maintenance.${patient.health_maintenance}` }) }</div>
-				</div> }
+						className='Details__field-value'>{formatMessage({ id: `health_maintenance.${patient.health_maintenance}` })}</div>
+				</div>}
 			</div>
 
-			<div className="Details__related-persons">
+			<div className='Details__related-persons'>
 				<RelatedPersonsTable
 					showRelatedPersonForm={showRelatedPersonForm}
 					editRelatedPerson={editRelatedPerson}
@@ -566,7 +567,7 @@ class PatientView extends Component {
 
 		if (!data) {
 			return (
-				<div className="PatientView__Empty">
+				<div className='PatientView__Empty'>
 					{formatMessage({ id: 'Patients.empty' })}
 				</div>
 			);
@@ -577,9 +578,9 @@ class PatientView extends Component {
 		const isReady = !loading && !error;
 
 		if (!isReady) {
-			return <div className="PatientView__Empty">
+			return <div className='PatientView__Empty'>
 				<Spin spinning={loading} />
-				{ error && <pre>{error}</pre> }
+				{error && <pre>{error}</pre>}
 			</div>
 		}
 
@@ -598,18 +599,18 @@ class PatientView extends Component {
 					visible={showRelatedPersonForm}
 					formatMessage={formatMessage}
 					values={activeRelatedPerson}
-					ref={ form => {
+					ref={form => {
 						this.relatedPersonForm = form
-					} }
+					}}
 				/>
 				<Tabs
 					animated={false}
-					tabBarExtraContent={ <div>
+					tabBarExtraContent={<div>
 						<Button icon='edit' style={{ marginLeft: 8 }}
-						        onClick={onEdit(patient)}>{ formatMessage({ id: 'common.action_edit' }) }</Button>
-						{ patient.archived
+						        onClick={onEdit(patient)}>{formatMessage({ id: 'common.action_edit' })}</Button>
+						{patient.archived
 							? (<Tooltip
-								title={ !canUnarchive && formatMessage({ id: 'Patients.archive_error_time' }, { time: minutes })}>
+								title={!canUnarchive && formatMessage({ id: 'Patients.archive_error_time' }, { time: minutes })}>
 								<Button
 									type='primary'
 									style={{ backgroundColor: '#00A854' }}
@@ -617,7 +618,7 @@ class PatientView extends Component {
 									onClick={this.onUnarchiveClick}
 									disabled={!canUnarchive}
 									icon='unlock'>
-									{ formatMessage({ id: 'common.action_unarchive' }) }
+									{formatMessage({ id: 'common.action_unarchive' })}
 								</Button>
 							</Tooltip> )
 							: (
@@ -627,16 +628,16 @@ class PatientView extends Component {
 									okText={formatMessage({ id: 'common.confirm_yes' })}
 									cancelText={formatMessage({ id: 'common.confirm_no' })}>
 									<Button type='danger' loading={archiveLoading}
-									        icon='lock'>{ formatMessage({ id: 'common.action_archive' }) }</Button>
+									        icon='lock'>{formatMessage({ id: 'common.action_archive' })}</Button>
 								</Popconfirm>
 							)
 						}
-					</div> }
-					type="card">
+					</div>}
+					type='card'>
 					<TabPane
 						className='PatientView__Tab'
-						tab={ formatMessage({ id: 'Patients.tabs.details' }) }
-						key="details">
+						tab={formatMessage({ id: 'Patients.tabs.details' })}
+						key='details'>
 						<DetailsTab
 							patient={patient}
 							showRelatedPersonForm={this.showRelatedPersonForm}
@@ -645,26 +646,26 @@ class PatientView extends Component {
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
-						tab={ formatMessage({ id: 'Patients.tabs.diagnoses' }) }
-						key="diagnoses">
+						tab={formatMessage({ id: 'Patients.tabs.diagnoses' })}
+						key='diagnoses'>
 						<DiagnoseTab patient={patient} />
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
-						tab={ formatMessage({ id: 'Patients.tabs.treatments' }) }
-						key="treatments">
+						tab={formatMessage({ id: 'Patients.tabs.treatments' })}
+						key='treatments'>
 						<TreatmentsTab patient={patient} />
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
-						tab={ formatMessage({ id: 'Patients.tabs.treatment_summary' }) }
-						key="treatment_summary">
+						tab={formatMessage({ id: 'Patients.tabs.treatment_summary' })}
+						key='treatment_summary'>
 						<TreatmentSummaryTab patient={patient} />
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
-						tab={ <FormattedMessage id='Patients.tabs.files' values={{ number: patient.files.length }} /> }
-						key="files">
+						tab={<FormattedMessage id='Patients.tabs.files' values={{ number: patient.files.length }} />}
+						key='files'>
 						<FilesTab onAddFile={this.onAddFile} onDeleteFile={this.props.deleteFile} patient={patient} />
 					</TabPane>
 				</Tabs>
