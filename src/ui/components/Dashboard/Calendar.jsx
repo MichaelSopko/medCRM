@@ -27,6 +27,7 @@ import {
 	Checkbox,
 	notification,
 	message,
+	Spin
 } from 'antd'
 import ColorHash from 'color-hash'
 import { FormattedMessage } from 'react-intl'
@@ -59,6 +60,12 @@ class TreatmentsCalendar extends Component {
 
 	state = {
 		currentTreatment: null,
+	}
+
+	componentWillMount() {
+		if (this.props.data && !this.props.data.loading) {
+			this.props.data.refetch();
+		}
 	}
 
 	moveEvent = ({ event, start, end }) => {
@@ -165,30 +172,32 @@ class TreatmentsCalendar extends Component {
 					currentUser={currentUser}
 					currentClinic={currentClinic}
 				/>
-				<DragAndDropCalendar
-					rtl={!__DEV__}
-					events={events}
-					eventPropGetter={getProps}
-					onEventDrop={this.moveEvent}
-					selectable
-					onSelectEvent={this.editTreatment}
-					formats={{
-						eventTimeRangeFormat: ({ start, end }, culture, local) =>
-							/*`${moment(start).format('H:mm')} — ${moment(end).format('H:mm')}`*/ '',
-						agendaTimeRangeFormat: ({ start, end }, culture, local) =>
-							/*`${moment(start).format('H:mm')} — ${moment(end).format('H:mm')}`*/ '',
-					}}
-					messages={{
-						allDay: <FormattedMessage id='Calendar.allDay' />,
-						previous: <FormattedMessage id='Calendar.previous' />,
-						next: <FormattedMessage id='Calendar.next' />,
-						today: <FormattedMessage id='Calendar.today' />,
-						month: <FormattedMessage id='Calendar.month' />,
-						week: <FormattedMessage id='Calendar.week' />,
-						day: <FormattedMessage id='Calendar.day' />,
-						agenda: <FormattedMessage id='Calendar.agenda' />,
-					}}
-				/>
+				<Spin spinning={loading}>
+					<DragAndDropCalendar
+						rtl={!__DEV__}
+						events={events}
+						eventPropGetter={getProps}
+						onEventDrop={this.moveEvent}
+						selectable
+						onSelectEvent={this.editTreatment}
+						formats={{
+							eventTimeRangeFormat: ({ start, end }, culture, local) =>
+								/*`${moment(start).format('H:mm')} — ${moment(end).format('H:mm')}`*/ '',
+							agendaTimeRangeFormat: ({ start, end }, culture, local) =>
+								/*`${moment(start).format('H:mm')} — ${moment(end).format('H:mm')}`*/ '',
+						}}
+						messages={{
+							allDay: <FormattedMessage id='Calendar.allDay' />,
+							previous: <FormattedMessage id='Calendar.previous' />,
+							next: <FormattedMessage id='Calendar.next' />,
+							today: <FormattedMessage id='Calendar.today' />,
+							month: <FormattedMessage id='Calendar.month' />,
+							week: <FormattedMessage id='Calendar.week' />,
+							day: <FormattedMessage id='Calendar.day' />,
+							agenda: <FormattedMessage id='Calendar.agenda' />,
+						}}
+					/>
+				</Spin>
 			</div>
 		);
 	}
