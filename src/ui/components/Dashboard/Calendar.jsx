@@ -84,7 +84,8 @@ class TreatmentsCalendar extends Component {
 		this.props.mutate({ variables: {
 			id: event.id,
 			treatment: {
-				start_date: start, end_date: end,
+				start_date: start,
+				end_date: end,
 			},
 		}}).catch(errorHandler);
 	}
@@ -143,8 +144,8 @@ class TreatmentsCalendar extends Component {
 			const userTimezoneOffset = startDate.getTimezoneOffset() * 60000;
 			const endDate = new Date(treatment.end_date);
 			return {
-				start: new Date(startDate.getTime() + userTimezoneOffset),
-				end: new Date(endDate.getTime() + userTimezoneOffset),
+				start: new Date(startDate.getTime()),
+				end: new Date(endDate.getTime()),
 				title: `${treatment.series.patient.first_name} ${treatment.series.patient.last_name} (${moment(startDate).format('H:mm')} — ${moment(endDate).format('H:mm')})`,
 				patient: treatment.series.patient,
 				id: treatment.id,
