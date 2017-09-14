@@ -108,7 +108,7 @@ class TreatmentSummaryTab extends Component {
 						initialValue: object.treatments_length,
 						rules: [],
 					})(
-						<Input type='textarea' />,
+						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
 					)}
 				</Form.Item>
 				<Form.Item
@@ -120,7 +120,7 @@ class TreatmentSummaryTab extends Component {
 						initialValue: object.treatment_targets,
 						rules: [],
 					})(
-						<Input type='textarea' />,
+						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
 					)}
 				</Form.Item>
 				<Form.Item
@@ -132,7 +132,7 @@ class TreatmentSummaryTab extends Component {
 						initialValue: object.parents_involment,
 						rules: [],
 					})(
-						<Input type='textarea' />,
+						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
 					)}
 				</Form.Item>
 				<Form.Item
@@ -144,7 +144,7 @@ class TreatmentSummaryTab extends Component {
 						initialValue: object.treatments_progress,
 						rules: [],
 					})(
-						<Input type='textarea' />,
+						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
 					)}
 				</Form.Item>
 				<Form.Item
@@ -156,7 +156,7 @@ class TreatmentSummaryTab extends Component {
 						initialValue: object.recommendations,
 						rules: [],
 					})(
-						<Input type='textarea' />,
+						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
 					)}
 				</Form.Item>
 			</div>

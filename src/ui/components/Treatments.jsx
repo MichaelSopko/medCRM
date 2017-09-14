@@ -156,7 +156,7 @@ export const TreatmentForm = Form.create()(
 							initialValue: values.target,
 							validateTrigger: 'onBlur', rules: [],
 						})(
-							<Input type="textarea" />,
+							<Input type="textarea" autosize={{ minRows: 2, maxRows: 20 }} />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -168,7 +168,7 @@ export const TreatmentForm = Form.create()(
 							initialValue: values.method,
 							validateTrigger: 'onBlur', rules: [],
 						})(
-							<Input type="textarea" />,
+							<Input type="textarea" autosize={{ minRows: 2, maxRows: 20 }} />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -180,7 +180,7 @@ export const TreatmentForm = Form.create()(
 							initialValue: values.process,
 							validateTrigger: 'onBlur', rules: [],
 						})(
-							<Input type="textarea" />,
+							<Input type="textarea" autosize={{ minRows: 2, maxRows: 20 }} />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -192,7 +192,7 @@ export const TreatmentForm = Form.create()(
 							initialValue: values.parents_guidance,
 							validateTrigger: 'onBlur', rules: [],
 						})(
-							<Input type="textarea" rows={3} />,
+							<Input type="textarea" autosize={{ minRows: 2, maxRows: 20 }} rows={3} />,
 						)}
 					</Form.Item> }
 					{ <Form.Item
@@ -204,7 +204,7 @@ export const TreatmentForm = Form.create()(
 							initialValue: values.next_treatment_remark,
 							validateTrigger: 'onBlur', rules: [],
 						})(
-							<Input type="textarea" rows={3} />,
+							<Input type="textarea" autosize={{ minRows: 2, maxRows: 20 }} rows={3} />,
 						)}
 					</Form.Item> }
 					{ !isEditing && <Form.Item

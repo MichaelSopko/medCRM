@@ -146,7 +146,7 @@ const PatientObjectForm = (props, context) => {
 						initialValue: object.hearing_test_remark,
 						rules: [],
 					})(
-						<Input type='textarea' />,
+						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
 					)}
 				</Form.Item> }
 				{ form.getFieldValue('hearing_test_trigger') === 'YES' && <Form.Item
