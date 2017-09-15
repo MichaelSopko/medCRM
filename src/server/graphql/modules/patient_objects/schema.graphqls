@@ -1,0 +1,135 @@
+type PatientFile {
+	id: ID!
+	patient_id: ID!
+	name: String!
+	url: String!
+	size: Int!
+	type: String!
+}
+
+input PatientFileInput {
+	patient_id: ID!
+	name: String!
+	url: String!
+	size: Int!
+	type: String!
+}
+
+interface PatientObject {
+	id: ID!
+	patient: Patient
+	patient_age: String # duration in milliseconds
+	date: Date
+	fillers: [Therapist]
+}
+
+type TreatmentSummaryFields {
+	treatments_length: String
+	treatment_targets: String
+	parents_involment: String
+	treatments_progress: String
+	recommendations: String
+}
+
+type TreatmentSummary implements PatientObject {
+	id: ID!
+	patient: Patient
+	patient_age: String
+	date: Date
+	fillers: [Therapist]
+	fields: TreatmentSummaryFields
+}
+
+input TreatmentSummaryFieldsInput {
+	treatments_length: String
+	treatment_targets: String
+	parents_involment: String
+	treatments_progress: String
+	recommendations: String
+}
+
+input TreatmentSummaryInput {
+	patient_id: ID!
+	patient_age: String!
+	date: Date!
+	fillers_ids: [String!]!
+	fields: TreatmentSummaryFieldsInput!
+}
+
+type DiagnoseFields {
+	pregnancy_and_birth: String
+	psychomotor_progression: String
+	language_and_speech_progression: String
+	eating_function: String
+	family_background: String
+	health_background: String
+	past_and_present_treatments: String
+	environmental_context: String
+	parents_report: String
+	kindergarten_teacher_report: String
+	diagnose_tools: String
+	behaviour_and_general_impression: String
+	communications_skills: String
+	gaming_skills: String
+	language_grasp: String
+	language_expression: String
+	speech_intelligibility: String
+	speech_fluency: String
+	summary: String
+	recommendations: String
+}
+
+type Diagnose implements PatientObject {
+	id: ID!
+	patient: Patient
+	patient_age: String
+	date: Date
+	fillers: [Therapist]
+	fields: DiagnoseFields
+	hearing_test_remark: String
+	hearing_test_date: Date
+}
+
+#killmepls
+input DiagnoseFieldsInput {
+	pregnancy_and_birth: String
+	psychomotor_progression: String
+	language_and_speech_progression: String
+	eating_function: String
+	family_background: String
+	health_background: String
+	past_and_present_treatments: String
+	environmental_context: String
+	parents_report: String
+	kindergarten_teacher_report: String
+	diagnose_tools: String
+	behaviour_and_general_impression: String
+	communications_skills: String
+	gaming_skills: String
+	language_grasp: String
+	language_expression: String
+	speech_intelligibility: String
+	speech_fluency: String
+	summary: String
+	recommendations: String
+}
+
+input DiagnoseInput {
+	patient_id: ID!
+	patient_age: String!
+	date: Date!
+	fillers_ids: [String!]!
+	fields: DiagnoseFieldsInput!
+	hearing_test_remark: String
+	hearing_test_date: Date
+}
+
+extend type Mutation {
+	addPatientFile(file: PatientFileInput!): Patient!
+	deletePatientFile(id: ID!): Patient!
+
+	addTreatmentSummary(input: TreatmentSummaryInput!): Patient!
+	addDiagnose(input: DiagnoseInput!): Patient!
+	editTreatmentSummary(id: ID!, input: TreatmentSummaryInput!): Patient!
+	editDiagnose(id: ID!, input: DiagnoseInput!): Patient!
+}

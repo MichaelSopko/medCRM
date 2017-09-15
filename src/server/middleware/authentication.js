@@ -1,7 +1,7 @@
 import { app as settings } from '../../../package.json'
 import jwt from 'jsonwebtoken';
-import User from '../sql/users';
-import Clinic from '../sql/clinics';
+import User from '../sql/models/users';
+import Clinic from '../sql/models/clinics';
 import log from '../../log'
 
 function generateToken(req, user) {

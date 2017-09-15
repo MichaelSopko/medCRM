@@ -9,9 +9,9 @@ import fs from 'fs';
 
 import { app as settings } from '../../package.json'
 import log from '../log'
-import Clinics from './sql/clinics';
-import Users from './sql/users';
-import Treatments from './sql/treatments';
+import Clinics from './sql/models/clinics';
+import Users from './sql/models/users';
+import Treatments from './sql/models/treatments';
 
 // Hot reloadable modules
 let websiteMiddleware = require('./middleware/website').default;
@@ -19,7 +19,7 @@ let graphiqlMiddleware = require('./middleware/graphiql').default;
 let graphqlMiddleware = require('./middleware/graphql').default;
 let authenticationMiddleware = require('./middleware/authentication').default;
 let uploadsMiddleware = require('./middleware/uploads').default;
-let subscriptionManager = require('./api/subscriptions').subscriptionManager;
+let subscriptionManager = require('./graphql/subscriptions').subscriptionManager;
 
 let server;
 
@@ -110,8 +110,8 @@ if (module.hot) {
 		module.hot.accept('./middleware/graphiql', () => {
 			graphiqlMiddleware = require('./middleware/graphiql').default;
 		});
-		module.hot.accept('./api/subscriptions', () => {
-			subscriptionManager = require('./api/subscriptions').subscriptionManager;
+		module.hot.accept('./graphql/subscriptions', () => {
+			subscriptionManager = require('./graphql/subscriptions').subscriptionManager;
 		});
 		module.hot.accept('./middleware/authentication', () => {
 			authenticationMiddleware = require('./middleware/authentication').default;

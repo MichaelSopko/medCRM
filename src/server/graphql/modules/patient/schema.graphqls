@@ -1,0 +1,88 @@
+
+
+type Patient implements User {
+	id: ID!
+	id_number: String!
+	first_name: String!
+	last_name: String!
+	birth_date: Date!
+	phone: String
+	profile_email: String
+	clinic: Clinic
+	clinic_id: ID,
+	related_persons: [PatientRelatedPerson]
+	health_maintenance: PatientHealthMaintenance
+	files: [PatientFile]
+	treatment_series: [TreatmentSeries]
+	diagnoses: [Diagnose]
+	treatment_summary: [TreatmentSummary]
+	archived_date: Date
+	archived: Boolean
+	gender: GENDER
+}
+
+input PatientInput {
+	id_number: String!
+	first_name: String!
+	last_name: String!
+	birth_date: Date!
+	phone: String
+	profile_email: String
+	related_persons: [PatientRelatedPersonInput]
+	health_maintenance: PatientHealthMaintenance
+	diagnoses: [String!]
+	treatment_summary: [String!]
+	gender: GENDER
+}
+
+enum PatientRelatedPersonType {
+	MOTHER
+	FATHER
+	OTHER
+}
+
+enum PatientHealthMaintenance {
+	CLATIT
+	MACCABI
+	MEUHEDET
+	LEUMIT
+	PRIVATE
+}
+
+type PatientRelatedPerson {
+	type: PatientRelatedPersonType
+	description: String
+	phone: String
+	email: String
+	receive_updates: Boolean
+	name: String
+}
+
+input PatientRelatedPersonInput {
+	type: PatientRelatedPersonType!
+	description: String
+	phone: String
+	email: String
+	receive_updates: Boolean
+	name: String
+}
+
+extend type Query {
+	patients(clinic_id: ID!, archived: Boolean): [Patient]
+	patient(id: ID!): Patient
+}
+
+extend type Mutation {
+	addPatient(clinic_id: ID!, patient: PatientInput): Patient!
+	editPatient(id: ID!, patient: PatientInput): Patient!
+	deletePatient(id: ID!): Patient!
+
+	archivePatient(id: ID!): Patient!
+	unarchivePatient(id: ID!): Patient!
+}
+
+extend type Subscription {
+	patientCreated(clinic_id: ID!): Patient!
+	patientUpdated(id: ID!): Patient!
+	patientDeleted(clinic_id: ID!): Patient!
+}

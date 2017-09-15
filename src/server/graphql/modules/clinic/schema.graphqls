@@ -1,0 +1,95 @@
+type Clinic {
+	id: ID!
+	name: String!
+	address: String!
+	email: String
+	fax: String
+	phone: String
+	administrators: [ClinicAdministrator]
+	patients: [Patient]
+	therapists: [Therapist]
+	treatment_duration: Int
+	patients_limit: Int!
+	archive_time: Int
+	disabled: Boolean
+	deleted: Boolean
+}
+
+input ClinicInput {
+	name: String!
+	address: String!
+	phone: String
+	email: String
+	fax: String
+	treatment_duration: Int
+	patients_limit: Int!
+	archive_time: Int
+	disabled: Boolean
+}
+
+type ClinicAdministrator implements User {
+	id: ID!
+	clinic: Clinic
+	first_name: String
+	last_name: String
+	email: String!
+}
+
+type Therapist implements User {
+	id: ID!
+	id_number: String
+	first_name: String
+	last_name: String
+	clinic: Clinic
+	license_number: Int
+	phone: String
+	email: String
+	birth_date: Date
+	disabled: Boolean
+	role: Role
+}
+
+extend type Query {
+	clinics: [Clinic]
+	administrators: [ClinicAdministrator]
+	therapists(clinic_id: Int): [Therapist]
+}
+
+extend type Mutation {
+	addClinic(clinic: ClinicInput): Clinic!
+	editClinic(id: ID!,	clinic: ClinicInput): Clinic!
+	deleteClinic(id: ID!): Clinic!
+
+	addAdministrator(email: String!, password: String!, clinic_id: ID!): MutationStatus
+	editAdministrator(id: ID!, password: String!): MutationStatus
+	deleteAdministrator(id: ID!): MutationStatus
+
+	addTherapist(
+	password: String!
+	id_number: String!
+	first_name: String!
+	last_name: String!
+	clinic_id: ID!
+	license_number: Int!
+	phone: String!
+	email: String!
+	birth_date: Date!
+): MutationStatus
+
+	editTherapist(
+	id: ID!
+	password: String
+	id_number: String!
+	first_name: String!
+	last_name: String!
+	license_number: Int!
+	phone: String!
+	email: String!
+	birth_date: Date!
+	disabled: Boolean
+): MutationStatus
+
+	deleteTherapist(
+	id: ID!
+): MutationStatus
+}

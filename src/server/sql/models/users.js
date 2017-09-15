@@ -1,8 +1,8 @@
-import knex from './connector'
+import knex from '../connector'
 import pwd from 'pwd'
 
-import log from '../../log'
-import createUser from './helpers/create_user'
+import log from '../../../log'
+import createUser from '../helpers/create_user'
 
 const safeParse = (json, deflt = []) => {
 	try {

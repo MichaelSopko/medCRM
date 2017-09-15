@@ -1,0 +1,56 @@
+scalar Date
+
+interface User {
+	id: ID!
+}
+
+enum Role {
+	SYSTEM_ADMIN
+	CLINIC_ADMIN
+	THERAPIST
+	PATIENT
+}
+
+enum GENDER {
+	MALE
+	FEMALE
+}
+
+type SystemAdministrator implements User {
+	id: ID!
+	role: Role!
+	login: String
+}
+
+type CurrentUser implements User {
+	id: ID!
+	login: String,
+	role: Role!,
+	first_name: String,
+	last_name: String,
+	email: String,
+	clinic: Clinic
+}
+
+# TODO: remove it
+type MutationStatus {
+	status: Boolean
+}
+
+type Query {
+	currentUser: CurrentUser
+}
+
+type Mutation {
+	foo: Int
+}
+
+type Subscription {
+	foo: Int
+}
+
+schema {
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
+}
