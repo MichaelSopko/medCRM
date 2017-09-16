@@ -1,5 +1,5 @@
 export default {
 	clinic(user, _, context) {
-		return context.Clinics.findOne(user.clinic_id);
+		return context.Clinic.query().findById(user.clinic_id);
 	},
 };

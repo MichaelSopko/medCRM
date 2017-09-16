@@ -1,4 +1,4 @@
-subscription onSeriesDeleted($patient_id: Int!){
+subscription onSeriesDeleted($patient_id: ID!){
     treatmentSeriesDeleted(patient_id: $patient_id) {
         id
     }

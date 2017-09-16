@@ -136,11 +136,16 @@ class Patients extends Component {
 			if (err) {
 				return;
 			}
+			console.log(values)
 			this.setState({ modalLoading: true });
 
 			// values = processRelatedPersons(this.state.relatedPersons, values);
 
 			values.birth_date = moment(values.birth_date);
+
+			if (isEditing) {
+				delete values.related_persons;
+			}
 
 			isEditing
 
@@ -321,7 +326,7 @@ class Patients extends Component {
 const PatientsWithApollo = withApollo(compose(
 	connect(({ currentClinic, currentUser }) => ({ currentClinic, currentUser })),
 	graphql(gql`
-      query patients($clinic_id: Int!) {
+      query patients($clinic_id: ID!) {
           patients(clinic_id: $clinic_id) {
               id
           }

@@ -16,7 +16,7 @@ export default class SoftDeleteQueryBuilder extends objection.QueryBuilder {
 		return this;
 	}
 
-	softDelete() {
-		return this.patch({ deleted: false });
+	softDeleteById(id) {
+		return this.patch({ deleted: true }).where('id', id);
 	}
 };

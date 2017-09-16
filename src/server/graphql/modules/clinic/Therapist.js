@@ -1,5 +1,5 @@
 export default {
 	clinic(user, _, { Clinic }) {
-		return Clinic.query().where('id', user.clinic_id).first();
+		return Clinic.query().findById(user.clinic_id);
 	},
 };

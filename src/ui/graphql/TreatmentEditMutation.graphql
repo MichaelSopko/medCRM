@@ -1,5 +1,5 @@
 mutation editTreatment(
-$id: Int!
+$id: ID!
 $treatment: TreatmentInput
 ) {
     editTreatment(

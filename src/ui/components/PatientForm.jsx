@@ -204,7 +204,7 @@ export default Form.create()(
 						</Col>
 					</Form.Item>}
 
-					<Form.Item
+					{ !isEditing && <Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'Patients.field_related_person_1' })}
 					>
@@ -271,9 +271,9 @@ export default Form.create()(
 							</Tooltip>
 							</Col>
 						</Row>
-					</Form.Item>
+					</Form.Item> }
 
-					<Form.Item
+					{ !isEditing && <Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'Patients.field_related_person_2' })}
 					>
@@ -340,7 +340,7 @@ export default Form.create()(
 							</Tooltip>
 							</Col>
 						</Row>
-					</Form.Item>
+					</Form.Item> }
 				</Form>
 			</Modal>
 		);

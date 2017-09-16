@@ -77,8 +77,8 @@ class PatientSelector extends Component {
 			{ ...props }>
 			{ patients && patients.map(patient => (
 				<Select.Option
-					key={ patient.id.toString() }
-					value={ patient.id.toString() }>
+					key={ patient.id }
+					value={ patient.id }>
 					#{ patient.id_number } { patient.first_name } { patient.last_name }
 				</Select.Option>
 			)) }

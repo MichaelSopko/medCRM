@@ -1,6 +1,8 @@
 import { roleOnly } from '../../utils/decorators';
 import ROLES from '../../../../helpers/constants/roles';
 
+import { pubsub } from '../../schema';
+
 export default {
 	@roleOnly(ROLES.THERAPIST)
 	async addDiagnose(_, { input }, { Users }) {
@@ -31,17 +33,14 @@ export default {
 		return patient;
 	},
 
-	async addPatientFile(_, { file }, ctx) {
-		await checkAccess(ctx, ROLES.THERAPIST)
-		const { Users } = ctx;
+	@roleOnly(ROLES.THERAPIST)
+	async addPatientFile(_, { file }, { Users }) {
 		await Users.addPatientFile(file);
 		const patient = await Users.findOne(file.patient_id);
 		pubsub.publish('patientUpdated', patient);
 		return patient;
 	},
-	async deletePatientFile(_, { id }, ctx) {
-		await checkAccess(ctx, ROLES.THERAPIST)
-		const { Users } = ctx;
+	async deletePatientFile(_, { id }, { Users }) {
 		const file = await Users.getPatientFile(id);
 		await Users.deletePatientFile(file.id);
 		const patient = await Users.findOne(file.patient_id);

@@ -13,3 +13,5 @@ Model.RelatedQueryBuilder = SoftDeleteQueryBuilder;
 Model.knex(knex);
 
 export { knex as default, Model };
+
+

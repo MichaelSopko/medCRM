@@ -3,6 +3,7 @@ import pwd from 'pwd'
 
 import log from '../../../log'
 import createUser from '../helpers/create_user'
+import Clinic from './Clinic';
 
 const safeParse = (json, deflt = []) => {
 	try {
@@ -38,7 +39,7 @@ export default class Users {
 				if (user.clinic_id) {
 					return {
 						...user,
-						clinic: await knex('clinics').where('id', user.clinic_id).first()
+						clinic: await Clinic.query().findOne({ id: user.clinic_id })
 					};
 				} else {
 					return user;

@@ -9,7 +9,7 @@ import fs from 'fs';
 
 import { app as settings } from '../../package.json'
 import log from '../log'
-import Clinics from './sql/models/clinics';
+import Clinic from './sql/models/Clinic';
 import Users from './sql/models/users';
 import Treatments from './sql/models/treatments';
 
@@ -71,7 +71,7 @@ new SubscriptionServer({
 	subscriptionManager,
 	onConnect: async (connectionParams, webSocket) => {
 		return {
-			Clinics: new Clinics(),
+			Clinic: new Clinic(),
 			Users: new Users(),
 			Treatments: new Treatments(),
 			currentUser: false, // TODO: implement security here

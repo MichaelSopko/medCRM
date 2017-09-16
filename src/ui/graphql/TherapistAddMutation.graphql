@@ -3,7 +3,7 @@ $password: String!
 $id_number: String!
 $first_name: String!
 $last_name: String!
-$clinic_id: Int!
+$clinic_id: ID!
 $license_number: Int!
 $phone: String!
 $email: String!

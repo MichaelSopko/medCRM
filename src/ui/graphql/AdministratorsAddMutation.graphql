@@ -1,7 +1,7 @@
 mutation addAdministrator(
     $email: String!
     $password: String!
-    $clinic_id: Int!
+    $clinic_id: ID!
 ) {
     addAdministrator(email: $email, password: $password, clinic_id: $clinic_id) {
         status

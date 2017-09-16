@@ -1,7 +1,7 @@
 import { app as settings } from '../../../package.json'
 import jwt from 'jsonwebtoken';
 import User from '../sql/models/users';
-import Clinic from '../sql/models/clinics';
+import Clinic from '../sql/models/Clinic';
 import log from '../../log'
 
 function generateToken(req, user) {
@@ -37,6 +37,7 @@ export default (req, res, next) => {
 					}));
 				}
 			} catch (e) {
+				console.error(e);
 				res.status(400);
 			}
 		} else {

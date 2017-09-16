@@ -4,18 +4,16 @@ import ROLES from '../../../../helpers/constants/roles';
 export default {
 	// Clinic
 	@roleOnly(ROLES.SYSTEM_ADMIN)
-	async addClinic(_, { clinic }, { Clinics }) {
-		const [id] = await Clinics.addClinic(clinic);
-		return Clinics.findOne(id);
+	async addClinic(_, { clinic }, { Clinic }) {
+		return Clinic.query().insertAndFetch(clinic);
 	},
 	@roleOnly(ROLES.SYSTEM_ADMIN)
-	async editClinic(_, { id, clinic }, { Clinics }) {
-		await Clinics.editClinic(id, clinic);
-		return Clinics.findOne(id);
+	async editClinic(_, { id, clinic }, { Clinic }) {
+		return Clinic.query().updateAndFetchById(id, clinic);
 	},
 	@roleOnly(ROLES.SYSTEM_ADMIN)
-	async deleteClinic(_, { id }, { Clinics }) {
-		return Clinics.deleteClinic({ id });
+	async deleteClinic(_, { id }, { Clinic }) {
+		return Clinic.softDeleteById(id);
 	},
 
 	// Administrators

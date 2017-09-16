@@ -1,7 +1,7 @@
 #import './ClinicFragment.graphql'
 
 mutation editClinic(
-    $id: Int!
+    $id: ID!
     $clinic: ClinicInput!
 ) {
     editClinic(

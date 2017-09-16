@@ -1,6 +1,6 @@
 #import './TreatmentFragment.graphql'
 
-subscription onSeriesCreated($patient_id: Int!){
+subscription onSeriesCreated($patient_id: ID!){
     treatmentSeriesCreated(patient_id: $patient_id) {
         ...TreatmentFragment
     }

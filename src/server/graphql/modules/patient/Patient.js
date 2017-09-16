@@ -1,3 +1,5 @@
+import safeParse from '../../../utils/safeParse';
+
 export default {
 	related_persons(user, _, ctx) {
 		return safeParse(user.related_persons);

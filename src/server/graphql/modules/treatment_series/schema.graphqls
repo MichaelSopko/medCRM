@@ -83,20 +83,26 @@ input TreatmentInput {
 	repeat_weeks: Int
 }
 
-union TreatmentSeriesObject = SchoolObservation | Treatment | StaffMeeting
-# union TreatmentSeriesObjectInput = SchoolObservationInput | TreatmentInput | StaffMeetingInput
+union TreatmentSeriesObject = SchoolObservation | Treatment | StaffMeeting | OutsideSourceConsult
+input TreatmentSeriesObjectInput {
+	Treatment: TreatmentInput,
+	SchoolObservation: SchoolObservationInput,
+	StaffMeeting: StaffMeetingInput,
+	OutsideSourceConsult: OutsideSourceConsultInput
+}
 
 type TreatmentSeries {
 	id: ID!
 	name: String
 	treatments_number: Int!
 	objects: [TreatmentSeriesObject]
+	treatments: [Treatment]
 	patient: Patient
 	patient_id: ID!
 }
 
 extend type Query {
-	treatmentSeries(patient_id: ID, clinic_id: Int, therapist_id: ID): [TreatmentSeries]
+	treatmentSeries(patient_id: ID, clinic_id: ID, therapist_id: ID): [TreatmentSeries]
 }
 
 extend type Mutation {
@@ -108,24 +114,23 @@ extend type Mutation {
 	): MutationStatus
 
 	updateTreatmentSeries(
-		id: Int!
+		id: ID!
 		name: String
 		treatments_number: Int!
 	): MutationStatus
 
 	deleteTreatmentSeries(
-		id: Int!
+		id: ID!
 	): MutationStatus
 
-
-	#createTreatmentSeriesObject(series_id: ID!, object: TreatmentSeriesObjectInput!): TreatmentSeriesObject!
-	#updateTreatmentSeriesObject(id: ID!, object: TreatmentSeriesObjectInput!): TreatmentSeriesObject!
-	deleteTreatmentSeriesObject(id: ID!): Boolean
+	createTreatmentSeriesObject(series_id: ID!, object: TreatmentSeriesObjectInput!): TreatmentSeriesObject!
+	updateTreatmentSeriesObject(id: ID!, object: TreatmentSeriesObjectInput!): TreatmentSeriesObject!
+	deleteTreatmentSeriesObject(id: ID!, object: TreatmentSeriesObjectInput!): Boolean
 
 }
 
 extend type Subscription {
-	treatmentObjectCreated(patient_id: ID!): TreatmentSeriesObject!
-	treatmentObjectUpdated(patient_id: ID!): TreatmentSeriesObject!
-	treatmentObjectDeleted(patient_id: ID!): TreatmentSeriesObject!
+	treatmentSeriesCreated(patient_id: ID!): TreatmentSeries!
+	treatmentSeriesUpdated(patient_id: ID!): TreatmentSeries!
+	treatmentSeriesDeleted(patient_id: ID!): TreatmentSeries!
 }

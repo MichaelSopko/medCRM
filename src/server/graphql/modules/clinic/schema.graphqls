@@ -52,7 +52,7 @@ type Therapist implements User {
 extend type Query {
 	clinics: [Clinic]
 	administrators: [ClinicAdministrator]
-	therapists(clinic_id: Int): [Therapist]
+	therapists(clinic_id: ID): [Therapist]
 }
 
 extend type Mutation {

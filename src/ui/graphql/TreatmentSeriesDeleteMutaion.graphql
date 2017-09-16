@@ -1,5 +1,5 @@
 mutation deleteTreatmentSeries(
-$id: Int!
+$id: ID!
 ) {
     deleteTreatmentSeries(id: $id) {
         status

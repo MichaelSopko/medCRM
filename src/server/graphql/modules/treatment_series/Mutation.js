@@ -6,6 +6,7 @@ import heMessages from '../../../../l10n/he.json';
 import emailConfig from '../../../../../email.config';
 import { roleOnly } from '../../utils/decorators';
 import ROLES from '../../../../helpers/constants/roles';
+import { pubsub } from '../../schema';
 
 const { template: emailTemplate, ...mailerConfig } = emailConfig;
 
@@ -13,14 +14,14 @@ let transporter = nodemailer.createTransport(mailerConfig);
 
 export default {
 	@roleOnly(ROLES.THERAPIST)
-	async addTreatmentSeries(_, seriesInput, { Treatments }) {
+	async createTreatmentSeries(_, seriesInput, { Treatments }) {
 		const [id] = await Treatments.addSeries(seriesInput);
 		const series = await Treatments.findOne(id);
 		pubsub.publish('treatmentSeriesCreated', series);
 		return series;
 	},
 	@roleOnly(ROLES.THERAPIST)
-	async editTreatmentSeries(_, seriesInput, { Treatments }) {
+	async updateTreatmentSeries(_, seriesInput, { Treatments }) {
 		await Treatments.editSeries(seriesInput);
 		const series = await Treatments.findOne(seriesInput.id);
 		pubsub.publish('treatmentSeriesUpdated', series);
@@ -35,8 +36,9 @@ export default {
 			return res;
 		}
 	},
+
 	@roleOnly(ROLES.THERAPIST)
-	async addTreatment(_, { series_id, treatment: { repeat_weeks, ...treatment } }, ctx) {
+	async createTreatmentSeriesObject(_, { series_id, treatment: { repeat_weeks, ...treatment } }, ctx) {
 		const isExists = await ctx.Treatments.isTreatmentExistsByTime(treatment.start_date, treatment.end_date);
 		if (isExists) {
 			throw new Error('Treatments.treatment_collided_error');
@@ -57,7 +59,7 @@ export default {
 		return { status: true };
 	},
 	@roleOnly(ROLES.THERAPIST)
-	async editTreatment(_, { id, treatment }, context) {
+	async updateTreatmentSeriesObject(_, { id, treatment }, context) {
 		const isExists = await context.Treatments.isTreatmentExistsByTime(treatment.start_date, treatment.end_date, id);
 		if (isExists) {
 			throw new Error('Treatments.treatment_collided_error');
@@ -104,7 +106,7 @@ export default {
 			});
 	},
 	@roleOnly(ROLES.THERAPIST)
-	async deleteTreatment(_, { id }, { Treatments }) {
+	async deleteTreatmentSeriesObject(_, { id }, { Treatments }) {
 		const treatment = await Treatments.findOneTreatment(id);
 		await Treatments.deleteTreatment({ id });
 		const series = await Treatments.findOne(treatment.series_id);

@@ -1,5 +1,5 @@
 mutation addTreatment(
-$series_id: Int!
+$series_id: ID!
 $treatment: TreatmentInput
 ) {
     addTreatment(

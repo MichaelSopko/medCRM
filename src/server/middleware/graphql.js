@@ -3,7 +3,7 @@ import 'isomorphic-fetch';
 import { formatError } from 'apollo-errors';
 
 import schema from '../graphql/schema';
-import Clinics from '../sql/models/clinics';
+import Clinic from '../sql/models/Clinic';
 import Users from '../sql/models/users';
 import Treatments from '../sql/models/treatments';
 
@@ -17,9 +17,9 @@ export default graphqlExpress(async (req, res) => {
     schema,
 	  formatError,
     context: {
-      Clinics: new Clinics(),
+      Clinic,
       Users: new Users(),
-	    Treatments: new Treatments,
+	    Treatments: new Treatments(),
       currentUser,
     },
   };

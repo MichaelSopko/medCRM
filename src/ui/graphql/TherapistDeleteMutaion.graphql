@@ -1,5 +1,5 @@
 mutation deleteTherapist(
-$id: Int!
+$id: ID!
 ) {
     deleteTherapist(id: $id) {
         status
