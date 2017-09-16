@@ -173,7 +173,13 @@
       "content": "תאריך התחלה: {start_date}, תאריך סיום: {end_date}"
     },
     "repeat_weeks": "חזור על הטיפול מספר שבועות",
-    "treatment_collided_error": "מועד הטיפול מתנגש עם טיפולים אחרים"
+    "treatment_collided_error": "מועד הטיפול מתנגש עם טיפולים אחרים",
+    "create_object_button": {
+      "treatment": "Add treatment",
+      "school_observation": "School Observation",
+      "staff_meeting": "Staff meeting",
+      "outside_source_control": "Outside source control"
+    }
   },
   "Calendar": {
     "header": "הראה טיפולים",

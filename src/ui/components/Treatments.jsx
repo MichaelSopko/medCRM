@@ -26,7 +26,7 @@ import { withCurrentUser } from './helpers/withCurrentUser';
 import './Treatments.scss'
 
 import {
-	Table, Icon, Button, Modal, Input, Form, Popconfirm, Select, DatePicker, InputNumber, notification, Col, Switch,
+	Table, Icon, Button, Menu, Modal, Input, Form, Popconfirm, Select, DatePicker, InputNumber, notification, Col, Switch, Dropdown
 } from 'antd'
 
 const SeriesForm = Form.create()(
@@ -708,11 +708,16 @@ class Treatments extends Component {
 			width: '35%',
 			render: (text, record) => (
 				<span>
-		      <Button size="small" type='primary' disabled={patient.archived}
-		              onClick={ this.showTreatmentModal(record) }>
-			      <Icon type="plus-circle-o" />
-			      {formatMessage({ id: 'Treatments.create_treatment_button' })}
-		      </Button>
+					<Dropdown.Button type='primary' onClick={this.showTreatmentModal(record)} size="small" disabled={patient.archived} overlay={
+						<Menu>
+							<Menu.Item key="2">{formatMessage({ id: 'Treatments.create_object_button.school_observation' })}</Menu.Item>
+							<Menu.Item key="3">{formatMessage({ id: 'Treatments.create_object_button.staff_meeting' })}</Menu.Item>
+							<Menu.Item key="4">{formatMessage({ id: 'Treatments.create_object_button.outside_source_control' })}</Menu.Item>
+						</Menu>
+					}>
+				      <Icon type="plus-circle-o" />
+				      {formatMessage({ id: 'Treatments.create_object_button.treatment' })}
+			    </Dropdown.Button>
 					<span className="ant-divider"></span>
 		      <Button size="small" type='ghost' onClick={ this.editSeries(record) }>
 			      {formatMessage({ id: 'common.action_edit' })}

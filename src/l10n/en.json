@@ -122,7 +122,13 @@
       "subject": "Schedule updated for patient: {patient}",
       "content": "Start date: {start_date}, End date: {end_date}"
     },
-    "treatment_collided_error": "This patient already has a treatment for selected time"
+    "treatment_collided_error": "This patient already has a treatment for selected time",
+    "create_object_button": {
+      "treatment": "Add treatment",
+      "school_observation": "School Observation",
+      "staff_meeting": "Staff meeting",
+      "outside_source_control": "Outside source control"
+    }
   },
   "Calendar": {
     "header": "View treatments",
