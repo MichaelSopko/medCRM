@@ -33,14 +33,14 @@ import ColorHash from 'color-hash'
 import { FormattedMessage } from 'react-intl'
 
 import PATIENTS_LIST_QUERY from '../../patient/graphql/PatientsList.graphql'
-import GET_TREATMENTS_QUERY from '../../graphql/TreatmentsGet.graphql'
+import GET_TREATMENTS_QUERY from '../../treatment_series/graphql/treatments.query.gql'
+import UPDATE_OBJECT_MUTATION from '../../treatment_series/graphql/updateTreatmentSeriesObject.mutation.gql'
 
 import ROLES from '../../../helpers/constants/roles'
 import ClinicsSelector from '../ClinicsSelector'
 import CheckAccess from '../helpers/CheckAccess'
 import PatientSelector from '../PatientSelector'
-import EDIT_TREATMENT_MUTATION from '../../graphql/TreatmentEditMutation.graphql'
-import {TreatmentForm} from '../Treatments';
+import {TreatmentForm} from '../../treatment_series/components/TreatmentForm';
 
 import './Calendar.scss'
 
@@ -83,9 +83,11 @@ class TreatmentsCalendar extends Component {
 
 		this.props.mutate({ variables: {
 			id: event.id,
-			treatment: {
-				start_date: start,
-				end_date: end,
+			object: {
+				TreatmentInput: {
+					start_date: start,
+					end_date: end,
+				},
 			},
 		}}).catch(errorHandler);
 	}
@@ -137,8 +139,8 @@ class TreatmentsCalendar extends Component {
 
 		let events = [];
 		treatmentSeries.forEach(series => {
-			events.push(...series.treatments.map(t => ({ series, ...t })));
-		})
+			events.push(...series.objects.filter(obj => obj.__typename === 'Treatment').map(t => ({ series, ...t })));
+		});
 		events = events.map(treatment => {
 			const startDate = new Date(treatment.start_date);
 			const userTimezoneOffset = startDate.getTimezoneOffset() * 60000;
@@ -215,7 +217,7 @@ const TreatmentsCalendarWithData = compose(
 		}),
 		skip: ({ currentClinic, patientId }) => !currentClinic && !patientId,
 	}),
-	graphql(EDIT_TREATMENT_MUTATION),
+	graphql(UPDATE_OBJECT_MUTATION),
 )(TreatmentsCalendar);
 
 class Calendar extends Component {

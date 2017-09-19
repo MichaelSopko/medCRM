@@ -1,8 +1,8 @@
-import React from 'react'
-import { createBatchingNetworkInterface } from 'apollo-client'
-import { ApolloProvider } from 'react-apollo'
-import { Router, browserHistory } from 'react-router'
-import { syncHistoryWithStore } from 'react-router-redux'
+import React from 'react';
+import { createBatchingNetworkInterface } from 'apollo-client';
+import { ApolloProvider } from 'react-apollo';
+import { Router, browserHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
 import { IntlProvider, addLocaleData } from 'react-intl';
 import en from 'react-intl/locale-data/en';
 import he from 'react-intl/locale-data/he';
@@ -19,12 +19,12 @@ const locale = config.locale;
 
 moment.locale(locale);
 
-import createApolloClient from '../apollo_client'
-import createReduxStore from '../redux_store'
-import routes from '../routes'
-import { app as settings } from '../../package.json'
+import createApolloClient from '../apollo_client';
+import createReduxStore from '../redux_store';
+import routes from '../routes';
+import { app as settings } from '../../package.json';
 
-import '../ui/styles.scss'
+import '../ui/styles.scss';
 
 // Favicon.ico should not be hashed, since some browsers expect it to be exactly on /favicon.ico URL
 require('!file?name=[name].[ext]!../assets/favicon.ico'); // eslint-disable-line import/no-webpack-loader-syntax
@@ -32,6 +32,19 @@ require('!file?name=[name].[ext]!../assets/favicon.ico'); // eslint-disable-line
 // Require all files from assets dir recursively addding them into assets.json
 var req = require.context('!file?name=[hash].[ext]!../assets', true, /.*/);
 req.keys().map(req);
+
+// disable errors for the missing translations
+if (process.env.NODE_ENV !== 'production' && locale === 'en') {
+	const originalConsoleError = console.error;
+	if (console.error === originalConsoleError) {
+		console.error = (...args) => {
+			if (args[0].includes && args[0].includes('[React Intl]')) {
+				return;
+			}
+			originalConsoleError.call(console, ...args);
+		};
+	}
+}
 
 function flattenMessages(nestedMessages, prefix = '') {
 	return Object.keys(nestedMessages).reduce((messages, key) => {
@@ -52,10 +65,10 @@ addLocaleData([...he]);
 
 let networkInterface = createBatchingNetworkInterface({
 	opts: {
-		credentials: "same-origin",
+		credentials: 'same-origin',
 	},
 	batchInterval: 20,
-	uri: "/graphql",
+	uri: '/graphql',
 });
 
 
@@ -67,7 +80,7 @@ networkInterface.use([{
 		const token = localStorage.getItem('token');
 		req.options.headers.authorization = token ? `Bearer ${token}` : null;
 		next();
-	}
+	},
 }]);
 
 const wsClient = new SubscriptionClient(window.location.origin.replace(/^http/, 'ws')
@@ -97,7 +110,7 @@ const antMessages = locale === 'he' ? heAnt : enUSAnt;
 export default class Main extends React.Component {
 	render() {
 		return (
-			<IntlProvider locale={'en'} defaultLocale='en' messages={ flattenMessages(messages) }>
+			<IntlProvider locale={'en'} defaultLocale='en' messages={flattenMessages(messages)}>
 				<LocaleProvider locale={antMessages}>
 					<ApolloProvider store={store} client={client}>
 						<Router history={history}>

@@ -1,0 +1,7 @@
+#import './TreatmentSeriesObject.fragment.gql'
+
+mutation updateTreatmentSeriesObject($id: ID!, $object: TreatmentSeriesObjectInput!) {
+    updateTreatmentSeriesObject(id: $id, object: $object) {
+        ...TreatmentSeriesObjectFragment
+    }
+}

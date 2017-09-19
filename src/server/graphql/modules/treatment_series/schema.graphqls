@@ -12,7 +12,7 @@ type SchoolObservation {
 	educationalFramework: String
 	observationFindings: String
 	observationSummary: String
-	therapist: Therapist!
+	therapists: [Therapist]
 }
 
 input SchoolObservationInput {
@@ -28,7 +28,7 @@ input SchoolObservationInput {
 	educationalFramework: String
 	observationFindings: String
 	observationSummary: String
-	therapist_id: ID!
+	therapist_ids: [ID]!
 }
 
 type StaffMeeting {
@@ -40,7 +40,7 @@ type StaffMeeting {
 }
 
 input StaffMeetingInput {
-	participants: [ID]!
+	participant_ids: [ID]!
 	date: Date
 	protocol: String
 	nextRecommendation: String
@@ -77,7 +77,7 @@ input TreatmentInput {
 	process: String
 	parents_guidance: String
 	next_treatment_remark: String
-	therapist_ids: [ID]
+	therapist_ids: [ID]!
 	start_date: Date
 	end_date: Date
 	repeat_weeks: Int
@@ -85,10 +85,10 @@ input TreatmentInput {
 
 union TreatmentSeriesObject = SchoolObservation | Treatment | StaffMeeting | OutsideSourceConsult
 input TreatmentSeriesObjectInput {
-	Treatment: TreatmentInput,
-	SchoolObservation: SchoolObservationInput,
-	StaffMeeting: StaffMeetingInput,
-	OutsideSourceConsult: OutsideSourceConsultInput
+	TreatmentInput: TreatmentInput,
+	SchoolObservationInput: SchoolObservationInput,
+	StaffMeetingInput: StaffMeetingInput,
+	OutsideSourceConsultInput: OutsideSourceConsultInput
 }
 
 type TreatmentSeries {
@@ -109,8 +109,8 @@ extend type Mutation {
 	createTreatmentSeries(
 		name: String
 		treatments_number: Int!
-		patient_id: Int!
-		clinic_id: Int!
+		patient_id: ID!
+		clinic_id: ID!
 	): MutationStatus
 
 	updateTreatmentSeries(
@@ -125,7 +125,7 @@ extend type Mutation {
 
 	createTreatmentSeriesObject(series_id: ID!, object: TreatmentSeriesObjectInput!): TreatmentSeriesObject!
 	updateTreatmentSeriesObject(id: ID!, object: TreatmentSeriesObjectInput!): TreatmentSeriesObject!
-	deleteTreatmentSeriesObject(id: ID!, object: TreatmentSeriesObjectInput!): Boolean
+	deleteTreatmentSeriesObject(id: ID!): Boolean
 
 }
 

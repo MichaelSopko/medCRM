@@ -1,8 +1,8 @@
-#import './TreatmentFragment.graphql'
+#import './TreatmentSeries.fragment.gql'
 
 query treatments($patient_id: ID, $clinic_id: ID) {
     treatmentSeries(patient_id: $patient_id, clinic_id: $clinic_id) {
-        ...TreatmentFragment
+        ...TreatmentSeriesFragment
     }
     therapists(clinic_id: $clinic_id) {
         id

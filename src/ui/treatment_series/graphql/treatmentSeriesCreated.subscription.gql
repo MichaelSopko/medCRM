@@ -1,7 +1,7 @@
-#import './TreatmentFragment.graphql'
+#import './TreatmentSeries.fragment.gql'
 
 subscription onSeriesCreated($patient_id: ID!){
     treatmentSeriesCreated(patient_id: $patient_id) {
-        ...TreatmentFragment
+        ...TreatmentSeriesFragment
     }
 }

@@ -38,28 +38,44 @@ export default {
 	},
 
 	@roleOnly(ROLES.THERAPIST)
-	async createTreatmentSeriesObject(_, { series_id, treatment: { repeat_weeks, ...treatment } }, ctx) {
-		const isExists = await ctx.Treatments.isTreatmentExistsByTime(treatment.start_date, treatment.end_date);
-		if (isExists) {
-			throw new Error('Treatments.treatment_collided_error');
-		}
-		const { Treatments } = ctx;
-		if (repeat_weeks) {
-			while (repeat_weeks--) {
-				let { start_date, end_date, ...fields } = treatment;
-				start_date = moment.utc(start_date).add(repeat_weeks, 'weeks').format('YYYY-MM-DD HH:mm:ss');
-				end_date = moment.utc(end_date).add(repeat_weeks, 'weeks').format('YYYY-MM-DD HH:mm:ss');
-				await Treatments.addTreatment({ series_id, start_date, end_date, ...fields });
+	async createTreatmentSeriesObject(_, {
+		series_id, object: {
+			TreatmentInput, SchoolObservationInput, StaffMeetingInput, OutsideSourceConsultInput,
+		},
+	}, { Treatments, Treatment, TreatmentSeries, TreatmentObject }) {
+
+		if (TreatmentInput) {
+			let { repeat_weeks, ...treatment } = TreatmentInput;
+			const isExists = await Treatments.isTreatmentExistsByTime(treatment.start_date, treatment.end_date);
+			if (isExists) {
+				throw new Error('Treatments.treatment_collided_error');
 			}
-		} else {
-			await Treatments.addTreatment({ series_id, ...treatment });
+			if (repeat_weeks) {
+				while (repeat_weeks--) {
+					let { start_date, end_date, ...fields } = treatment;
+					start_date = moment.utc(start_date).add(repeat_weeks, 'weeks').format('YYYY-MM-DD HH:mm:ss');
+					end_date = moment.utc(end_date).add(repeat_weeks, 'weeks').format('YYYY-MM-DD HH:mm:ss');
+					await Treatments.addTreatment({ series_id, start_date, end_date, ...fields });
+				}
+			} else {
+				await Treatments.addTreatment({ series_id, ...treatment });
+			}
+			const series = await Treatments.findOne(series_id);
+			pubsub.publish('treatmentSeriesUpdated', series);
+			return TreatmentInput;
+		} else if (SchoolObservationInput) {
+			const Model = TreatmentObject.SchoolObservation;
+			return Model.query().insertAndFetch({
+				series_id,
+				date: new Date(),
+				fields: SchoolObservationInput,
+			});
 		}
-		const series = await Treatments.findOne(series_id);
-		pubsub.publish('treatmentSeriesUpdated', series);
-		return { status: true };
 	},
 	@roleOnly(ROLES.THERAPIST)
-	async updateTreatmentSeriesObject(_, { id, treatment }, context) {
+	async updateTreatmentSeriesObject(_, { id, object: {
+		TreatmentInput, SchoolObservationInput, StaffMeetingInput, OutsideSourceConsultInput,
+	} }, context) {
 		const isExists = await context.Treatments.isTreatmentExistsByTime(treatment.start_date, treatment.end_date, id);
 		if (isExists) {
 			throw new Error('Treatments.treatment_collided_error');

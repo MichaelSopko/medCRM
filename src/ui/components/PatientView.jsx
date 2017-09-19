@@ -28,7 +28,7 @@ const TabPane = Tabs.TabPane
 import { FormattedMessage } from 'react-intl'
 import nl2br from 'react-nl2br';
 
-import TreatmentsTab from './Treatments';
+import TreatmentsTab from '../treatment_series/containers/Treatments';
 import TreatmentSummaryTab from '../patient/containers/TreatmentSummaryTab';
 import DiagnoseTab from '../patient/containers/DiagnoseTab';
 
