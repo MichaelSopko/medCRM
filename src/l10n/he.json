@@ -220,6 +220,14 @@
         "nextRecommendation": "המלצות לפגישה הבאה",
         "protocol": "פירוט הישיבה"
       }
+    },
+    "grid_headers": {
+      "past_treatments": "Past treatments",
+      "future_treatments": "Future treatments",
+      "total_treatments": "Total treatments",
+      "school_observations": "School Observations",
+      "staff_meetings": "Staff meetings",
+      "outside_source_consults": "Outside source consults"
     }
   },
   "Calendar": {
