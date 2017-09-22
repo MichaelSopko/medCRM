@@ -60,7 +60,7 @@ const SchoolObservationForm = (props) => {
 					{getFieldDecorator('observationReason', {
 						validateTrigger: 'onBlur', rules: [],
 					})(
-						<Input />,
+						<Input type='textarea' />,
 					)}
 				</Form.Item>}
 				{<Form.Item
@@ -79,7 +79,7 @@ const SchoolObservationForm = (props) => {
 					label={formatMessage({ id: 'common.field_date' })}
 					hasFeedback
 				>
-					{getFieldDecorator('observationReason', {
+					{getFieldDecorator('date', {
 						validateTrigger: 'onBlur', rules: [],
 					})(
 						<DatePicker />,

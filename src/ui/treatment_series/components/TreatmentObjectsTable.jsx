@@ -4,7 +4,7 @@ import React from 'react';
 
 
 export const colorsMap = {
-	'Treatment': 'default',
+	'Treatment': 'grey',
 	'SchoolObservation': 'cyan',
 	'StaffMeeting': 'blue',
 	'OutsideSourceConsult': 'purple',
