@@ -40,9 +40,11 @@ export default {
 	@roleOnly(ROLES.THERAPIST)
 	async createTreatmentSeriesObject(_, {
 		series_id, object: {
-			TreatmentInput, SchoolObservationInput, StaffMeetingInput, OutsideSourceConsultInput,
+			TreatmentInput, ...restObject,
 		},
 	}, { Treatments, Treatment, TreatmentSeries, TreatmentObject }) {
+
+		let newObject;
 
 		if (TreatmentInput) {
 			let { repeat_weeks, ...treatment } = TreatmentInput;
@@ -60,73 +62,94 @@ export default {
 			} else {
 				await Treatments.addTreatment({ series_id, ...treatment });
 			}
-			const series = await Treatments.findOne(series_id);
-			pubsub.publish('treatmentSeriesUpdated', series);
-			return TreatmentInput;
-		} else if (SchoolObservationInput) {
-			const Model = TreatmentObject.SchoolObservation;
-			return Model.query().insertAndFetch({
+			newObject = {
+				id: -1,
+				...TreatmentInput,
+			};
+		} else if (Object.keys(restObject).length) {
+			const { SchoolObservationInput, StaffMeetingInput, OutsideSourceConsultInput } = restObject;
+			const fields = SchoolObservationInput || StaffMeetingInput || OutsideSourceConsultInput;
+			newObject = await TreatmentObject.query().insertAndFetch({
 				series_id,
 				date: new Date(),
-				fields: SchoolObservationInput,
+				fields,
 			});
 		}
+		const series = await Treatments.findOne(series_id);
+		pubsub.publish('treatmentSeriesUpdated', series);
+		return newObject;
 	},
 	@roleOnly(ROLES.THERAPIST)
-	async updateTreatmentSeriesObject(_, { id, object: {
-		TreatmentInput, SchoolObservationInput, StaffMeetingInput, OutsideSourceConsultInput,
-	} }, context) {
-		const isExists = await context.Treatments.isTreatmentExistsByTime(treatment.start_date, treatment.end_date, id);
-		if (isExists) {
-			throw new Error('Treatments.treatment_collided_error');
-		}
-		const oldTreatment = await context.Treatments.findOneTreatment(id);
-		const currentUser = context.currentUser;
-		return context.Treatments.editTreatment({
-			id,
-			...treatment
-		})
-			.then(async () => {
-				treatment = await context.Treatments.findOneTreatment(id);
-				const series = await context.Treatments.findOne(treatment.series_id);
-				pubsub.publish('treatmentSeriesUpdated', series);
+	async updateTreatmentSeriesObject(_, {
+		id, object: {
+			TreatmentInput, ...restObject,
+		},
+	}, context) {
+		if (TreatmentInput) {
+			let treatment = TreatmentInput;
+			const isExists = await context.Treatments.isTreatmentExistsByTime(treatment.start_date, treatment.end_date, id);
+			if (isExists) {
+				throw new Error('Treatments.treatment_collided_error');
+			}
+			const oldTreatment = await context.Treatments.findOneTreatment(id);
+			const currentUser = context.currentUser;
+			return context.Treatments.editTreatment({
+				id,
+				...treatment
+			})
+				.then(async () => {
+					treatment = await context.Treatments.findOneTreatment(id);
+					const series = await context.Treatments.findOne(treatment.series_id);
+					pubsub.publish('treatmentSeriesUpdated', series);
 
-				let { related_persons, first_name, last_name } = await context.Users.findOne(series.patient_id);
-				related_persons = safeParse(related_persons, []);
+					let { related_persons, first_name, last_name } = await context.Users.findOne(series.patient_id);
+					related_persons = safeParse(related_persons, []);
 
-				related_persons.forEach(person => {
+					related_persons.forEach(person => {
 
-					const templateConfig = {
-						old_date: moment(oldTreatment.start_date).format('DD.MM.YYYY'),
-						old_time: moment(oldTreatment.start_date).format('HH:mm'),
-						new_time: moment(treatment.start_date).format('HH:mm'),
-						new_date: moment(treatment.start_date).format('DD.MM.YYYY'),
-						therapist_name: `${currentUser.first_name} ${currentUser.last_name}`,
-						relative_name: person.name,
-						patient_name: `${first_name} ${last_name}`,
-					};
+						const templateConfig = {
+							old_date: moment(oldTreatment.start_date).format('DD.MM.YYYY'),
+							old_time: moment(oldTreatment.start_date).format('HH:mm'),
+							new_time: moment(treatment.start_date).format('HH:mm'),
+							new_date: moment(treatment.start_date).format('DD.MM.YYYY'),
+							therapist_name: `${currentUser.first_name} ${currentUser.last_name}`,
+							relative_name: person.name,
+							patient_name: `${first_name} ${last_name}`,
+						};
 
-					let mailOptions = {
-						from: `"Clinic" <${mailerConfig.auth.user}>`,
-						to: person.email,
-						subject: heMessages.Treatments.update_email.subject,
-						html: emailTemplate(templateConfig),
-					};
+						let mailOptions = {
+							from: `"Clinic" <${mailerConfig.auth.user}>`,
+							to: person.email,
+							subject: heMessages.Treatments.update_email.subject,
+							html: emailTemplate(templateConfig),
+						};
 
-					transporter.sendMail(mailOptions).then(info => {
-						console.log('Message %s sent: %s', info.messageId, info.response);
+						transporter.sendMail(mailOptions).then(info => {
+							console.log('Message %s sent: %s', info.messageId, info.response);
+						});
 					});
-				});
 
-				return treatment;
-			});
+					return treatment;
+				});
+		} else if (Object.keys(restObject).length) {
+			const { SchoolObservationInput, StaffMeetingInput, OutsideSourceConsultInput } = restObject;
+			const fields = SchoolObservationInput || StaffMeetingInput || OutsideSourceConsultInput;
+			const updatedTreatment = await context.TreatmentObject.query().updateAndFetchById(id, fields);
+			const series = await context.Treatments.findOne(updatedTreatment.series_id);
+			pubsub.publish('treatmentSeriesUpdated', series);
+			return {
+				...updatedTreatment,
+				...updatedTreatment.fields,
+			};
+		}
 	},
 	@roleOnly(ROLES.THERAPIST)
-	async deleteTreatmentSeriesObject(_, { id }, { Treatments }) {
-		const treatment = await Treatments.findOneTreatment(id);
+	async deleteTreatmentSeriesObject(_, { id }, { Treatments, TreatmentObject }) {
+		const treatment = await Treatments.findOneTreatment(id) || await TreatmentObject.findById(id);
 		await Treatments.deleteTreatment({ id });
+		await TreatmentObject.softDeleteById(id);
 		const series = await Treatments.findOne(treatment.series_id);
 		pubsub.publish('treatmentSeriesUpdated', series);
-		return series;
+		return true;
 	},
 };

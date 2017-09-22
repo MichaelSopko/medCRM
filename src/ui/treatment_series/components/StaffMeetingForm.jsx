@@ -10,7 +10,10 @@ import {
 	Tabs,
 } from 'antd';
 import React from 'react';
+import moment from 'moment';
+
 import ROLES from '../../../helpers/constants/roles';
+import mapPropsToFields from './mapPropsToFields';
 
 const StaffMeetingForm = (props) => {
 	const { visible, onCancel, onSubmit, form, loading, isNew, formatMessage, therapists, currentUser, values } = props;
@@ -31,6 +34,14 @@ const StaffMeetingForm = (props) => {
 		okText: formatMessage({ id: 'common.modal_save_confirm.ok' }),
 		cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' }),
 	}) : onCancel();
+	const handleSubmit = (evt) => {
+		evt.preventDefault();
+		form.validateFields((err, values) => {
+			if (!err) {
+				onSubmit(form, values);
+			}
+		});
+	};
 
 	return (
 		<Modal
@@ -38,7 +49,7 @@ const StaffMeetingForm = (props) => {
 			visible={visible}
 			okText={formatMessage({ id: !isNew ? 'common.action_edit' : 'common.action_create' })}
 			onCancel={checkForConfirm}
-			onOk={onSubmit}
+			onOk={handleSubmit}
 			confirmLoading={loading}
 			width={800}
 		>
@@ -68,7 +79,7 @@ const StaffMeetingForm = (props) => {
 					label={formatMessage({ id: 'common.field_date' })}
 					hasFeedback
 				>
-					{getFieldDecorator('observationReason', {
+					{getFieldDecorator('date', {
 						validateTrigger: 'onBlur', rules: [],
 					})(
 						<DatePicker showTime format="DD.MM.YYYY HH:mm" />,
@@ -102,7 +113,5 @@ const StaffMeetingForm = (props) => {
 };
 
 export default Form.create({
-	mapPropsToFields: props => ({
-		...props.values,
-	})
+	mapPropsToFields
 })(StaffMeetingForm);

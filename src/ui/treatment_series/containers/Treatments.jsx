@@ -56,7 +56,8 @@ class Treatments extends Component {
 
 	state = {
 		currentFormType: null,
-		currentEntity: null,
+		currentObject: null,
+		currentSeries: null,
 		modalLoading: false,
 	};
 
@@ -118,130 +119,65 @@ class Treatments extends Component {
 		this.resetActiveEntity();
 	};
 
-	showSeriesModal = () => {
-		this.setState({ seriesModalOpened: true });
-	};
-
-	showTreatmentModal = record => () => {
-		this.setState({ treatmentModalOpened: true, activeSeries: record });
-	};
-
-	/**
-	 * Handle modal transition
-	 */
-	resetForm = () => {
-		setTimeout(() => {
-			this.setState({ activeSeries: {}, activeTreatment: {} });
-			this.seriesForm.resetFields();
-			this.treatmentForm.resetFields();
-		}, 300);
-	};
-
-	handleSeriesSubmit = () => {
-		const form = this.seriesForm;
-		const isEditing = !!Object.keys(this.state.activeSeries).length;
-		const formatMessage = this.context.intl.formatMessage;
-		const errorHandler = e => {
-			this.setState({ modalLoading: false });
-			console.error(e);
-			let id = 'common.server_error';
-			notification.error({
-				message: formatMessage({ id }),
-			});
-		};
-		form.validateFields((err, values) => {
-			if (err) {
-				return;
-			}
-
-			values.start_date = moment(values.start_date).toISOString();
-			values.end_date = moment(values.end_date).toISOString();
-
-			this.setState({ modalLoading: true });
-			isEditing ?
-				this.props.editSeries({ id: this.state.activeSeries.id, ...values }).then(() => {
-					form.resetFields();
-					this.setState({ seriesModalOpened: false, modalLoading: false, activeSeries: {} });
-				}).catch(errorHandler) :
-				this.props.addSeries({ patient_id: this.props.patient.id, clinic_id: this.props.currentClinic.id, ...values }).then(() => {
-					form.resetFields();
-					this.setState({ seriesModalOpened: false, modalLoading: false });
-				}).catch(errorHandler);
-
-		});
-	};
-
-	handleTreatmentSubmit = () => {
-		const form = this.treatmentForm;
-		const isEditing = !!Object.keys(this.state.activeTreatment).length;
-		console.log(this.state.activeTreatment);
-		const formatMessage = this.context.intl.formatMessage;
-		const errorHandler = e => {
-			this.setState({ modalLoading: false });
-			console.error(e);
-			console.dir(e)
-			let id = 'common.server_error';
-			if (e.graphQLErrors) {
-				id = e.graphQLErrors[0].message;
-			}
-			notification.error({
-				message: formatMessage({ id }),
-			});
-		};
-		form.validateFields((err, { repeat_weeks_trigger, ...values }) => {
-			if (err) {
-				return;
-			}
-			this.setState({ modalLoading: true });
-			isEditing ?
-				this.props.editTreatment({ id: this.state.activeTreatment.id, treatment: values }).then(() => {
-					form.resetFields();
-					this.setState({ treatmentModalOpened: false, modalLoading: false, activeTreatment: {} });
-				}).catch(errorHandler) :
-				this.props.addTreatment({ series_id: this.state.activeSeries.id, treatment: values }).then(() => {
-					form.resetFields();
-					this.setState({ treatmentModalOpened: false, modalLoading: false, activeSeries: {} });
-				}).catch(errorHandler);
-
-		});
-	};
-
-	editSeries = entity => () => {
-		this.seriesForm.resetFields();
-		this.setState({
-			seriesModalOpened: true,
-			activeSeries: entity,
-		});
-	};
-
-	editTreatment = entity => () => {
-		this.treatmentForm.resetFields();
-		this.setState({
-			treatmentModalOpened: true,
-			activeTreatment: entity,
-		});
-	};
-
 	updateObject = (object) => {
-		this.showForm(FORM_TYPES[object.__typename], object);
+		this.showForm(FORM_TYPES[object.__typename], null, object);
 	}
 
-	showForm = (currentFormType, currentEntity = null) => {
+	showForm = (currentFormType, currentSeries = null, currentObject = null) => {
 		this.setState({
-			currentFormType, currentEntity,
+			currentFormType, currentObject, currentSeries,
 		});
 	};
 
 	hideForm = () => {
 		this.setState({
-			currentFormType: null, currentEntity: null,
+			currentFormType: null, currentObject: null, currentSeries: null, modalLoading: false,
 		});
 	};
+
+	handleSubmit = async (form, values) => {
+			const { currentFormType, currentSeries, currentObject } = this.state;
+			let mutation, params, isNew;
+			if (currentFormType === FORM_TYPES.TreatmentSeries) {
+				isNew = !currentSeries;
+				mutation = isNew ? this.props.addSeries : this.props.editSeries;
+				values.start_date = moment(values.start_date).toISOString();
+				values.end_date = moment(values.end_date).toISOString();
+				params = isNew
+				? { patient_id: this.props.patient.id, clinic_id: this.props.currentClinic.id, ...values  }
+				: values;
+			} else {
+				isNew = !currentObject;
+				if (values.repeat_weeks_trigger !== undefined) {
+					delete values.repeat_weeks_trigger;
+				}
+				mutation = isNew ? this.props.createObject : this.props.updateObject;
+				params = isNew
+					? { series_id: currentSeries.id, object: { [`${currentFormType}Input`]: values } }
+					: { id: currentObject.id, object: { [`${currentFormType}Input`]: values } };
+			}
+			try {
+				this.setState({ modalLoading: true });
+				await mutation(params);
+				this.hideForm();
+				form.resetFields();
+			} catch (error) {
+				this.setState({ modalLoading: false });
+				console.error(error);
+				let id = 'common.server_error';
+				if (error.graphQLErrors) {
+					id = error.graphQLErrors[0].message;
+				}
+				notification.error({
+					message: this.context.intl.formatMessage({ id }),
+				});
+			}
+	}
 
 	render() {
 		const {
 			data: { loading, treatmentSeries = [], therapists = [] },
-			deleteTreatment, currentClinic, deleteSeries, currentUser, patient
+			currentClinic, deleteSeries, currentUser, patient
 		} = this.props;
 		const formatMessage = this.context.intl.formatMessage;
 
@@ -271,7 +207,7 @@ class Treatments extends Component {
 						size='small'
 						disabled={patient.archived}
 						overlay={
-						<Menu onClick={({ key }) => this.showForm(FORM_TYPES[key])}>
+						<Menu onClick={({ key }) => this.showForm(FORM_TYPES[key], record)}>
 							<Menu.Item key={FORM_TYPES.SchoolObservation}>
 								<Icon type='plus-circle-o' style={{marginRight: 6 }} />
 								{formatMessage({ id: 'Treatments.create_object_button.school_observation' })}
@@ -305,39 +241,47 @@ class Treatments extends Component {
         </span>
 			),
 		}];
-		const { currentFormType, currentEntity, modalLoading, } = this.state;
+		const { currentFormType, currentObject, currentSeries, modalLoading, } = this.state;
 		const formProps = {
 			loading: modalLoading,
 			onCancel: this.hideForm,
 			onSubmit: this.handleSubmit,
-			values: currentEntity,
 			formatMessage,
 			currentUser,
 			currentClinic,
 			therapists,
-			isNew: !currentEntity,
 		};
 
 		return (
 			<section className="Treatments">
 				<TreatmentSeriesForm
 					visible={currentFormType === FORM_TYPES.TreatmentSeries}
+					isNew={!currentSeries}
+					values={currentSeries}
 					{...formProps}
 				/>
 				<TreatmentForm
 					visible={currentFormType === FORM_TYPES.Treatment}
+					isNew={!currentObject}
+					values={currentObject}
 					{...formProps}
 				/>
 				<SchoolObservationForm
 					visible={currentFormType === FORM_TYPES.SchoolObservation}
+					isNew={!currentObject}
+					values={currentObject}
 					{...formProps}
 				/>
 				<StaffMeetingForm
 					visible={currentFormType === FORM_TYPES.StaffMeeting}
+					isNew={!currentObject}
+					values={currentObject}
 					{...formProps}
 				/>
 				<OutsideSourceConsultForm
 					visible={currentFormType === FORM_TYPES.OutsideSourceConsult}
+					isNew={!currentObject}
+					values={currentObject}
 					{...formProps}
 				/>
 				<div className="Dashboard__Details" style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -404,9 +348,22 @@ const TreatmentsWithApollo = withApollo(compose(
 		}),
 	}),
 	graphql(EDIT_SERIES_MUTATION, getOptions('editSeries')),
-	graphql(CREATE_OBJECT_MUTATION),
-	graphql(UPDATE_OBJECT_MUTATION),
-	graphql(DELETE_OBJECT_MUTATION),
+	graphql(CREATE_OBJECT_MUTATION, getOptions('createObject')),
+	graphql(UPDATE_OBJECT_MUTATION, getOptions('updateObject')),
+	graphql(DELETE_OBJECT_MUTATION, {
+		props: ({ ownProps: { patient, currentClinic }, mutate }) => ({
+			deleteObject: (fields) => mutate({
+				variables: fields,
+				refetchQueries: [{
+					query: GET_TREATMENTS_QUERY,
+					variables: patient ? { patient_id: +patient.id, clinic_id: null } : {
+						patient_id: null,
+						clinic_id: currentClinic.id,
+					},
+				}],
+			}),
+		}),
+	}),
 	// withCurrentUser
 )(Treatments));
 

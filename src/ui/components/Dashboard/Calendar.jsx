@@ -122,7 +122,7 @@ class TreatmentsCalendar extends Component {
 				return;
 			}
 			this.setState({ modalLoading: true });
-			this.props.mutate({ variables: { id: this.state.currentTreatment.id, treatment: values }}).then(() => {
+			this.props.mutate({ variables: { id: this.state.currentTreatment.id, object: { TreatmentInput: values } }}).then(() => {
 				form.resetFields();
 				this.setState({ modalLoading: false, currentTreatment: null });
 			}).catch(errorHandler);

@@ -64,13 +64,21 @@ export const TreatmentForm = Form.create()(
 			okText: formatMessage({ id: 'common.modal_save_confirm.ok' }),
 			cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' })
 		}) : onCancel();
+		const handleSubmit = (evt) => {
+			evt.preventDefault();
+			form.validateFields((err, values) => {
+				if (!err) {
+					onSubmit(form, values);
+				}
+			});
+		};
 
 		return (
 			<Modal title={ formatMessage({ id: isEditing ? 'Treatments.edit_header' : 'Treatments.create_header' }) }
 			       visible={visible}
 			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
 			       onCancel={checkForConfirm}
-			       onOk={onSubmit}
+			       onOk={handleSubmit}
 			       width={800}
 			       confirmLoading={loading}>
 				<Form>

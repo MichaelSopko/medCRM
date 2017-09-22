@@ -8,7 +8,7 @@ import Users from '../sql/models/users';
 import Treatments from '../sql/models/treatments';
 import Treatment from '../sql/models/Treatment';
 import TreatmentSeries from '../sql/models/TreatmentSeries';
-import * as TreatmentObject from '../sql/models/TreatmentObject';
+import TreatmentObject from '../sql/models/TreatmentObject';
 
 export default graphqlExpress(async (req, res) => {
 	let currentUser = null;

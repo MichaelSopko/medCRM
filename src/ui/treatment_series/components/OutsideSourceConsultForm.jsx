@@ -11,6 +11,8 @@ import {
 } from 'antd';
 import React from 'react';
 
+import mapPropsToFields from './mapPropsToFields';
+
 const OutsideSourceConsultForm = (props) => {
 	const { visible, onCancel, onSubmit, form, loading, isNew, formatMessage, currentUser, values } = props;
 	const { getFieldDecorator } = form;
@@ -25,6 +27,14 @@ const OutsideSourceConsultForm = (props) => {
 		okText: formatMessage({ id: 'common.modal_save_confirm.ok' }),
 		cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' }),
 	}) : onCancel();
+	const handleSubmit = (evt) => {
+		evt.preventDefault();
+		form.validateFields((err, values) => {
+				if (!err) {
+					onSubmit(form, values);
+				}
+		});
+	};
 
 	return (
 		<Modal
@@ -32,7 +42,7 @@ const OutsideSourceConsultForm = (props) => {
 			visible={visible}
 			okText={formatMessage({ id: !isNew ? 'common.action_edit' : 'common.action_create' })}
 			onCancel={checkForConfirm}
-			onOk={onSubmit}
+			onOk={handleSubmit}
 			confirmLoading={loading}
 			width={800}
 		>
@@ -76,7 +86,5 @@ const OutsideSourceConsultForm = (props) => {
 };
 
 export default Form.create({
-	mapPropsToFields: props => ({
-		...props.values,
-	})
+	mapPropsToFields
 })(OutsideSourceConsultForm);

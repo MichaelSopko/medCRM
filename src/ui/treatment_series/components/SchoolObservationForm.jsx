@@ -11,6 +11,7 @@ import {
 } from 'antd';
 import React from 'react';
 import ROLES from '../../../helpers/constants/roles';
+import mapPropsToFields from './mapPropsToFields';
 
 const SchoolObservationForm = (props) => {
 	const { visible, onCancel, onSubmit, form, loading, isNew, formatMessage, therapists, currentUser, values } = props;
@@ -31,6 +32,14 @@ const SchoolObservationForm = (props) => {
 		okText: formatMessage({ id: 'common.modal_save_confirm.ok' }),
 		cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' }),
 	}) : onCancel();
+	const handleSubmit = (evt) => {
+		evt.preventDefault();
+		form.validateFields((err, values) => {
+			if (!err) {
+				onSubmit(form, values);
+			}
+		});
+	};
 
 	return (
 		<Modal
@@ -38,7 +47,7 @@ const SchoolObservationForm = (props) => {
 			visible={visible}
 			okText={formatMessage({ id: !isNew ? 'common.action_edit' : 'common.action_create' })}
 			onCancel={checkForConfirm}
-			onOk={onSubmit}
+			onOk={handleSubmit}
 			confirmLoading={loading}
 			width={800}
 		>
@@ -171,7 +180,5 @@ const SchoolObservationForm = (props) => {
 };
 
 export default Form.create({
-	mapPropsToFields: props => ({
-		...props.values,
-	})
+	mapPropsToFields
 })(SchoolObservationForm);

@@ -16,7 +16,6 @@ type SchoolObservation {
 }
 
 input SchoolObservationInput {
-	patient_id: ID!
 	observationReason: String
 	educationEntity: String
 	date: Date
