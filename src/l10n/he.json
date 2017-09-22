@@ -175,50 +175,50 @@
     "repeat_weeks": "חזור על הטיפול מספר שבועות",
     "treatment_collided_error": "מועד הטיפול מתנגש עם טיפולים אחרים",
     "create_object_button": {
-      "treatment": "Add treatment",
-      "school_observation": "School Observation",
-      "staff_meeting": "Staff meeting",
-      "outside_source_consult": "Outside source consult"
+      "treatment": "הוספה טיפול",
+      "school_observation": "תצפית גן/בית ספר",
+      "staff_meeting": "ישיבת צוות",
+      "outside_source_consult": "שיחה עם גורם חיצוני"
     },
     "object_label_name": {
-      "Treatment": "treatment",
-      "SchoolObservation": "school observation",
-      "StaffMeeting": "staff meeting",
-      "OutsideSourceConsult": "outside source consult"
+      "Treatment": "טיפול",
+      "SchoolObservation": "תצפית גן/בית ספר",
+      "StaffMeeting": "ישיבת צוות",
+      "OutsideSourceConsult": "שיחה עם גורם חיצוני"
     },
     "school_observation": {
-      "create_header": "New School Observation",
-      "update_header": "Edit School Observation",
-      "tab1": "Background",
-      "tab2": "Observation summary",
+      "create_header": "תצפית חדשה",
+      "update_header": "עריכת תצפית",
+      "tab1": "רקע",
+      "tab2": "סיכום תצפית",
       "field": {
-        "observationReason": "observationReason",
-        "educationEntity": "educationEntity",
-        "context": "context",
-        "generalBackground": "generalBackground",
-        "familyBackground": "familyBackground",
-        "medicalBackground": "medicalBackground",
-        "previousDiagnoses": "previousDiagnoses",
-        "educationalFramework": "educationalFramework",
-        "observationFindings": "observationFindings",
-        "observationSummary": "observationSummary"
+        "observationReason": "סיבת התצפית",
+        "educationEntity": "מוסד חינוכי",
+        "context": "הקשר",
+        "generalBackground": "רקע כללי",
+        "familyBackground": "רקע משפחתי",
+        "medicalBackground": "רקע רפואי",
+        "previousDiagnoses": "אבחנות קודמות",
+        "educationalFramework": "מסגרת חינוכית",
+        "observationFindings": "ממצאי התצפית",
+        "observationSummary": "סיכום התצפית"
       }
     },
     "outside_source_consult": {
-      "create_header": "New Outside source consult",
-      "update_header": "Edit Outside source consult",
+      "create_header": "חדש",
+      "update_header": "עריכה",
       "field": {
-        "consultantRole": "consultantRole",
-        "meetingSummary": "meetingSummary"
+        "consultantRole": "תפקיד הגורם",
+        "meetingSummary": "סיכום הפגישה"
       }
     },
     "staff_meeting": {
-      "create_header": "New staff meeting",
-      "update_header": "Edit staff meeting",
+      "create_header": "חדש",
+      "update_header": "עריכה",
       "field": {
-        "participants": "participants",
-        "nextRecommendation": "nextRecommendation",
-        "protocol": "protocol"
+        "participants": "משתתפים",
+        "nextRecommendation": "המלצות לפגישה הבאה",
+        "protocol": "פירוט הישיבה"
       }
     }
   },
