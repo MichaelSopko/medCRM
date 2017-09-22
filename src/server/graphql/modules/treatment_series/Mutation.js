@@ -144,10 +144,9 @@ export default {
 		}
 	},
 	@roleOnly(ROLES.THERAPIST)
-	async deleteTreatmentSeriesObject(_, { id }, { Treatments, TreatmentObject }) {
-		const treatment = await Treatments.findOneTreatment(id) || await TreatmentObject.findById(id);
-		await Treatments.deleteTreatment({ id });
-		await TreatmentObject.softDeleteById(id);
+	async deleteTreatmentSeriesObject(_, { id, __typename }, { Treatments, TreatmentObject }) {
+		const treatment = __typename === 'Treatment' ? await Treatments.findOneTreatment(id) : await TreatmentObject.query().findById(id);
+		__typename === 'Treatment' ? await Treatments.deleteTreatment({ id }) : await TreatmentObject.query().softDeleteById(id);
 		const series = await Treatments.findOne(treatment.series_id);
 		pubsub.publish('treatmentSeriesUpdated', series);
 		return true;

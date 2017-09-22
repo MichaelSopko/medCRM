@@ -177,7 +177,7 @@ class Treatments extends Component {
 	render() {
 		const {
 			data: { loading, treatmentSeries = [], therapists = [] },
-			currentClinic, deleteSeries, currentUser, patient
+			currentClinic, deleteSeries, currentUser, patient, deleteObject,
 		} = this.props;
 		const formatMessage = this.context.intl.formatMessage;
 
@@ -209,15 +209,15 @@ class Treatments extends Component {
 						overlay={
 						<Menu onClick={({ key }) => this.showForm(FORM_TYPES[key], record)}>
 							<Menu.Item key={FORM_TYPES.SchoolObservation}>
-								<Icon type='plus-circle-o' style={{marginRight: 6 }} />
+								<Icon type='plus-circle-o' style={{marginLeft: 6, marginRight: 6 }} />
 								{formatMessage({ id: 'Treatments.create_object_button.school_observation' })}
 							</Menu.Item>
 							<Menu.Item key={FORM_TYPES.StaffMeeting}>
-								<Icon type='plus-circle-o' style={{marginRight: 6 }} />
+								<Icon type='plus-circle-o' style={{marginLeft: 6, marginRight: 6 }} />
 								{formatMessage({ id: 'Treatments.create_object_button.staff_meeting' })}
 							</Menu.Item>
 							<Menu.Item key={FORM_TYPES.OutsideSourceConsult}>
-								<Icon type='plus-circle-o' style={{marginRight: 6 }} />
+								<Icon type='plus-circle-o' style={{marginLeft: 6, marginRight: 6 }} />
 								{formatMessage({ id: 'Treatments.create_object_button.outside_source_consult' })}
 							</Menu.Item>
 						</Menu>
@@ -297,7 +297,7 @@ class Treatments extends Component {
 						treatments={record.objects}
 						updateObject={this.updateObject}
 						formatMessage={formatMessage}
-						deleteObject={this.deleteObject} />
+						deleteObject={deleteObject} />
 					}
 					dataSource={treatmentSeries}
 					columns={columns}
@@ -352,8 +352,8 @@ const TreatmentsWithApollo = withApollo(compose(
 	graphql(UPDATE_OBJECT_MUTATION, getOptions('updateObject')),
 	graphql(DELETE_OBJECT_MUTATION, {
 		props: ({ ownProps: { patient, currentClinic }, mutate }) => ({
-			deleteObject: (fields) => mutate({
-				variables: fields,
+			deleteObject: ({ id, __typename }) => mutate({
+				variables: { id, __typename },
 				refetchQueries: [{
 					query: GET_TREATMENTS_QUERY,
 					variables: patient ? { patient_id: +patient.id, clinic_id: null } : {

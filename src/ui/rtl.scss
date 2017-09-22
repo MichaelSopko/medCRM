@@ -111,4 +111,11 @@ body.rtl {
 		margin-right: 0;
 		padding: 0;
 	}
+	.ant-btn-group {
+		display: inline-flex;
+		flex-direction: row-reverse;
+	}
+	.ant-dropdown-menu-item {
+		text-align: right;
+	}
 }
