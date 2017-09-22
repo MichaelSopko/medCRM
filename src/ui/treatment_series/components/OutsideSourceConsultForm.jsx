@@ -38,7 +38,7 @@ const OutsideSourceConsultForm = (props) => {
 
 	return (
 		<Modal
-			title={formatMessage({ id: !isNew ? 'Treatments.outside_source_consult.create_header' : 'Treatments.outside_source_consult.update_header' })}
+			title={formatMessage({ id: isNew ? 'Treatments.outside_source_consult.create_header' : 'Treatments.outside_source_consult.update_header' })}
 			visible={visible}
 			okText={formatMessage({ id: !isNew ? 'common.action_edit' : 'common.action_create' })}
 			onCancel={checkForConfirm}
@@ -75,9 +75,9 @@ const OutsideSourceConsultForm = (props) => {
 					hasFeedback
 				>
 					{getFieldDecorator('meetingSummary', {
-						validateTrigger: 'onBlur', rules: [],
+						validateTrigger: 'onBlur', rules: [{ required: true }],
 					})(
-						<Input />,
+						<Input type='textarea' />,
 					)}
 				</Form.Item>}
 			</Form>

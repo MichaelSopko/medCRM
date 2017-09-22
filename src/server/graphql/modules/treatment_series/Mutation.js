@@ -68,12 +68,13 @@ export default {
 			};
 		} else if (Object.keys(restObject).length) {
 			const { SchoolObservationInput, StaffMeetingInput, OutsideSourceConsultInput } = restObject;
-			const fields = SchoolObservationInput || StaffMeetingInput || OutsideSourceConsultInput;
-			newObject = await TreatmentObject.query().insertAndFetch({
+			const { date, ...fields } = SchoolObservationInput || StaffMeetingInput || OutsideSourceConsultInput;
+			const inserted = await TreatmentObject.query().insertAndFetch({
 				series_id,
-				date: new Date(),
+				date,
 				fields,
 			});
+			newObject = { ...inserted, ...inserted.fields };
 		}
 		const series = await Treatments.findOne(series_id);
 		pubsub.publish('treatmentSeriesUpdated', series);
@@ -133,8 +134,8 @@ export default {
 				});
 		} else if (Object.keys(restObject).length) {
 			const { SchoolObservationInput, StaffMeetingInput, OutsideSourceConsultInput } = restObject;
-			const fields = SchoolObservationInput || StaffMeetingInput || OutsideSourceConsultInput;
-			const updatedTreatment = await context.TreatmentObject.query().updateAndFetchById(id, fields);
+			const { date, ...fields } = SchoolObservationInput || StaffMeetingInput || OutsideSourceConsultInput;
+			const updatedTreatment = await context.TreatmentObject.query().updateAndFetchById(id, { date, fields });
 			const series = await context.Treatments.findOne(updatedTreatment.series_id);
 			pubsub.publish('treatmentSeriesUpdated', series);
 			return {

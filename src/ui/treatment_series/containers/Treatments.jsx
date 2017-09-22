@@ -158,6 +158,7 @@ class Treatments extends Component {
 			}
 			try {
 				this.setState({ modalLoading: true });
+				console.log('Running form', params);
 				await mutation(params);
 				this.hideForm();
 				form.resetFields();
@@ -189,16 +190,53 @@ class Treatments extends Component {
 			render: text => <div className="to-dynamic-container">
 				<span className="to-dynamic">{ text }</span>
 			</div>,
-			width: '40%',
+			width: '20%',
 		}, {
+			title: formatMessage({ id: 'Treatments.grid_headers.past_treatments' }),
+			key: 'past_treatments',
+			sorter: true,
+			width: '10%',
+			render: (_, record) => record.objects.filter(obj => obj.__typename === 'Treatment' && moment(obj.start_date).valueOf() < moment().valueOf()).length,
+		}, {
+			title: formatMessage({ id: 'Treatments.grid_headers.future_treatments' }),
+			key: 'future_treatments',
+			sorter: true,
+			width: '10%',
+			render: (_, record) => record.objects.filter(obj => obj.__typename === 'Treatment' && moment(obj.start_date).valueOf() >= moment().valueOf()).length,
+		}, {
+			title: formatMessage({ id: 'Treatments.grid_headers.total_treatments' }),
+			key: 'total_treatments',
+			sorter: true,
+			width: '10%',
+			render: (_, record) => record.objects.filter(obj => obj.__typename === 'Treatment').length,
+		}, {
+			title: formatMessage({ id: 'Treatments.grid_headers.school_observations' }),
+			key: 'school_observations',
+			sorter: true,
+			width: '10%',
+			render: (_, record) => record.objects.filter(obj => obj.__typename === 'SchoolObservation').length,
+		}, {
+			title: formatMessage({ id: 'Treatments.grid_headers.staff_meetings' }),
+			key: 'staff_meetings',
+			sorter: true,
+			width: '10%',
+			render: (_, record) => record.objects.filter(obj => obj.__typename === 'StaffMeeting').length,
+		}, {
+			title: formatMessage({ id: 'Treatments.grid_headers.outside_source_consults' }),
+			key: 'outside_source_consults',
+			sorter: true,
+			width: '10%',
+			render: (_, record) => record.objects.filter(obj => obj.__typename === 'OutsideSourceConsult').length,
+		}/*, {
 			title: formatMessage({ id: 'Treatments.field_treatments_number' }),
 			key: 'treatments_number',
 			dataIndex: 'treatments_number',
 			sorter: (a, b) => a.treatments_number > b.treatments_number,
-		}, {
+			width: '35%',
+		}*/, {
 			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
-			width: '35%',
+			width: '20%',
 			render: (text, record) => (
 				<span>
 					<Dropdown.Button

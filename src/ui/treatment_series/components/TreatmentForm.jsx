@@ -6,6 +6,7 @@ import {
 	Select,
 	Col,
 	Row,
+	InputNumber,
 } from 'antd';
 import ROLES from '../../../helpers/constants/roles';
 import moment from 'moment';

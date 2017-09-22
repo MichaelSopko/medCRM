@@ -45,7 +45,7 @@ const StaffMeetingForm = (props) => {
 
 	return (
 		<Modal
-			title={formatMessage({ id: !isNew ? 'Treatments.staff_meeting.create_header' : 'Treatments.staff_meeting.update_header' })}
+			title={formatMessage({ id: isNew ? 'Treatments.staff_meeting.create_header' : 'Treatments.staff_meeting.update_header' })}
 			visible={visible}
 			okText={formatMessage({ id: !isNew ? 'common.action_edit' : 'common.action_create' })}
 			onCancel={checkForConfirm}
@@ -66,7 +66,7 @@ const StaffMeetingForm = (props) => {
 							type: 'array', required: true, message: formatMessage({ id: 'Treatments.field_therapists_error' }),
 						}],
 					})(
-						<Select multiple>
+						<Select mode="tags">
 							{ therapists.map(({ first_name, last_name, id }) =>
 								<Select.Option key={id} value={id}>
 									{first_name} {last_name}

@@ -43,7 +43,7 @@ const SchoolObservationForm = (props) => {
 
 	return (
 		<Modal
-			title={formatMessage({ id: !isNew ? 'Treatments.school_observation.create_header' : 'Treatments.school_observation.update_header' })}
+			title={formatMessage({ id: isNew ? 'Treatments.school_observation.create_header' : 'Treatments.school_observation.update_header' })}
 			visible={visible}
 			okText={formatMessage({ id: !isNew ? 'common.action_edit' : 'common.action_create' })}
 			onCancel={checkForConfirm}

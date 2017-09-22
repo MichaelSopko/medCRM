@@ -1,9 +1,9 @@
 export default {
 	__resolveType(obj, context, info){
-		if(obj.observationReason !== undefined){
+		if((obj.therapist_ids !== undefined || obj.therapists !== undefined) && !obj.start_date){
 			return 'SchoolObservation';
 		}
-		if(obj.protocol !== undefined){
+		if(obj.participant_ids !== undefined || obj.participants !== undefined){
 			return 'StaffMeeting';
 		}
 		if(obj.consultantRole !== undefined){
@@ -12,6 +12,7 @@ export default {
 		if(obj.start_date !== undefined){
 			return 'Treatment';
 		}
-		return 'Treatment';
+		console.log(obj);
+		throw Error('cant resolve object type');
 	},
 }
