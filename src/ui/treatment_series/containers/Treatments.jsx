@@ -194,37 +194,31 @@ class Treatments extends Component {
 		}, {
 			title: formatMessage({ id: 'Treatments.grid_headers.past_treatments' }),
 			key: 'past_treatments',
-			sorter: true,
 			width: '10%',
 			render: (_, record) => record.objects.filter(obj => obj.__typename === 'Treatment' && moment(obj.start_date).valueOf() < moment().valueOf()).length,
 		}, {
 			title: formatMessage({ id: 'Treatments.grid_headers.future_treatments' }),
 			key: 'future_treatments',
-			sorter: true,
 			width: '10%',
 			render: (_, record) => record.objects.filter(obj => obj.__typename === 'Treatment' && moment(obj.start_date).valueOf() >= moment().valueOf()).length,
 		}, {
 			title: formatMessage({ id: 'Treatments.grid_headers.total_treatments' }),
 			key: 'total_treatments',
-			sorter: true,
 			width: '10%',
 			render: (_, record) => record.objects.filter(obj => obj.__typename === 'Treatment').length,
 		}, {
 			title: formatMessage({ id: 'Treatments.grid_headers.school_observations' }),
 			key: 'school_observations',
-			sorter: true,
 			width: '10%',
 			render: (_, record) => record.objects.filter(obj => obj.__typename === 'SchoolObservation').length,
 		}, {
 			title: formatMessage({ id: 'Treatments.grid_headers.staff_meetings' }),
 			key: 'staff_meetings',
-			sorter: true,
 			width: '10%',
 			render: (_, record) => record.objects.filter(obj => obj.__typename === 'StaffMeeting').length,
 		}, {
 			title: formatMessage({ id: 'Treatments.grid_headers.outside_source_consults' }),
 			key: 'outside_source_consults',
-			sorter: true,
 			width: '10%',
 			render: (_, record) => record.objects.filter(obj => obj.__typename === 'OutsideSourceConsult').length,
 		}/*, {
