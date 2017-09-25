@@ -73,8 +73,8 @@
     "edit_header": "ערוך מטופל",
     "header": "מטופלים",
     "field_related_persons": "קרובים",
-    "field_related_person_1": "קרובים",
-    "field_related_person_2": "קרובים",
+    "field_related_person_1": "מקורב 1",
+    "field_related_person_2": "מקורב 2",
     "field_person_type": "קרבה",
     "field_person_type_error": "נא לבחור סוג קרבה",
     "field_person_description": "תיאור",
@@ -222,12 +222,12 @@
       }
     },
     "grid_headers": {
-      "past_treatments": "Past treatments",
-      "future_treatments": "Future treatments",
-      "total_treatments": "Total treatments",
-      "school_observations": "School Observations",
-      "staff_meetings": "Staff meetings",
-      "outside_source_consults": "Outside source consults"
+      "past_treatments": "טיפולים קודמים",
+      "future_treatments": "טיפולים עתידיים",
+      "total_treatments": "סה\"כ טיפולים",
+      "school_observations": "תצפיות",
+      "staff_meetings": "ישיבות צוות",
+      "outside_source_consults": "גורם חיצוני"
     }
   },
   "Calendar": {
@@ -261,7 +261,7 @@
     "confirm_yes": "כן",
     "confirm_no": "לא",
     "action_delete": "מחיקה",
-    "action_create": "יצירה",
+    "action_create": "שמירה",
     "action_edit": "עריכה",
     "field_new_password": "סיסמא חדשה",
     "field_password": "סיסמא",
