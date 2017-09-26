@@ -77,7 +77,7 @@ const OutsideSourceConsultForm = (props) => {
 					{getFieldDecorator('meetingSummary', {
 						validateTrigger: 'onBlur', rules: [{ required: true }],
 					})(
-						<Input type='textarea' />,
+						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
 					)}
 				</Form.Item>}
 			</Form>

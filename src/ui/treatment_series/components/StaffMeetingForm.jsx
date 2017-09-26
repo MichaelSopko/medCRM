@@ -93,7 +93,7 @@ const StaffMeetingForm = (props) => {
 					{getFieldDecorator('protocol', {
 						validateTrigger: 'onBlur', rules: [],
 					})(
-						<Input type='textarea' />,
+						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
 					)}
 				</Form.Item>
 				<Form.Item
@@ -104,7 +104,7 @@ const StaffMeetingForm = (props) => {
 					{getFieldDecorator('nextRecommendation', {
 						validateTrigger: 'onBlur', rules: [],
 					})(
-						<Input type='textarea' />,
+						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
 					)}
 				</Form.Item>
 			</Form>

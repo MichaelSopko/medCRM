@@ -60,7 +60,7 @@ const SchoolObservationForm = (props) => {
 					{getFieldDecorator('observationReason', {
 						validateTrigger: 'onBlur', rules: [],
 					})(
-						<Input type='textarea' />,
+						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
 					)}
 				</Form.Item>}
 				{<Form.Item
