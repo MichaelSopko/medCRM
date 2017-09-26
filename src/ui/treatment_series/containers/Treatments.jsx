@@ -340,7 +340,7 @@ class Treatments extends Component {
 					dataSource={treatmentSeries}
 					columns={columns}
 					loading={loading}
-					rowKey='id' />
+					rowKey={item => item.id + item.__typename} />
 			</section>
 		);
 	}

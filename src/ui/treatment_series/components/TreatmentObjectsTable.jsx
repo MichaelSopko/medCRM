@@ -61,5 +61,5 @@ export const TreatmentObjectsTable = ({ treatments, deleteObject, updateObject, 
 	return <Table
 		dataSource={treatments}
 		columns={columns}
-		rowKey='id' />;
+		rowKey={item => item.id + item.__typename} />;
 };
