@@ -60,7 +60,7 @@ const OutsideSourceConsultForm = (props) => {
 				</Form.Item>}
 				{<Form.Item
 					{...formItemLayout}
-					label={formatMessage({ id: 'Treatments.outside_source_consult.field.consultantRole' })}
+					label={formatMessage({ id: 'common.field_date' })}
 					hasFeedback
 				>
 					{getFieldDecorator('date', {

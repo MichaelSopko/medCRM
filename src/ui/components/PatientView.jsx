@@ -416,6 +416,7 @@ class PatientView extends Component {
 		intl: PropTypes.object.isRequired,
 	}
 
+/*
 	constructor(props) {
 		super(props);
 
@@ -424,7 +425,7 @@ class PatientView extends Component {
 
 	componentWillUnmount() {
 		clearInterval(this.forceUpdate);
-	}
+	}*/
 
 	state = {
 		archiveLoading: false,
