@@ -17,7 +17,7 @@ let basePlugins = [];
 if (__DEV__) {
 	basePlugins.push(new webpack.NamedModulesPlugin());
 } else {
-	basePlugins.push(new webpack.optimize.UglifyJsPlugin({ minimize: true }));
+	// basePlugins.push(new webpack.optimize.UglifyJsPlugin({ minimize: true }));
 }
 
 const baseConfig = {
@@ -104,6 +104,7 @@ const serverConfig = merge.smart(_.cloneDeep(baseConfig), {
 });
 
 let clientPlugins = [
+	new webpack.optimize.UglifyJsPlugin({ minimize: true }),
 	new ManifestPlugin({
 		fileName: 'assets.json',
 	}),
@@ -173,6 +174,7 @@ const dllConfig = merge.smart(_.cloneDeep(baseConfig), {
 		vendor: _.keys(pkg.dependencies),
 	},
 	plugins: [
+		new webpack.optimize.UglifyJsPlugin({ minimize: true }),
 		new webpack.DllPlugin({
 			name: '[name]',
 			path: path.join(pkg.app.frontendBuildDir, '[name]_dll.json'),
