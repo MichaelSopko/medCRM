@@ -106,7 +106,7 @@ export default {
 					let { related_persons, first_name, last_name } = await context.Users.findOne(series.patient_id);
 					related_persons = safeParse(related_persons, []);
 
-					related_persons.forEach(person => {
+					related_persons.filter(person => person.receive_updates).forEach(person => {
 
 						const templateConfig = {
 							old_date: moment(oldTreatment.start_date).format('DD.MM.YYYY'),
