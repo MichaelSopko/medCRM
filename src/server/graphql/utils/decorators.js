@@ -1,5 +1,5 @@
 import { UnauthorizedError } from './errors';
-import ROLES from '../../../helpers/constants/roles'
+import ROLES from '../../../helpers/constants/roles';
 import checkAccessLogic from '../../../helpers/checkAccessLogic';
 
 export const roleOnly = (requiredRole) => function (target, name, descriptor) {
@@ -7,6 +7,7 @@ export const roleOnly = (requiredRole) => function (target, name, descriptor) {
 
 	/* eslint-disable no-param-reassign */
 	descriptor.value = async function (root, params, ctx) {
+		console.log(ctx)
 		if (!ctx.currentUser || !checkAccessLogic(ctx.currentUser.role, requiredRole)) {
 			throw new UnauthorizedError({ data: { requiredRole } });
 		}
@@ -31,3 +32,11 @@ export const catchForNonUniqueField = () => function (target, name, descriptor) 
 	};
 };
 
+
+export const checkForClinic = (target, currentUser) => {
+	if (currentUser.role === ROLES.SYSTEM_ADMIN) return;
+	
+	if (!target || +(isNaN(target) ? target.clinic_id : target) !== +currentUser.clinic_id) {
+		throw new UnauthorizedError({ data: { requiredClinic: target.clinic_id } });
+	}
+};

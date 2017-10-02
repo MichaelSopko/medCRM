@@ -51,10 +51,11 @@ export default class CurrentUserProvider extends Component {
 		this.props.data.refetch();
 	}
 
-	logout() {
+	async logout() {
 		localStorage.removeItem('token');
 		if (this.context.router.location.pathname !== '/login') {
 			this.context.router.push('/login');
+			// await this.props.client.resetStore();
 			this.props.data.refetch();
 			this.props.setCurrentClinic(null);
 			this.props.setCurrentUser(null);
