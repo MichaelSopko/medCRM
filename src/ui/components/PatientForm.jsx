@@ -130,7 +130,7 @@ export default Form.create()(
 						})(
 							<Select>
 								{Object.keys(HEALTH_MAINTENANCES).map(key => <Select.Option value={key} key={key}>
-									{HEALTH_MAINTENANCES[key]}
+									{formatMessage({ id: `health_maintenance.${key}` })}
 								</Select.Option>)}
 							</Select>,
 						)}
