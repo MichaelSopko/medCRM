@@ -147,6 +147,10 @@ class Patients extends Component {
 				delete values.related_persons;
 			}
 
+			if (values.related_persons) {
+				values.related_persons = values.related_persons.filter(person => !!person.type && !!person.name);
+			}
+
 			isEditing
 
 				? this.props.editPatient({
