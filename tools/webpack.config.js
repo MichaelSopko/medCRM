@@ -104,7 +104,6 @@ const serverConfig = merge.smart(_.cloneDeep(baseConfig), {
 });
 
 let clientPlugins = [
-	new webpack.optimize.UglifyJsPlugin({ minimize: true }),
 	new ManifestPlugin({
 		fileName: 'assets.json',
 	}),
@@ -116,6 +115,14 @@ let clientPlugins = [
 ];
 
 if (!__DEV__) {
+	clientPlugins.push(new webpack.optimize.UglifyJsPlugin({
+		minimize: true,
+		comments: false,
+		compress: {
+			warnings: false,
+			drop_console: true
+		},
+	}));
 	clientPlugins.push(new ExtractTextPlugin('[name].[contenthash].css', { allChunks: true }));
 	clientPlugins.push(new webpack.optimize.CommonsChunkPlugin(
 		'vendor',
