@@ -16,8 +16,8 @@ const PatientObjectView = (props, context) => {
 
 	return (
 		<Spin spinning={loading}>
-			{ !!patient && object && Object.keys(object).length && <Row>
-				<Col span={12}>
+			{ !!patient && object && Object.keys(object).length && <div style={{ display: 'flex' }}>
+				<div style={{width: '50%'}}>
 					<table className='PatientObjectView__Table'>
 						<tr>
 							<td>{formatMessage({ id: 'Patients.diagnose_date' })}:</td>
@@ -49,8 +49,8 @@ const PatientObjectView = (props, context) => {
 							<td>{moment().format('L')}</td>
 						</tr>
 					</table>
-				</Col>
-				<Col span={12}>
+				</div>
+				<div style={{width: '50%'}}>
 					<table className='PatientObjectView__Table'>
 						<tr>
 							<td>{formatMessage({ id: 'Patients.patient_name' })}:</td>
@@ -92,11 +92,11 @@ const PatientObjectView = (props, context) => {
 							</td>
 						</tr>
 					</table>
-				</Col>
-			</Row> }
-			<Row>
+				</div>
+			</div> }
+			<div style={{marginTop: '2em'}}>
 				{renderFields && fields && renderFields(fields)}
-			</Row>
+			</div>
 		</Spin>
 	);
 };

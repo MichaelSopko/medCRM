@@ -1,8 +1,4 @@
 .PatientObjectView {
-	.ant-modal-content {
-		display: flex !important;
-		flex-direction: column-reverse !important;
-	}
 	.ant-modal-footer {
 		border-top: 0;
 		border-bottom: 1px solid #e9e9e9;
@@ -30,11 +26,12 @@ p {
 @media print {
 
 	@page {
-		margin: 1.5cm;
 		background: #fff !important;
+		padding: 1.5em;
+		size: A4 Portaint;
 	}
 
-	body {
+	body, html {
 		background: #fff !important;
 	}
 
@@ -49,6 +46,19 @@ p {
 	}
 	.ant-modal-footer {
 		display: none !important;
+	}
+	.Container {
+		max-width: none !important;
+		margin: 0;
+		position: relative;
+		left: 0;
+		right: 0;
+	}
+	.PatientObjectPrintPage {
+		position: absolute;
+		left: 0;
+		top: 0;
+		right: 0;
 	}
 }
 

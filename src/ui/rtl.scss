@@ -1,4 +1,4 @@
-body.rtl {
+body.rtl, html[dir="rtl"] {
 	direction: rtl;
 	.ant-modal-close {
 		left: 16px;
