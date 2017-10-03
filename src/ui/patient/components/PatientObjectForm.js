@@ -17,7 +17,7 @@ const PatientObjectForm = (props, context) => {
 	const isEditing = !!Object.keys(object).length;
 
 	let bdate = moment(patient.birth_date);
-	let diff = moment.duration(moment().diff(bdate));
+	let diff = moment.duration(isEditing ? +object.patient_age : moment().diff(bdate));
 	const age = {
 		years: diff.years() || '0',
 		months: diff.months() || '0',

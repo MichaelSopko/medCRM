@@ -50,7 +50,7 @@ class DiagnoseTab extends Component {
 	closeForm = () => {
 		this.setState({ formOpened: false });
 		setTimeout(() => {
-			this.form.resetFields();
+			this.setState({ selectedItem: {} });
 		}, 500);
 	}
 
