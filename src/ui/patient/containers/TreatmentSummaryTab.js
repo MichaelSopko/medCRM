@@ -208,7 +208,7 @@ class TreatmentSummaryTab extends Component {
 					object={selectedItem}
 					onSubmit={this.handleFormSubmit} />
 				<div className='PatientObjectTab__Actions'>
-					<Button onClick={this.openForm} type='primary'>{formatMessage({ id: 'common.action_create' })}</Button>
+					<Button onClick={this.openForm} type='primary'>{formatMessage({ id: 'TreatmentSummaryTab.create_title' })}</Button>
 				</div>
 				<Table dataSource={patient.treatment_summary} columns={columns} rowKey='id' />
 			</div>
