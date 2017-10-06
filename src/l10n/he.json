@@ -262,6 +262,7 @@
     "confirm_no": "לא",
     "action_delete": "מחיקה",
     "action_create": "שמירה",
+    "action_save": "שמירה",
     "action_edit": "עריכה",
     "field_new_password": "סיסמא חדשה",
     "field_password": "סיסמא",
