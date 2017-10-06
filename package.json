@@ -17,7 +17,6 @@
     }
   },
   "engines": {
-    "node": "7.9.0",
     "npm": "latest"
   },
   "scripts": {
@@ -38,6 +37,8 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@react-pdf/core": "^0.4.3",
+    "@react-pdf/node": "^0.4.3",
     "antd": "^2.9.3",
     "apollo-client": "1.9.2",
     "apollo-errors": "^1.5.1",
@@ -79,7 +80,7 @@
     "react-big-calendar": "^0.13.0",
     "react-dnd": "^2.4.0",
     "react-dnd-html5-backend": "^2.4.1",
-    "react-dom": "^15.3.2",
+    "react-dom": "^15.6.0",
     "react-intl": "^2.2.3",
     "react-nl2br": "^0.2.0",
     "react-redux": "^5.0.2",
@@ -139,6 +140,12 @@
     "webpack-manifest-plugin": "^1.0.1",
     "webpack-merge": "^2.6.1",
     "webpack-node-externals": "^1.4.3"
+  },
+  "resolutions": {
+    "@react-pdf/core/react": "^15.6.1",
+    "@react-pdf/core/react-dom": "^15.6.0",
+    "@react-pdf/node/react": "^15.6.1",
+    "@react-pdf/node/react-dom": "^15.6.0"
   },
   "eslintConfig": {
     "parser": "babel-eslint",
