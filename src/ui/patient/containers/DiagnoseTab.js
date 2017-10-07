@@ -273,6 +273,9 @@ class DiagnoseTab extends Component {
 				<Link to={`/print-object/${patient.id}/${record.id}`} target='_blank'>
 					<Button size='small'>{formatMessage({ id: 'common.action_print' })}</Button>
 				</Link>
+				<Link to={`/api/generate-pdf/${patient.id}/${record.id}`} target='_blank'>
+					<Button size='small'>PDF</Button>
+				</Link>
 				<Button size='small' onClick={() => {
 					this.openEditForm(record);
 				}}>{formatMessage({ id: 'common.action_edit' })}</Button>

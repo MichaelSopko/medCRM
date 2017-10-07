@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux';
 import { Form, Icon, Input, Button, Checkbox, message } from 'antd'
+
 import './Login.scss';
 import ROLES from '../../helpers/constants/roles'
 
@@ -10,15 +11,15 @@ import ROLES from '../../helpers/constants/roles'
 		setCurrentClinic(clinic) {
 			dispatch({
 				type: 'SET_CLINIC',
-				clinic
+				clinic,
 			});
 		},
 		setCurrentUser(user) {
 			dispatch({
 				type: 'SET_USER',
-				user
+				user,
 			});
-		}
+		},
 	}),
 )
 class Login extends Component {
@@ -26,27 +27,27 @@ class Login extends Component {
 	static contextTypes = {
 		router: PropTypes.object.isRequired,
 		currentUser: PropTypes.object.isRequired,
-		intl: PropTypes.object.isRequired
+		intl: PropTypes.object.isRequired,
 	};
 
 	state = {
-		loading: false
+		loading: false,
 	};
 
 	handleSubmit = e => {
 		e.preventDefault();
 		const formatMessage = this.context.intl.formatMessage;
-		this.props.form.validateFields(async(err, values) => {
+		this.props.form.validateFields(async (err, values) => {
 			if (!err) {
 				this.setState({ loading: true });
 				console.log('Received values of form: ', values);
 				try {
 					const resp = await fetch('/api/authentication', {
-						method: "POST",
+						method: 'POST',
 						body: JSON.stringify(values),
 						headers: {
-							"Content-Type": "application/json"
-						}
+							'Content-Type': 'application/json',
+						},
 					}).then(r => r.json());
 
 					this.setState({ loading: false });
@@ -93,25 +94,27 @@ class Login extends Component {
 		return (
 			<main className="Login">
 				<Form onSubmit={this.handleSubmit} className="Login__Window">
-					<h1 className="Login__Header">{ formatMessage({ id: 'Login.header' }) }</h1>
+					<h1 className="Login__Header">{formatMessage({ id: 'Login.header' })}</h1>
 					<Form.Item>
 						{getFieldDecorator('login', {
 							validateTrigger: 'onBlur',
 							rules: [{ required: true, message: formatMessage({ id: 'Login.field_email_error' }) }],
 						})(
-							<Input placeholder={ formatMessage({ id: 'Login.field_email' }) }/>
+							<Input placeholder={formatMessage({ id: 'Login.field_email' })}/>,
 						)}
 					</Form.Item>
 					<Form.Item>
 						{getFieldDecorator('password', {
-							validateTrigger: 'onBlur', rules: [{ required: true, message: 'Please input your Password!' }],
+							validateTrigger: 'onBlur',
+							rules: [{ required: true, message: 'Please input your Password!' }],
 						})(
-							<Input type="password" placeholder={ formatMessage({ id: 'Login.field_password' }) }/>
+							<Input type="password" placeholder={formatMessage({ id: 'Login.field_password' })}/>,
 						)}
 					</Form.Item>
 					<Form.Item>
-						<Button type="primary" size="large" htmlType="submit" className="Login__Button" loading={loading}>
-							{ formatMessage({ id: 'Login.login_button' }) }
+						<Button type="primary" size="large" htmlType="submit" className="Login__Button"
+						        loading={loading}>
+							{formatMessage({ id: 'Login.login_button' })}
 						</Button>
 					</Form.Item>
 				</Form>

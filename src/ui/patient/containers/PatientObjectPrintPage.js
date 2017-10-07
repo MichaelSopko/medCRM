@@ -3,8 +3,9 @@ import moment from 'moment';
 import { graphql } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';
 import { Spin, Row, Col, Input, Tabs, Form } from 'antd';
+// import { Document } from '@react-pdf/dom';
 
-import PatientObjectView from '../components/PatientObjectView';
+// import PatientObjectView from '../components/PatientObjectView';
 import GET_PATIENT_QUERY from '../graphql/PatientGet.graphql';
 
 @graphql(GET_PATIENT_QUERY, {
@@ -76,14 +77,15 @@ class PatientObjectPrintPage extends Component {
 
 		return (
 			<main className='PatientObjectPrintPage'>
-				<div className="Container">
+				<Document>
 					<PatientObjectView
 						patient={patient}
 						object={object}
 						renderFields={object.__typename === 'Diagnose' ? this.renderDiagnoseFields : this.renderTreatmentFields}
 						loading={loading}
+						formatMessage={this.context.intl.formatMessage}
 					/>
-				</div>
+				</Document>
 			</main>
 		);
 	}

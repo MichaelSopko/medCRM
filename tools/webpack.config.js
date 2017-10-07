@@ -162,6 +162,11 @@ const clientConfig = merge.smart(_.cloneDeep(baseConfig), {
 		publicPath: '/',
 	},
 	plugins: clientPlugins,
+	node: {
+		net: 'empty',
+		tls: 'empty',
+		dns: 'empty'
+	}
 });
 
 const dllConfig = merge.smart(_.cloneDeep(baseConfig), {

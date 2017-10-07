@@ -6,6 +6,7 @@ import https from 'https'
 import path from 'path'
 import jwt from 'express-jwt';
 import fs from 'fs';
+import cookieParser from 'cookie-parser';
 
 import { app as settings } from '../../package.json'
 import log from '../log'
@@ -20,11 +21,24 @@ let graphiqlMiddleware = require('./middleware/graphiql').default;
 let graphqlMiddleware = require('./middleware/graphql').default;
 let authenticationMiddleware = require('./middleware/authentication').default;
 let uploadsMiddleware = require('./middleware/uploads').default;
+let generatePDFMiddleware = require('./middleware/generate-pdf').default;
 let subscriptionManager = require('./graphql/subscriptions').subscriptionManager;
 
 let server;
 
 const app = express();
+
+const jwtMiddleware = jwt({
+	secret: settings.secret,
+	getToken: (req) => {
+		if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+			return req.headers.authorization.split(' ')[1];
+		} else if (req.cookies && req.cookies.token) {
+			return req.cookies.token;
+		}
+		return null;
+	}
+});
 
 const port = process.env.PORT || settings.apiPort;
 
@@ -36,6 +50,7 @@ app.enable('trust proxy');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use('/', express.static(settings.frontendBuildDir, { maxAge: '180 days' }));
 app.use('/uploads', express.static(settings.uploadsDir, {
@@ -49,10 +64,11 @@ if (__DEV__) {
 	app.use('/assets', express.static(settings.frontendBuildDir, { maxAge: '180 days' }));
 }
 
-app.use('/graphql', jwt({ secret: settings.secret }), (...args) => graphqlMiddleware(...args));
+app.use('/graphql', jwtMiddleware, (...args) => graphqlMiddleware(...args));
 app.use('/graphiql', (...args) => graphiqlMiddleware(...args));
 app.use('/api/authentication', (...args) => authenticationMiddleware(...args));
-app.use('/api/upload-file', jwt({ secret: settings.secret }), (...args) => uploadsMiddleware(...args));
+app.use('/api/upload-file', jwtMiddleware, (...args) => uploadsMiddleware(...args));
+app.use('/api/generate-pdf/:patient_id/:object_id', (...args) => generatePDFMiddleware(...args));
 app.use((...args) => websiteMiddleware(...args));
 
 server = !__SSL__ ? http.createServer(app) : https.createServer({
@@ -120,6 +136,9 @@ if (module.hot) {
 		});
 		module.hot.accept('./middleware/uploads', () => {
 			uploadsMiddleware = require('./middleware/uploads').default;
+		});
+		module.hot.accept('./middleware/generate-pdf', () => {
+			generatePDFMiddleware = require('./middleware/generate-pdf').default;
 		});
 	} catch (err) {
 		log(err.stack);

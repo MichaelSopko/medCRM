@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react'
 import { withApollo, graphql } from 'react-apollo'
 import GET_CURRENT_USER_QUERY from '../graphql/CurrentUser.graphql'
 import { connect } from 'react-redux';
+import Cookie from 'js-cookie';
 
 
 @graphql(GET_CURRENT_USER_QUERY)
@@ -48,11 +49,13 @@ export default class CurrentUserProvider extends Component {
 
 	setToken(token) {
 		localStorage.setItem('token', token);
+		Cookie.set('token', token, { expires: 365 });
 		this.props.data.refetch();
 	}
 
 	async logout() {
 		localStorage.removeItem('token');
+		Cookie.remove('token');
 		if (this.context.router.location.pathname !== '/login') {
 			this.context.router.push('/login');
 			// await this.props.client.resetStore();
