@@ -1,9 +1,12 @@
 import React, { PropTypes } from 'react';
 import moment from 'moment';
-import { Page, Text, View, StyleSheet } from '@react-pdf/core';
+import { Page, Text, View, StyleSheet, Font } from '@react-pdf/core';
 
 import config from '../../../../config';
 const isRtl = config.locale === 'he';
+
+Font.register(`assets/fonts/Arimo-Bold.ttf`, { family: 'Arimo Bold' });
+Font.register(`assets/fonts/Arimo-Regular.ttf`, { family: 'Arimo' });
 
 export const styles = StyleSheet.create({
 	page: {
@@ -30,26 +33,30 @@ export const styles = StyleSheet.create({
 	rowName: {
 		fontSize: 12,
 		flex: 1,
+		fontFamily: 'Arimo'
 	},
 	rowValue: {
 		fontSize: 12,
 		flex: 1,
+		fontFamily: 'Arimo'
 	},
 	heading1: {
 		fontWeight: 600,
 		fontSize: 12,
 		marginTop: 8,
 		marginBottom: 4,
+		fontFamily: 'Arimo Bold'
 	},
 	heading2: {
-		fontWeight: 500,
 		fontSize: 11,
 		marginTop: 4,
 		marginBottom: 2,
+		fontFamily: 'Arimo Bold'
 	},
 	text: {
-		fontSize: 11
-	}
+		fontSize: 11,
+		fontFamily: 'Arimo'
+	},
 });
 
 const PatientObjectView = (props) => {
