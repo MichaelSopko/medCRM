@@ -5,8 +5,8 @@ import { Page, Text, View, StyleSheet, Font } from '@react-pdf/core';
 import config from '../../../../config';
 const isRtl = config.locale === 'he';
 
-Font.register(`assets/fonts/Arimo-Bold.ttf`, { family: 'Arimo Bold' });
-Font.register(`assets/fonts/Arimo-Regular.ttf`, { family: 'Arimo' });
+Font.register(__dirname + `/../../../../assets/fonts/Arimo-Bold.ttf`, { family: 'Arimo Bold' });
+Font.register(__dirname + `/../../../../assets/fonts/Arimo-Regular.ttf`, { family: 'Arimo' });
 
 export const styles = StyleSheet.create({
 	page: {
