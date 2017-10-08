@@ -6,7 +6,6 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router';
 
 import PatientObjectForm from '../components/PatientObjectForm';
-import PatientObjectView from '../components/PatientObjectView';
 
 import ADD_TREATMENT_SUMMARY_MUTATION from '../graphql/addTreatmentSummary.mutation.graphql';
 import EDIT_TREATMENT_SUMMARY_MUTATION from '../graphql/editTreatmentSummary.mutation.graphql';
@@ -185,9 +184,9 @@ class TreatmentSummaryTab extends Component {
 			key: 'action',
 			width: '20%',
 			render: (text, record) => ( <span>
-				<Link to={`/print-object/${patient.id}/${record.id}`} target='_blank'>
+{/*				<Link to={`/print-object/${patient.id}/${record.id}`} target='_blank'>
 					<Button size='small'>{formatMessage({ id: 'common.action_print' })}</Button>
-				</Link>
+				</Link>*/}
 				<Link to={`/api/generate-pdf/${patient.id}/${record.id}`} target='_blank'>
 					<Button size='small'>PDF</Button>
 				</Link>

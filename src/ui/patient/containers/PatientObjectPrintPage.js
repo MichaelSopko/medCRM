@@ -30,47 +30,6 @@ class PatientObjectPrintPage extends Component {
 		}
 	}
 
-	renderTreatmentFields = (fields) => {
-		return fields && (
-				<Col style={{ margin: 12 }}>
-					{Object.keys(fields).map(key => fields[key] && (
-						<div style={{ marginTop: 12 }}>
-							<h4>
-								<FormattedMessage id={`TreatmentSummaryTab.${key}`} />
-							</h4>
-							<p>{fields[key]}</p>
-						</div>
-					))}
-				</Col>
-			);
-	}
-
-	renderDiagnoseFields = (fields) => {
-		return fields && (
-				<Col style={{ margin: 12 }}>
-					{Object.keys(fields).map((key, i) => (
-						<div style={{ marginTop: 16 }}>
-							{ i === 0 && <h3 style={{ marginBottom: 16 }}>
-								<FormattedMessage id={`DiagnoseTab.tab1`} />:
-							</h3> }
-							{ i === 9 && <h3 style={{ marginBottom: 16 }}>
-								<FormattedMessage id={`DiagnoseTab.tab2`} />:
-							</h3> }
-							{ i === 17 && <h3 style={{ marginBottom: 16 }}>
-								<FormattedMessage id={`DiagnoseTab.tab3`} />:
-							</h3> }
-							<h4>
-								<FormattedMessage id={`DiagnoseTab.${key}`} />:
-							</h4>
-							<p>{fields[key] || <span style={{ fontStyle: 'italic' }}>
-								<FormattedMessage id={`Patients.field_empty`} />
-							</span>}</p>
-						</div>
-					))}
-				</Col>
-			);
-	}
-
 	render() {
 		const { params: { patient_id, object_id }, data: { patient, error, loading } } = this.props;
 		const object = patient ? (patient.diagnoses.find(d => d.id == object_id) || patient.treatment_summary.find(d => d.id == object_id)) : {};

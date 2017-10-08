@@ -6,7 +6,7 @@ export default class Clinic extends Model {
 
 	async $beforeDelete(queryContext) {
 		console.log(queryContext);
-		const id = queryContext;
+		const { id } = queryContext;
 		return Promise.all([
 			knex('treatment_series').where('clinic_id', id).select(),
 			knex('users').where('clinic_id', id).delete(),

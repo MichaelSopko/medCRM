@@ -58,6 +58,7 @@ app.use('/uploads', express.static(settings.uploadsDir, {
 		res.attachment();
 	},
 }));
+app.use('/documents', express.static('documents'));
 if (__DEV__) {
 	app.use('/assets', express.static(path.join(settings.backendBuildDir, 'assets'), { maxAge: '180 days' }));
 } else {

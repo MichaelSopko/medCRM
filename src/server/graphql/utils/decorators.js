@@ -7,7 +7,6 @@ export const roleOnly = (requiredRole) => function (target, name, descriptor) {
 
 	/* eslint-disable no-param-reassign */
 	descriptor.value = async function (root, params, ctx) {
-		console.log(ctx)
 		if (!ctx.currentUser || !checkAccessLogic(ctx.currentUser.role, requiredRole)) {
 			throw new UnauthorizedError({ data: { requiredRole } });
 		}

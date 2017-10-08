@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@react-pdf/core@^0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@react-pdf/core/-/core-0.4.3.tgz#1690584d3741024654d0e9d0a89c7f8c88a51680"
+"@react-pdf/core@^0.4.5":
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/@react-pdf/core/-/core-0.4.5.tgz#897713630d931e4ed54d49f99ed0aeacd3609b89"
   dependencies:
     fbjs "^0.8.4"
     fontkit "^1.5.4"
@@ -14,6 +14,7 @@
     lodash.map "^4.6.0"
     lodash.topairsin "^4.3.0"
     lodash.upperfirst "^4.3.1"
+    nbind "^0.3.13"
     normalize-css-color "^1.0.2"
     pdfkit "^0.8.1"
     png-js "^0.1.1"
@@ -22,23 +23,22 @@
     reduce "^1.0.1"
     request "^2.81.0"
     string-hash "^1.1.3"
-    yoga-layout "^1.5.0"
 
-"@react-pdf/dom@^0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@react-pdf/dom/-/dom-0.4.3.tgz#3f921aca0cce0efadc02b1fdd3c47320859325ef"
+"@react-pdf/dom@^0.4.5":
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/@react-pdf/dom/-/dom-0.4.5.tgz#4cc6230c2247004451332b32bc9d9c891b13306a"
   dependencies:
-    "@react-pdf/core" "^0.4.3"
+    "@react-pdf/core" "^0.4.5"
     blob-stream "^0.1.3"
     pdfkit "*"
     react "16.0.0-alpha.4"
     react-dom "16.0.0-alpha.4"
 
-"@react-pdf/node@^0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@react-pdf/node/-/node-0.4.3.tgz#36254c3e316ac19ef743f4b1fde7ab8e753d447f"
+"@react-pdf/node@^0.4.5":
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/@react-pdf/node/-/node-0.4.5.tgz#1fe122bf40fcd6f2131cf21e23fd8191cafa2d9a"
   dependencies:
-    "@react-pdf/core" "^0.4.3"
+    "@react-pdf/core" "^0.4.5"
     react "16.0.0-alpha.4"
 
 "@types/graphql@0.10.2":
@@ -427,14 +427,6 @@ atob@~1.1.0:
 attr-accept@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/attr-accept/-/attr-accept-1.1.0.tgz#b5cd35227f163935a8f1de10ed3eba16941f6be6"
-
-autogypi@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/autogypi/-/autogypi-0.2.2.tgz#258bab5f7857755b09beac6a641fea130ff4622d"
-  dependencies:
-    bluebird "^3.4.0"
-    commander "~2.9.0"
-    resolve "~1.1.7"
 
 autoprefixer@^6.3.1:
   version "6.7.7"
@@ -1303,10 +1295,6 @@ block-stream@*:
   dependencies:
     inherits "~2.0.0"
 
-bluebird@^3.4.0:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.1.tgz#d9551f9de98f1fcda1e683d17ee91a0602ee2eb9"
-
 bluebird@^3.4.6, bluebird@^3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.0.tgz#791420d7f551eea2897453a8a77653f96606d67c"
@@ -1757,7 +1745,7 @@ combined-stream@^1.0.5, combined-stream@~1.0.5:
   dependencies:
     delayed-stream "~1.0.0"
 
-commander@2.9.0, commander@~2.9.0:
+commander@2.9.0:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.9.0.tgz#9c99094176e12240cb22d6c5146098400fe0f7d4"
   dependencies:
@@ -3044,6 +3032,14 @@ fs-extra@^0.30.0:
     path-is-absolute "^1.0.0"
     rimraf "^2.2.8"
 
+fs-extra@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-4.0.2.tgz#f91704c53d1b461f893452b0c307d9997647ab6b"
+  dependencies:
+    graceful-fs "^4.1.2"
+    jsonfile "^4.0.0"
+    universalify "^0.1.0"
+
 fs-readdir-recursive@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs-readdir-recursive/-/fs-readdir-recursive-1.0.0.tgz#8cd1745c8b4f8a29c8caec392476921ba195f560"
@@ -3949,6 +3945,12 @@ jsonfile@^2.1.0:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
+jsonfile@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/jsonfile/-/jsonfile-4.0.0.tgz#8771aae0799b64076b76640fca058f9c10e33ecb"
+  optionalDependencies:
+    graceful-fs "^4.1.6"
+
 jsonify@~0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/jsonify/-/jsonify-0.0.0.tgz#2c74b6ee41d93ca51b7b5aaee8f503631d252a73"
@@ -4588,7 +4590,7 @@ natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
 
-nbind@^0.3.8:
+nbind@^0.3.13:
   version "0.3.13"
   resolved "https://registry.yarnpkg.com/nbind/-/nbind-0.3.13.tgz#0b9722ab80e7f74e7705ca3de9e6773bafc80b86"
   dependencies:
@@ -4613,7 +4615,7 @@ node-fetch@^1.0.1, node-fetch@^1.5.3:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-node-gyp@^3.3.1, node-gyp@^3.4.0:
+node-gyp@^3.3.1:
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/node-gyp/-/node-gyp-3.6.2.tgz#9bfbe54562286284838e750eac05295853fa1c60"
   dependencies:
@@ -6302,7 +6304,7 @@ resolve-url@~0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/resolve-url/-/resolve-url-0.2.1.tgz#2c637fe77c893afd2a663fe21aa9080068e2052a"
 
-resolve@1.1.7, resolve@~1.1.7:
+resolve@1.1.7:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.1.7.tgz#203114d82ad2c5ed9e8e0411b3932875e889e97b"
 
@@ -7087,6 +7089,10 @@ uniqs@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/uniqs/-/uniqs-2.0.0.tgz#ffede4b36b25290696e6e165d4a59edb998e6b02"
 
+universalify@^0.1.0:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.1.tgz#fa71badd4437af4c148841e3b3b165f9e9e590b7"
+
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
@@ -7491,14 +7497,6 @@ yargs@~3.10.0:
     cliui "^2.1.0"
     decamelize "^1.0.0"
     window-size "0.1.0"
-
-yoga-layout@^1.5.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/yoga-layout/-/yoga-layout-1.6.0.tgz#82046dab9b4940ad2868f0d795bf7e3517e96382"
-  dependencies:
-    autogypi "^0.2.2"
-    nbind "^0.3.8"
-    node-gyp "^3.4.0"
 
 zen-observable-ts@^0.4.0:
   version "0.4.0"

@@ -96,7 +96,12 @@
     "archive_error_time": "This patient cannot be unarchived for {time}",
     "archived_message": "Patient archived",
     "unarchived_message": "Patient unarchived",
-    "field_receive_updates": "Receive updates to email"
+    "field_receive_updates": "Receive updates to email",
+    "age_in_diagnose": "Age in diagnose",
+    "print_date": "Print date",
+    "diagnose_fillers": "Diagnose fillers",
+    "patient_name": "Patient name",
+    "diagnose_date": "Diagnose date"
   },
   "Treatments": {
     "create_treatment_button": "Add treatment",
@@ -229,6 +234,11 @@
       "ok": "Close",
       "cancel": "Return to editing",
       "title": "You have unsaved changes"
+    },
+    "gender": {
+      "field_name": "Gender",
+      "MALE": "Male",
+      "FEMALE": "Female"
     }
   }
 }
