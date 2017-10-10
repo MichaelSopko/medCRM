@@ -1,7 +1,8 @@
-import React, { PropTypes, Component } from 'react'
+import React, { Component } from 'react'
 import checkAccessLogic from '../../../helpers/checkAccessLogic'
 import ROLES from '../../../helpers/constants/roles'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types';
 
 @connect(
 	({ currentUser }) => ({ currentUser })

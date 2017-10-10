@@ -1,10 +1,11 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router'
 import { connect } from 'react-redux';
 import { graphql, compose, withApollo } from 'react-apollo'
 import ApolloClient from 'apollo-client'
 import gql from 'graphql-tag'
 import update from 'react-addons-update'
+import PropTypes from 'prop-types';
 import GET_CLINICS_QUERY from '../../graphql/ClinicsGet.graphql'
 import ADD_CLINIC_MUTATION from '../../graphql/ClinicAddMutation.graphql'
 import DELETE_CLINIC_MUTATION from '../../graphql/ClinicDeleteMutaion.graphql'

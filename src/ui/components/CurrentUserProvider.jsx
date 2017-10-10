@@ -1,8 +1,9 @@
-import React, { PropTypes, Component } from 'react'
+import React, { Component } from 'react'
 import { withApollo, graphql } from 'react-apollo'
 import GET_CURRENT_USER_QUERY from '../graphql/CurrentUser.graphql'
 import { connect } from 'react-redux';
 import Cookie from 'js-cookie';
+import PropTypes from 'prop-types';
 
 
 @graphql(GET_CURRENT_USER_QUERY)

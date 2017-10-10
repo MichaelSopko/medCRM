@@ -1,6 +1,7 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import config from '../../../config';
 import cx from 'classnames';
+import PropTypes from 'prop-types';
 
 const Html = ({ content, state, assetMap }) => {
 	const isRtl = config.locale === 'he';

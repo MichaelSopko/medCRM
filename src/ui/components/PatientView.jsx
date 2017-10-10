@@ -1,7 +1,8 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import { graphql, compose, withApollo } from 'react-apollo'
 import moment from 'moment';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import {
 	Table,

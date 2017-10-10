@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component, } from 'react'; import PropTypes from 'prop-types';
 import moment from 'moment';
 import { graphql } from 'react-apollo';
 import { FormattedMessage } from 'react-intl';

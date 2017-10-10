@@ -1,6 +1,7 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { Form, Icon, Input, Button, Checkbox, message } from 'antd'
+import PropTypes from 'prop-types';
 
 import './Login.scss';
 import ROLES from '../../helpers/constants/roles'

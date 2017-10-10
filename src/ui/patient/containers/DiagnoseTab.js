@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component, } from 'react'; import PropTypes from 'prop-types';
 import { Table, Button, message, Form, Input, notification, Col, Tabs } from 'antd';
 import moment from 'moment';
 import { graphql } from 'react-apollo';
