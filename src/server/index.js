@@ -1,3 +1,5 @@
+global.requestAnimationFrame = f => setImmediate(f);
+
 import log from '../log'
 import './api_server'
 

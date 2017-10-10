@@ -94,7 +94,8 @@
     "redux": "^3.6.0",
     "source-map-support": "^0.4.2",
     "sqlite3": "^3.1.4",
-    "subscriptions-transport-ws": "^0.5.3"
+    "subscriptions-transport-ws": "^0.5.3",
+    "wait-port": "^0.2.2"
   },
   "devDependencies": {
     "apollo-codegen": "^0.16.5",
@@ -138,7 +139,6 @@
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
-    "wait-for-port": "0.0.2",
     "webpack": "^1.14.0",
     "webpack-dev-server": "^1.16.3",
     "webpack-manifest-plugin": "^1.0.1",

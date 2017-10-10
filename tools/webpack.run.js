@@ -1,7 +1,9 @@
+global.requestAnimationFrame = f => setImmediate(f);
+
 import webpack from 'webpack'
 import WebpackDevServer from 'webpack-dev-server'
 import { spawn } from 'child_process'
-import waitForPort from 'wait-for-port'
+import waitPort from 'wait-port'
 import fs from 'fs'
 import path from 'path'
 import mkdirp from 'mkdirp'
@@ -188,41 +190,44 @@ function startWebpackDevServer(clientConfig, reporter) {
 		}
 	});
 
-	waitForPort('localhost', pkg.app.apiPort, function(err) {
-		if (err) throw new Error(err);
+	waitPort({ host: 'localhost', port: pkg.app.apiPort })
+		.then(function() {
 
-		const sslOptions = process.env.USE_SSL ? {
-			https: ['http/1.1', 'http/1.0'],
-			key: fs.readFileSync("keys/key.pem"),
-			cert: fs.readFileSync("keys/cert.pem"),
-		} : {};
+			const sslOptions = process.env.USE_SSL ? {
+				https: ['http/1.1', 'http/1.0'],
+				key: fs.readFileSync("keys/key.pem"),
+				cert: fs.readFileSync("keys/cert.pem"),
+			} : {};
 
-		const app = new WebpackDevServer(compiler, {
-			hot: true,
-			contentBase: '/',
-			publicPath: clientConfig.output.publicPath,
-			headers: { 'Access-Control-Allow-Origin': '*' },
-			proxy: {
-				'*': {
-					target: process.env.USE_SSL ? `https://localhost:${pkg.app.apiPort}` : `http://localhost:${pkg.app.apiPort}`,
-					secure: false,
+			const app = new WebpackDevServer(compiler, {
+				hot: true,
+				contentBase: '/',
+				publicPath: clientConfig.output.publicPath,
+				headers: { 'Access-Control-Allow-Origin': '*' },
+				proxy: {
+					'*': {
+						target: process.env.USE_SSL ? `https://localhost:${pkg.app.apiPort}` : `http://localhost:${pkg.app.apiPort}`,
+						secure: false,
+					},
 				},
-			},
-			noInfo: true,
-			...sslOptions,
-			reporter: ({state, stats}) => {
-				if (state) {
-					logFront("bundle is now VALID.");
-				} else {
-					logFront("bundle is now INVALID.");
+				noInfo: true,
+				...sslOptions,
+				reporter: ({state, stats}) => {
+					if (state) {
+						logFront("bundle is now VALID.");
+					} else {
+						logFront("bundle is now INVALID.");
+					}
+					reporter(null, stats);
 				}
-				reporter(null, stats);
-			}
-		});
+			});
 
-		logFront(`Webpack dev server listening on ${pkg.app.webpackDevPort}`);
-		app.listen(pkg.app.webpackDevPort);
-	});
+			logFront(`Webpack dev server listening on ${pkg.app.webpackDevPort}`);
+			app.listen(pkg.app.webpackDevPort);
+	})
+		.catch(e => {
+			console.error(e);
+        });
 }
 
 function useWebpackDll() {
