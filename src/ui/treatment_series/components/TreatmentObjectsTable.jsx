@@ -45,8 +45,8 @@ export const TreatmentObjectsTable = ({ treatments, deleteObject, updateObject, 
 			width: '25%',
 			render: (text, record) => (
 				<span>
-		      <a onClick={() => updateObject(record)}>{formatMessage({ id: 'common.action_edit' })}</a>
-					<span className='ant-divider' />
+{/*		      <a onClick={() => updateObject(record)}>{formatMessage({ id: 'common.action_edit' })}</a>
+					<span className='ant-divider' />*/}
 		      <Popconfirm
 			      title={formatMessage({ id: 'common.confirm_message' })}
 			      onConfirm={() => deleteObject(record)}
@@ -60,6 +60,13 @@ export const TreatmentObjectsTable = ({ treatments, deleteObject, updateObject, 
 	];
 	return <Table
 		dataSource={treatments}
+		onRowClick={(record, index, event) => {
+			// dont edit when button clicked
+			if(event.target.tagName === 'BUTTON' || event.target.tagName === 'A'  || event.target.parentNode.tagName === 'BUTTON') {
+				return;
+			}
+			updateObject(record);
+		}}
 		columns={columns}
 		rowKey={item => item.id + item.__typename} />;
 };

@@ -107,6 +107,17 @@ const StaffMeetingForm = (props) => {
 						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
 					)}
 				</Form.Item>
+				<Form.Item
+					{...formItemLayout}
+					label={formatMessage({ id: 'Treatments.staff_meeting.field.meetingPurpose' })}
+					hasFeedback
+				>
+					{getFieldDecorator('meetingPurpose', {
+						validateTrigger: 'onBlur', rules: [],
+					})(
+						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
+					)}
+				</Form.Item>
 			</Form>
 		</Modal>
 	);

@@ -80,7 +80,10 @@ const RelatedPersonForm = Form.create()(
 						{getFieldDecorator(`type`, {
 							validateTrigger: 'onBlur',
 							initialValue: values.type,
-							rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_type_error' }) }],
+							rules: [{
+								required: true,
+								message: formatMessage({ id: 'Patients.field_person_type_error' }),
+							}],
 						})(
 							<Select placeholder={formatMessage({ id: 'Patients.field_person_type' })}>
 								{Object.keys(RELATED_PERSONS).map(key => <Select.Option value={key} key={key}>
@@ -95,10 +98,13 @@ const RelatedPersonForm = Form.create()(
 						{getFieldDecorator(`name`, {
 							initialValue: values.name,
 							validateTrigger: 'onBlur',
-							rules: [{ required: true, message: formatMessage({ id: 'Patients.field_person_name_error' }) }],
+							rules: [{
+								required: true,
+								message: formatMessage({ id: 'Patients.field_person_name_error' }),
+							}],
 
 						})(
-							<Input placeholder={formatMessage({ id: 'Patients.field_person_name' })} />,
+							<Input placeholder={formatMessage({ id: 'Patients.field_person_name' })}/>,
 						)}
 					</Form.Item>
 					<Form.Item
@@ -108,7 +114,7 @@ const RelatedPersonForm = Form.create()(
 							initialValue: values.description,
 							validateTrigger: 'onBlur', rules: [],
 						})(
-							<Input placeholder={formatMessage({ id: 'Patients.field_person_description' })} />,
+							<Input placeholder={formatMessage({ id: 'Patients.field_person_description' })}/>,
 						)}
 					</Form.Item>
 					<Form.Item
@@ -119,7 +125,7 @@ const RelatedPersonForm = Form.create()(
 							initialValue: values.email,
 							rules: [{ type: 'email', message: formatMessage({ id: 'common.field_email_error' }) }],
 						})(
-							<Input type='email' placeholder={formatMessage({ id: 'common.field_email' })} />,
+							<Input type='email' placeholder={formatMessage({ id: 'common.field_email' })}/>,
 						)}
 					</Form.Item>
 					<Form.Item
@@ -130,7 +136,7 @@ const RelatedPersonForm = Form.create()(
 							initialValue: values.phone,
 							rules: [{ message: formatMessage({ id: 'common.field_phone_error' }) }],
 						})(
-							<Input type='number' placeholder={formatMessage({ id: 'common.field_phone' })} />,
+							<Input type='number' placeholder={formatMessage({ id: 'common.field_phone' })}/>,
 						)}
 					</Form.Item>
 					<Form.Item>
@@ -199,12 +205,12 @@ const FilesTab = ({ patient, onAddFile, onDeleteFile }, context) => {
 				onChange={onAddFile}
 				action='/api/upload-file'>
 				<p className='ant-upload-drag-icon'>
-					<Icon type='inbox' />
+					<Icon type='inbox'/>
 				</p>
 				<p className='ant-upload-text'>{formatMessage({ id: 'Patients.upload_files' })}</p>
 			</Upload.Dragger>
 		</div>
-		<Table dataSource={patient.files} columns={columns} rowKey='id' />
+		<Table dataSource={patient.files} columns={columns} rowKey='id'/>
 	</div>
 };
 
@@ -253,10 +259,10 @@ const RelatedPersonsTable = ({ patient, showRelatedPersonForm, deleteRelatedPers
 		{
 			width: '17%',
 			render: (text, record) => <div>
-				<Button size='small' type='ghost' onClick={editRelatedPerson(record)}>
+				{/*				<Button size='small' type='ghost' onClick={editRelatedPerson(record)}>
 					{formatMessage({ id: 'common.action_edit' })}
 				</Button>
-				<span className='ant-divider'></span>
+				<span className='ant-divider'></span>*/}
 				<Popconfirm
 					title={formatMessage({ id: 'common.confirm_message' })}
 					onConfirm={deleteRelatedPerson(record._id)}
@@ -271,9 +277,19 @@ const RelatedPersonsTable = ({ patient, showRelatedPersonForm, deleteRelatedPers
 
 	return (
 		<div>
-			<Table dataSource={patient.related_persons.map((p, _id) => ({ ...p, _id }))} columns={columns} pagination={false}
-			       rowKey='_id' />
-			<br />
+			<Table
+				dataSource={patient.related_persons.map((p, _id) => ({ ...p, _id }))}
+				columns={columns}
+				pagination={false}
+				onRowClick={(record, index, event) => {
+					// dont edit when button clicked
+					if(event.target.tagName === 'BUTTON' || event.target.tagName === 'A'  || event.target.parentNode.tagName === 'BUTTON') {
+						return;
+					}
+					editRelatedPerson(record);
+				}}
+				rowKey='_id'/>
+			<br/>
 			<Button onClick={showRelatedPersonForm}
 			        type='dashed'>{formatMessage({ id: 'Patients.add_related_persons' })}</Button>
 		</div>
@@ -304,7 +320,7 @@ const DetailsTab = ({ patient, showRelatedPersonForm, deleteRelatedPerson, editR
 						years: diff.years() || '0',
 						months: diff.months() || '0',
 						days: diff.days() || '0',
-					}} />
+					}}/>
 				</span>
 				</div>
 				<div className='Details__field'>
@@ -342,7 +358,8 @@ const DetailsTab = ({ patient, showRelatedPersonForm, deleteRelatedPerson, editR
 				</div>
 
 				{!!patient.health_maintenance && <div className='Details__field'>
-					<div className='Details__field-name'>{formatMessage({ id: 'Patients.field_health_maintenance' })}</div>
+					<div
+						className='Details__field-name'>{formatMessage({ id: 'Patients.field_health_maintenance' })}</div>
 					<div
 						className='Details__field-value'>{formatMessage({ id: `health_maintenance.${patient.health_maintenance}` })}</div>
 				</div>}
@@ -353,7 +370,7 @@ const DetailsTab = ({ patient, showRelatedPersonForm, deleteRelatedPerson, editR
 					showRelatedPersonForm={showRelatedPersonForm}
 					editRelatedPerson={editRelatedPerson}
 					patient={patient}
-					deleteRelatedPerson={deleteRelatedPerson} />
+					deleteRelatedPerson={deleteRelatedPerson}/>
 			</div>
 
 		</div>
@@ -417,16 +434,16 @@ class PatientView extends Component {
 		intl: PropTypes.object.isRequired,
 	}
 
-/*
-	constructor(props) {
-		super(props);
+	/*
+		constructor(props) {
+			super(props);
 
-		setInterval(this.forceUpdate, 60000);
-	}
+			setInterval(this.forceUpdate, 60000);
+		}
 
-	componentWillUnmount() {
-		clearInterval(this.forceUpdate);
-	}*/
+		componentWillUnmount() {
+			clearInterval(this.forceUpdate);
+		}*/
 
 	state = {
 		archiveLoading: false,
@@ -515,7 +532,7 @@ class PatientView extends Component {
 				return;
 			}
 			this.setState({ formLoading: true });
-			const { __typename, archived, archived_date, files, ...patient } = this.props.data.patient;
+			const { __typename, archived, archived_date, files, objects, clinic_id, ...patient } = this.props.data.patient;
 			patient.related_persons = !isEditing
 				? [...patient.related_persons.map(({ __typename, ...p }) => p), values]
 				: patient.related_persons.map(({ __typename, ...p }, idx) => {
@@ -524,7 +541,11 @@ class PatientView extends Component {
 				});
 			this.props.editPatient(patient)
 				.then(() => {
-					this.setState({ formLoading: false, showRelatedPersonForm: false, activeRelatedPerson: null }, () => {
+					this.setState({
+						formLoading: false,
+						showRelatedPersonForm: false,
+						activeRelatedPerson: null,
+					}, () => {
 						form.resetFields();
 					});
 				})
@@ -540,7 +561,7 @@ class PatientView extends Component {
 		this.setState({ showRelatedPersonForm: true });
 	}
 
-	editRelatedPerson = (activeRelatedPerson) => () => {
+	editRelatedPerson = (activeRelatedPerson) => {
 		this.setState({ showRelatedPersonForm: true, activeRelatedPerson });
 	}
 
@@ -581,7 +602,7 @@ class PatientView extends Component {
 
 		if (!isReady) {
 			return <div className='PatientView__Empty'>
-				<Spin spinning={loading} />
+				<Spin spinning={loading}/>
 				{error && <pre>{error}</pre>}
 			</div>
 		}
@@ -644,31 +665,31 @@ class PatientView extends Component {
 							patient={patient}
 							showRelatedPersonForm={this.showRelatedPersonForm}
 							editRelatedPerson={this.editRelatedPerson}
-							deleteRelatedPerson={this.deleteRelatedPerson} />
+							deleteRelatedPerson={this.deleteRelatedPerson}/>
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
 						tab={formatMessage({ id: 'Patients.tabs.diagnoses' })}
 						key='diagnoses'>
-						<DiagnoseTab patient={patient} />
+						<DiagnoseTab patient={patient}/>
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
 						tab={formatMessage({ id: 'Patients.tabs.treatments' })}
 						key='treatments'>
-						<TreatmentsTab patient={patient} />
+						<TreatmentsTab patient={patient}/>
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
 						tab={formatMessage({ id: 'Patients.tabs.treatment_summary' })}
 						key='treatment_summary'>
-						<TreatmentSummaryTab patient={patient} />
+						<TreatmentSummaryTab patient={patient}/>
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
-						tab={<FormattedMessage id='Patients.tabs.files' values={{ number: patient.files.length }} />}
+						tab={<FormattedMessage id='Patients.tabs.files' values={{ number: patient.files.length }}/>}
 						key='files'>
-						<FilesTab onAddFile={this.onAddFile} onDeleteFile={this.props.deleteFile} patient={patient} />
+						<FilesTab onAddFile={this.onAddFile} onDeleteFile={this.props.deleteFile} patient={patient}/>
 					</TabPane>
 				</Tabs>
 			</div>

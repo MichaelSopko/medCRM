@@ -45,6 +45,7 @@ fragment TreatmentSeriesObjectFragment on TreatmentSeriesObject {
         date
         protocol
         nextRecommendation
+        meetingPurpose
     }
     ... on OutsideSourceConsult {
         id

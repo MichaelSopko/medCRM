@@ -36,6 +36,7 @@ type StaffMeeting {
 	date: Date
 	protocol: String
 	nextRecommendation: String
+	meetingPurpose: String
 }
 
 input StaffMeetingInput {
@@ -43,6 +44,7 @@ input StaffMeetingInput {
 	date: Date
 	protocol: String
 	nextRecommendation: String
+	meetingPurpose: String
 }
 
 type OutsideSourceConsult {

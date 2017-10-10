@@ -213,7 +213,7 @@ class Clinics extends Component {
 		});
 	}
 
-	editEntity = entity => () => {
+	editEntity = entity => {
 		this.setState({
 			modalOpened: true,
 			activeEntity: entity
@@ -251,10 +251,10 @@ class Clinics extends Component {
 			key: 'action',
 			render: (text, record) => (
 				<span>
-		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
+{/*		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
 			      {formatMessage({ id: 'common.action_edit' })}
 		      </Button>
-					<span className="ant-divider"></span>
+					<span className="ant-divider"></span>*/}
 		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
 			      deleteClinic(record).then(() => {
 			      	this.props.client.resetStore();
@@ -293,7 +293,14 @@ class Clinics extends Component {
 							</Button>
 						</div>
 					</div>
-					<Table dataSource={clinics} columns={columns} loading={loading} rowKey='id'/>
+					<Table
+						onRowClick={(record, index, event) => {
+							// dont edit when button clicked
+							if(event.target.tagName === 'BUTTON' || event.target.tagName === 'A'  || event.target.parentNode.tagName === 'BUTTON') {
+								return;
+							}
+							this.editEntity(record);
+						}} dataSource={clinics} columns={columns} loading={loading} rowKey='id'/>
 				</div>
 			</section>
 		);

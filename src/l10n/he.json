@@ -218,7 +218,8 @@
       "field": {
         "participants": "משתתפים",
         "nextRecommendation": "המלצות לפגישה הבאה",
-        "protocol": "פירוט הישיבה"
+        "protocol": "פירוט הישיבה",
+        "meetingPurpose": "meeting purpose"
       }
     },
     "grid_headers": {

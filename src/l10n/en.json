@@ -172,7 +172,8 @@
       "field": {
         "participants": "participants",
         "nextRecommendation": "nextRecommendation",
-        "protocol": "protocol"
+        "protocol": "protocol",
+        "meetingPurpose": "meeting purpose"
       }
     },
     "grid_headers": {

@@ -1,4 +1,5 @@
-import React, { Component, } from 'react'; import PropTypes from 'prop-types';
+import React, { Component, } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router'
 import { connect } from 'react-redux';
 import { graphql, compose, withApollo } from 'react-apollo'
@@ -26,33 +27,36 @@ const EntityForm = Form.create()(
 			title: formatMessage({ id: 'common.modal_save_confirm.title' }),
 			onOk: onCancel,
 			okText: formatMessage({ id: 'common.modal_save_confirm.ok' }),
-			cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' })
+			cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' }),
 		}) : onCancel();
 
 		return (
-			<Modal title={ formatMessage({ id: isEditing ? 'Administrators.edit_header' : 'Administrators.create_header' }) }
-			       visible={visible}
-			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
-			       onCancel={checkForConfirm}
-			       onOk={onSubmit}
-			       confirmLoading={loading}>
+			<Modal
+				title={formatMessage({ id: isEditing ? 'Administrators.edit_header' : 'Administrators.create_header' })}
+				visible={visible}
+				okText={formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' })}
+				onCancel={checkForConfirm}
+				onOk={onSubmit}
+				confirmLoading={loading}>
 				<Form>
-					{ !isEditing && <Form.Item
+					{!isEditing && <Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'common.field_email' })}
 						hasFeedback
 					>
 						{getFieldDecorator('email', {
 							validateTrigger: 'onBlur', rules: [{
-								type: 'email', required: true, message: formatMessage({ id: 'common.field_email_error' }),
+								type: 'email',
+								required: true,
+								message: formatMessage({ id: 'common.field_email_error' }),
 							}],
 						})(
-							<Input type='email' />,
+							<Input type='email'/>,
 						)}
-					</Form.Item> }
+					</Form.Item>}
 					<Form.Item
 						{...formItemLayout}
-						label={ formatMessage({ id: isEditing ? 'common.field_new_password' : 'common.field_password' }) }
+						label={formatMessage({ id: isEditing ? 'common.field_new_password' : 'common.field_password' })}
 						hasFeedback
 					>
 						{getFieldDecorator('password', {
@@ -61,10 +65,10 @@ const EntityForm = Form.create()(
 							},
 							],
 						})(
-							<Input />,
+							<Input/>,
 						)}
 					</Form.Item>
-					{ !isEditing && <Form.Item
+					{!isEditing && <Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'Administrators.field_clinic' })}
 						hasFeedback
@@ -75,11 +79,11 @@ const EntityForm = Form.create()(
 							}],
 						})(
 							<Select>
-								{ clinics.map(clinic => <Select.Option key={clinic.id}
-								                                       value={clinic.id.toString()}>{ clinic.name }</Select.Option>) }
+								{clinics.map(clinic => <Select.Option key={clinic.id}
+								                                      value={clinic.id.toString()}>{clinic.name}</Select.Option>)}
 							</Select>,
 						)}
-					</Form.Item> }
+					</Form.Item>}
 				</Form>
 			</Modal>
 		);
@@ -147,18 +151,18 @@ class Administrators extends Component {
 			}
 			isEditing
 				? this.props.editAdministrator({ id: this.state.activeEntity.id, ...values })
-				.then(() => {
+					.then(() => {
+						form.resetFields();
+						this.setState({ modalOpened: false, activeEntity: {} });
+					}).catch(errorHandler)
+				: this.props.addAdministrator(values).then(() => {
 					form.resetFields();
 					this.setState({ modalOpened: false, activeEntity: {} });
-				}).catch(errorHandler)
-				: this.props.addAdministrator(values).then(() => {
-				form.resetFields();
-				this.setState({ modalOpened: false, activeEntity: {} });
-			}).catch(errorHandler);
+				}).catch(errorHandler);
 		});
 	};
 
-	editEntity = entity => () => {
+	editEntity = entity => {
 		this.form.resetFields();
 		this.setState({
 			modalOpened: true,
@@ -185,13 +189,13 @@ class Administrators extends Component {
 			key: 'action',
 			render: (text, record) => (
 				<span>
-		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
+{/*		      <Button size="small" type='ghost' onClick={this.editEntity(record)}>
 			      {formatMessage({ id: 'common.action_edit' })}
 		      </Button>
-					<span className="ant-divider" />
-		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
+					<span className="ant-divider"/>*/}
+		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={() => {
 			      deleteAdministrator(record)
-		      } } okText={formatMessage({ id: 'common.confirm_yes' })}
+		      }} okText={formatMessage({ id: 'common.confirm_yes' })}
 		                  cancelText={formatMessage({ id: 'common.confirm_no' })}>
 		        <Button size="small" type='ghost'>
 			        {formatMessage({ id: 'common.action_delete' })}
@@ -206,9 +210,9 @@ class Administrators extends Component {
 			<section className="Administrators">
 				<div className="Container Dashboard__Content">
 					<EntityForm
-						ref={ form => {
+						ref={form => {
 							this.form = form
-						} }
+						}}
 						visible={modalOpened}
 						loading={loading}
 						onCancel={this.handleCancel}
@@ -219,16 +223,23 @@ class Administrators extends Component {
 					/>
 					<div className="Dashboard__Details">
 						<h1 className="Dashboard__Header">
-							{ formatMessage({ id: 'Administrators.header' }) }
+							{formatMessage({ id: 'Administrators.header' })}
 						</h1>
 						<div className="Dashboard__Actions">
-							<Button type="primary" onClick={ this.showModal }>
-								<Icon type="plus-circle-o" />
-								{ formatMessage({ id: 'Administrators.create_button' }) }
+							<Button type="primary" onClick={this.showModal}>
+								<Icon type="plus-circle-o"/>
+								{formatMessage({ id: 'Administrators.create_button' })}
 							</Button>
 						</div>
 					</div>
-					<Table dataSource={administrators} columns={columns} loading={loading} rowKey='id' />
+					<Table
+						onRowClick={(record, index, event) => {
+							// dont edit when button clicked
+							if (event.target.tagName === 'BUTTON' || event.target.tagName === 'A'  || event.target.parentNode.tagName === 'BUTTON') {
+								return;
+							}
+							this.editEntity(record);
+						}} dataSource={administrators} columns={columns} loading={loading} rowKey='id'/>
 				</div>
 			</section>
 		);

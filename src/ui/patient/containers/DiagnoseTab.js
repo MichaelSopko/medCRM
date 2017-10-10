@@ -275,9 +275,9 @@ class DiagnoseTab extends Component {
 				<Link to={`/api/generate-pdf/${patient.id}/${record.id}`} target='_blank'>
 					<Button size='small'>PDF</Button>
 				</Link>
-				<Button size='small' onClick={() => {
+{/*				<Button size='small' onClick={() => {
 					this.openEditForm(record);
-				}}>{formatMessage({ id: 'common.action_edit' })}</Button>
+				}}>{formatMessage({ id: 'common.action_edit' })}</Button>*/}
 			</span> ),
 		}];
 
@@ -298,7 +298,14 @@ class DiagnoseTab extends Component {
 				<div className='PatientObjectTab__Actions'>
 					<Button onClick={this.openForm} type='primary'>{formatMessage({ id: 'DiagnoseTab.create_title' })}</Button>
 				</div>
-				<Table dataSource={patient.diagnoses} columns={columns} rowKey='id' />
+				<Table
+					onRowClick={(record, index, event) => {
+						// dont edit when button clicked
+						if(event.target.tagName === 'BUTTON' || event.target.tagName === 'A'  || event.target.parentNode.tagName === 'BUTTON') {
+							return;
+						}
+						this.openEditForm(record);
+					}} dataSource={patient.diagnoses} columns={columns} rowKey='id' />
 			</div>
 		);
 	}

@@ -14,4 +14,7 @@ export default {
 			return [];
 		}
 	},
+	meetingPurpose(obj) {
+		return obj.meetingPurpose || null;
+	}
 };
