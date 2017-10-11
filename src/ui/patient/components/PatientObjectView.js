@@ -57,6 +57,12 @@ export const styles = StyleSheet.create({
 		fontSize: 11,
 		fontFamily: 'Arimo'
 	},
+	subRow: {
+		flex: 1,
+		display: 'flex',
+		flexDirection: 'column',
+		height: 36,
+	}
 });
 
 const PatientObjectView = (props) => {
@@ -92,7 +98,7 @@ const PatientObjectView = (props) => {
 					{showHearingTest && !!object.hearing_test_date && (
 						<View style={styles.row}>
 							<Text style={styles.rowName}>{formatMessage({ id: 'Patients.hearing_test' })}:</Text>
-							<View>
+							<View style={styles.subRow}>
 								<Text style={styles.rowValue}>{object.hearing_test_remark}</Text>
 								<Text style={styles.rowValue}>{moment(object.hearing_test_date).format('L')}</Text>
 							</View>

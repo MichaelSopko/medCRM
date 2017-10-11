@@ -58,6 +58,7 @@ export default async (req, res) => {
 				object={object}
 				formatMessage={formatMessage}
 				renderFields={object.__typename === 'Diagnose' ? renderDiagnoseFields : renderTreatmentFields}
+				showHearingTest={object.__typename === 'Diagnose'}
 			/>
 		</Document>
 	), filePath);
