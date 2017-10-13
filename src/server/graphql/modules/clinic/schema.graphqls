@@ -47,6 +47,20 @@ type Therapist implements User {
 	birth_date: Date
 	disabled: Boolean
 	role: Role
+	title: String
+}
+
+input TherapistInput {
+	id_number: String
+	first_name: String
+	last_name: String
+	license_number: Int
+	phone: String
+	email: String
+	birth_date: Date
+	disabled: Boolean
+	role: Role
+	title: String
 }
 
 extend type Query {
@@ -64,32 +78,7 @@ extend type Mutation {
 	editAdministrator(id: ID!, password: String!): MutationStatus
 	deleteAdministrator(id: ID!): MutationStatus
 
-	addTherapist(
-	password: String!
-	id_number: String!
-	first_name: String!
-	last_name: String!
-	clinic_id: ID!
-	license_number: Int!
-	phone: String!
-	email: String!
-	birth_date: Date!
-): MutationStatus
-
-	editTherapist(
-	id: ID!
-	password: String
-	id_number: String!
-	first_name: String!
-	last_name: String!
-	license_number: Int!
-	phone: String!
-	email: String!
-	birth_date: Date!
-	disabled: Boolean
-): MutationStatus
-
-	deleteTherapist(
-	id: ID!
-): MutationStatus
+	createTherapist(clinic_id: ID!, therapist: TherapistInput!): Therapist!
+	updateTherapist(id: ID!, therapist: TherapistInput!): Therapist!
+	deleteTherapist(id: ID!): Boolean!
 }

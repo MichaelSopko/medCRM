@@ -65,7 +65,13 @@
     "create_button": "Create a Therapist",
     "create_header": "Create Therapist",
     "edit_header": "Edit Therapist",
-    "header": "Therapists"
+    "header": "Therapists",
+    "field_title": {
+      "name": "Title",
+      "value1": "none",
+      "value2": "P.hd.",
+      "value3": "Mba"
+    }
   },
   "Patients": {
     "create_button": "Create a Patient",

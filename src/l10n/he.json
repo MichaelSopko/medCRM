@@ -65,7 +65,13 @@
     "create_button": "מטפל חדש",
     "create_header": "מטפל חדש",
     "edit_header": "עריכת מטפל",
-    "header": "מטפלים"
+    "header": "מטפלים",
+    "field_title": {
+      "name": "Title",
+      "value1": "none",
+      "value2": "P.hd.",
+      "value3": "Mba"
+    }
   },
   "Patients": {
     "create_button": "צור מטופל",

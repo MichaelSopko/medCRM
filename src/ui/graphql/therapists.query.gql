@@ -1,0 +1,7 @@
+#import './Therapist.fragment.gql'
+
+query therapists($clinic_id: ID) {
+    therapists(clinic_id: $clinic_id) {
+        ...TherapistFields
+    }
+}

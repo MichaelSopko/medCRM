@@ -36,14 +36,16 @@ export default {
 	// Therapists
 
 	@roleOnly(ROLES.CLINIC_ADMIN)
-		@catchForNonUniqueField()
-	addTherapist(_, user, { Users }) {
-		return Users.createUser({ ...user, role: ROLES.THERAPIST });
+	@catchForNonUniqueField()
+	async createTherapist(_, { clinic_id, therapist }, { Users }) {
+		const [id] = await Users.createUser({ clinic_id, ...therapist, role: ROLES.THERAPIST });
+		return Users.findOne(id);
 	},
 	@roleOnly(ROLES.CLINIC_ADMIN)
-		@catchForNonUniqueField()
-	editTherapist(_, user, { Users }) {
-		return Users.editUser(user);
+	@catchForNonUniqueField()
+	async updateTherapist(_, { id, therapist }, { Users }) {
+		await Users.editUser({ id, ...therapist });
+		return Users.findOne(id);
 	},
 	@roleOnly(ROLES.CLINIC_ADMIN)
 	deleteTherapist(_, { id }, { Users }) {

@@ -13,7 +13,7 @@
       "options" : {
         "headers": {
           "user-agent" : "JS GraphQL",
-          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxfSwiYWdlbnQiOiJNb3ppbGxhLzUuMCAoTWFjaW50b3NoOyBJbnRlbCBNYWMgT1MgWCAxMF8xMl82KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvNjAuMC4zMTEyLjExMyBTYWZhcmkvNTM3LjM2IiwiZXhwIjoxNTA2MjA1NzM0LCJpYXQiOjE1MDU2MDA5MzR9.jCJbA9Tx2WNvtVb3a1NNrtxQvVZtBvfAUhn8aNZgyVA"
+          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxfSwiYWdlbnQiOiJNb3ppbGxhLzUuMCAoTWFjaW50b3NoOyBJbnRlbCBNYWMgT1MgWCAxMF8xMl82KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvNjIuMC4zMjAyLjQ1IFNhZmFyaS81MzcuMzYiLCJleHAiOjE1MDgyNzYzNzEsImlhdCI6MTUwNzY3MTU3MX0.ewAzrYy0DQmRp3_9nvMcsKvOhchC9ElD5iAKfeQ8hVc"
         }
       }
     }
@@ -23,12 +23,12 @@
   "README_endpoints": "A list of GraphQL endpoints that can be queried from '.graphql' files in the IDE",
   "endpoints" : [
     {
-      "name": "Default (http://localhost:8080/graphql)",
+      "name": "Default (http://localhost:3000/graphql)",
       "url": "http://localhost:3000/graphql",
       "options" : {
         "headers": {
           "user-agent" : "JS GraphQL",
-          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxfSwiYWdlbnQiOiJNb3ppbGxhLzUuMCAoTWFjaW50b3NoOyBJbnRlbCBNYWMgT1MgWCAxMF8xMl82KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvNjAuMC4zMTEyLjExMyBTYWZhcmkvNTM3LjM2IiwiZXhwIjoxNTA2MjA1NzM0LCJpYXQiOjE1MDU2MDA5MzR9.jCJbA9Tx2WNvtVb3a1NNrtxQvVZtBvfAUhn8aNZgyVA"
+          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxfSwiYWdlbnQiOiJNb3ppbGxhLzUuMCAoTWFjaW50b3NoOyBJbnRlbCBNYWMgT1MgWCAxMF8xMl82KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvNjIuMC4zMjAyLjQ1IFNhZmFyaS81MzcuMzYiLCJleHAiOjE1MDgyNzYzNzEsImlhdCI6MTUwNzY3MTU3MX0.ewAzrYy0DQmRp3_9nvMcsKvOhchC9ElD5iAKfeQ8hVc"
         }
       }
     }

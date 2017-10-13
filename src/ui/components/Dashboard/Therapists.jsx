@@ -5,10 +5,10 @@ import { graphql, compose, withApollo } from 'react-apollo'
 import ApolloClient from 'apollo-client'
 import gql from 'graphql-tag'
 import update from 'react-addons-update'
-import GET_THERAPISTS_QUERY from '../../graphql/TherapistsGet.graphql'
-import ADD_THERAPIST_MUTATION from '../../graphql/TherapistAddMutation.graphql'
-import DELETE_THERAPIST_MUTATION from '../../graphql/TherapistDeleteMutaion.graphql'
-import EDIT_THERAPIST_MUTATION from '../../graphql/TherapistEditMutation.graphql'
+import GET_THERAPISTS_QUERY from '../../graphql/therapists.query.gql'
+import CREATE_THERAPIST_MUTATION from '../../graphql/createTherapist.mutation.gql'
+import DELETE_THERAPIST_MUTATION from '../../graphql/deleteTherapist.mutation.gql'
+import UPDATE_THERAPIST_MUTATION from '../../graphql/updateTherapist.mutation.gql'
 import ROLES from '../../../helpers/constants/roles'
 import ClinicsSelector from '../ClinicsSelector'
 import CheckAccess from '../helpers/CheckAccess'
@@ -115,6 +115,22 @@ const EntityForm = Form.create()(
 							<Input />,
 						)}
 					</Form.Item> }
+					<Form.Item
+						{...formItemLayout}
+						label={formatMessage({ id: 'Therapists.field_title.name' })}
+						hasFeedback
+					>
+						{getFieldDecorator('title', {
+							initialValue: values.title,
+							validateTrigger: 'onBlur', rules: [],
+						})(
+							<Select>
+								<Select.Option value={'value1'} key={'value1'}>{formatMessage({ id: `Therapists.field_title.value1` })}</Select.Option>
+								<Select.Option value={'value2'} key={'value2'}>{formatMessage({ id: `Therapists.field_title.value2` })}</Select.Option>
+								<Select.Option value={'value3'} key={'value3'}>{formatMessage({ id: `Therapists.field_title.value3` })}</Select.Option>
+							</Select>,
+						)}
+					</Form.Item>
 					{ <Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'common.field_phone' })}
@@ -227,13 +243,13 @@ class Therapists extends Component {
 			values.birth_date = moment(values.birth_date);
 
 			isEditing ?
-				this.props.editTherapist({ id: this.state.activeEntity.id, ...values })
+				this.props.updateTherapist({ id: this.state.activeEntity.id, therapist: values })
 					.then(() => {
 						form.resetFields();
 						this.setState({ modalOpened: false, modalLoading: false, activeEntity: {} });
 						this.resetActiveEntity();
 					}).catch(errorHandler) :
-				this.props.addTherapist({ clinic_id: this.props.currentClinic.id, ...values })
+				this.props.createTherapist(values)
 					.then(() => {
 						form.resetFields();
 						this.setState({ modalOpened: false, modalLoading: false });
@@ -257,10 +273,21 @@ class Therapists extends Component {
 		const columns = [{
 			title: formatMessage({ id: 'common.field_name' }),
 			key: 'name',
-			width: '30%',
+			width: '25%',
 			sorter: (a, b) => a.name > b.name,
 			render: (text, record) => <div className="to-dynamic-container">
 				<span className="to-dynamic">{record.first_name} {record.last_name}</span>
+			</div>,
+		}, {
+			title: formatMessage({ id: 'Therapists.field_title.name' }),
+			dataIndex: 'title',
+			key: 'title',
+			width: '15%',
+			sorter: (a, b) => a.title > b.title,
+			render: text => <div className="to-dynamic-container">
+				<span className="to-dynamic" style={{ color: text == 'value1' ? '#d1d1d1' : 'inherit' }}>
+					{formatMessage({ id: `Therapists.field_title.${text}` })}
+				</span>
 			</div>,
 		}, {
 			title: formatMessage({ id: 'common.field_phone' }),
@@ -283,7 +310,7 @@ class Therapists extends Component {
 		}, {
 			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
-			width: '20%',
+			width: '10%',
 			render: (text, record) => (
 				<span>
 {/*		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
@@ -354,10 +381,10 @@ const TherapistsApollo = withApollo(compose(
 			},
 		}),
 	}),
-	graphql(ADD_THERAPIST_MUTATION, {
+	graphql(CREATE_THERAPIST_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
-			addTherapist: (fields) => mutate({
-				variables: fields,
+			createTherapist: therapist => mutate({
+				variables: { clinic_id: ownProps.currentClinic.id, therapist },
 				refetchQueries: [{
 					query: GET_THERAPISTS_QUERY,
 					variables: {
@@ -380,10 +407,10 @@ const TherapistsApollo = withApollo(compose(
 			}),
 		}),
 	}),
-	graphql(EDIT_THERAPIST_MUTATION, {
+	graphql(UPDATE_THERAPIST_MUTATION, {
 		props: ({ ownProps, mutate }) => ({
-			editTherapist: (fields) => mutate({
-				variables: fields,
+			updateTherapist: ({ id, therapist }) => mutate({
+				variables: { id, therapist },
 				refetchQueries: [{
 					query: GET_THERAPISTS_QUERY,
 					variables: {
