@@ -21,7 +21,6 @@ let graphiqlMiddleware = require('./middleware/graphiql').default;
 let graphqlMiddleware = require('./middleware/graphql').default;
 let authenticationMiddleware = require('./middleware/authentication').default;
 let uploadsMiddleware = require('./middleware/uploads').default;
-let generatePDFMiddleware = require('./middleware/generate-pdf').default;
 let subscriptionManager = require('./graphql/subscriptions').subscriptionManager;
 
 let server;
@@ -69,7 +68,6 @@ app.use('/graphql', jwtMiddleware, (...args) => graphqlMiddleware(...args));
 app.use('/graphiql', (...args) => graphiqlMiddleware(...args));
 app.use('/api/authentication', (...args) => authenticationMiddleware(...args));
 app.use('/api/upload-file', jwtMiddleware, (...args) => uploadsMiddleware(...args));
-app.use('/api/generate-pdf/:patient_id/:object_id', (...args) => generatePDFMiddleware(...args));
 app.use((...args) => websiteMiddleware(...args));
 
 server = !__SSL__ ? http.createServer(app) : https.createServer({
@@ -137,9 +135,6 @@ if (module.hot) {
 		});
 		module.hot.accept('./middleware/uploads', () => {
 			uploadsMiddleware = require('./middleware/uploads').default;
-		});
-		module.hot.accept('./middleware/generate-pdf', () => {
-			generatePDFMiddleware = require('./middleware/generate-pdf').default;
 		});
 	} catch (err) {
 		log(err.stack);

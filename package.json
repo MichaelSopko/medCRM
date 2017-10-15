@@ -37,9 +37,6 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@react-pdf/core": "^0.4.6",
-    "@react-pdf/dom": "^0.4.6",
-    "@react-pdf/node": "^0.4.6",
     "antd": "^2.13.4",
     "apollo-client": "1.9.2",
     "apollo-errors": "^1.5.1",
@@ -149,8 +146,7 @@
     "react-overlays/react-dom": "^16.0.0",
     "react-big-calendar/react-overlays": "^0.8.2",
     "react-big-calendar/react": "^16.0.0",
-    "react-big-calendar/react-dom": "^16.0.0",
-    "@react-pdf/core/nbind": "^0.3.13"
+    "react-big-calendar/react-dom": "^16.0.0"
   },
   "eslintConfig": {
     "parser": "babel-eslint",
