@@ -61,6 +61,7 @@ input TherapistInput {
 	disabled: Boolean
 	role: Role
 	title: String
+	password: String
 }
 
 extend type Query {

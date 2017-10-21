@@ -195,6 +195,12 @@
     "header": "View treatments",
     "show_all": "Show all"
   },
+  "Settings": {
+    "tab1": "General",
+    "header": "Settings",
+    "save_button": "Save",
+    "success_message": "Settings saved"
+  },
   "common": {
     "size": "Size",
     "field_name": "Name",

@@ -249,6 +249,12 @@
     "day": "יום",
     "agenda": "רשימה"
   },
+  "Settings": {
+    "tab1": "General",
+    "header": "Settings",
+    "save_button": "Save",
+    "success_message": "Settings saved"
+  },
   "common": {
     "field_name": "שם",
     "field_name_error": "נא להכניס שם",

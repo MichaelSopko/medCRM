@@ -1,5 +1,6 @@
 import { catchForNonUniqueField, roleOnly } from '../../utils/decorators';
 import ROLES from '../../../../helpers/constants/roles';
+import { UnauthorizedError } from '../../utils/errors';
 
 export default {
 	// Clinic
@@ -41,9 +42,13 @@ export default {
 		const [id] = await Users.createUser({ clinic_id, ...therapist, role: ROLES.THERAPIST });
 		return Users.findOne(id);
 	},
-	@roleOnly(ROLES.CLINIC_ADMIN)
+	@roleOnly(ROLES.THERAPIST)
 	@catchForNonUniqueField()
-	async updateTherapist(_, { id, therapist }, { Users }) {
+	async updateTherapist(_, { id, therapist }, { Users, currentUser }) {
+		// allow user update himself
+		if (currentUser.role === ROLES.THERAPIST && +id !== +currentUser.id) {
+			throw new UnauthorizedError();
+		}
 		await Users.editUser({ id, ...therapist });
 		return Users.findOne(id);
 	},

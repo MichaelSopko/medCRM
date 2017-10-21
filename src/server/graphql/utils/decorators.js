@@ -20,12 +20,13 @@ export const catchForNonUniqueField = () => function (target, name, descriptor) 
 	/* eslint-disable no-param-reassign */
 	descriptor.value = async function (root, params, ctx) {
 		try {
-			return method.call(this, root, params, ctx);
+			const res = await method.call(this, root, params, ctx);
+			return res;
 		} catch (e) {
-			if (e.code === 'ER_DUP_ENTRY') {
-				if (e.message.indexOf('users_email_unique') !== -1) throw new Error('DUPLICATE_EMAIL');
-				if (e.message.indexOf('users_id_number_clinic_id_unique') !== -1) throw new Error('DUPLICATE_ID_NUMBER');
-			}
+			// if (e.code === 'ER_DUP_ENTRY') {
+				if (e.message.includes('users_email_unique')) throw new Error('DUPLICATE_EMAIL');
+				if (e.message.includes('users_id_number_clinic_id_unique')) throw new Error('DUPLICATE_ID_NUMBER');
+			// }
 			throw new Error(e);
 		}
 	};

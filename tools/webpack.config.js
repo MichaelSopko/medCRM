@@ -104,14 +104,6 @@ const serverConfig = merge.smart(_.cloneDeep(baseConfig), {
 });
 
 let clientPlugins = [
-	new webpack.optimize.UglifyJsPlugin(__DEV__ ? { minimize: true } : {
-		minimize: true,
-		comments: false,
-		compress: {
-			warnings: false,
-			drop_console: true
-		},
-	}),
 	new ManifestPlugin({
 		fileName: 'assets.json',
 	}),
@@ -123,6 +115,16 @@ let clientPlugins = [
 ];
 
 if (!__DEV__) {
+	clientPlugins.push(
+		new webpack.optimize.UglifyJsPlugin(__DEV__ ? { minimize: true } : {
+			minimize: true,
+			comments: false,
+			compress: {
+				warnings: false,
+				drop_console: true
+			},
+		})
+	);
 	clientPlugins.push(new ExtractTextPlugin('[name].[contenthash].css', { allChunks: true }));
 	clientPlugins.push(new webpack.optimize.CommonsChunkPlugin(
 		'vendor',
@@ -134,7 +136,7 @@ if (!__DEV__) {
 }
 
 const clientConfig = merge.smart(_.cloneDeep(baseConfig), {
-	devtool: __DEV__ ? '#eval' : '#source-map',
+	devtool: __DEV__ ? '#cheap-module-source-map' : '#source-map',
 	entry: {
 		bundle: ['babel-polyfill', './src/client/index.jsx'],
 	},

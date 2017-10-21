@@ -24,12 +24,15 @@ type SystemAdministrator implements User {
 
 type CurrentUser implements User {
 	id: ID!
-	login: String,
-	role: Role!,
-	first_name: String,
-	last_name: String,
-	email: String,
+	login: String
+	role: Role!
+	first_name: String
+	last_name: String
+	email: String
 	clinic: Clinic
+	title: String
+	license_number: String
+	phone: String
 }
 
 # TODO: remove it
@@ -38,7 +41,7 @@ type MutationStatus {
 }
 
 type Query {
-	currentUser: CurrentUser
+	currentUser: CurrentUser # TODO: return User type
 }
 
 type Mutation {
