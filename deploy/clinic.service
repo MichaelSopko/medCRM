@@ -1,10 +1,10 @@
 [Unit]
 Description=Clinic Server
-After=docker.service network-online.target
-Requires=docker.service network-online.target
+After=docker.service
+Requires=docker.service
 
 [Service]
-Type=oneshot
+Type=simple
 ExecStart=/usr/bin/docker-compose up --build
 ExecStop=/usr/bin/docker-compose down --rmi local
 WorkingDirectory=/home/clinic/jobs/petro-clinic
