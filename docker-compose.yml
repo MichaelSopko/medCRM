@@ -1,0 +1,38 @@
+version: '3.3'
+
+services:
+  clinic:
+    build: .
+    image: clinic
+    container_name: clinic-app
+    environment:
+      PORT: 3000
+      ADMIN_PASSWORD: 'admin'
+      DATABASE_HOST: 'mysql-app'
+      DATABASE_USER: 'rootUser'
+      DATABASE_PASSWORD: 'MyDbPaSsWoRd'
+      DATABASE_NAME: 'clinic-dev'
+    networks:
+      - clinic
+    depends_on:
+      - mysql
+    ports:
+      - '8088:3000'
+  mysql:
+    image: mysql
+    container_name: mysql-app
+    environment:
+      MYSQL_ROOT_PASSWORD: 'mYsQl:AdMiN:PwD'
+      MYSQL_DATABASE: 'clinic-dev'
+      MYSQL_USER: 'rootUser'
+      MYSQL_PASSWORD: 'MyDbPaSsWoRd'
+    networks:
+      - clinic
+    ports:
+      - '3306:3306'
+    volumes:
+      - db-data:/var/lib/mysql
+networks:
+  clinic:
+volumes:
+  db-data:

@@ -30,7 +30,8 @@
     "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
     "heroku-postbuild": "rm -rf build && npm run build && npm run seed",
-    "generate-schema": "apollo-codegen introspect-schema ./src/server/api/schema_def.graphqls --insecure --output graphql.schema.json"
+    "generate-schema": "apollo-codegen introspect-schema ./src/server/api/schema_def.graphqls --insecure --output graphql.schema.json",
+    "docker-start": "npm run heroku-postbuild && npm start"
   },
   "repository": {
     "type": "git",
