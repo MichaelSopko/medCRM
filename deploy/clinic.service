@@ -5,7 +5,7 @@ Requires=docker.service
 
 [Service]
 Type=simple
-User=clinic
+User=root
 ExecStart=/usr/bin/docker-compose -f /home/clinic/jobs/petro-clinic/docker-compose.yml up --build
 ExecStop=/usr/bin/docker-compose -f /home/clinic/jobs/petro-clinic/docker-compose.yml down --rmi local
 Restart=always
