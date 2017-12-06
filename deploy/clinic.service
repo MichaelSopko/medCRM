@@ -5,9 +5,9 @@ Requires=docker.service
 
 [Service]
 Type=simple
-WorkingDirectory=/home/clinic/jobs/petro-clinic
-ExecStart=/usr/bin/docker-compose -f docker-compose.yml up --build
-ExecStop=/usr/bin/docker-compose -f docker-compose.yml down --rmi local
+User=clinic
+ExecStart=/usr/bin/docker-compose -f /home/clinic/jobs/petro-clinic/docker-compose.yml up --build
+ExecStop=/usr/bin/docker-compose -f /home/clinic/jobs/petro-clinic/docker-compose.yml down --rmi local
 Restart=always
 RestartSec=10                       # Restart service after 10 seconds if node service crashes
 #User=<alternate user>
