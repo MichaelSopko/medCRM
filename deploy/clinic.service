@@ -1,10 +1,13 @@
 [Unit]
 Description=Clinic Server
+After=docker.service network-online.target
+Requires=docker.service network-online.target
 
 [Service]
 User=clinic
-Type=simple
+Type=oneshot
 ExecStart=/usr/bin/docker-compose up --build
+ExecStop=/usr/bin/docker-compose down --rmi local
 WorkingDirectory=/home/clinic/jobs/petro-clinic
 Restart=always
 RestartSec=10                       # Restart service after 10 seconds if node service crashes
