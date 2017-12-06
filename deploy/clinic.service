@@ -2,7 +2,7 @@
 Description=Clinic Server
 
 [Service]
-
+User=clinic
 Type=simple
 ExecStart=/usr/bin/docker-compose up --build
 WorkingDirectory=/home/clinic/jobs/petro-clinic
