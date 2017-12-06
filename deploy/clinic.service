@@ -4,7 +4,6 @@ After=docker.service network-online.target
 Requires=docker.service network-online.target
 
 [Service]
-User=clinic
 Type=oneshot
 ExecStart=/usr/bin/docker-compose up --build
 ExecStop=/usr/bin/docker-compose down --rmi local
