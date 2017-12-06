@@ -1,0 +1,15 @@
+[Unit]
+Description=Clinic Server
+
+[Service]
+
+Type=simple
+ExecStart=/home/clinic/jobs/petro-clinic/docker-compose up --build
+WorkingDirectory=/home/clinic/jobs/petro-clinic
+Restart=always
+RestartSec=10                       # Restart service after 10 seconds if node service crashes
+#User=<alternate user>
+#Group=<alternate group>
+
+[Install]
+WantedBy=multi-user.target
