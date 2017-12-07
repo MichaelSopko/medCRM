@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import './Signup.scss';
-import { graphql } from 'react-apollo/lib/index';
+import { graphql } from 'react-apollo';
 
 import ADD_USER from '../graphql/UserAddMutation.graphql';
 
@@ -21,21 +21,23 @@ class Signup extends Component {
     ev.preventDefault();
     const formatMessage = this.context.intl.formatMessage;
     this.props.form.validateFields(async(err, values) => {
-      const {
-        first_name,
-        last_name,
-        email,
-        password,
-      } = values;
+      const { first_name, last_name, email, password } = values;
+
       if (!err) {
-        const request = await this.props.mutate({
+        this.setState({ loading: true });
+        try {
+          const request = await this.props.mutate({
             variables: {
               name: `${first_name} ${last_name}`,
               login: email,
               password,
               role: 'role',
             },
-          })
+          });
+          this.setState({ loading: false });
+        } catch (e) {
+          this.setState({ loading: false });
+        }
       }
     });
   }
