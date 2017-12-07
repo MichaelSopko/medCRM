@@ -26,6 +26,21 @@
     "error_password": "פרטי התחברות שגויים",
     "error_disabled": "החשבון חסום"
   },
+  "Signup": {
+    "main_title": "Clinic CRM",
+    "main_info": "Lorem ipsum...",
+    "form_title": "Registration",
+    "field_first_name": "First name",
+    "field_last_name": "Last name",
+    "field_email": "Email",
+    "field_password": "Password",
+    "field_confirm_password": "Repeat Password",
+    "button_registration": "Register now",
+    "button_login": "Log in",
+    "field_email_error": "SignupPlease input your email!",
+    "error_password": "SignupAccount with same credentials wasn't found",
+    "error_disabled": "SignupYour account had been disabled by administrator"
+  },
   "ProfileWidget": {
     "logout": "להתנתק",
     "settings": "הגדרות"
