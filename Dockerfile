@@ -7,6 +7,7 @@ WORKDIR /usr/src/app
 
 COPY . /usr/src/app
 
+RUN rm -R node_modules/
 RUN npm install --dev
 RUN npm rebuild node-sass
 
