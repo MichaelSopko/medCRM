@@ -21,9 +21,6 @@
     "npm": "latest"
   },
   "scripts": {
-    "watch": "babel-node tools/webpack.run watch",
-    "build": "babel-node tools/webpack.run",
-    "start": "node --harmony build/server",
     "test": "mocha-webpack --webpack-config tools/webpack.config.js --full-trace --exit 'tests/**/*.test.js' && npm run lint",
     "lint": "eslint --fix --ext js --ext jsx src",
     "seed": "npm run migrate && knex seed:run",
