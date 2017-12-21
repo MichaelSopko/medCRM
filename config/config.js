@@ -1,3 +1,3 @@
 export default {
-	locale: __DEV__ ? 'he' : 'en',
+  locale: __DEV__ ? 'he' : 'en',
 };

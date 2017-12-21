@@ -1,10 +1,10 @@
 export default {
-	service: 'Mail.ru',
-	auth: {
-		user: 'clinic.test@mail.ru',
-		pass: '123___123',
-	},
-	template: ({ start_date, end_date }) => `
+  service: 'Mail.ru',
+  auth: {
+    user: 'clinic.test@mail.ru',
+    pass: '123___123',
+  },
+  template: ({ start_date, end_date }) => `
 <!doctype html>
 <html>
   <head>
