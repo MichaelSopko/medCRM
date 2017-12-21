@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-underscore-dangle,import/no-extraneous-dependencies */
 const webpack = require('webpack');
 
 const babelPlugins = [
