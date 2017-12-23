@@ -16,7 +16,6 @@ if (__DEV__) {
 }
 
 const config = {
-  // Tell webpack to run babel on every file it runs through
   module: {
     rules: [
       {
@@ -28,23 +27,31 @@ const config = {
           presets: [
             'react',
             'stage-0',
-            ['env', { targets: { browsers: ['last 2 versions'] } }],
+            ['env', {
+              targets: {
+                rowsers: ['last 2 versions'],
+              },
+            }],
           ],
           plugins: babelPlugins,
         },
       },
-      { test: /\.json$/, loader: 'json' },
-      { test: /\.graphqls/, loader: 'raw' },
+      { test: /\.json$/, loader: 'json-loader' },
+      { test: /\.graphqls/, loader: 'raw-loader' },
       {
         test: /\.(graphql|gql)$/,
         exclude: /node_modules/,
         loader: 'graphql-tag/loader',
       },
-      { test: /\.(woff2?|svg|png|ico|jpg|xml)$/, loader: 'url?name=[hash].[ext]&limit=10000' },
-      { test: /\.(ttf|eot)$/, loader: 'file?name=[hash].[ext]' },
+      { test: /\.(woff2?|svg|png|ico|jpg|xml)$/, loader: 'url-loader?name=[hash].[ext]&limit=10000' },
+      { test: /\.(ttf|eot)$/, loader: 'file-loader?name=[hash].[ext]' },
     ],
   },
   plugins: basePlugins,
+
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
 };
 
 module.exports = config;

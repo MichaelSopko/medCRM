@@ -1,13 +1,13 @@
-import React from 'react'
-import ReactDOM from 'react-dom/server'
-import { match, RouterContext } from 'react-router'
-import fs from 'fs'
-import path from 'path'
+import React from 'react';
+import ReactDOM from 'react-dom/server';
+import { match, RouterContext } from 'react-router';
+import fs from 'fs';
+import path from 'path';
 
-import Html from '../../ui/components/Html'
-import routes from '../../routes'
-import log from '../../log'
-import { app as settings } from '../../../package.json'
+import Html from '../../ui/components/Html';
+import routes from '../../routes';
+import log from '../../log';
+import { app as settings } from '../../../package.json';
 
 let assetMap;
 

@@ -1,28 +1,69 @@
-const path = require('path');
+/* eslint-disable import/no-extraneous-dependencies */
+const { join } = require('path');
+const _ = require('lodash');
+const webpack = require('webpack');
 const merge = require('webpack-merge');
 const baseConfig = require('./webpack.base.js');
 const webpackNodeExternals = require('webpack-node-externals');
+const pkg = require('../package.json');
+
+const buildNodeEnv = __DEV__ ? 'development' : 'production';
+const serverPlugins = [
+  new webpack.BannerPlugin({
+    banner: 'require("source-map-support").install();',
+    raw: true,
+    entryOnly: false,
+  }),
+  new webpack.DefinePlugin({
+    __SERVER__: true,
+    __DEV__,
+    'process.env.NODE_ENV': `"${buildNodeEnv}"`,
+  }),
+];
+
+let devtool = 'cheap-module-source-map';
+
+if (!__DEV__) {
+  devtool = 'source-map';
+}
 
 const config = {
-  // Inform webpack that we're building a bundle
-  // for nodeJS, rather than for the browser
   target: 'node',
 
-  // Tell webpack the root file of our
-  // server application
   entry: [
     'babel-polyfill',
-    './src/index.js'
+    './src/server/index.js',
   ],
 
-  // Tell webpack where to put the output file
-  // that is generated
-  output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'build')
+  node: {
+    __dirname: true,
+    __filename: true,
   },
 
-  externals: [webpackNodeExternals()]
+  module: {
+    rules: [
+      {
+        test: /\.scss$/,
+        use: __DEV__ ? [
+          'isomorphic-style-loader',
+          'css-loader',
+          'sass-loader'] : ['ignore-loader'],
+      },
+    ],
+  },
+
+  output: {
+    devtoolModuleFilenameTemplate: __DEV__ ? '../../[resource-path]' : undefined,
+    devtoolFallbackModuleFilenameTemplate: __DEV__ ? '../../[resource-path];[hash]' : undefined,
+    filename: '[name].js',
+    sourceMapFilename: '[name].[chunkhash].js.map',
+    path: join(__dirname, '..', pkg.app.backendBuildDir),
+    publicPath: '/',
+  },
+
+  plugins: serverPlugins,
+  externals: [webpackNodeExternals()],
+  devtool,
 };
 
-module.exports = merge(baseConfig, config);
+module.exports = merge.smart(_.cloneDeep(baseConfig), config);
