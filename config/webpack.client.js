@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 const baseConfig = require('./webpack.base.js');
 const mainConfig = require('./main');
 const pkg = require('../package.json');
@@ -15,6 +16,10 @@ const clientEntry = [
   'babel-polyfill',
 ];
 const clientPlugins = [
+  new ManifestPlugin({
+    fileName: 'assets.json',
+  }),
+  new ExtractTextPlugin('[name].[contenthash].css', { allChunks: true }),
   new webpack.DefinePlugin({
     __CLIENT__: true,
     __DEV__,
@@ -27,7 +32,6 @@ let outputFileNamePattern = '[name]-[chunkhash].js';
 
 if (!__DEV__) {
   devtool = 'hidden-source-map';
-  clientPlugins.push(new ExtractTextPlugin('[name].min.css'));
   clientPlugins.push(new webpack.optimize.CommonsChunkPlugin({
     names: ['vendor', 'manifest'],
   }));

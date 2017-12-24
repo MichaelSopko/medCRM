@@ -6,19 +6,14 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import { IntlProvider, addLocaleData } from 'react-intl';
 import en from 'react-intl/locale-data/en';
 import he from 'react-intl/locale-data/he';
+import moment from 'moment';
+import enUSAnt from 'antd/lib/locale-provider/en_US';
+import { LocaleProvider } from 'antd';
+import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
 import enMessages from '../l10n/en.json';
 import heMessages from '../l10n/he.json';
-import moment from 'moment';
-import { LocaleProvider } from 'antd';
-import enUSAnt from 'antd/lib/locale-provider/en_US';
 import heAnt from '../l10n/ant/he';
 import config from '../../config/config';
-import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
-
-const locale = config.locale;
-
-moment.locale(locale);
-
 import createApolloClient from '../apollo_client';
 import createReduxStore from '../redux_store';
 import routes from '../routes';
@@ -26,11 +21,15 @@ import { app as settings } from '../../package.json';
 
 import '../ui/styles.scss';
 
+const locale = config.locale;
+
+moment.locale(locale);
+
 // Favicon.ico should not be hashed, since some browsers expect it to be exactly on /favicon.ico URL
-require('!file?name=[name].[ext]!../assets/favicon.ico'); // eslint-disable-line import/no-webpack-loader-syntax
+require('!file-loader?name=[name].[ext]!../assets/favicon.ico'); // eslint-disable-line import/no-webpack-loader-syntax
 
 // Require all files from assets dir recursively addding them into assets.json
-const req = require.context('!file?name=[hash].[ext]!../assets', true, /.*/);
+const req = require.context('!file-loader?name=[hash].[ext]!../assets', true, /.*/);
 req.keys().map(req);
 
 function flattenMessages(nestedMessages, prefix = '') {

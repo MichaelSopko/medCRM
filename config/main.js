@@ -26,8 +26,6 @@ module.exports = {
     'react-nl2br',
     'react-router-redux',
     'redux',
-    'redux-form',
-    'redux-promise',
     'subscriptions-transport-ws',
   ],
 };
