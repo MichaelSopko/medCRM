@@ -4,8 +4,6 @@ if (!isBabel) {
   require('babel-register');
 }
 
-console.log('>>>>>>>>>>>>>>>>>>', process.env.NODE_ENV);
-
 module.exports = {
   client: 'mysql',
   connection: process.env.CLEARDB_DATABASE_URL || process.env.DATABASE_URL || {

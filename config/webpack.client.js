@@ -11,6 +11,7 @@ const mainConfig = require('./main');
 const pkg = require('../package.json');
 
 const VENDOR_LIST = mainConfig.VENDOR_LIST.slice();
+const APP_ENTRY_POINT = resolve(__dirname, '../src/client/index.jsx');
 const buildNodeEnv = __DEV__ ? 'development' : 'production';
 const clientEntry = [
   'babel-polyfill',
@@ -20,11 +21,15 @@ const clientPlugins = [
     fileName: 'assets.json',
   }),
   new ExtractTextPlugin('[name].[contenthash].css', { allChunks: true }),
+  new webpack.optimize.CommonsChunkPlugin({
+    names: ['vendor', 'manifest'],
+  }),
   new webpack.DefinePlugin({
     __CLIENT__: true,
+    __SERVER__: false,
     __DEV__,
     'process.env.NODE_ENV': `"${buildNodeEnv}"`,
-  }),
+  })
 ];
 let devtool = 'inline-source-map';
 
@@ -32,20 +37,13 @@ let outputFileNamePattern = '[name]-[chunkhash].js';
 
 if (!__DEV__) {
   devtool = 'hidden-source-map';
-  clientPlugins.push(new webpack.optimize.CommonsChunkPlugin({
-    names: ['vendor', 'manifest'],
-  }));
-  clientPlugins.push(new HtmlWebpackPlugin({
-    filename: '../../dist/views/index.hbs',
-    template: 'app/views/index.hbs',
-  }));
 } else {
   outputFileNamePattern = '[name]-[hash]-[id].js';
   clientEntry.push('react-hot-loader/patch');
   clientEntry.push('webpack-hot-middleware/client?reload=true');
 }
 
-clientEntry.push('./src/client/index.jsx');
+clientEntry.push(APP_ENTRY_POINT);
 
 const config = {
   entry: {
@@ -113,7 +111,7 @@ const config = {
 
   output: {
     filename: outputFileNamePattern,
-    path: join(__dirname, '..', pkg.app.frontendBuildDir),
+    path: resolve(__dirname, '..', pkg.app.frontendBuildDir),
     publicPath: '/',
   },
 

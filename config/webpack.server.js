@@ -7,6 +7,8 @@ const baseConfig = require('./webpack.base.js');
 const webpackNodeExternals = require('webpack-node-externals');
 const pkg = require('../package.json');
 
+const APP_ENTRY_POINT = join(__dirname, '../src/server/index.js');
+
 const buildNodeEnv = __DEV__ ? 'development' : 'production';
 const serverPlugins = [
   new webpack.BannerPlugin({
@@ -15,6 +17,7 @@ const serverPlugins = [
     entryOnly: false,
   }),
   new webpack.DefinePlugin({
+    __CLIENT__: false,
     __SERVER__: true,
     __DEV__,
     'process.env.NODE_ENV': `"${buildNodeEnv}"`,
@@ -32,7 +35,7 @@ const config = {
 
   entry: [
     'babel-polyfill',
-    './src/server/index.js',
+    APP_ENTRY_POINT,
   ],
 
   node: {

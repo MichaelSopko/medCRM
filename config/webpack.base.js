@@ -12,6 +12,7 @@ const basePlugins = [];
 global.__DEV__ = process.env.NODE_ENV !== 'production';
 if (__DEV__) {
   babelPlugins.push('react-hot-loader/babel');
+  basePlugins.push(new webpack.HotModuleReplacementPlugin(),);
   basePlugins.push(new webpack.NamedModulesPlugin());
 }
 

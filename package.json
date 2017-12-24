@@ -29,13 +29,16 @@
     "heroku-postbuild": "rm -rf build && npm run build && npm run seed",
     "generate-schema": "apollo-codegen introspect-schema ./src/server/api/schema_def.graphqls --insecure --output graphql.schema.json",
     "docker-start": "npm run heroku-postbuild && npm start",
+    "build": "npm-run-all -p prod:*",
     "build:dev": "npm-run-all -p dev:*",
     "dev:build-server": "webpack --config config/webpack.server.js --watch",
+    "prod:build-server": "NODE_ENV=production webpack --config config/webpack.server.js",
     "dev:build-client": "webpack --config config/webpack.client.js --watch",
+    "prod:build-client": "NODE_ENV=production webpack --config config/webpack.client.js",
     "deploy:dev": "npm run heroku-postbuild && npm start",
     "stop:mssql": "docker-compose -f docker-compose-dev-start.yml down",
     "start:mssql": "docker-compose -f docker-compose-dev-start.yml up --build -d",
-    "start:dev": "NODE_ENV=development ADMIN_PASSWORD=\"admin\" DATABASE_USER=\"rootUser\" DATABASE_PASSWORD=\"MyDbPaSsWoRd\" DATABASE_NAME=\"clinic-dev\" npm-run-all stop:mssql start:mssql deploy:dev"
+    "start:dev": ""
   },
   "repository": {
     "type": "git",
