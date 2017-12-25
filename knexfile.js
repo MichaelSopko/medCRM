@@ -4,6 +4,8 @@ if (!isBabel) {
   require('babel-register');
 }
 
+require('dotenv').config();
+
 module.exports = {
   client: 'mysql',
   connection: process.env.CLEARDB_DATABASE_URL || process.env.DATABASE_URL || {
