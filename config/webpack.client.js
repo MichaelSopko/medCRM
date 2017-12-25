@@ -10,6 +10,7 @@ const baseConfig = require('./webpack.base.js');
 const mainConfig = require('./main');
 const pkg = require('../package.json');
 
+const port = process.env.PORT || (pkg.app && pkg.app.apiPort) || 3000;
 const VENDOR_LIST = mainConfig.VENDOR_LIST.slice();
 const APP_ENTRY_POINT = resolve(__dirname, '../src/client/index.jsx');
 const buildNodeEnv = __DEV__ ? 'development' : 'production';
@@ -29,7 +30,7 @@ const clientPlugins = [
     __SERVER__: false,
     __DEV__,
     'process.env.NODE_ENV': `"${buildNodeEnv}"`,
-  })
+  }),
 ];
 let devtool = 'inline-source-map';
 
@@ -40,7 +41,7 @@ if (!__DEV__) {
 } else {
   outputFileNamePattern = '[name]-[hash]-[id].js';
   clientEntry.push('react-hot-loader/patch');
-  clientEntry.push('webpack-hot-middleware/client?reload=true');
+  clientEntry.push(`webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`);
 }
 
 clientEntry.push(APP_ENTRY_POINT);

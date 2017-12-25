@@ -37,7 +37,7 @@ const config = {
     index: [
       'babel-polyfill',
       APP_ENTRY_POINT,
-    ]
+    ],
   },
 
   node: {

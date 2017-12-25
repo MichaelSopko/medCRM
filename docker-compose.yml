@@ -21,11 +21,11 @@ services:
     depends_on:
       - mysql
     ports:
-      - 8088:3000
+      - 3000:3000
     command: npm run start:dev:docker
     volumes:
       - ./:${APP_DIR}
-      - ${APP_DIR}/build
+      #- ${APP_DIR}/build
       - notused:${APP_DIR}/node_modules
   mysql:
     image: mysql

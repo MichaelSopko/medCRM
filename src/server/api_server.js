@@ -42,6 +42,7 @@ if (__DEV__) {
 
   app.use(webpackDevMiddleware(compiler, {
     stats: 'minimal',
+    publicPath: webpackConfig.output.publicPath,
   }));
   app.use(webpackHotMiddleware(compiler));
 }
