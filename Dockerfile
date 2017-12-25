@@ -20,6 +20,7 @@ COPY package.json package-lock.json ./
 
 RUN npm install --dev
 RUN npm rebuild node-sass
+RUN npm i nodemon -g
 
 EXPOSE $PORT
 

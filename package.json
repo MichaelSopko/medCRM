@@ -43,7 +43,8 @@
     "start:db": "docker-compose -f docker-compose-mssql-only.yml up --build -d",
     "deploy:db": "npm run stop:db && npm run start:db",
     "start": "node --harmony build/server",
-    "start:dev:docker": "npm run build:dev && npm run seed && npm start",
+    "start:nodemon": "nodemon --watch build/server --exec \"node --harmony build/server\"",
+    "start:dev:docker": "npm-run-all -p build:dev:watch seed start:nodemon",
     "start:prod:docker": "npm run build && npm run seed && npm start",
     "start:dev": "rm -rf build && npm run build:dev && npm run deploy:db && npm run seed && npm start"
   },
