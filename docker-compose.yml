@@ -26,7 +26,7 @@ services:
     volumes:
       - ./:${APP_DIR}
       - ${APP_DIR}/build
-      - ${APP_DIR}/node_modules
+      - notused:${APP_DIR}/node_modules
   mysql:
     image: mysql
     container_name: mysql-app
@@ -45,3 +45,4 @@ networks:
   clinic:
 volumes:
   db-data:
+  notused:

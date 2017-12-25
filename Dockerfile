@@ -16,7 +16,7 @@ RUN mkdir -p ${APP_DIR}/build && \
 
 WORKDIR $APP_DIR
 
-COPY . $APP_DIR
+COPY package.json package-lock.json ./
 
 RUN npm install --dev
 RUN npm rebuild node-sass
