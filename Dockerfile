@@ -23,4 +23,4 @@ RUN npm rebuild node-sass
 
 EXPOSE $PORT
 
-CMD [ "npm", "run", "start:dev:docker"]
+CMD [ "npm", "run", "start:prod:docker"]

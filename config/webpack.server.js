@@ -33,10 +33,12 @@ if (!__DEV__) {
 const config = {
   target: 'node',
 
-  entry: [
-    'babel-polyfill',
-    APP_ENTRY_POINT,
-  ],
+  entry: {
+    index: [
+      'babel-polyfill',
+      APP_ENTRY_POINT,
+    ]
+  },
 
   node: {
     __dirname: true,
