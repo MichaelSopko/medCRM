@@ -10,10 +10,6 @@ set `ADMIN_PASSWORD` to yours
 
 `npm run start`
 
-### Use https
-
-set `USE_SSL` env var to true, and create `keys/key.pem` and `keys/cert.pem`
-
 ### Use docker-compose
 Run app in docker development mode
 
