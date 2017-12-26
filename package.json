@@ -46,7 +46,7 @@
     "start:nodemon": "nodemon --watch build/server --exec \"node --harmony build/server\"",
     "start:dev:docker": "npm-run-all build:dev seed start",
     "start:prod:docker": "npm run build && npm run seed && npm start",
-    "start:dev:docker-db": "rm -rf build && npm run build:dev && npm run deploy:db && npm run seed && npm start"
+    "start:dev:docker-db": "rm -rf build && npm run build:dev && npm run deploy:db && npm run seed && npm start",
     "start:dev": "rm -rf build && npm run build:dev && npm run seed && npm start"
   },
   "repository": {
