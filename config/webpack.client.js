@@ -32,8 +32,9 @@ const clientPlugins = [
     'process.env.NODE_ENV': `"${buildNodeEnv}"`,
   }),
 ];
-let devtool = 'inline-source-map';
+const hotReloadString = 'webpack-hot-middleware/client?reload=true';
 
+let devtool = 'inline-source-map';
 let outputFileNamePattern = '[name]-[chunkhash].js';
 
 if (!__DEV__) {
@@ -41,10 +42,14 @@ if (!__DEV__) {
 } else {
   outputFileNamePattern = '[name]-[hash]-[id].js';
   clientEntry.push('react-hot-loader/patch');
-  clientEntry.push(`webpack-hot-middleware/client?path=http://localhost:${port}/__webpack_hmr`);
 }
 
 clientEntry.push(APP_ENTRY_POINT);
+
+if (__DEV__) {
+  clientEntry.push(hotReloadString);
+  VENDOR_LIST.push(hotReloadString);
+}
 
 const config = {
   entry: {
