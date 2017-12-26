@@ -1,5 +1,5 @@
 import pwd from 'pwd';
-import knex from '../../../knexfile';
+import knex from './connector';
 
 import log from '../../log';
 import createUser from './helpers/create_user';

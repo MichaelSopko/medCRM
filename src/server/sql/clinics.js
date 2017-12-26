@@ -1,4 +1,4 @@
-import knex from './../../../knexfile';
+import knex from './connector';
 
 export default class Clinics {
   getClinics() {

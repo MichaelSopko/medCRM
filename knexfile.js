@@ -1,5 +1,3 @@
-import knex from 'knex';
-
 const isBabel = !(class {
 }.toString().indexOf('class ') === 0);
 if (!isBabel) {
@@ -8,7 +6,7 @@ if (!isBabel) {
 
 require('dotenv').config();
 
-export default knex({
+module.exports = {
   client: 'mysql',
   connection: process.env.CLEARDB_DATABASE_URL || process.env.DATABASE_URL || {
     host: process.env.DATABASE_HOST || '127.0.0.1',
@@ -23,4 +21,4 @@ export default knex({
     directory: './src/database/migrations',
   },
   useNullAsDefault: true,
-});
+};
