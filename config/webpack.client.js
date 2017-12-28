@@ -21,7 +21,10 @@ const clientPlugins = [
   new ManifestPlugin({
     fileName: 'assets.json',
   }),
-  new ExtractTextPlugin('[name].[contenthash].css', { allChunks: true }),
+  new ExtractTextPlugin('[name].[contenthash].css', {
+    allChunks: true,
+    disable: buildNodeEnv === 'development',
+  }),
   new webpack.optimize.CommonsChunkPlugin({
     names: ['vendor', 'manifest'],
   }),
@@ -61,56 +64,54 @@ const config = {
     rules: [
       {
         test: /\.scss$/,
-        use: __DEV__ ? ExtractTextPlugin.extract({
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 2,
-                sourceMap: true,
-              },
+        use: __DEV__ ? [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 2,
+              sourceMap: true,
             },
-            {
-              loader: 'postcss-loader',
-              options: {
-                sourceMap: true,
-              },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true,
             },
-            {
-              loader: 'sass-loader',
-              options: {
-                outputStyle: 'expanded',
-                sourceMap: true,
-                sourceMapContents: true,
-                outFile: resolve(__dirname, '..', pkg.app.frontendBuildDir),
-              },
-            }],
-          fallback: 'style-loader',
-        }) : ExtractTextPlugin.extract({
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 2,
-                sourceMap: true,
-                minimize: true,
-              },
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              outputStyle: 'expanded',
+              sourceMap: true,
+              sourceMapContents: true,
+              outFile: resolve(__dirname, '..', pkg.app.frontendBuildDir),
             },
-            {
-              loader: 'postcss-loader',
-              options: {
-                sourceMap: true,
+          }] : ExtractTextPlugin.extract({
+            use: [
+              {
+                loader: 'css-loader',
+                options: {
+                  importLoaders: 2,
+                  sourceMap: true,
+                  minimize: true,
+                },
               },
-            },
-            {
-              loader: 'sass-loader',
-              options: {
-                outputStyle: 'expanded',
-                sourceMap: true,
+              {
+                loader: 'postcss-loader',
+                options: {
+                  sourceMap: true,
+                },
               },
-            }],
-          fallback: 'style-loader',
-        }),
+              {
+                loader: 'sass-loader',
+                options: {
+                  outputStyle: 'expanded',
+                  sourceMap: true,
+                },
+              }],
+            fallback: 'style-loader',
+          }),
       },
     ],
   },

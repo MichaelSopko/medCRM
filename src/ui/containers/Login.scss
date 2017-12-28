@@ -1,10 +1,12 @@
+@import "../../assets/styles/variables";
+
 .Login {
 	height: 100vh;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 
-	background: linear-gradient(to left, #43C6AC , #191654);
+	background: linear-gradient(to left, $aqua , $dark_blue);
 
 	&__Window {
 		width: 500px;

@@ -92,26 +92,26 @@ class Login extends Component {
       <main className="Login" >
         <Form onSubmit={this.handleSubmit} className="Login__Window" >
           <h1 className="Login__Header" >{formatMessage({ id: 'Login.header' })}</h1 >
-            <Form.Item >
-              {getFieldDecorator('login', {
-                validateTrigger: 'onBlur',
-                rules: [{ required: true, message: formatMessage({ id: 'Login.field_email_error' }) }],
-              })(
-                <Input placeholder={formatMessage({ id: 'Login.field_email' })} />,
+          <Form.Item >
+            {getFieldDecorator('login', {
+              validateTrigger: 'onBlur',
+              rules: [{ required: true, message: formatMessage({ id: 'Login.field_email_error' }) }],
+            })(
+              <Input placeholder={formatMessage({ id: 'Login.field_email' })} />,
             )}
-            </Form.Item >
-              <Form.Item >
-                {getFieldDecorator('password', {
-                  validateTrigger: 'onBlur', rules: [{ required: true, message: 'Please input your Password!' }],
-                })(
-                  <Input type="password" placeholder={formatMessage({ id: 'Login.field_password' })} />,
+          </Form.Item >
+          <Form.Item >
+            {getFieldDecorator('password', {
+              validateTrigger: 'onBlur', rules: [{ required: true, message: 'Please input your Password!' }],
+            })(
+              <Input type="password" placeholder={formatMessage({ id: 'Login.field_password' })} />,
             )}
-              </Form.Item >
-                <Form.Item >
-                  <Button type="primary" size="large" htmlType="submit" className="Login__Button" loading={loading} >
-                    {formatMessage({ id: 'Login.login_button' })}
-                  </Button >
-                </Form.Item >
+          </Form.Item >
+          <Form.Item >
+            <Button type="primary" size="large" htmlType="submit" className="Login__Button" loading={loading} >
+              {formatMessage({ id: 'Login.login_button' })}
+            </Button >
+          </Form.Item >
         </Form >
       </main >
     );

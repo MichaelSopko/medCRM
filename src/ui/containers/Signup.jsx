@@ -54,7 +54,8 @@ class Signup extends Component {
 
     return (
       <main className="Signup" >
-        <div >
+        <div className="Signup--Blur" />
+        <div className="Signup__WrapUp">
           <div >
             <h1 >{formatMessage({ id: 'Signup.main_title' })}</h1 >
             <div >{formatMessage({ id: 'Signup.main_info' })}</div >
