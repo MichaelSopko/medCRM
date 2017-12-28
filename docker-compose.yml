@@ -2,11 +2,15 @@ version: "3.3"
 
 services:
   clinic:
-    build: .
+    build:
+      context: .
+      args:
+        - APP_DIR=${APP_DIR}
     image: clinic
     container_name: clinic-app
     environment:
       PORT: 3000
+      NODE_ENV: development
       ADMIN_PASSWORD: 'admin'
       DATABASE_HOST: 'mysql-app'
       DATABASE_USER: 'rootUser'
@@ -17,7 +21,12 @@ services:
     depends_on:
       - mysql
     ports:
-      - '8088:3000'
+      - 3000:3000
+    command: npm run start:dev:docker
+    volumes:
+      - ./:${APP_DIR}
+      #- ${APP_DIR}/build
+      - ${APP_DIR}/node_modules
   mysql:
     image: mysql
     container_name: mysql-app
@@ -36,3 +45,4 @@ networks:
   clinic:
 volumes:
   db-data:
+  notused:

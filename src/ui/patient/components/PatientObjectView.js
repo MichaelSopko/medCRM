@@ -9,9 +9,6 @@ const PatientObjectView = (props, context) => {
 	const formatMessage = context.intl.formatMessage;
 	const { object, patient, renderFields, showHearingTest, loading } = props;
 	const ageDiff = object && moment.duration(parseInt(object.patient_age));
-
-	console.log(ageDiff);
-
 	const { __typename, ...fields } = object.fields || {};
 
 	return (

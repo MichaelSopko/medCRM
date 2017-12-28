@@ -1,0 +1,21 @@
+version: "3.3"
+
+services:
+  mysql:
+    image: mysql
+    container_name: mysql-app
+    environment:
+      MYSQL_ROOT_PASSWORD: 'mYsQl:AdMiN:PwD'
+      MYSQL_DATABASE: 'clinic-dev'
+      MYSQL_USER: 'rootUser'
+      MYSQL_PASSWORD: 'MyDbPaSsWoRd'
+    networks:
+      - clinic
+    ports:
+      - '3306:3306'
+    volumes:
+      - db-data:/var/lib/mysql
+networks:
+  clinic:
+volumes:
+  db-data:

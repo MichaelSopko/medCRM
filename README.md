@@ -10,6 +10,17 @@ set `ADMIN_PASSWORD` to yours
 
 `npm run start`
 
-### Use https
+### Use docker-compose
+Run app in docker development mode
 
-set `USE_SSL` env var to true, and create `keys/key.pem` and `keys/cert.pem`
+`docker-compose up --build`
+
+### Run 
+Run app in development mode with HMR
+
+Make sure that `Docker` ran on your machine
+`npm run start:dev:docker-db`
+
+Or without `Docker`, but make sure that `MySQL` server installed and ran
+`npm run start:dev`
+

@@ -20,7 +20,7 @@ class Signup extends Component {
   handleSubmit(ev) {
     ev.preventDefault();
     const formatMessage = this.context.intl.formatMessage;
-    this.props.form.validateFields(async(err, values) => {
+    this.props.form.validateFields(async (err, values) => {
       const { first_name, last_name, email, password } = values;
 
       if (!err) {
@@ -42,7 +42,7 @@ class Signup extends Component {
     });
   }
 
-  handleBackToLogin( ev ) {
+  handleBackToLogin(ev) {
     ev.preventDefault();
     this.context.router.push('/');
   }
@@ -64,10 +64,10 @@ class Signup extends Component {
             <Form.Item >
               {getFieldDecorator('first_name', {
                 validateTrigger: 'onBlur',
-                rules: [ {
+                rules: [{
                   required: true,
                   message: formatMessage({ id: 'Signup.field_email_error' }),
-                } ],
+                }],
               })(
                 <Input
                   placeholder={formatMessage({ id: 'Signup.field_first_name' })}
@@ -77,10 +77,10 @@ class Signup extends Component {
             <Form.Item >
               {getFieldDecorator('last_name', {
                 validateTrigger: 'onBlur',
-                rules: [ {
+                rules: [{
                   required: true,
                   message: formatMessage({ id: 'Signup.field_email_error' }),
-                } ],
+                }],
               })(
                 <Input
                   placeholder={formatMessage({ id: 'Signup.field_last_name' })}
@@ -90,10 +90,10 @@ class Signup extends Component {
             <Form.Item >
               {getFieldDecorator('email', {
                 validateTrigger: 'onBlur',
-                rules: [ {
+                rules: [{
                   required: true,
                   message: formatMessage({ id: 'Signup.field_email_error' }),
-                } ],
+                }],
               })(
                 <Input
                   placeholder={formatMessage({ id: 'Signup.field_email' })}
@@ -103,10 +103,10 @@ class Signup extends Component {
             <Form.Item >
               {getFieldDecorator('password', {
                 validateTrigger: 'onBlur',
-                rules: [ {
+                rules: [{
                   required: true,
                   message: 'Please input your Password!',
-                } ],
+                }],
               })(
                 <Input
                   type="password"
@@ -117,10 +117,10 @@ class Signup extends Component {
             <Form.Item >
               {getFieldDecorator('confirm_password', {
                 validateTrigger: 'onBlur',
-                rules: [ {
+                rules: [{
                   required: true,
                   message: 'Please input your Password!',
-                } ],
+                }],
               })(
                 <Input
                   type="password"

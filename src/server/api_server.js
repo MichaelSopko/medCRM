@@ -1,14 +1,16 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import express from 'express';
-import bodyParser from 'body-parser'
-import { SubscriptionServer } from 'subscriptions-transport-ws'
-import http from 'http'
-import https from 'https'
-import path from 'path'
+import webpack from 'webpack';
+import bodyParser from 'body-parser';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
+import http from 'http';
+import https from 'https';
+import path from 'path';
 import jwt from 'express-jwt';
 import fs from 'fs';
 
-import { app as settings } from '../../package.json'
-import log from '../log'
+import { app as settings } from '../../package.json';
+import log from '../log';
 import Clinics from './sql/clinics';
 import Users from './sql/users';
 import Treatments from './sql/treatments';
@@ -29,20 +31,34 @@ const port = process.env.PORT || settings.apiPort;
 
 // Don't rate limit heroku
 app.enable('trust proxy');
+if (__DEV__) {
+  // eslint-disable-next-line
+  const webpackConfig = require('../../config/webpack.client');
+  // eslint-disable-next-line
+  const webpackHotMiddleware = require('webpack-hot-middleware');
+  // eslint-disable-next-line
+  const webpackDevMiddleware = require('webpack-dev-middleware');
+  const compiler = webpack(webpackConfig);
 
+  app.use(webpackDevMiddleware(compiler, {
+    stats: 'minimal',
+    publicPath: webpackConfig.output.publicPath,
+  }));
+  app.use(webpackHotMiddleware(compiler));
+}
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use('/', express.static(settings.frontendBuildDir, {maxAge: '180 days'}));
+app.use('/', express.static(settings.frontendBuildDir, { maxAge: '180 days' }));
 app.use('/uploads', express.static(settings.uploadsDir, {
   setHeaders(res) {
 	  res.attachment();
-  }
+  },
 }));
 if (__DEV__) {
-  app.use('/assets', express.static(path.join(settings.backendBuildDir, 'assets'), {maxAge: '180 days'}));
+  app.use('/assets', express.static(path.join(settings.backendBuildDir, 'assets'), { maxAge: '180 days' }));
 } else {
-	app.use('/assets', express.static(settings.frontendBuildDir, {maxAge: '180 days'}));
+  app.use('/assets', express.static(settings.frontendBuildDir, { maxAge: '180 days' }));
 }
 
 app.use('/graphql', jwt({ secret: settings.secret }), (...args) => graphqlMiddleware(...args));
@@ -51,24 +67,19 @@ app.use('/api/authentication', (...args) => authenticationMiddleware(...args));
 app.use('/api/upload-file', jwt({ secret: settings.secret }), (...args) => uploadsMiddleware(...args));
 app.use((...args) => websiteMiddleware(...args));
 
-server = !__SSL__ ? http.createServer(app) : https.createServer({
-	key: fs.readFileSync('keys/key.pem'),
-	cert: fs.readFileSync('keys/cert.pem')
-}, app);
+server = http.createServer(app);
 
 new SubscriptionServer({
   subscriptionManager,
-	onConnect: async (connectionParams, webSocket) => {
-		return {
-			Clinics: new Clinics(),
-			Users: new Users(),
-			Treatments: new Treatments(),
-			currentUser: false, // TODO: implement security here
-		};
-	}
+  onConnect: async (connectionParams, webSocket) => ({
+    Clinics: new Clinics(),
+    Users: new Users(),
+    Treatments: new Treatments(),
+    currentUser: false, // TODO: implement security here
+  }),
 }, {
-	server,
-	path: '/'
+  server,
+  path: '/',
 });
 
 server.listen(port, () => {

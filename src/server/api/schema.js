@@ -13,7 +13,7 @@ import moment from 'moment';
 
 import log from '../../log'
 import schema from './schema_def.graphqls'
-import emailConfig from '../../../email.config'
+import emailConfig from '../../../config/email.config'
 import heMessages from '../../l10n/he.json'
 
 const { template: emailTemplate, ...mailerConfig } = emailConfig;
