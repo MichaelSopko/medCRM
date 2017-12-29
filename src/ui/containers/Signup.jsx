@@ -54,13 +54,16 @@ class Signup extends Component {
 
     return (
       <main className="Signup" >
-        <div className="Signup--Blur" />
         <div className="Signup__WrapUp">
-          <div >
-            <h1 >{formatMessage({ id: 'Signup.main_title' })}</h1 >
-            <div >{formatMessage({ id: 'Signup.main_info' })}</div >
+          <div className="Signup__Description">
+            <div>
+              <h1 >{formatMessage({ id: 'Signup.main_title' })}</h1 >
+            </div>
+            <div >
+              <p>{formatMessage({ id: 'Signup.main_info' })}</p>
+            </div >
           </div >
-          <Form onSubmit={this.handleSubmit} >
+          <Form onSubmit={this.handleSubmit} className="Signup__Content">
             <h1 className="Signup__Header" >{formatMessage({ id: 'Signup.form_title' })}</h1 >
             <Form.Item >
               {getFieldDecorator('first_name', {
