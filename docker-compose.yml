@@ -10,7 +10,7 @@ services:
     container_name: clinic-app
     environment:
       PORT: 3000
-      NODE_ENV: development
+      NODE_ENV: production
       ADMIN_PASSWORD: 'admin'
       DATABASE_HOST: 'mysql-app'
       DATABASE_USER: 'rootUser'
@@ -22,7 +22,7 @@ services:
       - mysql
     ports:
       - 3000:3000
-    command: npm run start:dev:docker
+#    command: npm run start:dev:docker
     volumes:
       - ./:${APP_DIR}
       #- ${APP_DIR}/build
