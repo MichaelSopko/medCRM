@@ -1,11 +1,12 @@
+/* eslint-disable camelcase */
 import React, { Component, PropTypes } from 'react';
 import { Form, Input, Button, message } from 'antd';
-import './Signup.scss';
 import { graphql } from 'react-apollo';
+import './Signup.scss';
 
-import ADD_USER from '../graphql/UserAddMutation.graphql';
+import SIGN_UP from '../graphql/SignUp.graphql';
 
-@graphql(ADD_USER)
+@graphql(SIGN_UP)
 class Signup extends Component {
 
   static contextTypes = {
@@ -28,10 +29,10 @@ class Signup extends Component {
         try {
           const request = await this.props.mutate({
             variables: {
-              name: `${first_name} ${last_name}`,
-              login: email,
+              first_name,
+              last_name,
+              email,
               password,
-              role: 'role',
             },
           });
           this.setState({ loading: false });
@@ -59,7 +60,7 @@ class Signup extends Component {
             <h1 >{formatMessage({ id: 'Signup.main_title' })}</h1 >
             <div >{formatMessage({ id: 'Signup.main_info' })}</div >
           </div >
-          <Form onSubmit={this.handleSubmit} >
+          <Form onSubmit={this.handleSubmit.bind(this)} >
             <h1 className="Signup__Header" >{formatMessage({ id: 'Signup.form_title' })}</h1 >
             <Form.Item >
               {getFieldDecorator('first_name', {

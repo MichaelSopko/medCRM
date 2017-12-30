@@ -1,4 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/no-extraneous-dependencies,no-new */
 import express from 'express';
 import webpack from 'webpack';
 import bodyParser from 'body-parser';
@@ -61,7 +61,17 @@ if (__DEV__) {
   app.use('/assets', express.static(settings.frontendBuildDir, { maxAge: '180 days' }));
 }
 
-app.use('/graphql', jwt({ secret: settings.secret }), (...args) => graphqlMiddleware(...args));
+const jwtMiddleware = jwt({ secret: settings.secret });
+
+app.use('/graphql', (req, res, next) => {
+  const { body } = req;
+  if (Array.isArray(body) && typeof body[0] === 'object' && body[0].operationName === 'signUp') { // todo
+    next();
+  } else {
+    jwtMiddleware(req, res, next);
+  }
+});
+app.use('/graphql', (...args) => graphqlMiddleware(...args));
 app.use('/graphiql', (...args) => graphiqlMiddleware(...args));
 app.use('/api/authentication', (...args) => authenticationMiddleware(...args));
 app.use('/api/upload-file', jwt({ secret: settings.secret }), (...args) => uploadsMiddleware(...args));
