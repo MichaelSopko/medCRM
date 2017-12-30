@@ -47,7 +47,8 @@
     "start:dev:docker": "npm-run-all build:dev seed start",
     "start:prod:docker": "npm run build && npm run seed && npm start",
     "start:dev:docker-db": "rimraf build && npm run build:dev && npm run deploy:db && npm run seed && npm start",
-    "start:dev": "rimraf build && npm run build:dev && npm run seed && npm start"
+    "start:dev": "rimraf build && npm run build:dev && npm run seed && npm start",
+    "start:prod": "rimraf build && npm run build && npm run seed && npm start"
   },
   "repository": {
     "type": "git",
@@ -62,6 +63,7 @@
     "classnames": "2.2.5",
     "color-hash": "1.0.3",
     "dotenv": "4.0.0",
+    "event-source-polyfill": "0.0.12",
     "express": "4.14.0",
     "express-jwt": "5.1.0",
     "express-session": "1.15.0",
