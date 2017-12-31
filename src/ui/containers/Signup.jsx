@@ -53,10 +53,15 @@ class Signup extends Component {
     const { loading } = this.state;
     const formatMessage = this.context.intl.formatMessage;
 
+    const svgFilter = `<svg >
+         <image width="650" height="400" xlink:href="http://lorempixel.com/400/200/" filter="url(#blurlayer)" />
+    </svg>`;
+
     return (
       <main className="Signup">
         <SvgImage filterStrength="15" />
         <div className="Signup__WrapUp">
+          <div dangerouslySetInnerHTML={{__html: svgFilter}}></div>
           <div className="Signup__Description">
             <div>
               <h1 >{formatMessage({ id: 'Signup.main_title' })}</h1 >

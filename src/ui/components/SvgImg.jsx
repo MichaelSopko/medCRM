@@ -13,7 +13,7 @@ const SvgImageFilter = (props) => {
                        </defs>`;
 
   return (
-    <svg dangerouslySetInnerHTML={{ __html: svgFilter }} />
+    <svg dangerouslySetInnerHTML={{ __html: svgFilter }} viewBox="0 0 3000 2000"/>
   );
 };
 
