@@ -19,19 +19,22 @@
     right: 10.3rem;
     top: 9.3rem;
     width: 117.4rem;
-    z-index: 0;
+    // z-index: 0;
 
     &:before {
       background: inherit;
       bottom: 0;
       box-shadow: inset 0 0 0 300rem $blur-colour;
       content: ' ';
+      filter: url(#blurlayer);
       filter: blur(1rem);
       left: -2.5rem;
       position: absolute;
       right: 0;
       top: -2.5rem;
-      z-index: -1;
+      // z-index: -1;
+      width: 110%;
+      height: 110%;
     }
   }
 

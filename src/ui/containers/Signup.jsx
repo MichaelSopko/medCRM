@@ -52,12 +52,11 @@ class Signup extends Component {
     const { getFieldDecorator } = this.props.form;
     const { loading } = this.state;
     const formatMessage = this.context.intl.formatMessage;
-    const svgImage = `<image width="160" height="90" x="0" y="0" xlink:href="../../assets/images/background.png" filter="url(#filtersPicture)"/>`;
 
     return (
-      <main className="Signup" >
-          <SvgImage filterStrength="4.5"/>
-        <div className="Signup__WrapUp" dangerouslySetInnerHTML={{ __html: svgImage }}>
+      <main className="Signup">
+        <SvgImage filterStrength="15" />
+        <div className="Signup__WrapUp">
           <div className="Signup__Description">
             <div>
               <h1 >{formatMessage({ id: 'Signup.main_title' })}</h1 >
