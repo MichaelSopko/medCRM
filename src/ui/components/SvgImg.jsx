@@ -4,16 +4,10 @@ import './SvgImg.scss';
 
 const SvgImageFilter = (props) => {
   const filterStrength = props.filterStrength;
-  const svgFilter = `<defs>
-                                  <filter id="blurlayer">
-                                    
-                                    <feGaussianBlur  stdDeviation="${filterStrength}" result="blur"/>
-                                  
-                                  </filter>
-                       </defs>`;
+  const svgFilter = `<defs><filter id="blurlayer" width="110%" height="100%"><feGaussianBlur  stdDeviation="25"/></filter></defs>`;
 
   return (
-    <svg dangerouslySetInnerHTML={{ __html: svgFilter }} viewBox="0 0 3000 2000"/>
+    <svg dangerouslySetInnerHTML={{ __html: svgFilter }} className="SvgImg" />
   );
 };
 

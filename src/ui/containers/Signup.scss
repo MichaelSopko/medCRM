@@ -19,22 +19,44 @@
     right: 10.3rem;
     top: 9.3rem;
     width: 117.4rem;
-    z-index: 0;
+    z-index: 1;
 
     &:before {
       background: inherit;
       bottom: 0;
       box-shadow: inset 0 0 0 300rem $blur-colour;
       content: ' ';
-      filter: url(#blurlayer);
-      // filter: blur(1.5rem);
+      // filter: url(#blurlayer);
+      filter: blur(1.5rem);
       left: -2.5rem;
       position: absolute;
       right: 0;
       top: -2.5rem;
-      z-index: -1;
       width: 110%;
       height: 110%;
+    }
+  }
+
+  &__Blur {
+    top: 9.3rem;
+    left: 10.3rem;
+    bottom: 10.3rem;
+    right: 10.3rem;
+    position: absolute;
+    overflow: hidden;
+    // opacity: 0.6;
+    z-index: 0;
+
+    svg {
+      width: 100%;
+      height: 100%;
+      // display: block;
+      /* stylelint-disable */
+      image {
+        width: 110%;
+        height: 110%;
+      }
+      /* stylelint-enable */
     }
   }
 
