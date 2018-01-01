@@ -96,10 +96,6 @@ export default class Canvas extends Component {
   }
 
   render() {
-    if (!Canvas.getIEVersion()) {
-      return null;
-    }
-
     const { imageUrl } = this.props;
 
     return (
