@@ -10,7 +10,7 @@ const SvgImageFilter = (props) => {
   const svgFilterContainer = `<defs>
                         <filter id="blurlayer">
                             <feGaussianBlur  stdDeviation="15" result="blur"/>
-                            <feImage id="feimage" xlink:href='data:image/svg+xml;charset=utf-8,<svg%20version="1.1"%20xmlns="http://www.w3.org/2000/svg"%20xmlns:xlink="http://www.w3.org/1999/xlink"%20width="800"%20height="800"><rect%20width="100%"%20height="100%"%20/></svg>'  width="1000px" x="0px" y="0px" result="mask" preserveAspectRatio="none"/>
+                            <feImage id="feimage" xlink:href="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSIzMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+DQogPGc+DQogIDx0aXRsZT5iYWNrZ3JvdW5kPC90aXRsZT4NCiAgPHJlY3QgZmlsbD0ibm9uZSIgaWQ9ImNhbnZhc19iYWNrZ3JvdW5kIiBoZWlnaHQ9IjMwMiIgd2lkdGg9IjEwMjYiIHk9Ii0xIiB4PSItMSIvPg0KIDwvZz4NCg0KIDxnPg0KICA8dGl0bGU+TGF5ZXIgMTwvdGl0bGU+DQogIDxyZWN0IGlkPSJzdmdfMSIgaGVpZ2h0PSIxMzMiIHdpZHRoPSIxMDI0IiB5PSI4NC41IiB4PSIwIiBmaWxsLW9wYWNpdHk9Im51bGwiIHN0cm9rZS1vcGFjaXR5PSJudWxsIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlPSJudWxsIiBmaWxsPSIjMDAwMDAwIi8+DQogPC9nPg0KPC9zdmc+" x="0px" y="0px" result="mask"/>
             
             <feComposite in2="mask" in="blur"  operator="in" result="comp" />
             
