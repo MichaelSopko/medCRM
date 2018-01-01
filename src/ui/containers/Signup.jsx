@@ -59,8 +59,6 @@ class Signup extends Component {
 
     return (
       <main className="Signup">
-        <SvgImage filterStrength="15" />
-        <div dangerouslySetInnerHTML={{ __html: svgFilter }} className="Signup__Blur" />
         <div className="Signup__WrapUp">
           <div className="Signup__Description">
             <div>
