@@ -3,6 +3,7 @@ import { Form, Input, Button, message } from 'antd';
 import { graphql } from 'react-apollo';
 import './Signup.scss';
 import SvgImage from '../components/SvgImg';
+import Canvas from '../components/Canvas.jsx';
 
 import ADD_USER from '../graphql/UserAddMutation.graphql';
 
@@ -56,6 +57,7 @@ class Signup extends Component {
     return (
       <main className="Signup">
         <SvgImage filterStrength="15" />
+        <Canvas></Canvas>
         <div className="Signup__WrapUp">
           <div className="Signup__Description">
             <div>

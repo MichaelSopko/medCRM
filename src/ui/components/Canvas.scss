@@ -1,0 +1,32 @@
+.Canvas {
+  position: absolute;
+  bottom: 10.3rem;
+  left: 10.3rem;
+  overflow: hidden;
+  right: 10.3rem;
+  top: 9.3rem;
+  z-index: 1;
+
+  img {
+    display: none;
+  }
+  &__Content {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: translate(-203px, -93px);
+  }
+  &--BlurRectangle {
+    left: 0;
+    top: 0;
+    position: absolute;
+    width: 100%;
+    background: white;
+    opacity: 0.20;
+    height: 100%;
+  }
+}
