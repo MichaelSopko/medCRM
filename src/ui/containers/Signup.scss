@@ -9,7 +9,7 @@
 
   &__WrapUp {
     align-items: flex-start;
-    // background: inherit;
+    background: inherit;
     bottom: 10.3rem;
     display: flex;
     justify-content: space-between;
@@ -20,20 +20,19 @@
     top: 9.3rem;
     z-index: 1;
 
-    //&:before {
-    //  background: inherit;
-    //  bottom: 0;
-    //  box-shadow: inset 0 0 0 300rem $blur-colour;
-    //  content: ' ';
-    //  filter: url(#blurlayer);
-    //  filter: blur(1.5rem);
-    //  left: -2.5rem;
-    //  position: absolute;
-    //  right: 0;
-    //  top: -2.5rem;
-    //  width: 110%;
-    //  height: 110%;
-    //}
+    &:before {
+      background: inherit;
+      bottom: 0;
+      box-shadow: inset 0 0 0 300rem $blur-colour;
+      content: ' ';
+      filter: blur(1.5rem);
+      height: 110%;
+      left: -2.5rem;
+      position: absolute;
+      right: 0;
+      top: -2.5rem;
+      width: 110%;
+    }
   }
 
   &__Description {

@@ -56,8 +56,7 @@ class Signup extends Component {
 
     return (
       <main className="Signup">
-        <SvgImage filterStrength="15" />
-        <Canvas></Canvas>
+        <Canvas />
         <div className="Signup__WrapUp">
           <div className="Signup__Description">
             <div>
