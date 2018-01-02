@@ -60,7 +60,7 @@ export default class Canvas extends Component {
     if (!this.state || !this.state.loaded) {
       return;
     }
-    const { canvas, image, blur } = this;
+    const { canvas, image, blur, container } = this;
 
     if (!canvas || !image) {
       return;
@@ -71,8 +71,8 @@ export default class Canvas extends Component {
     if (typeof HTMLImageElement !== 'undefined' && !(image instanceof HTMLImageElement)) {
       return;
     }
-    const w = image.naturalWidth;
-    const h = image.naturalHeight;
+    const w = container.offsetWidth;
+    const h = container.offsetHeight;
 
     if (typeof HTMLCanvasElement !== 'undefined' && !(canvas instanceof HTMLCanvasElement)) {
       return;
@@ -85,7 +85,7 @@ export default class Canvas extends Component {
 
     const context = canvas.getContext('2d');
     context.clearRect(0, 0, w, h);
-    context.drawImage(image, 0, 0);
+    context.drawImage(image, 0, 0, w, h);
 
     if (isNaN(radius) || radius < 1) {
       return;
@@ -99,7 +99,7 @@ export default class Canvas extends Component {
     const { imageUrl } = this.props;
 
     return (
-      <div className="Canvas">
+      <div className="Canvas" ref={c => this.container = c}>
         <img
           src={imageUrl}
           ref={c => this.image = c}
