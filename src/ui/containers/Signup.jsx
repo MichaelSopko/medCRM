@@ -59,7 +59,7 @@ class Signup extends Component {
         <Canvas />
         <div className="Signup__WrapUp">
           <div className="Signup__Description">
-            <div>
+            <div className="Signup__Description__Header">
               <h1 >{formatMessage({ id: 'Signup.main_title' })}</h1 >
             </div>
             <div >
@@ -67,7 +67,7 @@ class Signup extends Component {
             </div >
           </div >
           <Form onSubmit={this.handleSubmit} className="Signup__Content">
-            <h1 className="Signup__Header" >{formatMessage({ id: 'Signup.form_title' })}</h1 >
+            <h1 className="Signup__Content__Header" >{formatMessage({ id: 'Signup.form_title' })}</h1 >
             <Form.Item >
               {getFieldDecorator('first_name', {
                 validateTrigger: 'onBlur',
@@ -135,28 +135,27 @@ class Signup extends Component {
                 />,
               )}
             </Form.Item >
-            <Form.Item >
-              <Button
-                type="primary"
-                size="large"
-                htmlType="submit"
-                className="Signup__Button"
-                loading={loading}
-              >
-                {formatMessage({ id: 'Signup.button_registration' })}
-              </Button >
-            </Form.Item >
-            <Form.Item >
-              <Button
-                type="primary"
-                size="large"
-                htmlType="button"
-                className="Signup__Button"
-                onClick={this.handleBackToLogin.bind(this)}
-              >
-                {formatMessage({ id: 'Signup.button_login' })}
-              </Button >
-            </Form.Item >
+            <div className="Signup__WrapUp__CTA">
+              <Form.Item >
+                <Button
+                  type="primary"
+                  size="large"
+                  htmlType="submit"
+                  className="Signup__Button"
+                  loading={loading}
+                >
+                  {formatMessage({ id: 'Signup.button_registration' })}
+                </Button >
+              </Form.Item >
+              <Form.Item >
+                <span
+                  className="Signup__WrapUp__CTA__Login"
+                  onClick={this.handleBackToLogin.bind(this)}
+                >
+                  {formatMessage({ id: 'Signup.button_login' })}
+                </span >
+              </Form.Item >
+            </div>
           </Form >
         </div >
       </main >

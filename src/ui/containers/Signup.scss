@@ -1,4 +1,4 @@
-@import "../../assets/styles/variables";
+@import '../../assets/styles/variables';
 
 .Signup {
   height: 100vh;
@@ -8,6 +8,7 @@
     align-items: flex-start;
     bottom: 10.3rem;
     display: flex;
+    font-family: $base-font;
     justify-content: space-between;
     left: 10.3rem;
     overflow: hidden;
@@ -15,21 +16,46 @@
     right: 10.3rem;
     top: 9.3rem;
     z-index: 1;
+
+    &__CTA {
+      display: flex;
+      justify-content: space-between;
+
+      &__Login {
+        color: $content-border;
+        cursor: pointer;
+        display: inline-block;
+        padding-right: 2rem;
+      }
+    }
   }
 
   &__Description {
+    color: $content-border;
+    font-weight: normal;
     padding-left: 14.6rem;
+    padding-right: 4rem;
     padding-top: 11.4rem;
+    width: 50%;
+
+    &__Header h1 {
+      font-weight: normal;
+    }
   }
 
   &__Content {
-    border: .1rem solid white;
+    border: .1rem solid $content-border;
     margin-right: 8.5rem;
     margin-top: 7.9rem;
     padding-left: 6.1rem;
     padding-right: 6.1rem;
     padding-top: 2.4rem;
-
     width: 48.2rem;
+
+    &__Header {
+      color: $content-border;
+      font-weight: normal;
+      padding-bottom: 3rem;
+    }
   }
 }

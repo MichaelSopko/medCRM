@@ -83,6 +83,11 @@ class Login extends Component {
     });
   };
 
+  handleGoToRegistration(ev) {
+    ev.preventDefault();
+    this.context.router.push('/signup');
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     const { loading } = this.state;
@@ -107,11 +112,23 @@ class Login extends Component {
               <Input type="password" placeholder={formatMessage({ id: 'Login.field_password' })} />,
             )}
           </Form.Item >
-          <Form.Item >
-            <Button type="primary" size="large" htmlType="submit" className="Login__Button" loading={loading} >
-              {formatMessage({ id: 'Login.login_button' })}
-            </Button >
-          </Form.Item >
+          <div className="Login__Window__CTA">
+            <div className="Login__Window__CTA__Registration">
+              <div>
+                <span
+                  className="Login__Window__CTA__Registration--Register"
+                  onClick={this.handleGoToRegistration.bind(this)}
+                >
+                 Registration
+                </span>
+              </div>
+            </div>
+            <Form.Item >
+              <Button type="primary" size="large" htmlType="submit" className="Login__Button" loading={loading} >
+                {formatMessage({ id: 'Login.login_button' })}
+              </Button >
+            </Form.Item >
+          </div>
         </Form >
       </main >
     );
