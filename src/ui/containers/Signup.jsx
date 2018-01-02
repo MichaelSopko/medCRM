@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { graphql } from 'react-apollo';
 import './Signup.scss';
-import SvgImage from '../components/SvgImg';
 
 import ADD_USER from '../graphql/UserAddMutation.graphql';
 

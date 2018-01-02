@@ -18,7 +18,7 @@
     position: absolute;
     right: 10.3rem;
     top: 9.3rem;
-    width: 117.4rem;
+    // width: 117.4rem;
     z-index: 1;
 
     &:before {
@@ -26,7 +26,7 @@
       bottom: 0;
       box-shadow: inset 0 0 0 300rem $blur-colour;
       content: ' ';
-      filter: url(#blurlayer);
+      // filter: url(#blurlayer);
       filter: blur(1.5rem);
       left: -2.5rem;
       position: absolute;
@@ -34,6 +34,7 @@
       top: -2.5rem;
       width: 110%;
       height: 110%;
+      z-index: -1;
     }
   }
 
