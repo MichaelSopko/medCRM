@@ -27,6 +27,5 @@ module.exports = {
     'react-router-redux',
     'redux',
     'subscriptions-transport-ws',
-    'stackblur-canvas',
   ],
 };
