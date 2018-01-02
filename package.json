@@ -47,6 +47,7 @@
     "start:dev:docker": "npm-run-all build:dev seed start",
     "start:prod:docker": "npm run build && npm run seed && npm start",
     "start:dev:docker-db": "rimraf build && npm run build:dev && npm run deploy:db && npm run seed && npm start",
+    "start:prod:docker-db": "rimraf build && npm run build && npm run deploy:db && npm run seed && npm start",
     "start:dev": "rimraf build && npm run build:dev && npm run seed && npm start",
     "start:prod": "rimraf build && npm run build && npm run seed && npm start"
   },
