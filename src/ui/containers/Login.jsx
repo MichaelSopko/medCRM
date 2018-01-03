@@ -83,6 +83,11 @@ class Login extends Component {
     });
   };
 
+  handleGoToRegistration(ev) {
+    ev.preventDefault();
+    this.context.router.push('/signup');
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
     const { loading } = this.state;
@@ -92,26 +97,38 @@ class Login extends Component {
       <main className="Login" >
         <Form onSubmit={this.handleSubmit} className="Login__Window" >
           <h1 className="Login__Header" >{formatMessage({ id: 'Login.header' })}</h1 >
+          <Form.Item >
+            {getFieldDecorator('login', {
+              validateTrigger: 'onBlur',
+              rules: [{ required: true, message: formatMessage({ id: 'Login.field_email_error' }) }],
+            })(
+              <Input placeholder={formatMessage({ id: 'Login.field_email' })} />,
+            )}
+          </Form.Item >
+          <Form.Item >
+            {getFieldDecorator('password', {
+              validateTrigger: 'onBlur', rules: [{ required: true, message: 'Please input your Password!' }],
+            })(
+              <Input type="password" placeholder={formatMessage({ id: 'Login.field_password' })} />,
+            )}
+          </Form.Item >
+          <div className="Login__Window__CTA">
+            <div className="Login__Window__CTA__Registration">
+              <div>
+                <span
+                  className="Login__Window__CTA__Registration--Register"
+                  onClick={this.handleGoToRegistration.bind(this)}
+                >
+                 Registration
+                </span>
+              </div>
+            </div>
             <Form.Item >
-              {getFieldDecorator('login', {
-                validateTrigger: 'onBlur',
-                rules: [{ required: true, message: formatMessage({ id: 'Login.field_email_error' }) }],
-              })(
-                <Input placeholder={formatMessage({ id: 'Login.field_email' })} />,
-            )}
+              <Button type="primary" size="large" htmlType="submit" className="Login__Button" loading={loading} >
+                {formatMessage({ id: 'Login.login_button' })}
+              </Button >
             </Form.Item >
-              <Form.Item >
-                {getFieldDecorator('password', {
-                  validateTrigger: 'onBlur', rules: [{ required: true, message: 'Please input your Password!' }],
-                })(
-                  <Input type="password" placeholder={formatMessage({ id: 'Login.field_password' })} />,
-            )}
-              </Form.Item >
-                <Form.Item >
-                  <Button type="primary" size="large" htmlType="submit" className="Login__Button" loading={loading} >
-                    {formatMessage({ id: 'Login.login_button' })}
-                  </Button >
-                </Form.Item >
+          </div>
         </Form >
       </main >
     );

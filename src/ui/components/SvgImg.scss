@@ -1,0 +1,30 @@
+.SvgImg {
+  height: 0;
+  width: 0;
+  //position: relative;
+  pointer-events: none;
+
+  &__Blur {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    overflow: hidden;
+    // opacity: 0.6;
+
+    svg {
+      transform: scale(1.1, 1.1);
+      transform-origin: 50%;
+      width: 100%;
+      height: 100vh;
+      display: block;
+      /* stylelint-disable */
+      image {
+        width: 100%;
+        height: 100%;
+      }
+      /* stylelint-enable */
+    }
+  }
+}

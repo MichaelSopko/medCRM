@@ -1,25 +1,43 @@
+@import "../../assets/styles/variables";
+
 .Login {
-	height: 100vh;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+  align-items: center;
+  background: linear-gradient(to left, $aqua , $dark-blue);
+  display: flex;
+  height: 100vh;
 
-	background: linear-gradient(to left, #43C6AC , #191654);
+  justify-content: center;
 
-	&__Window {
-		width: 500px;
-		background: rgba(255, 255, 255, .15);
-		padding: 24px;
-		padding-bottom: 0;
-		border-radius: 3px;
-	}
+  &__Window {
+    background: rgba(255, 255, 255, .15);
+    border-radius: .3rem;
+    padding: 2.4rem;
+    padding-bottom: 0;
+    width: 50rem;
 
-	&__Header {
-		font-size: 28px;
-		font-weight: 300;
-		margin: 0;
-		padding: 0 0 20px 0;
-		color: #fff;
-		padding-left: .7em;
-	}
+    &__CTA {
+      display: flex;
+      justify-content: space-between;
+
+      &__Registration {
+        display: flex;
+        flex-direction: column;
+        font-size: $cta-font-size;
+
+        &--Register {
+          color: $light-blue;
+          cursor: pointer;
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  &__Header {
+    color: $content-border;
+    font-size: $header-font-size;
+    font-weight: 300;
+    margin: 0;
+    padding: 0 0 2rem .7em;
+  }
 }

@@ -10,6 +10,7 @@ import moment from 'moment';
 import enUSAnt from 'antd/lib/locale-provider/en_US';
 import { LocaleProvider } from 'antd';
 import { SubscriptionClient, addGraphQLSubscriptions } from 'subscriptions-transport-ws';
+import 'event-source-polyfill';
 import enMessages from '../l10n/en.json';
 import heMessages from '../l10n/he.json';
 import heAnt from '../l10n/ant/he';
