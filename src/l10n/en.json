@@ -37,9 +37,11 @@
     "field_confirm_password": "Repeat Password",
     "button_registration": "Register now",
     "button_login": "Log in",
-    "field_email_error": "SignupPlease input your email!",
-    "error_password": "SignupAccount with same credentials wasn't found",
-    "error_disabled": "SignupYour account had been disabled by administrator"
+    "field_email_error": "Please input your email!",
+    "field_first_name_error": "Please input your first name!",
+    "field_last_name_error": "Please input your last name!",
+    "error_password": "Account with same credentials wasn't found",
+    "error_disabled": "Your account had been disabled by administrator"
   },
   "ProfileWidget": {
     "logout": "Log out",

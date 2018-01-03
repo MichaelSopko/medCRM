@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable camelcase,no-unused-vars */
 import React, { Component, PropTypes } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { graphql } from 'react-apollo';
@@ -22,12 +22,12 @@ class Signup extends Component {
     ev.preventDefault();
     const formatMessage = this.context.intl.formatMessage;
     this.props.form.validateFields(async (err, values) => {
-      const { first_name, last_name, email, password } = values;
+      const { first_name, last_name, email, password, confirm_password } = values;
 
-      if (!err) {
+      if (!err && password === confirm_password) {
         this.setState({ loading: true });
         try {
-          const request = await this.props.mutate({
+          await this.props.mutate({
             variables: {
               first_name,
               last_name,
@@ -36,6 +36,7 @@ class Signup extends Component {
             },
           });
           this.setState({ loading: false });
+          this.handleBackToLogin(ev);
         } catch (e) {
           this.setState({ loading: false });
         }
@@ -72,7 +73,7 @@ class Signup extends Component {
                   validateTrigger: 'onBlur',
                   rules: [{
                     required: true,
-                    message: formatMessage({ id: 'Signup.field_email_error' }),
+                    message: formatMessage({ id: 'Signup.field_first_name_error' }),
                   }],
                 })(
                   <Input
@@ -85,7 +86,7 @@ class Signup extends Component {
                   validateTrigger: 'onBlur',
                   rules: [{
                     required: true,
-                    message: formatMessage({ id: 'Signup.field_email_error' }),
+                    message: formatMessage({ id: 'Signup.field_last_name_error' }),
                   }],
                 })(
                   <Input
@@ -125,7 +126,7 @@ class Signup extends Component {
                   validateTrigger: 'onBlur',
                   rules: [{
                     required: true,
-                    message: 'Please input your Password!',
+                    message: 'Please input your confirmation password!',
                   }],
                 })(
                   <Input
