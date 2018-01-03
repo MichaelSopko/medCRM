@@ -86,7 +86,7 @@ const resolvers = {
       return context.Users.createUser({
         ...user,
         login: user.email,
-        role: ROLES.PATIENT,
+        role: ROLES.THERAPIST,
       })
         .then(res => ({ status: res }))
         .catch(checkForNonUniqueField);
