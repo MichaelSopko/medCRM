@@ -4,7 +4,7 @@ const _ = require('lodash');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const baseConfig = require('./webpack.base.js');
 const mainConfig = require('./main');
@@ -42,6 +42,38 @@ let outputFileNamePattern = '[name]-[chunkhash].js';
 
 if (!__DEV__) {
   devtool = 'hidden-source-map';
+  clientPlugins.push(
+    new webpack.optimize.UglifyJsPlugin([
+      {
+        compressor: {
+          warnings: false,
+        },
+        sourcemap: false,
+      },
+      {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract([
+          'css-loader?modules',
+          'postcss-loader',
+        ]),
+      },
+      {
+        test: /\.scss$/,
+        loader: ExtractTextPlugin.extract([
+          'css-loader?importLoaders=2&sourceMap',
+          'postcss-loader?sourceMap=true',
+          'sass-loader?outputStyle=expanded&sourceMap',
+        ]),
+      },
+    ]),
+    new CompressionPlugin({
+      asset: '[path].gz[query]',
+      algorithm: 'gzip',
+      test: /\.js$|\.s?css$/,
+      // threshold: 10240,
+      minRatio: 0.8,
+    }),
+  );
 } else {
   outputFileNamePattern = '[name]-[hash]-[id].js';
   clientEntry.push('react-hot-loader/patch');
