@@ -20,7 +20,9 @@ class Signup extends Component {
 
   handleSubmit(ev) {
     ev.preventDefault();
+
     const formatMessage = this.context.intl.formatMessage;
+
     this.props.form.validateFields(async (err, values) => {
       const { first_name, last_name, email, password, confirm_password } = values;
 
@@ -148,12 +150,12 @@ class Signup extends Component {
                   </Button >
                 </Form.Item >
                 <Form.Item >
-                <span
-                  className="Signup__WrapUp__CTA__Login"
-                  onClick={this.handleBackToLogin.bind(this)}
-                >
-                  {formatMessage({ id: 'Signup.button_login' })}
-                </span >
+                  <span
+                    className="Signup__WrapUp__CTA__Login"
+                    onClick={this.handleBackToLogin.bind(this)}
+                  >
+                    {formatMessage({ id: 'Signup.button_login' })}
+                  </span >
                 </Form.Item >
               </div>
             </Form >
