@@ -1,3 +1,5 @@
+const direction = __DEV__ ? 'ltr' : 'rtl';
+
 export default {
   service: 'Mail.ru',
   auth: {
@@ -11,7 +13,7 @@ export default {
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style>
-      body { direction: rtl; }
+      body { direction: ${direction}; }
     </style>
     </head>
     <body>
@@ -20,6 +22,23 @@ export default {
     </p>
     <p> Start date: ${start_date} </p>
     <p> End date: ${end_date} </p>
+    </body>
+</html>
+`,
+  registerUserTemplate: ({ first_name, last_name }) => `
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+      body { direction: ${direction}; }
+    </style>
+    </head>
+    <body>
+    <p>
+      Hello ${ first_name } ${ last_name }!
+    </p>
     </body>
 </html>
 `,

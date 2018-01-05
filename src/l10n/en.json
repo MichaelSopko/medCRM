@@ -82,7 +82,10 @@
     "create_button": "Create a Therapist",
     "create_header": "Create Therapist",
     "edit_header": "Edit Therapist",
-    "header": "Therapists"
+    "header": "Therapists",
+    "registration_email": {
+      "subject": "Registration"
+    }
   },
   "Patients": {
     "create_button": "Create a Patient",

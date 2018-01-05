@@ -16,9 +16,10 @@ import schema from './schema_def.graphqls';
 import emailConfig from '../../../config/email.config';
 import { clinic as defaultClinic } from '../../helpers/constants/general';
 import heMessages from '../../l10n/he.json';
+import enMessages from '../../l10n/en.json';
 
-const { template: emailTemplate, ...mailerConfig } = emailConfig;
-
+const { template: emailTemplate, registerUserTemplate, ...mailerConfig } = emailConfig;
+const messages = __DEV__ ? enMessages : heMessages;
 const transporter = nodemailer.createTransport(mailerConfig);
 
 export const pubsub = new PubSub();
@@ -106,7 +107,22 @@ const resolvers = {
         login: user.email,
         role: ROLES.THERAPIST,
       })
-        .then(res => ({ status: res }))
+        .then((res) => {
+          const mailOptions = {
+            from: `"Clinic" <${mailerConfig.auth.user}>`,
+            to: user.email,
+            subject: messages.Therapists.registration_email.subject,
+            html: registerUserTemplate(user),
+          };
+
+          transporter.sendMail(mailOptions).then((info) => {
+            console.log('Message %s sent: %s', info.messageId, info.response);
+          }).catch((exc) => {
+            console.error(exc);
+          });
+
+          return { status: res };
+        })
         .catch(checkForNonUniqueField);
     },
     addClinic(_, { clinic }, context) {
@@ -332,7 +348,7 @@ const resolvers = {
           const mailOptions = {
             from: `"Clinic" <${mailerConfig.auth.user}>`,
             to: related_persons.filter(p => !!p.receive_updates).map(p => p.email),
-            subject: heMessages.Treatments.update_email.subject,
+            subject: messages.Treatments.update_email.subject,
             html: emailTemplate(treatment),
           };
 

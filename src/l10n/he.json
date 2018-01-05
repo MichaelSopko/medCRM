@@ -82,7 +82,10 @@
     "create_button": "מטופל חדש",
     "create_header": "מטופל חדש",
     "edit_header": "עריכת מטפל",
-    "header": "מטפלים"
+    "header": "מטפלים",
+    "registration_email": {
+      "subject": "Registration"
+    }
   },
   "Patients": {
     "create_button": "צור מטופל",
