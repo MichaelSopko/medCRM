@@ -1,10 +1,11 @@
-/* eslint-disable camelcase,no-unused-vars */
+/* eslint-disable camelcase,no-unused-vars,react/jsx-no-bind */
 import React, { Component, PropTypes } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { graphql } from 'react-apollo';
 import './Signup.scss';
 
 import SIGN_UP from '../graphql/SignUp.graphql';
+import GET_CLINICS_QUERY from '../graphql/ClinicsGet.graphql';
 
 @graphql(SIGN_UP)
 class Signup extends Component {
@@ -36,6 +37,9 @@ class Signup extends Component {
               email,
               password,
             },
+            refetchQueries: [{
+              query: GET_CLINICS_QUERY,
+            }],
           });
           this.setState({ loading: false });
           this.handleBackToLogin(ev);
@@ -68,7 +72,7 @@ class Signup extends Component {
                 <p>{formatMessage({ id: 'Signup.main_info' })}</p>
               </div >
             </div >
-            <Form onSubmit={this.handleSubmit.bind(this)} className="Signup__Content">
+            <Form onSubmit={::this.handleSubmit} className="Signup__Content">
               <h1 className="Signup__Content__Header" >{formatMessage({ id: 'Signup.form_title' })}</h1 >
               <Form.Item >
                 {getFieldDecorator('first_name', {
@@ -152,7 +156,7 @@ class Signup extends Component {
                 <Form.Item >
                   <span
                     className="Signup__WrapUp__CTA__Login"
-                    onClick={this.handleBackToLogin.bind(this)}
+                    onClick={::this.handleBackToLogin}
                   >
                     {formatMessage({ id: 'Signup.button_login' })}
                   </span >
