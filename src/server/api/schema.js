@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable max-len,no-param-reassign */
 import { makeExecutableSchema, addErrorLoggingToSchema } from 'graphql-tools';
 import { PubSub } from 'graphql-subscriptions';
 import nodemailer from 'nodemailer';
@@ -14,6 +14,7 @@ import GraphQLMomentMySQL from './GraphQLMomentMySQL';
 import log from '../../log';
 import schema from './schema_def.graphqls';
 import emailConfig from '../../../config/email.config';
+import { clinic as defaultClinic } from '../../helpers/constants/general';
 import heMessages from '../../l10n/he.json';
 
 const { template: emailTemplate, ...mailerConfig } = emailConfig;
@@ -82,7 +83,24 @@ const resolvers = {
     },
   },
   Mutation: {
-    signUp(_, user, context) {
+    async signUp(_, user, context) {
+      const clinic = { ...defaultClinic };
+
+      clinic.name = `${user.first_name} ${user.last_name}`;
+
+      let clinicResult = null;
+
+      try {
+        clinicResult = await context.Clinics.addClinic(clinic);
+      } catch (exc) {
+        return Promise.reject(exc);
+      }
+
+      if (clinicResult) {
+        const [clinicId] = clinicResult;
+        user.clinic_id = clinicId;
+      }
+
       return context.Users.createUser({
         ...user,
         login: user.email,
