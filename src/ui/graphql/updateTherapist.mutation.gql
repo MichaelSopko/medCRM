@@ -1,0 +1,7 @@
+#import './Therapist.fragment.gql'
+
+mutation updateTherapist($id: ID!, $therapist: TherapistInput!) {
+    updateTherapist(id: $id, therapist: $therapist) {
+        ...TherapistFields
+    }
+}

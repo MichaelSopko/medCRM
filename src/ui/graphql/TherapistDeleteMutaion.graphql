@@ -1,7 +1,0 @@
-mutation deleteTherapist(
-$id: Int!
-) {
-    deleteTherapist(id: $id) {
-        status
-    }
-}

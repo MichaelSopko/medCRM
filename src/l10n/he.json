@@ -44,7 +44,7 @@
     "error_disabled": "Your account had been disabled by administrator"
   },
   "ProfileWidget": {
-    "logout": "להתנתק",
+    "logout": "יציאה",
     "settings": "הגדרות"
   },
   "ClinicsSelector": {
@@ -79,10 +79,16 @@
     "field_clinic_error": "נא לבחור קליניקה"
   },
   "Therapists": {
-    "create_button": "מטופל חדש",
-    "create_header": "מטופל חדש",
+    "create_button": "מטפל חדש",
+    "create_header": "מטפל חדש",
     "edit_header": "עריכת מטפל",
     "header": "מטפלים",
+    "field_title": {
+      "name": "Title",
+      "value1": "none",
+      "value2": "P.hd.",
+      "value3": "Mba"
+    },
     "registration_email": {
       "subject": "Registration"
     }
@@ -93,9 +99,13 @@
     "edit_header": "ערוך מטופל",
     "header": "מטופלים",
     "field_related_persons": "קרובים",
+    "field_related_person_1": "מקורב 1",
+    "field_related_person_2": "מקורב 2",
     "field_person_type": "קרבה",
     "field_person_type_error": "נא לבחור סוג קרבה",
     "field_person_description": "תיאור",
+    "field_person_name": "שם",
+    "field_person_name_error": "נא לציין שם",
     "add_related_persons": "הוספת מקורב",
     "upload_files": "העלאת קבצים",
     "field_files": "קבצים",
@@ -118,16 +128,16 @@
     "archived_message": "מטופל נשלח לארכיון",
     "unarchived_message": "מטופל הוסר מארכיון",
     "field_receive_updates": "מעוניין לקבל עדכונים למייל",
-    "diagnose_fillers": "Diagnose fillers",
-    "diagnose_date": "Diagnose date",
-    "print_date": "Print date",
-    "age_in_diagnose": "Age in diagnose",
-    "patient_name": "Patient name",
-    "add_filler": "Add filler",
+    "diagnose_fillers": "כותבי האבחון",
+    "diagnose_date": "תאריך האבחון",
+    "print_date": "תאריך הדפסה",
+    "age_in_diagnose": "גיל בזמן האבחון",
+    "patient_name": "שם המטופל",
+    "add_filler": "הוספה ממלא אבחון",
     "field_empty": "<מידע ריק>"
   },
   "TreatmentSummaryTab": {
-    "create_title": "Generate treatment summary",
+    "create_title": "סיכום טיפול חדש",
     "treatments_length": "משך הטיפול",
     "treatment_targets": "מטרות הטיפול",
     "parents_involment": "שיתוף פעולה ומעורבות ההורים",
@@ -135,12 +145,12 @@
     "recommendations": "המלצות"
   },
   "DiagnoseTab": {
-    "create_title": "Generate diagnose",
-    "hearing_test": "Hearing test",
-    "hearing_test_remarks": "Remarks for hearing test",
-    "hearing_test_date": "Date",
+    "create_title": "אבחון חדש",
+    "hearing_test": "האם נערכה בדיקת שמיעה",
+    "hearing_test_remarks": "הערות לבדיקת שמיעה",
+    "hearing_test_date": "תאריך",
     "tab1": "רקע כללי והתפתחותי",
-    "tab2": "כלי אבחון",
+    "tab2": "ממצאי אבחון",
     "tab3": "סיכום",
     "pregnancy_and_birth": "הריון ולידה",
     "psychomotor_progression": "התפתחות פסיכומוטורית",
@@ -152,7 +162,7 @@
     "environmental_context": "הקשר סביבתי",
     "parents_report": "דיווח הורים",
     "kindergarten_teacher_report": "דיווח גננת",
-    "diagnose_tools": "אבחון כלי",
+    "diagnose_tools": "כלי אבחון",
     "behaviour_and_general_impression": "התנהגות והתרשמות כללית",
     "communications_skills": "מיומנויות תקשורת",
     "gaming_skills": "מיומנויות משחק ",
@@ -188,13 +198,69 @@
       "subject": "עדכון טיפול עבור מטופל",
       "content": "תאריך התחלה: {start_date}, תאריך סיום: {end_date}"
     },
-    "repeat_weeks": "Repeat this treatment for X weeks",
-    "treatment_collided_error": "This patient already has a treatment for selected time"
+    "repeat_weeks": "חזור על הטיפול מספר שבועות",
+    "treatment_collided_error": "מועד הטיפול מתנגש עם טיפולים אחרים",
+    "create_object_button": {
+      "treatment": "הוספה טיפול",
+      "school_observation": "תצפית גן/בית ספר",
+      "staff_meeting": "ישיבת צוות",
+      "outside_source_consult": "שיחה עם גורם חיצוני"
+    },
+    "object_label_name": {
+      "Treatment": "טיפול",
+      "SchoolObservation": "תצפית גן/בית ספר",
+      "StaffMeeting": "ישיבת צוות",
+      "OutsideSourceConsult": "שיחה עם גורם חיצוני"
+    },
+    "school_observation": {
+      "create_header": "תצפית חדשה",
+      "update_header": "עריכת תצפית",
+      "tab1": "רקע",
+      "tab2": "סיכום תצפית",
+      "field": {
+        "observationReason": "סיבת התצפית",
+        "educationEntity": "מוסד חינוכי",
+        "context": "הקשר",
+        "generalBackground": "רקע כללי",
+        "familyBackground": "רקע משפחתי",
+        "medicalBackground": "רקע רפואי",
+        "previousDiagnoses": "אבחנות קודמות",
+        "educationalFramework": "מסגרת חינוכית",
+        "observationFindings": "ממצאי התצפית",
+        "observationSummary": "סיכום התצפית"
+      }
+    },
+    "outside_source_consult": {
+      "create_header": "חדש",
+      "update_header": "עריכה",
+      "field": {
+        "consultantRole": "תפקיד הגורם",
+        "meetingSummary": "סיכום הפגישה"
+      }
+    },
+    "staff_meeting": {
+      "create_header": "חדש",
+      "update_header": "עריכה",
+      "field": {
+        "participants": "משתתפים",
+        "nextRecommendation": "המלצות לפגישה הבאה",
+        "protocol": "פירוט הישיבה",
+        "meetingPurpose": "meeting purpose"
+      }
+    },
+    "grid_headers": {
+      "past_treatments": "טיפולים קודמים",
+      "future_treatments": "טיפולים עתידיים",
+      "total_treatments": "סה\"כ טיפולים",
+      "school_observations": "תצפיות",
+      "staff_meetings": "ישיבות צוות",
+      "outside_source_consults": "גורם חיצוני"
+    }
   },
   "Calendar": {
     "header": "הראה טיפולים",
     "show_all": "הראה הכל",
-    "allDay": "All day",
+    "allDay": "כל היום",
     "previous": "הקודם",
     "next": "הבא",
     "today": "היום",
@@ -202,6 +268,12 @@
     "week": "שבוע",
     "day": "יום",
     "agenda": "רשימה"
+  },
+  "Settings": {
+    "tab1": "General",
+    "header": "Settings",
+    "save_button": "Save",
+    "success_message": "Settings saved"
   },
   "common": {
     "field_name": "שם",
@@ -217,12 +289,13 @@
     "field_email": "אימייל",
     "field_email_error": "נא להכניס אימייל",
     "field_fax": "פקס",
-    "field_actions": "אקשנים",
+    "field_actions": "פעולות",
     "confirm_message": "האם אתה בטוח?",
     "confirm_yes": "כן",
     "confirm_no": "לא",
     "action_delete": "מחיקה",
-    "action_create": "יצירה",
+    "action_create": "שמירה",
+    "action_save": "שמירה",
     "action_edit": "עריכה",
     "field_new_password": "סיסמא חדשה",
     "field_password": "סיסמא",
@@ -244,29 +317,30 @@
     "field_year": "שנה",
     "field_month": "חודש",
     "field_day": "יום",
-    "field_hours": "hours",
-    "field_minutes": "minutes",
+    "field_hours": "שעות",
+    "field_minutes": "דקות",
     "size": "גודל",
     "action_archive": "שלח לארכיון",
     "action_unarchive": "הוצא מארכיון",
+    "field_date": "Date",
     "gender": {
-      "field_name": "Gender",
-      "field_error": "Please set a gender",
-      "MALE": "Male",
-      "FEMALE": "Female"
+      "field_name": "מין",
+      "field_error": "נא לבחור מין",
+      "MALE": "זכר",
+      "FEMALE": "נקבה"
     },
-    "action_view": "View",
-    "action_print": "Print",
-    "action_cancel": "Cancel",
+    "action_view": "צפיה",
+    "action_print": "הדפסה",
+    "action_cancel": "ביטול",
     "age": {
-      "years": "years",
-      "months": "months",
-      "days": "days"
+      "years": "שנים",
+      "months": "חודשים",
+      "days": "ימים"
     },
     "modal_save_confirm": {
-      "ok": "Close",
-      "cancel": "Return to editing",
-      "title": "You have unsaved changes"
+      "ok": "סגירה",
+      "cancel": "חזרה לעריכה",
+      "title": "שינויים שלא נשמרו"
     }
   }
 }

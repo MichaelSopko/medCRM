@@ -1,53 +1,55 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { Form, Icon, Input, Button, Checkbox, message } from 'antd';
+import { Form, Icon, Input, Button, Checkbox, message } from 'antd'
+import PropTypes from 'prop-types';
+
 import './Login.scss';
 import ROLES from '../../helpers/constants/roles';
 
 @connect(
-  false,
-  dispatch => ({
-    setCurrentClinic(clinic) {
-      dispatch({
-        type: 'SET_CLINIC',
-        clinic,
-      });
-    },
-    setCurrentUser(user) {
-      dispatch({
-        type: 'SET_USER',
-        user,
-      });
-    },
-  }),
+	false,
+	(dispatch) => ({
+		setCurrentClinic(clinic) {
+			dispatch({
+				type: 'SET_CLINIC',
+				clinic,
+			});
+		},
+		setCurrentUser(user) {
+			dispatch({
+				type: 'SET_USER',
+				user,
+			});
+		},
+	}),
 )
 class Login extends Component {
 
-  static contextTypes = {
-    router: PropTypes.object.isRequired,
-    currentUser: PropTypes.object.isRequired,
-    intl: PropTypes.object.isRequired,
-  };
+	static contextTypes = {
+		router: PropTypes.object.isRequired,
+		currentUser: PropTypes.object.isRequired,
+		intl: PropTypes.object.isRequired,
+	};
 
-  state = {
-    loading: false,
-  };
+	state = {
+		loading: false,
+	};
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    const formatMessage = this.context.intl.formatMessage;
-    this.props.form.validateFields(async (err, values) => {
-      if (!err) {
-        this.setState({ loading: true });
-        console.log('Received values of form: ', values);
-        try {
-          const resp = await fetch('/api/authentication', {
-            method: 'POST',
-            body: JSON.stringify(values),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }).then(r => r.json());
+	handleSubmit = e => {
+		e.preventDefault();
+		const formatMessage = this.context.intl.formatMessage;
+		this.props.form.validateFields(async (err, values) => {
+			if (!err) {
+				this.setState({ loading: true });
+				console.log('Received values of form: ', values);
+				try {
+					const resp = await fetch('/api/authentication', {
+						method: 'POST',
+						body: JSON.stringify(values),
+						headers: {
+							'Content-Type': 'application/json',
+						},
+					}).then(r => r.json());
 
           this.setState({ loading: false });
           if (resp.token) {

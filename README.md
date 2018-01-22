@@ -24,3 +24,8 @@ Make sure that `Docker` ran on your machine
 Or without `Docker`, but make sure that `MySQL` server installed and ran
 `npm run start:dev`
 
+### Use https
+
+set `USE_SSL` env var to true, and create `keys/key.pem` and `keys/cert.pem`
+set `HTTP_PORT=80`
+set `PORT=443`

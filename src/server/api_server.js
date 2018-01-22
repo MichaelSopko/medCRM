@@ -8,12 +8,14 @@ import https from 'https';
 import path from 'path';
 import jwt from 'express-jwt';
 import fs from 'fs';
+// import cookieParser from 'cookie-parser';
 
-import { app as settings } from '../../package.json';
-import log from '../log';
-import Clinics from './sql/clinics';
-import Users from './sql/users';
-import Treatments from './sql/treatments';
+import { app as settings } from '../../package.json'
+import log from '../log'
+import Clinic from './sql/models/Clinic';
+import TreatmentObject from './sql/models/TreatmentObject';
+import Users from './sql/models/users';
+import Treatments from './sql/models/treatments';
 
 // Hot reloadable modules
 let websiteMiddleware = require('./middleware/website').default;
@@ -21,13 +23,28 @@ let graphiqlMiddleware = require('./middleware/graphiql').default;
 let graphqlMiddleware = require('./middleware/graphql').default;
 let authenticationMiddleware = require('./middleware/authentication').default;
 let uploadsMiddleware = require('./middleware/uploads').default;
-let subscriptionManager = require('./api/subscriptions').subscriptionManager;
+let subscriptionManager = require('./graphql/subscriptions').subscriptionManager;
 
 let server;
 
 const app = express();
 
+// const jwtMiddleware = jwt({
+// 	secret: settings.secret,
+// 	getToken: (req) => {
+// 		if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+// 			return req.headers.authorization.split(' ')[1];
+// 		} else if (req.cookies && req.cookies.token) {
+// 			return req.cookies.token;
+// 		}
+// 		return null;
+// 	}
+// });
+
 const port = process.env.PORT || settings.apiPort;
+
+console.log('PORT: ' + process.env.PORT);
+console.log('HTTP_PORT: ' + process.env.HTTP_PORT);
 
 // Don't rate limit heroku
 app.enable('trust proxy');
@@ -48,6 +65,7 @@ if (__DEV__) {
 }
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+// app.use(cookieParser());
 
 app.use('/', express.static(settings.frontendBuildDir, { maxAge: '180 days' }));
 app.use('/uploads', express.static(settings.uploadsDir, {
@@ -55,11 +73,13 @@ app.use('/uploads', express.static(settings.uploadsDir, {
 	  res.attachment();
   },
 }));
+app.use('/documents', express.static('documents'));
 if (__DEV__) {
-  app.use('/assets', express.static(path.join(settings.backendBuildDir, 'assets'), { maxAge: '180 days' }));
+	app.use('/assets', express.static(path.join(settings.backendBuildDir, 'assets'), { maxAge: '180 days' }));
 } else {
-  app.use('/assets', express.static(settings.frontendBuildDir, { maxAge: '180 days' }));
+	app.use('/assets', express.static(settings.frontendBuildDir, { maxAge: '180 days' }));
 }
+// app.use('/graphql', jwtMiddleware, (...args) => graphqlMiddleware(...args));
 
 const jwtMiddleware = jwt({ secret: settings.secret });
 
@@ -74,50 +94,78 @@ app.use('/graphql', (req, res, next) => {
 app.use('/graphql', (...args) => graphqlMiddleware(...args));
 app.use('/graphiql', (...args) => graphiqlMiddleware(...args));
 app.use('/api/authentication', (...args) => authenticationMiddleware(...args));
-app.use('/api/upload-file', jwt({ secret: settings.secret }), (...args) => uploadsMiddleware(...args));
+app.use('/api/upload-file', jwtMiddleware, (...args) => uploadsMiddleware(...args));
 app.use((...args) => websiteMiddleware(...args));
 
 server = http.createServer(app);
 
+// server = !__SSL__ ? http.createServer(app) : https.createServer({
+// 	key: fs.readFileSync('keys/private.key'),
+// 	cert: fs.readFileSync('keys/certificate.crt')
+// }, app);
+
+// if (__SSL__ && process.env.HTTP_PORT) {
+// 	console.log("Running secured server");
+// 	http.createServer(function (req, res) {
+// 		res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+// 		res.end();
+// 	}).listen(process.env.HTTP_PORT);
+// }
+
 new SubscriptionServer({
-  subscriptionManager,
-  onConnect: async (connectionParams, webSocket) => ({
-    Clinics: new Clinics(),
-    Users: new Users(),
-    Treatments: new Treatments(),
-    currentUser: false, // TODO: implement security here
-  }),
+	subscriptionManager,
+	onConnect: async (connectionParams, webSocket) => {
+		return {
+			Clinic,
+			TreatmentObject,
+			Users: new Users(),
+			Treatments: new Treatments(),
+			currentUser: false, // TODO: implement security here
+		};
+	},
 }, {
-  server,
-  path: '/',
+	server,
+	path: '/',
 });
 
 server.listen(port, () => {
-  log.info(`API is now running on port ${port}`);
+	log.info(`API is now running on port ${port}`);
 });
 
 server.on('close', () => {
-  server = undefined;
+	server = undefined;
 });
 
 if (module.hot) {
-  try {
-    module.hot.dispose(() => {
-      if (server) {
-        server.close();
-      }
-    });
+	try {
+		module.hot.dispose(() => {
+			if (server) {
+				server.close();
+			}
+		});
 
-    module.hot.accept();
+		module.hot.accept();
 
-    // Reload reloadable modules
-    module.hot.accept('./middleware/website', () => { websiteMiddleware = require('./middleware/website').default; });
-    module.hot.accept('./middleware/graphql', () => { graphqlMiddleware = require('./middleware/graphql').default; });
-    module.hot.accept('./middleware/graphiql', () => { graphiqlMiddleware = require('./middleware/graphiql').default; });
-    module.hot.accept('./api/subscriptions', () => { subscriptionManager = require('./api/subscriptions').subscriptionManager; });
-    module.hot.accept('./middleware/authentication', () => { authenticationMiddleware = require('./middleware/authentication').default; });
-    module.hot.accept('./middleware/uploads', () => { uploadsMiddleware = require('./middleware/uploads').default; });
-  } catch (err) {
-    log(err.stack);
-  }
+		// Reload reloadable modules
+		module.hot.accept('./middleware/website', () => {
+			websiteMiddleware = require('./middleware/website').default;
+		});
+		module.hot.accept('./middleware/graphql', () => {
+			graphqlMiddleware = require('./middleware/graphql').default;
+		});
+		module.hot.accept('./middleware/graphiql', () => {
+			graphiqlMiddleware = require('./middleware/graphiql').default;
+		});
+		module.hot.accept('./graphql/subscriptions', () => {
+			subscriptionManager = require('./graphql/subscriptions').subscriptionManager;
+		});
+		module.hot.accept('./middleware/authentication', () => {
+			authenticationMiddleware = require('./middleware/authentication').default;
+		});
+		module.hot.accept('./middleware/uploads', () => {
+			uploadsMiddleware = require('./middleware/uploads').default;
+		});
+	} catch (err) {
+		log(err.stack);
+	}
 }

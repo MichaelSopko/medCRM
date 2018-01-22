@@ -83,6 +83,12 @@
     "create_header": "Create Therapist",
     "edit_header": "Edit Therapist",
     "header": "Therapists",
+    "field_title": {
+      "name": "Title",
+      "value1": "none",
+      "value2": "P.hd.",
+      "value3": "Mba"
+    },
     "registration_email": {
       "subject": "Registration"
     }
@@ -116,7 +122,12 @@
     "archive_error_time": "This patient cannot be unarchived for {time}",
     "archived_message": "Patient archived",
     "unarchived_message": "Patient unarchived",
-    "field_receive_updates": "Receive updates to email"
+    "field_receive_updates": "Receive updates to email",
+    "age_in_diagnose": "Age in diagnose",
+    "print_date": "Print date",
+    "diagnose_fillers": "Diagnose fillers",
+    "patient_name": "Patient name",
+    "diagnose_date": "Diagnose date"
   },
   "Treatments": {
     "create_treatment_button": "Add treatment",
@@ -142,11 +153,73 @@
       "subject": "Schedule updated for patient: {patient}",
       "content": "Start date: {start_date}, End date: {end_date}"
     },
-    "treatment_collided_error": "This patient already has a treatment for selected time"
+    "treatment_collided_error": "This patient already has a treatment for selected time",
+    "create_object_button": {
+      "treatment": "Add treatment",
+      "school_observation": "School Observation",
+      "staff_meeting": "Staff meeting",
+      "outside_source_consult": "Outside source consult"
+    },
+    "object_label_name": {
+      "Treatment": "treatment",
+      "SchoolObservation": "school observation",
+      "StaffMeeting": "staff meeting",
+      "OutsideSourceConsult": "outside source consult"
+    },
+    "school_observation": {
+      "create_header": "New School Observation",
+      "update_header": "Edit School Observation",
+      "tab1": "Background",
+      "tab2": "Observation summary",
+      "field": {
+        "observationReason": "observationReason",
+        "educationEntity": "educationEntity",
+        "context": "context",
+        "generalBackground": "generalBackground",
+        "familyBackground": "familyBackground",
+        "medicalBackground": "medicalBackground",
+        "previousDiagnoses": "previousDiagnoses",
+        "educationalFramework": "educationalFramework",
+        "observationFindings": "observationFindings",
+        "observationSummary": "observationSummary"
+      }
+    },
+    "outside_source_consult": {
+      "create_header": "New Outside source consult",
+      "update_header": "Edit Outside source consult",
+      "field": {
+        "consultantRole": "consultantRole",
+        "meetingSummary": "meetingSummary"
+      }
+    },
+    "staff_meeting": {
+      "create_header": "New staff meeting",
+      "update_header": "Edit staff meeting",
+      "field": {
+        "participants": "participants",
+        "nextRecommendation": "nextRecommendation",
+        "protocol": "protocol",
+        "meetingPurpose": "meeting purpose"
+      }
+    },
+    "grid_headers": {
+      "past_treatments": "Past treatments",
+      "future_treatments": "Future treatments",
+      "total_treatments": "Total treatments",
+      "school_observations": "School Observations",
+      "staff_meetings": "Staff meetings",
+      "outside_source_consults": "Outside source consults"
+    }
   },
   "Calendar": {
     "header": "View treatments",
     "show_all": "Show all"
+  },
+  "Settings": {
+    "tab1": "General",
+    "header": "Settings",
+    "save_button": "Save",
+    "success_message": "Settings saved"
   },
   "common": {
     "size": "Size",
@@ -189,10 +262,16 @@
     "field_year": "Year",
     "field_month": "Month",
     "field_day": "Day",
+    "field_date": "Date",
     "modal_save_confirm": {
       "ok": "Close",
       "cancel": "Return to editing",
       "title": "You have unsaved changes"
+    },
+    "gender": {
+      "field_name": "Gender",
+      "MALE": "Male",
+      "FEMALE": "Female"
     }
   }
 }

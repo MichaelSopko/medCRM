@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, { } from 'react'; import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Modal, Form, Col, Row, DatePicker, Input, Icon, Button, Switch, Radio, Select } from 'antd';
 import moment from 'moment';
@@ -9,7 +9,7 @@ import withCurrentUser from '../../../utils/withCurrentUser';
 const PatientObjectForm = (props, context) => {
 	const formatMessage = context.intl.formatMessage;
 	const { patient, visible, onSubmit, onCancel, form, loading, title, therapists, currentUser, showHearingTest, renderFields, object } = props;
-	const { getFieldDecorator } = form;
+	const { getFieldDecorator, isFieldsTouched } = form;
 	const formItemLayout = {
 		labelCol: { span: 6 },
 		wrapperCol: { span: 14 },
@@ -17,7 +17,7 @@ const PatientObjectForm = (props, context) => {
 	const isEditing = !!Object.keys(object).length;
 
 	let bdate = moment(patient.birth_date);
-	let diff = moment.duration(moment().diff(bdate));
+	let diff = moment.duration(isEditing ? +object.patient_age : moment().diff(bdate));
 	const age = {
 		years: diff.years() || '0',
 		months: diff.months() || '0',
@@ -32,12 +32,19 @@ const PatientObjectForm = (props, context) => {
 		selectedFillers = object.fillers.map(t => t.id == -1 ? t.first_name : t.id.toString());
 	}
 
+	const checkForConfirm = () => isFieldsTouched() ? Modal.confirm({
+		title: formatMessage({ id: 'common.modal_save_confirm.title' }),
+		onOk: onCancel,
+		okText: formatMessage({ id: 'common.modal_save_confirm.ok' }),
+		cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' })
+	}) : onCancel();
+
 	return (
 		<Modal title={title}
 		       visible={visible}
 		       okText={ isEditing ? formatMessage({ id: 'common.action_edit' }) : formatMessage({ id: 'common.action_create' }) }
 		       onOk={onSubmit}
-		       onCancel={onCancel}
+		       onCancel={checkForConfirm}
 		       width={1000}
 		       confirmLoading={loading}>
 			<Form className='PatientObjectForm'>
@@ -139,7 +146,7 @@ const PatientObjectForm = (props, context) => {
 						initialValue: object.hearing_test_remark,
 						rules: [],
 					})(
-						<Input type='textarea' />,
+						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
 					)}
 				</Form.Item> }
 				{ form.getFieldValue('hearing_test_trigger') === 'YES' && <Form.Item

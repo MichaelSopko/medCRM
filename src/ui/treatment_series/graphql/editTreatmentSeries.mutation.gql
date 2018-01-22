@@ -1,0 +1,13 @@
+mutation editTreatmentSeries(
+$id: ID!
+$name: String
+$treatments_number: Int!
+) {
+    updateTreatmentSeries(
+        id: $id
+        name: $name
+        treatments_number: $treatments_number
+    ) {
+        status
+    }
+}

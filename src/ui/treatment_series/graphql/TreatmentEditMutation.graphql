@@ -1,0 +1,24 @@
+mutation editTreatment(
+$id: ID!
+$treatment: TreatmentInput
+) {
+    editTreatment(
+        id: $id
+        treatment: $treatment
+    ) {
+        id
+        target
+        method
+        process
+        parents_guidance
+        next_treatment_remark
+        therapists {
+            id
+            id_number
+            first_name
+            last_name
+        }
+        start_date
+        end_date
+    }
+}

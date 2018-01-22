@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component, } from 'react'; import PropTypes from 'prop-types';
 import {
 	Table,
 	Icon,
@@ -15,6 +15,7 @@ import {
 	notification,
 	Checkbox,
 	Radio,
+	Tooltip,
 } from 'antd'
 import moment from 'moment';
 
@@ -44,16 +45,18 @@ export default Form.create()(
 			title: formatMessage({ id: 'common.modal_save_confirm.title' }),
 			onOk: onCancel,
 			okText: formatMessage({ id: 'common.modal_save_confirm.ok' }),
-			cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' })
+			cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' }),
 		}) : onCancel();
 
+		const hasFirstPerson = form.getFieldValue('related_persons[0].type') !== undefined;
+
 		return (
-			<Modal title={ formatMessage({ id: isEditing ? 'Patients.edit_header' : 'Patients.create_header' }) }
+			<Modal title={formatMessage({ id: isEditing ? 'Patients.edit_header' : 'Patients.create_header' })}
 			       visible={visible}
-			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
+			       okText={formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' })}
 			       onCancel={checkForConfirm}
 			       onOk={onSubmit}
-			       width={600}
+			       width={960}
 			       confirmLoading={loading}>
 				<Form>
 					<Form.Item
@@ -70,24 +73,10 @@ export default Form.create()(
 								message: formatMessage({ id: 'common.field_id_number_error' }),
 							}],
 						})(
-							<Input type="number" />,
+							<Input type='number' />,
 						)}
 					</Form.Item>
-					{ <Form.Item
-						{...formItemLayout}
-						label={formatMessage({ id: 'common.field_email' })}
-						hasFeedback
-					>
-						{getFieldDecorator('profile_email', {
-							initialValue: values.profile_email,
-							validateTrigger: 'onBlur', rules: [{
-								type: 'email', message: formatMessage({ id: 'common.field_email_error' }),
-							}],
-						})(
-							<Input type="email" />,
-						)}
-					</Form.Item> }
-					{ <Form.Item
+					{<Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'common.field_first_name' })}
 						hasFeedback
@@ -100,8 +89,8 @@ export default Form.create()(
 						})(
 							<Input />,
 						)}
-					</Form.Item> }
-					{ <Form.Item
+					</Form.Item>}
+					{<Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'common.field_last_name' })}
 						hasFeedback
@@ -114,8 +103,8 @@ export default Form.create()(
 						})(
 							<Input />,
 						)}
-					</Form.Item> }
-					{ <Form.Item
+					</Form.Item>}
+					{<Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'common.field_phone' })}
 						hasFeedback
@@ -124,13 +113,13 @@ export default Form.create()(
 							initialValue: values.phone,
 							validateTrigger: 'onBlur', rules: [{
 								pattern: /^\d{2,9}-?\d{2,9}?-?\d{0,9}$/,
-								required: true, message: formatMessage({ id: 'common.field_phone_error' }),
+								required: false, message: formatMessage({ id: 'common.field_phone_error' }),
 							}],
 						})(
 							<Input />,
 						)}
-					</Form.Item> }
-					{ <Form.Item
+					</Form.Item>}
+					{<Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'Patients.field_health_maintenance' })}
 						hasFeedback
@@ -140,13 +129,13 @@ export default Form.create()(
 							validateTrigger: 'onBlur', rules: [],
 						})(
 							<Select>
-								{ Object.keys(HEALTH_MAINTENANCES).map(key => <Select.Option value={key} key={key}>
-									{HEALTH_MAINTENANCES[key]}
-								</Select.Option>) }
+								{Object.keys(HEALTH_MAINTENANCES).map(key => <Select.Option value={key} key={key}>
+									{formatMessage({ id: `health_maintenance.${key}` })}
+								</Select.Option>)}
 							</Select>,
 						)}
-					</Form.Item> }
-					{ <Form.Item
+					</Form.Item>}
+					{<Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'common.gender.field_name' })}
 						hasFeedback
@@ -162,8 +151,8 @@ export default Form.create()(
 								<Radio value='FEMALE'>{formatMessage({ id: 'common.gender.FEMALE' })}</Radio>
 							</Radio.Group>,
 						)}
-					</Form.Item> }
-					{ <Form.Item
+					</Form.Item>}
+					{<Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'common.field_birth_date' })}
 						hasFeedback
@@ -176,10 +165,10 @@ export default Form.create()(
 								}],
 							})(
 								<Select placeholder={formatMessage({ id: 'common.field_year' })}>
-									{ new Array(100).fill(new Date().getFullYear()).map((_, i) => {
+									{new Array(100).fill(new Date().getFullYear()).map((_, i) => {
 										const y = _ - i;
 										return (<Select.Option key={i} value={y.toString()}>{y}</Select.Option>)
-									}) }
+									})}
 								</Select>,
 							)}
 						</Col>
@@ -191,10 +180,10 @@ export default Form.create()(
 								}],
 							})(
 								<Select placeholder={formatMessage({ id: 'common.field_day' })}>
-									{ new Array(31).fill(1).map((_, i) => {
+									{new Array(31).fill(1).map((_, i) => {
 										const y = ++i;
 										return (<Select.Option key={y} value={y.toString()}>{y}</Select.Option>)
-									}) }
+									})}
 								</Select>,
 							)}
 						</Col>
@@ -206,16 +195,152 @@ export default Form.create()(
 								}],
 							})(
 								<Select placeholder={formatMessage({ id: 'common.field_month' })}>
-									{ new Array(12).fill(12).map((_, i) => {
+									{new Array(12).fill(12).map((_, i) => {
 										const y = _ - i;
 										return (<Select.Option key={i} value={(y - 1).toString()}>{moment.months()[y - 1]}</Select.Option>)
-									}).reverse() }
+									}).reverse()}
 								</Select>,
 							)}
 						</Col>
+					</Form.Item>}
 
+					{ !isEditing && <Form.Item
+						{...formItemLayout}
+						label={formatMessage({ id: 'Patients.field_related_person_1' })}
+					>
+						<Row type='flex' gutter={16}>
+							<Col span={6}>
+								<Form.Item
+									hasFeedback
+								>
+									{getFieldDecorator(`related_persons[0].type`, {
+										validateTrigger: 'onBlur',
+										initialValue: values.type,
+										rules: [{ message: formatMessage({ id: 'Patients.field_person_type_error' }) }],
+									})(
+										<Select placeholder={formatMessage({ id: 'Patients.field_person_type' })}>
+											{Object.keys(RELATED_PERSONS).map(key => <Select.Option value={key} key={key}>
+												{formatMessage({ id: `related_persons.${RELATED_PERSONS[key]}` })}
+											</Select.Option>)}
+										</Select>,
+									)}
+								</Form.Item>
+							</Col>
+
+							<Col span={8}>
+							<Form.Item
+								hasFeedback
+							>
+								{getFieldDecorator(`related_persons[0].name`, {
+									initialValue: values.name,
+									validateTrigger: 'onBlur',
+									rules: [{ required: hasFirstPerson, message: formatMessage({ id: 'Patients.field_person_name_error' }) }],
+
+								})(
+									<Input placeholder={formatMessage({ id: 'Patients.field_person_name' })} />,
+								)}
+							</Form.Item>
+							</Col>
+								<Col span={8}>
+							<Form.Item
+								hasFeedback
+							>
+								{getFieldDecorator(`related_persons[0].email`, {
+									validateTrigger: 'onBlur',
+									initialValue: values.email,
+									rules: [{ type: 'email', message: formatMessage({ id: 'common.field_email_error' }) }],
+								})(
+									<Input type='email' placeholder={formatMessage({ id: 'common.field_email' })} />,
+								)}
+							</Form.Item>
+							</Col>
+							<Col span={2}>
+							<Tooltip title={formatMessage({ id: 'Patients.field_receive_updates' })} placement='topRight'>
+								<div>
+									<Form.Item>
+										{getFieldDecorator(`related_persons[0].receive_updates`, {
+											validateTrigger: 'onBlur',
+											initialValue: values.receive_updates,
+											valuePropName: 'checked',
+											rules: [],
+										})(
+											<Checkbox />,
+										)}
+									</Form.Item>
+								</div>
+							</Tooltip>
+							</Col>
+						</Row>
 					</Form.Item> }
 
+					{ !isEditing && <Form.Item
+						{...formItemLayout}
+						label={formatMessage({ id: 'Patients.field_related_person_2' })}
+					>
+						<Row type='flex' gutter={16}>
+							<Col span={6}>
+								<Form.Item
+									hasFeedback
+								>
+									{getFieldDecorator(`related_persons[1].type`, {
+										validateTrigger: 'onBlur',
+										initialValue: values.type,
+										rules: [{ message: formatMessage({ id: 'Patients.field_person_type_error' }) }],
+									})(
+										<Select placeholder={formatMessage({ id: 'Patients.field_person_type' })} disabled={!hasFirstPerson}>
+											{Object.keys(RELATED_PERSONS).map(key => <Select.Option value={key} key={key}>
+												{formatMessage({ id: `related_persons.${RELATED_PERSONS[key]}` })}
+											</Select.Option>)}
+										</Select>,
+									)}
+								</Form.Item>
+							</Col>
+
+							<Col span={8}>
+							<Form.Item
+								hasFeedback
+							>
+								{getFieldDecorator(`related_persons[1].name`, {
+									initialValue: values.name,
+									validateTrigger: 'onBlur',
+									rules: [{ required: form.getFieldValue('related_persons[1].type') !== undefined, message: formatMessage({ id: 'Patients.field_person_name_error' }) }],
+
+								})(
+									<Input placeholder={formatMessage({ id: 'Patients.field_person_name' })} disabled={!hasFirstPerson} />,
+								)}
+							</Form.Item>
+							</Col>
+								<Col span={8}>
+							<Form.Item
+								hasFeedback
+							>
+								{getFieldDecorator(`related_persons[1].email`, {
+									validateTrigger: 'onBlur',
+									initialValue: values.email,
+									rules: [{ type: 'email', message: formatMessage({ id: 'common.field_email_error' }) }],
+								})(
+									<Input type='email' placeholder={formatMessage({ id: 'common.field_email' })} disabled={!hasFirstPerson} />,
+								)}
+							</Form.Item>
+							</Col>
+							<Col span={2}>
+							<Tooltip title={formatMessage({ id: 'Patients.field_receive_updates' })} placement='topRight'>
+								<div>
+									<Form.Item>
+										{getFieldDecorator(`related_persons[1].receive_updates`, {
+											validateTrigger: 'onBlur',
+											initialValue: values.receive_updates,
+											valuePropName: 'checked',
+											rules: [],
+										})(
+											<Checkbox disabled={!hasFirstPerson} />,
+										)}
+									</Form.Item>
+								</div>
+							</Tooltip>
+							</Col>
+						</Row>
+					</Form.Item> }
 				</Form>
 			</Modal>
 		);

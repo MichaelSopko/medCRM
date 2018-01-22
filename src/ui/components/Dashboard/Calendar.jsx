@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component, } from 'react'; import PropTypes from 'prop-types';
 import { Link } from 'react-router'
 import { connect } from 'react-redux';
 import { graphql, compose, withApollo } from 'react-apollo'
@@ -27,19 +27,20 @@ import {
 	Checkbox,
 	notification,
 	message,
+	Spin
 } from 'antd'
 import ColorHash from 'color-hash'
 import { FormattedMessage } from 'react-intl'
 
 import PATIENTS_LIST_QUERY from '../../patient/graphql/PatientsList.graphql'
-import GET_TREATMENTS_QUERY from '../../graphql/TreatmentsGet.graphql'
+import GET_TREATMENTS_QUERY from '../../treatment_series/graphql/treatments.query.gql'
+import UPDATE_OBJECT_MUTATION from '../../treatment_series/graphql/updateTreatmentSeriesObject.mutation.gql'
 
 import ROLES from '../../../helpers/constants/roles'
 import ClinicsSelector from '../ClinicsSelector'
 import CheckAccess from '../helpers/CheckAccess'
 import PatientSelector from '../PatientSelector'
-import EDIT_TREATMENT_MUTATION from '../../graphql/TreatmentEditMutation.graphql'
-import {TreatmentForm} from '../Treatments';
+import {TreatmentForm} from '../../treatment_series/components/TreatmentForm';
 
 import './Calendar.scss'
 
@@ -61,6 +62,12 @@ class TreatmentsCalendar extends Component {
 		currentTreatment: null,
 	}
 
+	componentWillMount() {
+		if (this.props.data && !this.props.data.loading) {
+			this.props.data.refetch();
+		}
+	}
+
 	moveEvent = ({ event, start, end }) => {
 		const formatMessage = this.context.intl.formatMessage;
 		const errorHandler = e => {
@@ -76,8 +83,11 @@ class TreatmentsCalendar extends Component {
 
 		this.props.mutate({ variables: {
 			id: event.id,
-			treatment: {
-				start_date: start, end_date: end,
+			object: {
+				TreatmentInput: {
+					start_date: start,
+					end_date: end,
+				},
 			},
 		}}).catch(errorHandler);
 	}
@@ -112,7 +122,7 @@ class TreatmentsCalendar extends Component {
 				return;
 			}
 			this.setState({ modalLoading: true });
-			this.props.mutate({ variables: { id: this.state.currentTreatment.id, treatment: values }}).then(() => {
+			this.props.mutate({ variables: { id: this.state.currentTreatment.id, object: { TreatmentInput: values } }}).then(() => {
 				form.resetFields();
 				this.setState({ modalLoading: false, currentTreatment: null });
 			}).catch(errorHandler);
@@ -129,15 +139,15 @@ class TreatmentsCalendar extends Component {
 
 		let events = [];
 		treatmentSeries.forEach(series => {
-			events.push(...series.treatments.map(t => ({ series, ...t })));
-		})
+			events.push(...series.objects.filter(obj => obj.__typename === 'Treatment').map(t => ({ series, ...t })));
+		});
 		events = events.map(treatment => {
 			const startDate = new Date(treatment.start_date);
 			const userTimezoneOffset = startDate.getTimezoneOffset() * 60000;
 			const endDate = new Date(treatment.end_date);
 			return {
-				start: new Date(startDate.getTime() + userTimezoneOffset),
-				end: new Date(endDate.getTime() + userTimezoneOffset),
+				start: new Date(startDate.getTime()),
+				end: new Date(endDate.getTime()),
 				title: `${treatment.series.patient.first_name} ${treatment.series.patient.last_name} (${moment(startDate).format('H:mm')} — ${moment(endDate).format('H:mm')})`,
 				patient: treatment.series.patient,
 				id: treatment.id,
@@ -165,30 +175,32 @@ class TreatmentsCalendar extends Component {
 					currentUser={currentUser}
 					currentClinic={currentClinic}
 				/>
-				<DragAndDropCalendar
-					rtl={!__DEV__}
-					events={events}
-					eventPropGetter={getProps}
-					onEventDrop={this.moveEvent}
-					selectable
-					onSelectEvent={this.editTreatment}
-					formats={{
-						eventTimeRangeFormat: ({ start, end }, culture, local) =>
-							/*`${moment(start).format('H:mm')} — ${moment(end).format('H:mm')}`*/ '',
-						agendaTimeRangeFormat: ({ start, end }, culture, local) =>
-							/*`${moment(start).format('H:mm')} — ${moment(end).format('H:mm')}`*/ '',
-					}}
-					messages={{
-						allDay: <FormattedMessage id='Calendar.allDay' />,
-						previous: <FormattedMessage id='Calendar.previous' />,
-						next: <FormattedMessage id='Calendar.next' />,
-						today: <FormattedMessage id='Calendar.today' />,
-						month: <FormattedMessage id='Calendar.month' />,
-						week: <FormattedMessage id='Calendar.week' />,
-						day: <FormattedMessage id='Calendar.day' />,
-						agenda: <FormattedMessage id='Calendar.agenda' />,
-					}}
-				/>
+				<Spin spinning={loading}>
+					<DragAndDropCalendar
+						rtl={!__DEV__}
+						events={events}
+						eventPropGetter={getProps}
+						onEventDrop={this.moveEvent}
+						selectable
+						onSelectEvent={this.editTreatment}
+						formats={{
+							eventTimeRangeFormat: ({ start, end }, culture, local) =>
+								/*`${moment(start).format('H:mm')} — ${moment(end).format('H:mm')}`*/ '',
+							agendaTimeRangeFormat: ({ start, end }, culture, local) =>
+								/*`${moment(start).format('H:mm')} — ${moment(end).format('H:mm')}`*/ '',
+						}}
+						messages={{
+							allDay: <FormattedMessage id='Calendar.allDay' />,
+							previous: <FormattedMessage id='Calendar.previous' />,
+							next: <FormattedMessage id='Calendar.next' />,
+							today: <FormattedMessage id='Calendar.today' />,
+							month: <FormattedMessage id='Calendar.month' />,
+							week: <FormattedMessage id='Calendar.week' />,
+							day: <FormattedMessage id='Calendar.day' />,
+							agenda: <FormattedMessage id='Calendar.agenda' />,
+						}}
+					/>
+				</Spin>
 			</div>
 		);
 	}
@@ -205,7 +217,7 @@ const TreatmentsCalendarWithData = compose(
 		}),
 		skip: ({ currentClinic, patientId }) => !currentClinic && !patientId,
 	}),
-	graphql(EDIT_TREATMENT_MUTATION),
+	graphql(UPDATE_OBJECT_MUTATION),
 )(TreatmentsCalendar);
 
 class Calendar extends Component {

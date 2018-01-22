@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component, } from 'react'; import PropTypes from 'prop-types';
 import { Table, Button, message, Form, Input, notification, Col } from 'antd';
 import moment from 'moment';
 import { graphql } from 'react-apollo';
@@ -6,7 +6,6 @@ import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router';
 
 import PatientObjectForm from '../components/PatientObjectForm';
-import PatientObjectView from '../components/PatientObjectView';
 
 import ADD_TREATMENT_SUMMARY_MUTATION from '../graphql/addTreatmentSummary.mutation.graphql';
 import EDIT_TREATMENT_SUMMARY_MUTATION from '../graphql/editTreatmentSummary.mutation.graphql';
@@ -108,7 +107,7 @@ class TreatmentSummaryTab extends Component {
 						initialValue: object.treatments_length,
 						rules: [],
 					})(
-						<Input type='textarea' />,
+						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
 					)}
 				</Form.Item>
 				<Form.Item
@@ -120,7 +119,7 @@ class TreatmentSummaryTab extends Component {
 						initialValue: object.treatment_targets,
 						rules: [],
 					})(
-						<Input type='textarea' />,
+						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
 					)}
 				</Form.Item>
 				<Form.Item
@@ -132,7 +131,7 @@ class TreatmentSummaryTab extends Component {
 						initialValue: object.parents_involment,
 						rules: [],
 					})(
-						<Input type='textarea' />,
+						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
 					)}
 				</Form.Item>
 				<Form.Item
@@ -144,7 +143,7 @@ class TreatmentSummaryTab extends Component {
 						initialValue: object.treatments_progress,
 						rules: [],
 					})(
-						<Input type='textarea' />,
+						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
 					)}
 				</Form.Item>
 				<Form.Item
@@ -156,7 +155,7 @@ class TreatmentSummaryTab extends Component {
 						initialValue: object.recommendations,
 						rules: [],
 					})(
-						<Input type='textarea' />,
+						<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />,
 					)}
 				</Form.Item>
 			</div>
@@ -185,12 +184,12 @@ class TreatmentSummaryTab extends Component {
 			key: 'action',
 			width: '20%',
 			render: (text, record) => ( <span>
-				<Link to={`/print-object/${patient.id}/${record.id}`} target='_blank'>
+{/*				<Link to={`/print-object/${patient.id}/${record.id}`} target='_blank'>
 					<Button size='small'>{formatMessage({ id: 'common.action_print' })}</Button>
 				</Link>
-				<Button size='small' onClick={() => {
-					this.openEditForm(record);
-				}}>{formatMessage({ id: 'common.action_edit' })}</Button>
+				<Link to={`/api/generate-pdf/${patient.id}/${record.id}`} target='_blank'>
+					<Button size='small'>PDF</Button>
+				</Link>*/}
 			</span> ),
 		}];
 
@@ -208,9 +207,16 @@ class TreatmentSummaryTab extends Component {
 					object={selectedItem}
 					onSubmit={this.handleFormSubmit} />
 				<div className='PatientObjectTab__Actions'>
-					<Button onClick={this.openForm} type='primary'>{formatMessage({ id: 'common.action_create' })}</Button>
+					<Button onClick={this.openForm} type='primary'>{formatMessage({ id: 'TreatmentSummaryTab.create_title' })}</Button>
 				</div>
-				<Table dataSource={patient.treatment_summary} columns={columns} rowKey='id' />
+				<Table
+					onRowClick={(record, index, event) => {
+						// dont edit when button clicked
+						if(event.target.tagName === 'BUTTON' || event.target.tagName === 'A'  || event.target.parentNode.tagName === 'BUTTON') {
+							return;
+						}
+						this.openEditForm(record);
+					}} dataSource={patient.treatment_summary} columns={columns} rowKey='id' />
 			</div>
 		);
 	}

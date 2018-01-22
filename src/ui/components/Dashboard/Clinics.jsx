@@ -1,14 +1,15 @@
-import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
+import React, { Component } from 'react'
+import { Link } from 'react-router'
 import { connect } from 'react-redux';
-import { graphql, compose, withApollo } from 'react-apollo';
-import ApolloClient from 'apollo-client';
-import gql from 'graphql-tag';
-import update from 'react-addons-update';
-import GET_CLINICS_QUERY from '../../graphql/ClinicsGet.graphql';
-import ADD_CLINIC_MUTATION from '../../graphql/ClinicAddMutation.graphql';
-import DELETE_CLINIC_MUTATION from '../../graphql/ClinicDeleteMutaion.graphql';
-import EDIT_CLINIC_MUTATION from '../../graphql/ClinicEditMutation.graphql';
+import { graphql, compose, withApollo } from 'react-apollo'
+import ApolloClient from 'apollo-client'
+import gql from 'graphql-tag'
+import update from 'react-addons-update'
+import PropTypes from 'prop-types';
+import GET_CLINICS_QUERY from '../../graphql/ClinicsGet.graphql'
+import ADD_CLINIC_MUTATION from '../../graphql/ClinicAddMutation.graphql'
+import DELETE_CLINIC_MUTATION from '../../graphql/ClinicDeleteMutaion.graphql'
+import EDIT_CLINIC_MUTATION from '../../graphql/ClinicEditMutation.graphql'
 
 import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Switch } from 'antd';
 
@@ -249,82 +250,87 @@ class Clinics extends Component {
     const { data: { loading, clinics }, deleteClinic } = this.props;
     const formatMessage = this.context.intl.formatMessage;
 
-    const columns = [{
-      title: formatMessage({ id: 'common.field_name' }),
-      dataIndex: 'name',
-      key: 'name',
-      sorter: (a, b) => a.name > b.name,
-    }, {
-      title: formatMessage({ id: 'common.field_address' }),
-      dataIndex: 'address',
-      key: 'address',
-      sorter: (a, b) => a.address > b.address,
-    }, {
-      title: formatMessage({ id: 'common.field_phone' }),
-      dataIndex: 'phone',
-      key: 'phone',
-      sorter: (a, b) => a.phone > b.phone,
-      render: text => <a href={`tel:${text}`} >{text}</a >,
-    }, {
-      title: formatMessage({ id: 'common.field_email' }),
-      dataIndex: 'email',
-      key: 'email',
-      sorter: (a, b) => a.email > b.email,
-      render: text => <a href={`mailto:${text}`} >{text}</a >,
-    }, {
-      title: formatMessage({ id: 'common.field_actions' }),
-      key: 'action',
-      render: (text, record) => (
-        <span >
-          <Button size="small" type="ghost" onClick={this.editEntity(record)} >
-            {formatMessage({ id: 'common.action_edit' })}
-          </Button >
-          <span className="ant-divider" />
-          <Popconfirm
-            title={formatMessage({ id: 'common.confirm_message' })} onConfirm={() => {
-              deleteClinic(record).then(() => {
-                this.props.client.resetStore();
-              });
-            }} okText={formatMessage({ id: 'common.confirm_yes' })}
-            cancelText={formatMessage({ id: 'common.confirm_no' })}
-          >
-            <Button size="small" type="ghost" >{formatMessage({ id: 'common.action_delete' })}</Button >
-          </Popconfirm >
-        </span >
-      ),
-    }];
-    const { modalOpened, activeEntity } = this.state;
+		const columns = [{
+			title: formatMessage({ id: 'common.field_name' }),
+			dataIndex: 'name',
+			key: 'name',
+			sorter: (a, b) => a.name > b.name,
+		}, {
+			title: formatMessage({ id: 'common.field_address' }),
+			dataIndex: 'address',
+			key: 'address',
+			sorter: (a, b) => a.address > b.address,
+		}, {
+			title: formatMessage({ id: 'common.field_phone' }),
+			dataIndex: 'phone',
+			key: 'phone',
+			sorter: (a, b) => a.phone > b.phone,
+			render: text => <a href={ `tel:${text}` }>{ text }</a>
+		}, {
+			title: formatMessage({ id: 'common.field_email' }),
+			dataIndex: 'email',
+			key: 'email',
+			sorter: (a, b) => a.email > b.email,
+			render: text => <a href={ `mailto:${text}` }>{ text }</a>
+		}, {
+			title: formatMessage({ id: 'common.field_actions' }),
+			key: 'action',
+			render: (text, record) => (
+				<span>
+{/*		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
+			      {formatMessage({ id: 'common.action_edit' })}
+		      </Button>
+					<span className="ant-divider"></span>*/}
+		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
+			      deleteClinic(record).then(() => {
+			      	this.props.client.resetStore();
+			      })
+		      } } okText={formatMessage({ id: 'common.confirm_yes' })}
+		                  cancelText={formatMessage({ id: 'common.confirm_no' })}>
+		        <Button size="small" type='ghost'>{formatMessage({ id: 'common.action_delete' })}</Button>
+		      </Popconfirm>
+        </span>
+			),
+		}];
+		const { modalOpened, activeEntity } = this.state;
 
-    return (
-      <section className="Clinics" >
-        <div className="Container Dashboard__Content" >
-          <EntityForm
-            ref={(form) => {
-              this.form = form;
-            }}
-            visible={modalOpened}
-            loading={loading}
-            onCancel={this.handleCancel}
-            onSubmit={this.handleFormSubmit}
-            values={activeEntity}
-            formatMessage={formatMessage}
-          />
-          <div className="Dashboard__Details" >
-            <h1 className="Dashboard__Header" >
-              {formatMessage({ id: 'Clinics.header' })}
-            </h1 >
-            <div className="Dashboard__Actions" >
-              <Button type="primary" onClick={this.showModal} >
-                <Icon type="plus-circle-o" />
-                {formatMessage({ id: 'Clinics.create_button' })}
-              </Button >
-            </div >
-          </div >
-          <Table dataSource={clinics} columns={columns} loading={loading} rowKey="id" />
-        </div >
-      </section >
-    );
-  }
+		return (
+			<section className="Clinics">
+				<div className="Container Dashboard__Content">
+					<EntityForm
+						ref={ form => {
+							this.form = form
+						} }
+						visible={modalOpened}
+						loading={loading}
+						onCancel={this.handleCancel}
+						onSubmit={this.handleFormSubmit}
+						values={activeEntity}
+						formatMessage={formatMessage}
+					/>
+					<div className="Dashboard__Details">
+						<h1 className="Dashboard__Header">
+							{ formatMessage({ id: 'Clinics.header' }) }
+						</h1>
+						<div className="Dashboard__Actions">
+							<Button type="primary" onClick={ this.showModal }>
+								<Icon type="plus-circle-o"/>
+								{ formatMessage({ id: 'Clinics.create_button' }) }
+							</Button>
+						</div>
+					</div>
+					<Table
+						onRowClick={(record, index, event) => {
+							// dont edit when button clicked
+							if(event.target.tagName === 'BUTTON' || event.target.tagName === 'A'  || event.target.parentNode.tagName === 'BUTTON') {
+								return;
+							}
+							this.editEntity(record);
+						}} dataSource={clinics} columns={columns} loading={loading} rowKey='id'/>
+				</div>
+			</section>
+		);
+	}
 }
 
 const ClinicsWithApollo = withApollo(compose(

@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component, } from 'react'; import PropTypes from 'prop-types';
 import { Link } from 'react-router'
 import { connect } from 'react-redux';
 import { graphql, compose, withApollo } from 'react-apollo'
@@ -46,8 +46,6 @@ import PatientView from '../PatientView';
 import PatientSelector from '../PatientSelector';
 
 import './Patients.scss'
-
-
 
 
 class Patients extends Component {
@@ -103,23 +101,23 @@ class Patients extends Component {
 		const formatMessage = this.context.intl.formatMessage;
 		const form = this.form;
 		const isEditing = !!Object.keys(this.state.activeEntity).length;
-/*		const processRelatedPersons = (relatedPersons, values) => {
-			values.related_persons = [];
-			relatedPersons.forEach(({ _id }) => {
-				const type = values[`related_persons-${_id}-type`];
-				delete values[`related_persons-${_id}-type`];
-				const phone = values[`related_persons-${_id}-phone`];
-				delete values[`related_persons-${_id}-phone`];
-				const email = values[`related_persons-${_id}-email`];
-				delete values[`related_persons-${_id}-email`];
-				const description = values[`related_persons-${_id}-description`];
-				delete values[`related_persons-${_id}-description`];
-				const receive_updates = values[`related_persons-${_id}-receive_updates`];
-				delete values[`related_persons-${_id}-receive_updates`];
-				values.related_persons.push({ type, phone, email, description, receive_updates });
-			})
-			return values;
-		};*/
+		/*		const processRelatedPersons = (relatedPersons, values) => {
+					values.related_persons = [];
+					relatedPersons.forEach(({ _id }) => {
+						const type = values[`related_persons-${_id}-type`];
+						delete values[`related_persons-${_id}-type`];
+						const phone = values[`related_persons-${_id}-phone`];
+						delete values[`related_persons-${_id}-phone`];
+						const email = values[`related_persons-${_id}-email`];
+						delete values[`related_persons-${_id}-email`];
+						const description = values[`related_persons-${_id}-description`];
+						delete values[`related_persons-${_id}-description`];
+						const receive_updates = values[`related_persons-${_id}-receive_updates`];
+						delete values[`related_persons-${_id}-receive_updates`];
+						values.related_persons.push({ type, phone, email, description, receive_updates });
+					})
+					return values;
+				};*/
 		const errorHandler = e => {
 			this.setState({ modalLoading: false });
 			console.error(e);
@@ -138,36 +136,45 @@ class Patients extends Component {
 			if (err) {
 				return;
 			}
+			console.log(values)
 			this.setState({ modalLoading: true });
 
 			// values = processRelatedPersons(this.state.relatedPersons, values);
 
 			values.birth_date = moment(values.birth_date);
 
+			if (isEditing) {
+				delete values.related_persons;
+			}
+
+			if (values.related_persons) {
+				values.related_persons = values.related_persons.filter(person => !!person.type && !!person.name);
+			}
+
 			isEditing
 
 				? this.props.editPatient({
-				id: this.state.activeEntity.id,
-				patient: values,
-			}).then(() => {
-				form.resetFields();
-				this.setState({ modalOpened: false, modalLoading: false, relatedPersons: [] });
-				this.resetActiveEntity();
-			}).catch(errorHandler)
+					id: this.state.activeEntity.id,
+					patient: values,
+				}).then(() => {
+					form.resetFields();
+					this.setState({ modalOpened: false, modalLoading: false, relatedPersons: [] });
+					this.resetActiveEntity();
+				}).catch(errorHandler)
 
 				: this.props.addPatient({
-				clinic_id: this.props.currentClinic.id,
-				patient: values,
-			}).then((res) => {
-				form.resetFields();
-				this.setState({
-					modalOpened: false,
-					modalLoading: false,
-					relatedPersons: [],
-					currentPatientId: res.data.addPatient.id,
-				});
-				message.success(this.context.intl.formatMessage({ id: 'Patients.created-message' }));
-			}).catch(errorHandler);
+					clinic_id: this.props.currentClinic.id,
+					patient: values,
+				}).then((res) => {
+					form.resetFields();
+					this.setState({
+						modalOpened: false,
+						modalLoading: false,
+						relatedPersons: [],
+						currentPatientId: res.data.addPatient.id,
+					});
+					message.success(this.context.intl.formatMessage({ id: 'Patients.created-message' }));
+				}).catch(errorHandler);
 
 		});
 	};
@@ -215,32 +222,32 @@ class Patients extends Component {
 			title: formatMessage({ id: 'common.field_name' }),
 			key: 'name',
 			width: '20%',
-			render: (text, record) => <div className="to-dynamic-container">
-				<span className="to-dynamic">{record.first_name} {record.last_name}</span>
+			render: (text, record) => <div className='to-dynamic-container'>
+				<span className='to-dynamic'>{record.first_name} {record.last_name}</span>
 			</div>,
 		}, {
 			title: formatMessage({ id: 'common.field_phone' }),
 			dataIndex: 'phone',
 			key: 'phone',
 			width: '15%',
-			render: text => <div className="to-dynamic-container">
-				<span className="to-dynamic"><a href={ `tel:${text}` }>{ text }</a></span>
+			render: text => <div className='to-dynamic-container'>
+				<span className='to-dynamic'><a href={`tel:${text}`}>{text}</a></span>
 			</div>,
 		}, {
 			title: formatMessage({ id: 'common.field_email' }),
 			dataIndex: 'profile_email',
 			key: 'profile_email',
 			width: '15%',
-			render: text => <div className="to-dynamic-container">
-				<span className="to-dynamic"><a href={ `mailto:${text}` }>{ text }</a></span>
+			render: text => <div className='to-dynamic-container'>
+				<span className='to-dynamic'><a href={`mailto:${text}`}>{text}</a></span>
 			</div>,
 		}, {
 			title: formatMessage({ id: 'Patients.field_files' }),
 			dataIndex: 'files',
 			key: 'files',
-			render: (text, record) => <div className="to-dynamic-container">
-				<span className="to-dynamic">
-					{ intersperse(record.files.map(file => <a href={file.url}>{file.name}</a>), ", ") }
+			render: (text, record) => <div className='to-dynamic-container'>
+				<span className='to-dynamic'>
+					{intersperse(record.files.map(file => <a href={file.url}>{file.name}</a>), ", ")}
 					</span>
 			</div>,
 		}, {
@@ -249,15 +256,15 @@ class Patients extends Component {
 			width: '20%',
 			render: (text, record) => (
 				<span>
-		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
+		      <Button size='small' type='ghost' onClick={this.editEntity(record)}>
 			      {formatMessage({ id: 'common.action_edit' })}
 		      </Button>
-					<span className="ant-divider" />
-		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
+					<span className='ant-divider' />
+		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={() => {
 			      deletePatient(record)
-		      } } okText={formatMessage({ id: 'common.confirm_yes' })}
+		      }} okText={formatMessage({ id: 'common.confirm_yes' })}
 		                  cancelText={formatMessage({ id: 'common.confirm_no' })}>
-		        <Button size="small" type='ghost'>
+		        <Button size='small' type='ghost'>
 			        {formatMessage({ id: 'common.action_delete' })}
 		        </Button>
 		      </Popconfirm>
@@ -268,12 +275,12 @@ class Patients extends Component {
 		const canAddPatient = currentClinic.id && (currentUser.role === 'SYSTEM_ADMIN' || !currentClinic.patients_limit || (data && data.patients && data.patients.length < currentClinic.patients_limit));
 
 		return (
-			<div className="Container">
-				<section className="Patients">
+			<div className='Container'>
+				<section className='Patients'>
 					<PatientForm
-						ref={ form => {
+						ref={form => {
 							this.form = form
-						} }
+						}}
 						visible={modalOpened}
 						loading={modalLoading}
 						onCancel={this.handleCancel}
@@ -288,21 +295,22 @@ class Patients extends Component {
 						{/*						<h1 className="Dashboard__Header">
 						 { formatMessage({ id: 'Patients.header' }) }
 						 </h1>*/}
-						<div className="Dashboard__Actions">
+						<div className='Dashboard__Actions'>
 							<div>
 								<PatientSelector showArchived={showArchived} onChange={this.onPatientChange} />
 								<Checkbox style={{ marginRight: 8 }} checked={showArchived}
-								          onChange={this.onShowArchivedChange}>{ formatMessage({ id: 'Patients.show-archived' }) }</Checkbox>
+								          onChange={this.onShowArchivedChange}>{formatMessage({ id: 'Patients.show-archived' })}</Checkbox>
 							</div>
 							<div>
-								<CheckAccess role={ ROLES.SYSTEM_ADMIN }>
+								<CheckAccess role={ROLES.SYSTEM_ADMIN}>
 									<ClinicsSelector />
 								</CheckAccess>
-								<Tooltip title={ !canAddPatient && formatMessage({ id: 'Patients.archive_error_limit' }, { limit: currentClinic.patients_limit }) }>
-									<Button size='large' style={{ marginRight: 8 }} type="primary" onClick={ this.showModal }
-									        disabled={ !canAddPatient }>
-										<Icon type="plus-circle-o" />
-										{ formatMessage({ id: 'Patients.create_button' }) }
+								<Tooltip
+									title={!canAddPatient && formatMessage({ id: 'Patients.archive_error_limit' }, { limit: currentClinic.patients_limit })}>
+									<Button size='large' style={{ marginRight: 8 }} type='primary' onClick={this.showModal}
+									        disabled={!canAddPatient}>
+										<Icon type='plus-circle-o' />
+										{formatMessage({ id: 'Patients.create_button' })}
 									</Button>
 								</Tooltip>
 							</div>
@@ -322,11 +330,11 @@ class Patients extends Component {
 const PatientsWithApollo = withApollo(compose(
 	connect(({ currentClinic, currentUser }) => ({ currentClinic, currentUser })),
 	graphql(gql`
-		query patients($clinic_id: Int!) {
-				patients(clinic_id: $clinic_id) {
-						id
-				}
-		}
+      query patients($clinic_id: ID!) {
+          patients(clinic_id: $clinic_id) {
+              id
+          }
+      }
 	`, {
 		options: ({ currentClinic, showArchived }) => ({
 			variables: { clinic_id: currentClinic.id, archived: showArchived },

@@ -1,8 +1,8 @@
+import { app as settings } from '../../../package.json'
 import jwt from 'jsonwebtoken';
-import { app as settings } from '../../../package.json';
-import User from '../sql/users';
-import Clinic from '../sql/clinics';
-import log from '../../log';
+import User from '../sql/models/users';
+import Clinic from '../sql/models/Clinic';
+import log from '../../log'
 
 function generateToken(req, user) {
   const token = jwt.sign({

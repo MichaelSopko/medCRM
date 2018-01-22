@@ -7,6 +7,7 @@ import Dashboard from './ui/containers/Dashboard';
 import App from './ui/components/App';
 import { Clinics, Patients, Therapists, Administrators, Calendar } from './ui/components/Dashboard';
 import PatientObjectPrintPage from './ui/patient/containers/PatientObjectPrintPage';
+import Settings from './ui/containers/Settings';
 
 function authCheck(router, replace) {
   if (__CLIENT__) {
@@ -31,6 +32,7 @@ export default (
       <Route path="therapists" component={Therapists} />
       <Route path="administrators" component={Administrators} />
       <Route path="calendar" component={Calendar} />
-    </Route>
+		<Route path="settings" component={Settings}/>
+	</Route>
   </Route>
 );

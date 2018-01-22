@@ -1,8 +1,9 @@
-import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
-import { connect } from 'react-redux';
-import ROLES from '../../helpers/constants/roles';
-import { Spin } from 'antd';
+import React, { Component } from 'react'
+import { Link } from 'react-router'
+import { connect } from 'react-redux'
+import ROLES from '../../helpers/constants/roles'
+import { Spin } from 'antd'
+import PropTypes from 'prop-types';
 
 import UserNavbar from '../components/UserNavbar';
 import './Dashboard.scss';

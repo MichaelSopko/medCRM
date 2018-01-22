@@ -1,7 +1,7 @@
 #import './PatientFragment.graphql'
 
 mutation addPatient(
-$clinic_id: Int!
+$clinic_id: ID!
 $patient: PatientInput!
 ) {
     addPatient(

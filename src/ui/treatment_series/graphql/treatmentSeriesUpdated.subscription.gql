@@ -1,0 +1,7 @@
+#import './TreatmentSeries.fragment.gql'
+
+subscription onSeriesUpdated($patient_id: ID!){
+    treatmentSeriesUpdated(patient_id: $patient_id) {
+        ...TreatmentSeriesFragment
+    }
+}

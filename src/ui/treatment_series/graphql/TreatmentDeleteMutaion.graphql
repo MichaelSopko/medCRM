@@ -1,0 +1,7 @@
+mutation deleteTreatment(
+$id: ID!
+) {
+    deleteTreatment(id: $id) {
+        status
+    }
+}

@@ -1,0 +1,8 @@
+.Treatments {
+	tr.ant-table-expanded-row, tr.ant-table-expanded-row:hover {
+		background: transparent !important;
+		> td {
+			background: transparent !important;
+		}
+	}
+}

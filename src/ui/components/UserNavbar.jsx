@@ -1,10 +1,11 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router'
 import { Menu, Icon } from 'antd';
 import ProfileWidget from './ProfileWidget';
 import CheckAccess from './helpers/CheckAccess'
 import ROLES from '../../helpers/constants/roles'
 import checkAccessLogic from '../../helpers/checkAccessLogic'
+import PropTypes from 'prop-types';
 
 import './UserNavbar.scss'
 

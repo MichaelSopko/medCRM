@@ -1,0 +1,56 @@
+fragment TreatmentSeriesObjectFragment on TreatmentSeriesObject {
+    ... on Treatment {
+        id
+        target
+        method
+        process
+        parents_guidance
+        next_treatment_remark
+        therapists {
+            id
+            id_number
+            first_name
+            last_name
+        }
+        start_date
+        end_date
+    }
+    ... on SchoolObservation {
+        id
+        observationReason
+        educationEntity
+        date
+        context
+        generalBackground
+        familyBackground
+        medicalBackground
+        previousDiagnoses
+        educationalFramework
+        observationSummary
+        therapists {
+            id
+            id_number
+            first_name
+            last_name
+        }
+    }
+    ... on StaffMeeting {
+        id
+        participants {
+            id
+            id_number
+            first_name
+            last_name
+        }
+        date
+        protocol
+        nextRecommendation
+        meetingPurpose
+    }
+    ... on OutsideSourceConsult {
+        id
+        consultantRole
+        date
+        meetingSummary
+    }
+}

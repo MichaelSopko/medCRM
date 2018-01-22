@@ -1,0 +1,137 @@
+type SchoolObservation {
+	id: ID!
+	patient: Patient!
+	observationReason: String
+	educationEntity: String
+	date: Date
+	context: String
+	generalBackground: String
+	familyBackground: String
+	medicalBackground: String
+	previousDiagnoses: String
+	educationalFramework: String
+	observationFindings: String
+	observationSummary: String
+	therapists: [Therapist]
+}
+
+input SchoolObservationInput {
+	observationReason: String
+	educationEntity: String
+	date: Date
+	context: String
+	generalBackground: String
+	familyBackground: String
+	medicalBackground: String
+	previousDiagnoses: String
+	educationalFramework: String
+	observationFindings: String
+	observationSummary: String
+	therapist_ids: [ID]!
+}
+
+type StaffMeeting {
+	id: ID!
+	participants: [Therapist]
+	date: Date
+	protocol: String
+	nextRecommendation: String
+	meetingPurpose: String
+}
+
+input StaffMeetingInput {
+	participant_ids: [ID]!
+	date: Date
+	protocol: String
+	nextRecommendation: String
+	meetingPurpose: String
+}
+
+type OutsideSourceConsult {
+	id: ID!
+	consultantRole: String
+	date: Date
+	meetingSummary: String
+}
+
+input OutsideSourceConsultInput {
+	consultantRole: String
+	date: Date
+	meetingSummary: String
+}
+
+type Treatment {
+	id: ID!
+	target: String
+	method: String
+	process: String
+	parents_guidance: String
+	next_treatment_remark: String
+	therapists: [Therapist]
+	start_date: Date
+	end_date: Date
+}
+
+input TreatmentInput {
+	target: String
+	method: String
+	process: String
+	parents_guidance: String
+	next_treatment_remark: String
+	therapist_ids: [ID]
+	start_date: Date
+	end_date: Date
+	repeat_weeks: Int
+}
+
+union TreatmentSeriesObject = SchoolObservation | Treatment | StaffMeeting | OutsideSourceConsult
+input TreatmentSeriesObjectInput {
+	TreatmentInput: TreatmentInput,
+	SchoolObservationInput: SchoolObservationInput,
+	StaffMeetingInput: StaffMeetingInput,
+	OutsideSourceConsultInput: OutsideSourceConsultInput
+}
+
+type TreatmentSeries {
+	id: ID!
+	name: String
+	treatments_number: Int!
+	objects: [TreatmentSeriesObject]
+	treatments: [Treatment]
+	patient: Patient
+	patient_id: ID!
+}
+
+extend type Query {
+	treatmentSeries(patient_id: ID, clinic_id: ID, therapist_id: ID): [TreatmentSeries]
+}
+
+extend type Mutation {
+	createTreatmentSeries(
+		name: String
+		treatments_number: Int!
+		patient_id: ID!
+		clinic_id: ID!
+	): MutationStatus
+
+	updateTreatmentSeries(
+		id: ID!
+		name: String
+		treatments_number: Int!
+	): MutationStatus
+
+	deleteTreatmentSeries(
+		id: ID!
+	): MutationStatus
+
+	createTreatmentSeriesObject(series_id: ID!, object: TreatmentSeriesObjectInput!): TreatmentSeriesObject!
+	updateTreatmentSeriesObject(id: ID!, object: TreatmentSeriesObjectInput!): TreatmentSeriesObject!
+	deleteTreatmentSeriesObject(id: ID!, __typename: String!): Boolean
+
+}
+
+extend type Subscription {
+	treatmentSeriesCreated(patient_id: ID!): TreatmentSeries!
+	treatmentSeriesUpdated(patient_id: ID!): TreatmentSeries!
+	treatmentSeriesDeleted(patient_id: ID!): TreatmentSeries!
+}

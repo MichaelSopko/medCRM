@@ -1,6 +1,6 @@
 import { graphql } from 'react-apollo';
 import { propType } from 'graphql-anywhere';
-import { PropTypes } from 'react';
+import { } from 'react'; import PropTypes from 'prop-types';
 
 import CURRENT_USER_QUERY from '../../graphql/CurrentUser.graphql';
 

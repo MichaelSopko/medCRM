@@ -2,6 +2,9 @@
 @import "~react-big-calendar/lib/css/react-big-calendar.css";
 @import "~react-big-calendar/lib/addons/dragAndDrop/styles.css";
 
+@import "./rtl.scss";
+
+
 $primary-color: #191654;
 
 html {
@@ -166,4 +169,8 @@ body.rtl {
   content: '-';
   display: inline-block;
   visibility: hidden;
+}
+
+.ant-table-row {
+	cursor: pointer;
 }

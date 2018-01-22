@@ -1,0 +1,15 @@
+mutation addTreatmentSeries(
+$name: String
+$treatments_number: Int!
+$patient_id: ID!
+$clinic_id: ID!
+) {
+    createTreatmentSeries(
+        name: $name
+        treatments_number: $treatments_number
+        patient_id: $patient_id
+        clinic_id: $clinic_id
+    ) {
+        status
+    }
+}
