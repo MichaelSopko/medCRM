@@ -29,6 +29,7 @@ let server;
 
 const app = express();
 
+
 // const jwtMiddleware = jwt({
 // 	secret: settings.secret,
 // 	getToken: (req) => {
