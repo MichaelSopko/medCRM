@@ -7,11 +7,11 @@ if (!isBabel) {
 module.exports = {
 	development: {
 		client: 'mysql',
-		connection: {
-			host: '127.0.0.1',
-			user: 'root',
-			password: '',
-			database: 'clinic-app'
+		connection: process.env.CLEARDB_DATABASE_URL || process.env.DATABASE_URL || {
+			host: process.env.DATABASE_HOST || '127.0.0.1',
+			user: process.env.DATABASE_USER || 'root',
+			password: process.env.DATABASE_PASSWORD || '',
+			database: process.env.DATABASE_NAME || 'clinic-prod',
 		},
 		seeds: {
 			directory: './src/database/seeds'
@@ -37,6 +37,5 @@ module.exports = {
 		},
 		useNullAsDefault: true
 	},
-
-
+	
 };
