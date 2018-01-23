@@ -136,45 +136,36 @@ class Patients extends Component {
 			if (err) {
 				return;
 			}
-			console.log(values)
 			this.setState({ modalLoading: true });
 
 			// values = processRelatedPersons(this.state.relatedPersons, values);
 
 			values.birth_date = moment(values.birth_date);
 
-			if (isEditing) {
-				delete values.related_persons;
-			}
-
-			if (values.related_persons) {
-				values.related_persons = values.related_persons.filter(person => !!person.type && !!person.name);
-			}
-
 			isEditing
 
 				? this.props.editPatient({
-					id: this.state.activeEntity.id,
-					patient: values,
-				}).then(() => {
-					form.resetFields();
-					this.setState({ modalOpened: false, modalLoading: false, relatedPersons: [] });
-					this.resetActiveEntity();
-				}).catch(errorHandler)
+				id: this.state.activeEntity.id,
+				patient: values,
+			}).then(() => {
+				form.resetFields();
+				this.setState({ modalOpened: false, modalLoading: false, relatedPersons: [] });
+				this.resetActiveEntity();
+			}).catch(errorHandler)
 
 				: this.props.addPatient({
-					clinic_id: this.props.currentClinic.id,
-					patient: values,
-				}).then((res) => {
-					form.resetFields();
-					this.setState({
-						modalOpened: false,
-						modalLoading: false,
-						relatedPersons: [],
-						currentPatientId: res.data.addPatient.id,
-					});
-					message.success(this.context.intl.formatMessage({ id: 'Patients.created-message' }));
-				}).catch(errorHandler);
+				clinic_id: this.props.currentClinic.id,
+				patient: values,
+			}).then((res) => {
+				form.resetFields();
+				this.setState({
+					modalOpened: false,
+					modalLoading: false,
+					relatedPersons: [],
+					currentPatientId: res.data.addPatient.id,
+				});
+				message.success(this.context.intl.formatMessage({ id: 'Patients.created-message' }));
+			}).catch(errorHandler);
 
 		});
 	};
@@ -330,11 +321,11 @@ class Patients extends Component {
 const PatientsWithApollo = withApollo(compose(
 	connect(({ currentClinic, currentUser }) => ({ currentClinic, currentUser })),
 	graphql(gql`
-      query patients($clinic_id: ID!) {
-          patients(clinic_id: $clinic_id) {
-              id
-          }
-      }
+		query patients($clinic_id: ID!) {
+				patients(clinic_id: $clinic_id) {
+						id
+				}
+		}
 	`, {
 		options: ({ currentClinic, showArchived }) => ({
 			variables: { clinic_id: currentClinic.id, archived: showArchived },

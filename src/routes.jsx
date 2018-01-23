@@ -25,14 +25,12 @@ export default (
     <IndexRedirect to="/dashboard" />
     <Route path="login" component={Login} />
     <Route path="signup" component={SignUp} />
-    <Route path="print-object/:patient_id/:object_id" component={PatientObjectPrintPage} />
     <Route path="dashboard" component={Dashboard}>
       <Route path="clinics" component={Clinics} />
       <Route path="patients" component={Patients} />
       <Route path="therapists" component={Therapists} />
       <Route path="administrators" component={Administrators} />
       <Route path="calendar" component={Calendar} />
-		<Route path="settings" component={Settings}/>
 	</Route>
   </Route>
 );

@@ -179,7 +179,7 @@ type Patient implements User {
 	phone: String!
 	profile_email: String
 	clinic: Clinic
-	clinic_id: Int,
+	clinic_id: ID,
 	related_persons: [PatientRelatedPerson]
 	health_maintenance: PatientHealthMaintenance
 	files: [PatientFile]
@@ -264,6 +264,9 @@ type CurrentUser implements User {
 	last_name: String,
 	email: String,
 	clinic: Clinic
+	title: String
+	license_number: String
+	phone: String
 }
 
 type Clinic {

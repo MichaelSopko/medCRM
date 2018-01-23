@@ -9,13 +9,12 @@
       }
     ],
     "stage-0",
-    "stage-1",
     "react"
   ],
   "plugins": [
     "transform-runtime",
-    "transform-decorators-legacy",
-    "transform-class-properties"
+    "transform-decorators-legacy"
+
   ],
   "only": [
     "*.js",

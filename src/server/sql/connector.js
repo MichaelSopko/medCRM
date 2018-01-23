@@ -14,3 +14,4 @@ Model.knex(knex);
 
 export { knex as default, Model };
 
+// export default knex(config);

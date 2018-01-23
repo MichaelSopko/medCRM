@@ -5,6 +5,8 @@ import log from '../../../log'
 import createUser from '../helpers/create_user'
 import Clinic from './Clinic';
 
+// const Clinics = new Clinic();
+
 const safeParse = (json, deflt = []) => {
   try {
     if (json == null) {
@@ -28,24 +30,41 @@ export default class Users {
       .where('id', id)
       .first();
   }
-
+	
 	getByLogin(login) {
 		if (!login) return false;
 		return knex('users')
 			.orWhere('login', login)
 			.orWhere('email', login)
 			.first()
-			.then(async user => {
+			.then(async (user) => {
 				if (user.clinic_id) {
 					return {
 						...user,
-						clinic: await Clinic.query().findOne({ id: user.clinic_id })
+						clinic: await knex('clinics').where('id', user.clinic_id).first(),
 					};
-				} else {
-					return user;
 				}
-			})
+				return user;
+			});
 	}
+
+	// getByLogin(login) {
+	// 	if (!login) return false;
+	// 	return knex('users')
+	// 		.orWhere('login', login)
+	// 		.orWhere('email', login)
+	// 		.first()
+	// 		.then(async user => {
+	// 			if (user.clinic_id) {
+	// 				return {
+	// 					...user,
+	// 					clinic: await Clinic.query().findOne({ id: user.clinic_id })
+	// 				};
+	// 			} else {
+	// 				return user;
+	// 			}
+	// 		})
+	// }
 
   getUsers(ids) {
     return knex('users')
