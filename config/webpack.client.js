@@ -72,7 +72,7 @@ if (!__DEV__) {
       test: /\.js$|\.s?css$/,
       // threshold: 10240,
       minRatio: 0.8,
-    }),
+    })
   );
 } else {
   outputFileNamePattern = '[name]-[hash]-[id].js';
@@ -96,7 +96,7 @@ const config = {
     rules: [
       {
         test: /\.scss$/,
-        use: __DEV__ ? [
+        use: [
           'style-loader',
           {
             loader: 'css-loader',
@@ -119,31 +119,7 @@ const config = {
               sourceMapContents: true,
               outFile: resolve(__dirname, '..', pkg.app.frontendBuildDir),
             },
-          }] : ExtractTextPlugin.extract({
-            use: [
-              {
-                loader: 'css-loader',
-                options: {
-                  importLoaders: 2,
-                  sourceMap: true,
-                  minimize: true,
-                },
-              },
-              {
-                loader: 'postcss-loader',
-                options: {
-                  sourceMap: true,
-                },
-              },
-              {
-                loader: 'sass-loader',
-                options: {
-                  outputStyle: 'expanded',
-                  sourceMap: true,
-                },
-              }],
-            fallback: 'style-loader',
-          }),
+          }],
       },
     ],
   },
