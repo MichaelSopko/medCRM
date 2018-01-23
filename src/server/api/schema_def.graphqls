@@ -1,7 +1,7 @@
 scalar Date
 
 interface User {
-	id: Int!
+	id: ID!
 }
 
 enum Role {
@@ -17,13 +17,13 @@ enum GENDER {
 }
 
 type SystemAdministrator implements User {
-	id: Int!
+	id: ID!
 	role: Role!
 	login: String
 }
 
 type ClinicAdministrator implements User {
-	id: Int!
+	id: ID!
 	clinic: Clinic
 	first_name: String
 	last_name: String
@@ -31,7 +31,7 @@ type ClinicAdministrator implements User {
 }
 
 type Therapist implements User {
-	id: Int!
+	id: ID!
 	id_number: String
 	first_name: String
 	last_name: String
@@ -42,6 +42,7 @@ type Therapist implements User {
 	birth_date: Date
 	disabled: Boolean
 	role: Role
+	title: String
 }
 
 type PatientFile {
@@ -330,7 +331,7 @@ type Treatment {
 }
 
 type CurrentUser implements User {
-	id: Int!
+	id: ID!
 	login: String,
 	role: Role!,
 	first_name: String,
@@ -392,7 +393,7 @@ type Query {
 	administrators: [ClinicAdministrator]
 	therapists(clinic_id: ID): [Therapist]
 	patients(clinic_id: ID!, archived: Boolean): [Patient]
-	patient(id: Int!): Patient
+	patient(id: ID!): Patient
 	treatmentSeries(patient_id: ID, clinic_id: ID, therapist_id: ID): [TreatmentSeries]
 	currentUser: CurrentUser
 }
@@ -468,12 +469,12 @@ type Mutation {
 ): Patient!
 
 	editPatient(
-	id: Int!
+	id: ID!
 	patient: PatientInput
 ): Patient!
 
 	deletePatient(
-	id: Int!
+	id: ID!
 ): Patient!
 
 	archivePatient(id: ID!): Patient!
@@ -525,7 +526,7 @@ type Mutation {
 
 type Subscription {
 	patientCreated(clinic_id: ID!): Patient!
-	patientUpdated(id: Int!): Patient!
+	patientUpdated(id: ID!): Patient!
 	patientDeleted(clinic_id: ID!): Patient!
 	treatmentSeriesCreated(patient_id: Int!): TreatmentSeries!
 	treatmentSeriesUpdated(patient_id: Int!): TreatmentSeries!
