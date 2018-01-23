@@ -17,6 +17,7 @@
     }
   },
   "engines": {
+    "node": "7.9.0",
     "npm": "latest"
   },
   "scripts": {
@@ -58,15 +59,18 @@
   "dependencies": {
     "antd": "2.9.3",
     "apollo-client": "1.0.0",
+    "apollo-errors": "^1.5.1",
     "babel-plugin-import": "1.1.0",
     "body-parser": "1.15.2",
     "classnames": "2.2.5",
     "color-hash": "1.0.3",
+    "cookie-parser": "^1.4.3",
     "dotenv": "4.0.0",
     "event-source-polyfill": "0.0.12",
     "express": "4.14.0",
     "express-jwt": "5.1.0",
     "express-session": "1.15.0",
+    "fs-extra": "^4.0.2",
     "globalize": "0.1.1",
     "graphql": "0.9.0",
     "graphql-anywhere": "3.0.1",
@@ -79,6 +83,7 @@
     "graphql-typings": "0.0.1-beta-2",
     "isomorphic-fetch": "2.2.1",
     "jquery-file-upload-middleware": "0.1.8",
+    "js-cookie": "^2.1.4",
     "jsonwebtoken": "7.2.1",
     "knex": "0.12.1",
     "lodash": "^4.17.4",
@@ -89,7 +94,9 @@
     "nodemailer": "4.0.0",
     "npm": "^5.6.0",
     "npm-run-all": "^4.1.2",
+    "objection": "^0.9.4",
     "postcss": "5.2.15",
+    "prop-types": "^15.5.10",
     "pwd": "1.1.0",
     "react": "15.3.2",
     "react-addons-update": "15.3.2",
@@ -107,7 +114,8 @@
     "redux": "3.6.0",
     "source-map-support": "0.4.2",
     "sqlite3": "3.1.4",
-    "subscriptions-transport-ws": "0.5.3"
+    "subscriptions-transport-ws": "0.5.3",
+    "wait-port": "^0.2.2"
   },
   "devDependencies": {
     "apollo-codegen": "0.10.9",
@@ -125,7 +133,7 @@
     "babel-preset-es2017": "6.16.0",
     "babel-preset-react": "6.11.1",
     "babel-preset-stage-0": "6.22.0",
-    "babel-preset-stage-1": "6.16.0",
+    "babel-preset-stage-1": "^6.16.0",
     "babel-register": "6.14.0",
     "chai": "3.5.0",
     "compression-webpack-plugin": "^1.1.3",

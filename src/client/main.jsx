@@ -34,17 +34,17 @@ const req = require.context('!file-loader?name=[hash].[ext]!../assets', true, /.
 req.keys().map(req);
 
 // disable errors for the missing translations
-if (process.env.NODE_ENV !== 'production' && locale === 'en') {
-	const originalConsoleError = console.error;
-	if (console.error === originalConsoleError) {
-		console.error = (...args) => {
-			if (args[0].includes && args[0].includes('[React Intl]')) {
-				return;
-			}
-			originalConsoleError.call(console, ...args);
-		};
-	}
-}
+// if (process.env.NODE_ENV !== 'production' && locale === 'en') {
+// 	const originalConsoleError = console.error;
+// 	if (console.error === originalConsoleError) {
+// 		console.error = (...args) => {
+// 			if (args[0].includes && args[0].includes('[React Intl]')) {
+// 				return;
+// 			}
+// 			originalConsoleError.call(console, ...args);
+// 		};
+// 	}
+// }
 
 function flattenMessages(nestedMessages, prefix = '') {
   return Object.keys(nestedMessages).reduce((messages, key) => {

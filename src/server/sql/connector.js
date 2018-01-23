@@ -1,6 +1,6 @@
 import Knex from 'knex';
-import { development, production } from '../../../knexfile'; // eslint-disable-line
 import objection from 'objection';
+import { development, production } from '../../../knexfile'; // eslint-disable-line
 
 import SoftDeleteQueryBuilder from './helpers/SoftDeleteQueryBuilder';
 // import/named
@@ -13,5 +13,4 @@ Model.RelatedQueryBuilder = SoftDeleteQueryBuilder;
 Model.knex(knex);
 
 export { knex as default, Model };
-
 

@@ -126,7 +126,7 @@ extend type Mutation {
 
 	createTreatmentSeriesObject(series_id: ID!, object: TreatmentSeriesObjectInput!): TreatmentSeriesObject!
 	updateTreatmentSeriesObject(id: ID!, object: TreatmentSeriesObjectInput!): TreatmentSeriesObject!
-	deleteTreatmentSeriesObject(id: ID!, __typename: String!): Boolean
+	deleteTreatmentSeriesObject(id: ID!, typename: String!): Boolean
 
 }
 

@@ -12,8 +12,8 @@ module.exports = {
 		connection: {
 			host: '127.0.0.1',
 			user: 'root',
-			password: '',
-			database: 'clinic-app'
+			password: '123456',
+			database: 'clinic-prod'
 		},
 		seeds: {
 			directory: './src/database/seeds'

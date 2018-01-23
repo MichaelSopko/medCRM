@@ -13,6 +13,8 @@ if (__DEV__) {
   ), root);
 
   if (module.hot) {
+    module.hot.accept();
+
     module.hot.accept('./main', () => {
       try {
         log.debug('Reloading front-end');

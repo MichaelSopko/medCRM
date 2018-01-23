@@ -8,7 +8,7 @@ import https from 'https';
 import path from 'path';
 import jwt from 'express-jwt';
 import fs from 'fs';
-// import cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 
 import { app as settings } from '../../package.json'
 import log from '../log'
@@ -65,7 +65,7 @@ if (__DEV__) {
 }
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-// app.use(cookieParser());
+app.use(cookieParser());
 
 app.use('/', express.static(settings.frontendBuildDir, { maxAge: '180 days' }));
 app.use('/uploads', express.static(settings.uploadsDir, {
@@ -75,9 +75,9 @@ app.use('/uploads', express.static(settings.uploadsDir, {
 }));
 app.use('/documents', express.static('documents'));
 if (__DEV__) {
-	app.use('/assets', express.static(path.join(settings.backendBuildDir, 'assets'), { maxAge: '180 days' }));
+  app.use('/assets', express.static(path.join(settings.backendBuildDir, 'assets'), { maxAge: '180 days' }));
 } else {
-	app.use('/assets', express.static(settings.frontendBuildDir, { maxAge: '180 days' }));
+  app.use('/assets', express.static(settings.frontendBuildDir, { maxAge: '180 days' }));
 }
 // app.use('/graphql', jwtMiddleware, (...args) => graphqlMiddleware(...args));
 
@@ -94,7 +94,7 @@ app.use('/graphql', (req, res, next) => {
 app.use('/graphql', (...args) => graphqlMiddleware(...args));
 app.use('/graphiql', (...args) => graphiqlMiddleware(...args));
 app.use('/api/authentication', (...args) => authenticationMiddleware(...args));
-app.use('/api/upload-file', jwtMiddleware, (...args) => uploadsMiddleware(...args));
+app.use('/api/upload-file', jwt({ secret: settings.secret }), (...args) => uploadsMiddleware(...args));
 app.use((...args) => websiteMiddleware(...args));
 
 server = http.createServer(app);
@@ -124,8 +124,8 @@ new SubscriptionServer({
 		};
 	},
 }, {
-	server,
-	path: '/',
+  server,
+  path: '/',
 });
 
 server.listen(port, () => {

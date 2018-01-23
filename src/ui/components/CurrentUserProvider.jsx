@@ -72,14 +72,14 @@ export default class CurrentUserProvider extends Component {
 
   setToken(token) {
     localStorage.setItem('token', token);
-    // Cookie.set('token', token, { expires: 365 });
-	this.props.data.refetch();
+    Cookie.set('token', token, { expires: 365 });
+    this.props.data.refetch();
   }
 
   logout() {
     localStorage.removeItem('token');
-	// Cookie.remove('token');
-	const pathName = this.context.router.location.pathname;
+    Cookie.remove('token');
+    const pathName = this.context.router.location.pathname;
 
     if (pathName !== '/login' && pathName !== '/signup') {
       this.context.router.push('/login');
