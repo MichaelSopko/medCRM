@@ -27,9 +27,9 @@ module.exports = {
 		client: 'mysql',
 		connection: process.env.CLEARDB_DATABASE_URL || process.env.DATABASE_URL || {
 			host: process.env.DATABASE_HOST || '127.0.0.1',
-			user: process.env.DATABASE_USER || 'root',
-			password: process.env.DATABASE_PASSWORD || '',
-			database: process.env.DATABASE_NAME || 'clinic-app'
+			user:'root',
+			password:  '123456',
+			database: 'clinic-prod'
 		},
 		seeds: {
 			directory: './src/database/seeds'
