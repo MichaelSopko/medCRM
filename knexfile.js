@@ -1,10 +1,8 @@
 const isBabel = !(class {
 }.toString().indexOf('class ') === 0);
 if (!isBabel) {
-  require('babel-register');
+	require('babel-register');
 }
-
-require('dotenv').config();
 
 module.exports = {
 	development: {
@@ -12,8 +10,8 @@ module.exports = {
 		connection: {
 			host: '127.0.0.1',
 			user: 'root',
-			password: '123456',
-			database: 'clinic-prod'
+			password: '',
+			database: 'clinic-app'
 		},
 		seeds: {
 			directory: './src/database/seeds'
@@ -27,9 +25,9 @@ module.exports = {
 		client: 'mysql',
 		connection: process.env.CLEARDB_DATABASE_URL || process.env.DATABASE_URL || {
 			host: process.env.DATABASE_HOST || '127.0.0.1',
-			user:'root',
-			password:  '123456',
-			database: 'clinic-prod'
+			user: process.env.DATABASE_USER || 'root',
+			password: process.env.DATABASE_PASSWORD || '',
+			database: process.env.DATABASE_NAME || 'clinic-app'
 		},
 		seeds: {
 			directory: './src/database/seeds'
