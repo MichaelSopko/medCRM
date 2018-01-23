@@ -72,7 +72,7 @@ if (!__DEV__) {
       test: /\.js$|\.s?css$/,
       // threshold: 10240,
       minRatio: 0.8,
-    })
+    }),
   );
 } else {
   outputFileNamePattern = '[name]-[hash]-[id].js';
