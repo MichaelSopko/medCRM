@@ -171,7 +171,7 @@ input DiagnoseInput {
 }
 
 type Patient implements User {
-	id: Int!
+	id: ID!
 	id_number: String!
 	first_name: String!
 	last_name: String!
@@ -222,17 +222,89 @@ enum PatientHealthMaintenance {
 type PatientRelatedPerson {
 	type: PatientRelatedPersonType
 	description: String
-	phone: String!
+	phone: String
 	email: String
 	receive_updates: Boolean
+	name: String
 }
 
 input PatientRelatedPersonInput {
 	type: PatientRelatedPersonType!
 	description: String
-	phone: String!
+	phone: String
 	email: String
 	receive_updates: Boolean
+	name: String
+}
+
+type SchoolObservation {
+	id: ID!
+	patient: Patient!
+	observationReason: String
+	educationEntity: String
+	date: Date
+	context: String
+	generalBackground: String
+	familyBackground: String
+	medicalBackground: String
+	previousDiagnoses: String
+	educationalFramework: String
+	observationFindings: String
+	observationSummary: String
+	therapists: [Therapist]
+}
+
+input SchoolObservationInput {
+	observationReason: String
+	educationEntity: String
+	date: Date
+	context: String
+	generalBackground: String
+	familyBackground: String
+	medicalBackground: String
+	previousDiagnoses: String
+	educationalFramework: String
+	observationFindings: String
+	observationSummary: String
+	therapist_ids: [ID]!
+}
+
+type StaffMeeting {
+	id: ID!
+	participants: [Therapist]
+	date: Date
+	protocol: String
+	nextRecommendation: String
+	meetingPurpose: String
+}
+
+input StaffMeetingInput {
+	participant_ids: [ID]!
+	date: Date
+	protocol: String
+	nextRecommendation: String
+	meetingPurpose: String
+}
+
+type OutsideSourceConsult {
+	id: ID!
+	consultantRole: String
+	date: Date
+	meetingSummary: String
+}
+
+input OutsideSourceConsultInput {
+	consultantRole: String
+	date: Date
+	meetingSummary: String
+}
+
+union TreatmentSeriesObject = SchoolObservation | Treatment | StaffMeeting | OutsideSourceConsult
+input TreatmentSeriesObjectInput {
+	TreatmentInput: TreatmentInput,
+	SchoolObservationInput: SchoolObservationInput,
+	StaffMeetingInput: StaffMeetingInput,
+	OutsideSourceConsultInput: OutsideSourceConsultInput
 }
 
 type TreatmentSeries {
@@ -240,6 +312,7 @@ type TreatmentSeries {
 	name: String
 	treatments_number: Int!
 	treatments: [Treatment]
+	objects: [TreatmentSeriesObject]
 	patient: Patient
 	patient_id: ID!
 }
@@ -270,7 +343,7 @@ type CurrentUser implements User {
 }
 
 type Clinic {
-	id: Int!,
+	id: ID!,
 	name: String!
 	address: String!
 	email: String
@@ -317,10 +390,10 @@ input ClinicInput {
 type Query {
 	clinics: [Clinic]
 	administrators: [ClinicAdministrator]
-	therapists(clinic_id: Int): [Therapist]
-	patients(clinic_id: Int!, archived: Boolean): [Patient]
+	therapists(clinic_id: ID): [Therapist]
+	patients(clinic_id: ID!, archived: Boolean): [Patient]
 	patient(id: Int!): Patient
-	treatmentSeries(patient_id: ID, clinic_id: Int, therapist_id: ID): [TreatmentSeries]
+	treatmentSeries(patient_id: ID, clinic_id: ID, therapist_id: ID): [TreatmentSeries]
 	currentUser: CurrentUser
 }
 
@@ -346,7 +419,7 @@ type Mutation {
 	addAdministrator(
 		email: String!
 		password: String!
-		clinic_id: Int!
+		clinic_id: ID!
 	): MutationStatus
 
 	editAdministrator(
@@ -364,7 +437,7 @@ type Mutation {
 	id_number: String!
 	first_name: String!
 	last_name: String!
-	clinic_id: Int!
+	clinic_id: ID!
 	license_number: Int!
 	phone: String!
 	email: String!
@@ -390,7 +463,7 @@ type Mutation {
 
 
 	addPatient(
-	clinic_id: Int!
+	clinic_id: ID!
 	patient: PatientInput
 ): Patient!
 
@@ -411,7 +484,7 @@ type Mutation {
 	name: String
 	treatments_number: Int!
 	patient_id: Int!
-	clinic_id: Int!
+	clinic_id: ID!
 ): MutationStatus
 
 	editTreatmentSeries(
@@ -451,9 +524,9 @@ type Mutation {
 
 
 type Subscription {
-	patientCreated(clinic_id: Int!): Patient!
+	patientCreated(clinic_id: ID!): Patient!
 	patientUpdated(id: Int!): Patient!
-	patientDeleted(clinic_id: Int!): Patient!
+	patientDeleted(clinic_id: ID!): Patient!
 	treatmentSeriesCreated(patient_id: Int!): TreatmentSeries!
 	treatmentSeriesUpdated(patient_id: Int!): TreatmentSeries!
 	treatmentSeriesDeleted(patient_id: Int!): TreatmentSeries!
