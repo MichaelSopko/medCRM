@@ -4,6 +4,7 @@ minilog.enable();
 
 const log = typeof window !== 'undefined' ? minilog('frontend') : minilog('backend');
 
+
 if (__DEV__ && __SERVER__) {
   var console_log = global.console.log;
   global.console.log = function() {
