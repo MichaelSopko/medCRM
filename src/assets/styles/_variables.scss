@@ -8,3 +8,39 @@ $base-font: 'Source Sans Pro', 'SF UI Display', sans-serif;
 $header-font-size: 2.8rem;
 $description-header-font-size: 6.2rem;
 $cta-font-size: 1.4rem;
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Source Sans Pro Light'), local('SourceSansPro-Light'),
+  url('/assets/fonts/Source_Sans_Pro/SourceSansPro-Light.woff2') format('woff2'),
+  url('/assets/fonts/Source_Sans_Pro/SourceSansPro-Light.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Source Sans Pro Regular'), local('SourceSansPro-Regular'),
+  url('/assets/fonts/Source_Sans_Pro/SourceSansPro-Regular.woff2') format('woff2'),
+  url('/assets/fonts/Source_Sans_Pro/SourceSansPro-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Source Sans Pro SemiBold'), local('SourceSansPro-SemiBold'),
+  url('/assets/fonts/Source_Sans_Pro/SourceSansPro-SemiBold.woff2') format('woff2'),
+  url('/assets/fonts/Source_Sans_Pro/SourceSansPro-SemiBold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'),
+  url('/assets/fonts/Source_Sans_Pro/SourceSansPro-Bold.woff2') format('woff2'),
+  url('/assets/fonts/Source_Sans_Pro/SourceSansPro-Bold.woff') format('woff');
+}
