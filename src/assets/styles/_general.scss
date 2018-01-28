@@ -1,0 +1,110 @@
+@import "./variables";
+
+a {
+  color: $light-blue;
+
+  &:hover {
+    color: #367fa9;
+  }
+}
+
+// buttons ---
+
+.ant-btn {
+  background: #f4f4f4;
+  color: #444;
+  border-color: #ddd;
+
+  &:hover {
+    background-color: #e7e7e7;
+    color: #333;
+    border-color: #adadad;
+  }
+
+  &:active {
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  }
+
+  &:focus {
+    background: #f4f4f4;
+    color: #444;
+    border-color: #ddd;
+  }
+
+  &.ant-btn-primary {
+    background: $light-blue;
+    border-color: $light-blue;
+    color: #ffffff;
+
+    &:hover {
+      background: #367fa9;
+      border-color: #204d74;
+    }
+
+    &:active {
+      background: #367fa9;
+      border-color: #204d74;
+      box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    }
+
+    &:focus {
+      background: $light-blue;
+      border-color: $light-blue;
+    }
+  }
+
+  &.ant-btn-lg {
+    padding: 0 12px;
+    border-radius: 3px;
+    height: 34px;
+  }
+}
+
+// inputs ---
+
+.ant-input {
+  padding: 6px 12px;
+  color: #555;
+  border: 1px solid #ccc;
+  border-radius: 0;
+
+  &.ant-input-lg {
+    height: 34px;
+
+    &:hover {
+      border-color: #ccc;
+    }
+
+    &:focus {
+      border-color: #3c8dbc;
+      box-shadow: none;
+    }
+  }
+}
+
+// select ---
+
+.ant-select-selection__rendered,
+.ant-select-selection--single,
+.ant-select-lg .ant-select-selection--single {
+  height: 34px;
+}
+
+.ant-select-selection {
+  border-radius: 0;
+  border: 1px solid #ccc;
+
+  &:focus {
+    border-color: #3c8dbc;
+    box-shadow: none;
+  }
+
+  &:hover {
+    border-color: #ccc;
+  }
+}
+
+.ant-select-open .ant-select-selection {
+  border-color: #3c8dbc;
+  box-shadow: none;
+}

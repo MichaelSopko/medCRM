@@ -9,11 +9,10 @@
   justify-content: center;
 
   &__Window {
-    background: rgba(255, 255, 255, .15);
+    background: #fff;
     border-radius: .3rem;
-    padding: 2.4rem;
-    padding-bottom: 0;
-    width: 50rem;
+    padding: 2.5rem 4.6rem 1rem;
+    width: 54rem;
 
     &__CTA {
       display: flex;
@@ -34,10 +33,10 @@
   }
 
   &__Header {
-    color: $content-border;
+    color: #666;
     font-size: $header-font-size;
     font-weight: 300;
     margin: 0;
-    padding: 0 0 2rem .7em;
+    padding-bottom: 2rem;
   }
 }
