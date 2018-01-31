@@ -330,6 +330,18 @@ type Treatment {
 	end_date: Date
 }
 
+input TreatmentInput {
+	target: String
+	method: String
+	process: String
+	parents_guidance: String
+	next_treatment_remark: String
+	therapist_ids: [ID]
+	start_date: Date
+	end_date: Date
+	repeat_weeks: Int
+}
+
 type CurrentUser implements User {
 	id: ID!
 	login: String,
@@ -362,18 +374,6 @@ type Clinic {
 
 type MutationStatus {
 	status: String
-}
-
-input TreatmentInput {
-	target: String
-	method: String
-	process: String
-	parents_guidance: String
-	next_treatment_remark: String
-	therapist_ids: [Int]
-	start_date: Date
-	end_date: Date
-	repeat_weeks: Int
 }
 
 input ClinicInput {
@@ -520,6 +520,24 @@ type Mutation {
 	addDiagnose(input: DiagnoseInput!): Patient!
 	editTreatmentSummary(id: ID!, input: TreatmentSummaryInput!): Patient!
 	editDiagnose(id: ID!, input: DiagnoseInput!): Patient!
+
+	createTreatmentSeries(
+	name: String
+	treatments_number: Int!
+	patient_id: ID!
+	clinic_id: ID!
+): MutationStatus
+
+	updateTreatmentSeries(
+	id: ID!
+	name: String
+	treatments_number: Int!
+): MutationStatus
+
+
+	createTreatmentSeriesObject(series_id: ID!, object: TreatmentSeriesObjectInput!): TreatmentSeriesObject!
+	updateTreatmentSeriesObject(id: ID!, object: TreatmentSeriesObjectInput!): TreatmentSeriesObject!
+	deleteTreatmentSeriesObject(id: ID!, typename: String!): Boolean
 
 }
 
