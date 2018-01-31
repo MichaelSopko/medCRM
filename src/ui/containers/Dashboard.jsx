@@ -27,7 +27,7 @@ class Dashboard extends Component {
           router.push('/dashboard/therapists');
           break;
         case ROLES.THERAPIST:
-          router.push('/patients');
+          router.push('/dashboard/patients');
           break;
       }
     }
