@@ -33,6 +33,6 @@ export default (
       <Route path="administrators" component={Administrators} />
       <Route path="calendar" component={Calendar} />
       <Route path="settings" component={Settings} />
-	</Route>
+    </Route>
   </Route>
 );
