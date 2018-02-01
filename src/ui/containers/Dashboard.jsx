@@ -6,6 +6,8 @@ import { Spin } from 'antd'
 import PropTypes from 'prop-types';
 
 import UserNavbar from '../components/UserNavbar';
+import NavBar from '../components/NavBar';
+
 import './Dashboard.scss';
 
 @connect(
@@ -47,7 +49,8 @@ class Dashboard extends Component {
           <Spin size="large" />
         </div> }
         { !showSpinner && <UserNavbar currentUser={currentUser} /> }
-        { !showSpinner && currentUser && children }
+        { !showSpinner && <NavBar currentUser={currentUser} /> }
+        { !showSpinner && currentUser && <div className="content-wrap">{ children }</div> }
       </main>
     );
   }
