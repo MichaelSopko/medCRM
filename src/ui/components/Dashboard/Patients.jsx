@@ -266,7 +266,7 @@ class Patients extends Component {
 		const canAddPatient = currentClinic.id && (currentUser.role === 'SYSTEM_ADMIN' || !currentClinic.patients_limit || (data && data.patients && data.patients.length < currentClinic.patients_limit));
 
 		return (
-			<div className='Container'>
+			<div className='Container Patient_container'>
 				<section className='Patients'>
 					<PatientForm
 						ref={form => {
