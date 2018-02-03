@@ -8,13 +8,14 @@ import checkAccessLogic from '../../helpers/checkAccessLogic'
 import './NavBar.scss';
 
 const NavBar = (props, context) => {
-		const formatMessage = context.intl.formatMessage;
-		let styles = {
-			height: 'auto'
-		};
-		const { currentUser } = props;
-		
-		return (
+	const formatMessage = context.intl.formatMessage;
+	let styles = {
+		height: 'auto'
+	};
+	const { currentUser } = props;
+	const { first_name, last_name, login, email } = currentUser;
+	
+	return (
 			<aside className="main-sidebar">
 				<section className="sidebar" style={styles}>
 					<div className="user-panel">
@@ -24,7 +25,7 @@ const NavBar = (props, context) => {
 								className="img-circle" alt="User Image"/>
 						</div>
 						<div className="pull-left info">
-							<p>Alexander Pierce</p>
+							<p>{!!first_name ? `${first_name} ${last_name}` : (email || login)}</p>
 						</div>
 					</div>
 					<ul className="sidebar-menu tree">
@@ -67,7 +68,6 @@ const NavBar = (props, context) => {
 				</section>
 			</aside>
 		);
-	
 };
 
 NavBar.contextTypes = {
