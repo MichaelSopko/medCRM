@@ -22,7 +22,7 @@ class UserNavbar extends Component {
 
 	render() {
 		const currentEntity = this.context.router.routes[2] && this.context.router.routes[2].path;
-		const { currentUser } = this.props;
+		const { currentUser, toggleSidebar } = this.props;
 		const formatMessage = this.context.intl.formatMessage;
 
 		return (
@@ -33,7 +33,12 @@ class UserNavbar extends Component {
 				</a>
 				<nav className="navbar navbar-static-top">
 					<div className="nav-content">
-						<a href="#" className="sidebar-toggle fa fa-navicon" data-toggle="push-menu" role="button">
+						<a href="javascript:;"
+						   className="sidebar-toggle fa fa-navicon"
+						   data-toggle="push-menu"
+						   role="button"
+						   onClick={toggleSidebar}
+						>
 							<span className="sr-only">Toggle navigation</span>
 						</a>
 					</div>

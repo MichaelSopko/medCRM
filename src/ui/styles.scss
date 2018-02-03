@@ -177,3 +177,36 @@ body.rtl {
 .ant-table-row {
 	cursor: pointer;
 }
+
+.sidebar-collapse {
+  .main-sidebar {
+    -webkit-transform: translate(0, 0);
+    -ms-transform: translate(0, 0);
+    -o-transform: translate(0, 0);
+    transform: translate(0, 0);
+    width: 50px !important;
+    z-index: 850;
+
+    .user-panel>.info,
+    .sidebar-form,
+    .sidebar-menu>li>a>span,
+    .sidebar-menu>li>.treeview-menu,
+    .sidebar-menu>li>a>.pull-right,
+    .sidebar-menu li.header {
+      display: none !important;
+      -webkit-transform: translateZ(0);
+    }
+  }
+
+  .main-header .logo {
+    width: 50px;
+  }
+  .main-header .logo>.logo-lg {
+    display: none;
+  }
+
+  .content-wrap {
+    margin-left: 50px;
+  }
+
+}

@@ -35,4 +35,6 @@
 .content-wrap {
 	margin-left: 230px;
 	padding: 64px 24px 40px;
+
+	transition: transform .3s ease-in-out,margin .3s ease-in-out;
 }

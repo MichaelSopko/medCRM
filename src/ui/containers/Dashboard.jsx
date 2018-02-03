@@ -18,6 +18,10 @@ class Dashboard extends Component {
   static contextTypes = {
     router: PropTypes.object,
   };
+  
+  state = {
+	  sidebarCollapsed: false
+  };
 
   checkRedirect({ location, router, currentUser }) {
     if (currentUser && location.pathname === '/dashboard') {
@@ -37,18 +41,22 @@ class Dashboard extends Component {
       router.push('/login');
     }
   }
+	
+	toggleSidebarHandler() {
+      this.setState({sidebarCollapsed: !this.state.sidebarCollapsed});
+    }
 
   render() {
     const { children, currentUser } = this.props;
     const showSpinner = !currentUser;
-    this.checkRedirect(this.props);
+	this.checkRedirect(this.props);
 
     return (
-      <main className="Dashboard">
+      <main className={"Dashboard " + (this.state.sidebarCollapsed ? 'sidebar-collapse': '') }>
         { showSpinner && <div className="SplashSpinner">
           <Spin size="large" />
         </div> }
-        { !showSpinner && <UserNavbar currentUser={currentUser} /> }
+        { !showSpinner && <UserNavbar currentUser={currentUser} toggleSidebar={this.toggleSidebarHandler.bind(this)} /> }
         { !showSpinner && <NavBar currentUser={currentUser} /> }
         { !showSpinner && currentUser && <div className="content-wrap">{ children }</div> }
       </main>
