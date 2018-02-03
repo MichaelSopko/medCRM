@@ -64,10 +64,26 @@
 
 		display: flex;
 		padding: 0 12px;
+
+		.sidebar-toggle {
+			float: left;
+			background-color: transparent;
+			background-image: none;
+			padding: 15px 15px;
+			color: #fff;
+			font-size: 18px;
+			text-decoration: none;
+		}
+
+		[role=button] {
+			cursor: pointer;
+		}
 	}
 
 	.nav-content {
 		flex: 1;
+		display: flex;
+		align-items: center;
 	}
 }
 

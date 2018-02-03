@@ -32,7 +32,11 @@ class UserNavbar extends Component {
 					<span className="logo-lg"><b>Clinics</b>CRM</span>
 				</a>
 				<nav className="navbar navbar-static-top">
-					<div className="nav-content"></div>
+					<div className="nav-content">
+						<a href="#" className="sidebar-toggle fa fa-navicon" data-toggle="push-menu" role="button">
+							<span className="sr-only">Toggle navigation</span>
+						</a>
+					</div>
 					<ProfileWidget />
 				</nav>
 			</header>

@@ -31,30 +31,35 @@ const NavBar = (props, context) => {
 						<li className="treeview">
 							{ checkAccessLogic(currentUser.role, ROLES.SYSTEM_ADMIN) &&
 							<Link to="/dashboard/clinics" activeClassName="active">
+								<i className="fa fa-building"></i>
 								<span>{ formatMessage({id: 'UserNavbar.clinics'}) }</span>
 							</Link> }
 						</li>
 						<li className="treeview">
 							{ checkAccessLogic(currentUser.role, ROLES.SYSTEM_ADMIN) &&
 							<Link to="/dashboard/administrators" activeClassName="active">
+								<i className="fa fa-desktop"></i>
 								<span>{ formatMessage({ id: 'UserNavbar.administrators' }) }</span>
 							</Link> }
 						</li>
 						<li className="treeview">
 							{ checkAccessLogic(currentUser.role, ROLES.CLINIC_ADMIN) &&
 							<Link to="/dashboard/therapists" activeClassName="active">
+								<i className="fa fa-user"></i>
 								<span>{ formatMessage({ id: 'UserNavbar.therapists' }) }</span>
 							</Link> }
 						</li>
 						<li className="treeview">
 							{ checkAccessLogic(currentUser.role, ROLES.THERAPIST) &&
 							<Link to="/dashboard/patients" activeClassName="active">
+								<i className="fa fa-users"></i>
 								<span>{ formatMessage({ id: 'UserNavbar.patients' }) }</span>
 							</Link> }
 						</li>
 						<li className="treeview">
 							{ checkAccessLogic(currentUser.role, ROLES.THERAPIST) &&
 							<Link to="/dashboard/calendar" activeClassName="active">
+								<i className="fa fa-calendar"></i>
 								<span>{ formatMessage({ id: 'UserNavbar.calendar' }) }</span>
 							</Link> }
 						</li>
