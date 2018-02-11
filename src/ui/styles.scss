@@ -1,5 +1,7 @@
 @import "~antd/dist/antd.css";
 @import '~font-awesome/css/font-awesome.css';
+@import "~bootstrap/scss/bootstrap";
+@import "~react-bootstrap-table/dist/react-bootstrap-table.min.css";
 @import "~react-big-calendar/lib/css/react-big-calendar.css";
 @import "~react-big-calendar/lib/addons/dragAndDrop/styles.css";
 @import "../assets/styles/variables";
@@ -209,4 +211,42 @@ body.rtl {
     margin-left: 50px;
   }
 
+}
+
+.table {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.65);
+
+  td,th {
+    padding: 16px 8px;
+    word-break: break-all;
+  }
+
+  th {
+    position: relative;
+
+    span {
+      position: absolute;
+      bottom: 16px;
+      font-size: 16px;
+      right: 16px;
+      display: block;
+      opacity: 0.5;
+    }
+  }
+}
+
+.pagination {
+  font-size: 12px;
+
+  .page-link {
+    padding: 6px 12px;
+  }
+}
+
+.pagination-block {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 0 15px;
 }

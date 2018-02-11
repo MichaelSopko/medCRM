@@ -1,17 +1,13 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router'
-import { connect } from 'react-redux';
-import { graphql, compose, withApollo } from 'react-apollo'
-import ApolloClient from 'apollo-client'
-import gql from 'graphql-tag'
-import update from 'react-addons-update'
+import React, { Component } from 'react';
+import { graphql, compose, withApollo } from 'react-apollo';
 import PropTypes from 'prop-types';
-import GET_CLINICS_QUERY from '../../graphql/ClinicsGet.graphql'
-import ADD_CLINIC_MUTATION from '../../graphql/ClinicAddMutation.graphql'
-import DELETE_CLINIC_MUTATION from '../../graphql/ClinicDeleteMutaion.graphql'
-import EDIT_CLINIC_MUTATION from '../../graphql/ClinicEditMutation.graphql'
+import { Table, Icon, Button, Modal, Input, Form, Popconfirm, Switch } from 'antd';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
-import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Switch } from 'antd';
+import GET_CLINICS_QUERY from '../../graphql/ClinicsGet.graphql';
+import ADD_CLINIC_MUTATION from '../../graphql/ClinicAddMutation.graphql';
+import DELETE_CLINIC_MUTATION from '../../graphql/ClinicDeleteMutaion.graphql';
+import EDIT_CLINIC_MUTATION from '../../graphql/ClinicEditMutation.graphql';
 
 const EntityForm = Form.create()(
   (props) => {
@@ -245,6 +241,31 @@ class Clinics extends Component {
       activeEntity: entity,
     });
   };
+	
+	renderPaginationPanel = (props) => {
+		return (
+			<div className="pagination-block">
+				{ props.components.pageList }
+			</div>
+		);
+	};
+	
+	editRender = (cell, record) => {
+		const formatMessage = this.context.intl.formatMessage;
+		
+		return (
+			<span>
+				<Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
+					this.props.deleteClinic(record).then(() => {
+						this.props.client.resetStore();
+					})
+				} } okText={formatMessage({ id: 'common.confirm_yes' })}
+							cancelText={formatMessage({ id: 'common.confirm_no' })}>
+					<Button size="small" type='ghost'>{formatMessage({ id: 'common.action_delete' })}</Button>
+				  </Popconfirm>
+				</span>
+		);
+	};
 
   render() {
     const { data: { loading, clinics }, deleteClinic } = this.props;
@@ -255,44 +276,50 @@ class Clinics extends Component {
 			dataIndex: 'name',
 			key: 'name',
 			sorter: (a, b) => a.name > b.name,
+			filterIcon: <Icon type="smile-o" style={{ color: '#aaa' }} />,
 		}, {
 			title: formatMessage({ id: 'common.field_address' }),
 			dataIndex: 'address',
 			key: 'address',
 			sorter: (a, b) => a.address > b.address,
+			filterIcon: <Icon type="smile-o" style={{ color: '#108ee9' }} />,
 		}, {
 			title: formatMessage({ id: 'common.field_phone' }),
 			dataIndex: 'phone',
 			key: 'phone',
 			sorter: (a, b) => a.phone > b.phone,
-			render: text => <a href={ `tel:${text}` }>{ text }</a>
+			render: text => <a href={ `tel:${text}` }>{ text }</a>,
+			sorterIcon: <Icon type="smile-o" style={{ color: '#aaa' }} />,
 		}, {
 			title: formatMessage({ id: 'common.field_email' }),
 			dataIndex: 'email',
 			key: 'email',
-			sorter: (a, b) => a.email > b.email,
-			render: text => <a href={ `mailto:${text}` }>{ text }</a>
+			
 		}, {
 			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
 			render: (text, record) => (
 				<span>
-{/*		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
+					{/* <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
 			      {formatMessage({ id: 'common.action_edit' })}
 		      </Button>
-					<span className="ant-divider"></span>*/}
-		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
-			      deleteClinic(record).then(() => {
-			      	this.props.client.resetStore();
-			      })
-		      } } okText={formatMessage({ id: 'common.confirm_yes' })}
-		                  cancelText={formatMessage({ id: 'common.confirm_no' })}>
-		        <Button size="small" type='ghost'>{formatMessage({ id: 'common.action_delete' })}</Button>
-		      </Popconfirm>
-        </span>
+					<span className="ant-divider"></span>*/
+					}
+				  <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
+					  deleteClinic(record).then(() => {
+						this.props.client.resetStore();
+					  })
+				  } } okText={formatMessage({ id: 'common.confirm_yes' })}
+							  cancelText={formatMessage({ id: 'common.confirm_no' })}>
+					<Button size="small" type='ghost'>{formatMessage({ id: 'common.action_delete' })}</Button>
+				  </Popconfirm>
+				</span>
 			),
 		}];
 		const { modalOpened, activeEntity } = this.state;
+	  const options = {
+		  paginationPanel: this.renderPaginationPanel
+	  };
 
 		return (
 			<section className="Clinics">
@@ -319,18 +346,43 @@ class Clinics extends Component {
 							</Button>
 						</div>
 					</div>
-					<Table
+					{/*<Table
 						onRowClick={(record, index, event) => {
 							// dont edit when button clicked
 							if(event.target.tagName === 'BUTTON' || event.target.tagName === 'A'  || event.target.parentNode.tagName === 'BUTTON') {
 								return;
 							}
 							this.editEntity(record);
-						}} dataSource={clinics} columns={columns} loading={loading} rowKey='id'/>
+						}}
+						dataSource={clinics} columns={columns} loading={loading} rowKey='id'
+					/>*/}
+					
+					<BootstrapTable data={clinics} keyField='id' hover consended options={options} pagination >
+						<TableHeaderColumn dataField='name' dataSort caretRender={ getCaret }>Product ID</TableHeaderColumn>
+						<TableHeaderColumn dataField='address' dataSort caretRender={ getCaret }>Product ID</TableHeaderColumn>
+						<TableHeaderColumn dataField='phone' dataSort caretRender={ getCaret }>Product ID</TableHeaderColumn>
+						<TableHeaderColumn dataFormat={this.editRender.bind(this)}>Actions</TableHeaderColumn>
+					</BootstrapTable>
 				</div>
 			</section>
 		);
 	}
+}
+
+function getCaret(direction) {
+	if (direction === 'asc') {
+		return (
+			<span className="fa fa-sort-amount-asc"></span>
+		);
+	}
+	if (direction === 'desc') {
+		return (
+			<span className="fa fa-sort-amount-desc"></span>
+		);
+	}
+	return (
+		<span className="fa fa-exchange fa-rotate-90"></span>
+	);
 }
 
 const ClinicsWithApollo = withApollo(compose(

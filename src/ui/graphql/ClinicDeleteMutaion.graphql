@@ -1,5 +1,5 @@
 mutation deleteClinic(
-$id: ID!
+$id: Int!
 ) {
     deleteClinic(id: $id) {
         id

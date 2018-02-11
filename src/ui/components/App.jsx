@@ -1,9 +1,7 @@
-import React from 'react'
-import classnames from 'classnames'
-import CurrentUserProvider from './CurrentUserProvider'
+import React from 'react';
 import PropTypes from 'prop-types';
 
-import NavBar from './NavBar'
+import CurrentUserProvider from './CurrentUserProvider';
 
 export default function App({ children }) {
   return (
