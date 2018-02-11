@@ -1,20 +1,17 @@
 import React, { Component, } from 'react'; import PropTypes from 'prop-types';
-import { Link } from 'react-router'
 import { connect } from 'react-redux';
-import { graphql, compose, withApollo } from 'react-apollo'
-import ApolloClient from 'apollo-client'
-import gql from 'graphql-tag'
-import update from 'react-addons-update'
-import GET_THERAPISTS_QUERY from '../../graphql/therapists.query.gql'
-import CREATE_THERAPIST_MUTATION from '../../graphql/createTherapist.mutation.gql'
-import DELETE_THERAPIST_MUTATION from '../../graphql/deleteTherapist.mutation.gql'
-import UPDATE_THERAPIST_MUTATION from '../../graphql/updateTherapist.mutation.gql'
-import ROLES from '../../../helpers/constants/roles'
-import ClinicsSelector from '../ClinicsSelector'
-import CheckAccess from '../helpers/CheckAccess'
+import { graphql, compose, withApollo } from 'react-apollo';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import moment from 'moment';
-
 import { Table, Icon, Switch, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, DatePicker, notification } from 'antd'
+
+import GET_THERAPISTS_QUERY from '../../graphql/therapists.query.gql';
+import CREATE_THERAPIST_MUTATION from '../../graphql/createTherapist.mutation.gql';
+import DELETE_THERAPIST_MUTATION from '../../graphql/deleteTherapist.mutation.gql';
+import UPDATE_THERAPIST_MUTATION from '../../graphql/updateTherapist.mutation.gql';
+import ROLES from '../../../helpers/constants/roles';
+import ClinicsSelector from '../ClinicsSelector';
+import CheckAccess from '../helpers/CheckAccess';
 
 const EntityForm = Form.create()(
 	(props) => {
