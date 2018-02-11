@@ -179,68 +179,68 @@ const EntityForm = Form.create()(
 );
 
 class Clinics extends Component {
-
-  static contextTypes = {
-    intl: PropTypes.object.isRequired,
-  };
-
-  static propTypes = {
-    data: PropTypes.object,
-  };
-
-  state = {
-    modalOpened: false,
-    activeEntity: {},
-  };
-
-  handleOk = () => {
-    this.setState({
-      modalOpened: false,
-      activeEntity: {},
-    });
-    this.props.form.submit();
-  };
-
-  handleCancel = () => {
-    this.setState({
-      modalOpened: false,
-      activeEntity: {},
-    });
-    this.form.resetFields();
-  };
-
-  showModal = () => {
-    this.setState({ modalOpened: true });
-  };
-
-  handleFormSubmit = () => {
-    const form = this.form;
-    const isEditing = !!Object.keys(this.state.activeEntity).length;
-    form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
-      isEditing
-        ? this.props.editClinic({
-          id: this.state.activeEntity.id,
-          clinic: values,
-        })
-        : this.props.addClinic({ clinic: values });
-      console.log('Adding new clinic', values);
-      form.resetFields();
-      this.setState({
-        modalOpened: false,
-        activeEntity: {},
-      });
-    });
-  };
-
-  editEntity = entity => () => {
-    this.setState({
-      modalOpened: true,
-      activeEntity: entity,
-    });
-  };
+	
+	static contextTypes = {
+		intl: PropTypes.object.isRequired,
+	};
+	
+	static propTypes = {
+		data: PropTypes.object,
+	};
+	
+	state = {
+		modalOpened: false,
+		activeEntity: {},
+	};
+	
+	handleOk = () => {
+		this.setState({
+			modalOpened: false,
+			activeEntity: {},
+		});
+		this.props.form.submit();
+	};
+	
+	handleCancel = () => {
+		this.setState({
+			modalOpened: false,
+			activeEntity: {},
+		});
+		this.form.resetFields();
+	};
+	
+	showModal = () => {
+		this.setState({modalOpened: true});
+	};
+	
+	handleFormSubmit = () => {
+		const form = this.form;
+		const isEditing = !!Object.keys(this.state.activeEntity).length;
+		form.validateFields((err, values) => {
+			if (err) {
+				return;
+			}
+			isEditing
+				? this.props.editClinic({
+				id: this.state.activeEntity.id,
+				clinic: values,
+			})
+				: this.props.addClinic({clinic: values});
+			console.log('Adding new clinic', values);
+			form.resetFields();
+			this.setState({
+				modalOpened: false,
+				activeEntity: {},
+			});
+		});
+	};
+	
+	editEntity = entity => {
+		this.setState({
+			modalOpened: true,
+			activeEntity: entity,
+		});
+	};
 	
 	renderPaginationPanel = (props) => {
 		return (
@@ -255,72 +255,85 @@ class Clinics extends Component {
 		
 		return (
 			<span>
-				<Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
-					this.props.deleteClinic(record).then(() => {
-						this.props.client.resetStore();
-					})
-				} } okText={formatMessage({ id: 'common.confirm_yes' })}
-							cancelText={formatMessage({ id: 'common.confirm_no' })}>
-					<Button size="small" type='ghost'>{formatMessage({ id: 'common.action_delete' })}</Button>
+				<Popconfirm title={formatMessage({id: 'common.confirm_message'})}
+							onConfirm={ () => {
+								this.props.deleteClinic(record).then(() => {
+									this.props.client.resetStore();
+								})
+							} } okText={formatMessage({id: 'common.confirm_yes'})}
+							cancelText={formatMessage({id: 'common.confirm_no'})}>
+					<Button size="small"
+							type='ghost'>{formatMessage({id: 'common.action_delete'})}</Button>
 				  </Popconfirm>
 				</span>
 		);
 	};
-
-  render() {
-    const { data: { loading, clinics }, deleteClinic } = this.props;
-    const formatMessage = this.context.intl.formatMessage;
-
+	
+	onRowClick = (record, index, i, event) => {
+		// dont edit when button clicked
+		if (event.target.tagName === 'BUTTON' || event.target.tagName === 'A' || event.target.parentNode.tagName === 'BUTTON') {
+			return;
+		}
+		this.editEntity(record);
+	};
+	
+	render() {
+		const {data: {loading, clinics}, deleteClinic} = this.props;
+		const formatMessage = this.context.intl.formatMessage;
+		
 		const columns = [{
-			title: formatMessage({ id: 'common.field_name' }),
+			title: formatMessage({id: 'common.field_name'}),
 			dataIndex: 'name',
 			key: 'name',
 			sorter: (a, b) => a.name > b.name,
-			filterIcon: <Icon type="smile-o" style={{ color: '#aaa' }} />,
+			filterIcon: <Icon type="smile-o" style={{color: '#aaa'}}/>,
 		}, {
-			title: formatMessage({ id: 'common.field_address' }),
+			title: formatMessage({id: 'common.field_address'}),
 			dataIndex: 'address',
 			key: 'address',
 			sorter: (a, b) => a.address > b.address,
-			filterIcon: <Icon type="smile-o" style={{ color: '#108ee9' }} />,
+			filterIcon: <Icon type="smile-o" style={{color: '#108ee9'}}/>,
 		}, {
-			title: formatMessage({ id: 'common.field_phone' }),
+			title: formatMessage({id: 'common.field_phone'}),
 			dataIndex: 'phone',
 			key: 'phone',
 			sorter: (a, b) => a.phone > b.phone,
 			render: text => <a href={ `tel:${text}` }>{ text }</a>,
-			sorterIcon: <Icon type="smile-o" style={{ color: '#aaa' }} />,
+			sorterIcon: <Icon type="smile-o" style={{color: '#aaa'}}/>,
 		}, {
-			title: formatMessage({ id: 'common.field_email' }),
+			title: formatMessage({id: 'common.field_email'}),
 			dataIndex: 'email',
 			key: 'email',
 			
 		}, {
-			title: formatMessage({ id: 'common.field_actions' }),
+			title: formatMessage({id: 'common.field_actions'}),
 			key: 'action',
 			render: (text, record) => (
 				<span>
 					{/* <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
-			      {formatMessage({ id: 'common.action_edit' })}
-		      </Button>
-					<span className="ant-divider"></span>*/
+					 {formatMessage({ id: 'common.action_edit' })}
+					 </Button>
+					 <span className="ant-divider"></span>*/
 					}
-				  <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
-					  deleteClinic(record).then(() => {
-						this.props.client.resetStore();
-					  })
-				  } } okText={formatMessage({ id: 'common.confirm_yes' })}
-							  cancelText={formatMessage({ id: 'common.confirm_no' })}>
-					<Button size="small" type='ghost'>{formatMessage({ id: 'common.action_delete' })}</Button>
+					<Popconfirm title={formatMessage({id: 'common.confirm_message'})}
+								onConfirm={ () => {
+									deleteClinic(record).then(() => {
+										this.props.client.resetStore();
+									})
+								} } okText={formatMessage({id: 'common.confirm_yes'})}
+								cancelText={formatMessage({id: 'common.confirm_no'})}>
+					<Button size="small"
+							type='ghost'>{formatMessage({id: 'common.action_delete'})}</Button>
 				  </Popconfirm>
 				</span>
 			),
 		}];
-		const { modalOpened, activeEntity } = this.state;
-	  const options = {
-		  paginationPanel: this.renderPaginationPanel
-	  };
-
+		const {modalOpened, activeEntity} = this.state;
+		const options = {
+			paginationPanel: this.renderPaginationPanel,
+			onRowClick: this.onRowClick,
+		};
+		
 		return (
 			<section className="Clinics">
 				<div className="Container Dashboard__Content">
@@ -337,31 +350,36 @@ class Clinics extends Component {
 					/>
 					<div className="Dashboard__Details">
 						<h1 className="Dashboard__Header">
-							{ formatMessage({ id: 'Clinics.header' }) }
+							{ formatMessage({id: 'Clinics.header'}) }
 						</h1>
 						<div className="Dashboard__Actions">
 							<Button type="primary" onClick={ this.showModal }>
 								<Icon type="plus-circle-o"/>
-								{ formatMessage({ id: 'Clinics.create_button' }) }
+								{ formatMessage({id: 'Clinics.create_button'}) }
 							</Button>
 						</div>
 					</div>
 					{/*<Table
-						onRowClick={(record, index, event) => {
-							// dont edit when button clicked
-							if(event.target.tagName === 'BUTTON' || event.target.tagName === 'A'  || event.target.parentNode.tagName === 'BUTTON') {
-								return;
-							}
-							this.editEntity(record);
-						}}
-						dataSource={clinics} columns={columns} loading={loading} rowKey='id'
-					/>*/}
+					 onRowClick={(record, index, event) => {
+					 // dont edit when button clicked
+					 if(event.target.tagName === 'BUTTON' || event.target.tagName === 'A'  || event.target.parentNode.tagName === 'BUTTON') {
+					 return;
+					 }
+					 this.editEntity(record);
+					 }}
+					 dataSource={clinics} columns={columns} loading={loading} rowKey='id'
+					 />*/}
 					
-					<BootstrapTable data={clinics} keyField='id' hover consended options={options} pagination >
-						<TableHeaderColumn dataField='name' dataSort caretRender={ getCaret }>Product ID</TableHeaderColumn>
-						<TableHeaderColumn dataField='address' dataSort caretRender={ getCaret }>Product ID</TableHeaderColumn>
-						<TableHeaderColumn dataField='phone' dataSort caretRender={ getCaret }>Product ID</TableHeaderColumn>
-						<TableHeaderColumn dataFormat={this.editRender.bind(this)}>Actions</TableHeaderColumn>
+					<BootstrapTable data={clinics} keyField='id' hover consended options={options}
+									pagination>
+						<TableHeaderColumn dataField='name' dataSort caretRender={ getCaret }>Product
+							ID</TableHeaderColumn>
+						<TableHeaderColumn dataField='address' dataSort caretRender={ getCaret }>Product
+							ID</TableHeaderColumn>
+						<TableHeaderColumn dataField='phone' dataSort caretRender={ getCaret }>Product
+							ID</TableHeaderColumn>
+						<TableHeaderColumn
+							dataFormat={this.editRender.bind(this)}>Actions</TableHeaderColumn>
 					</BootstrapTable>
 				</div>
 			</section>
