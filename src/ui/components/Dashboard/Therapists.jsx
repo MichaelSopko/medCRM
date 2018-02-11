@@ -262,11 +262,70 @@ class Therapists extends Component {
 			activeEntity: entity,
 		});
 	};
+	
+	onRowClick = (record, index, i, event) => {
+		// dont edit when button clicked
+		if (event.target.tagName === 'BUTTON' || event.target.tagName === 'A' || event.target.parentNode.tagName === 'BUTTON') {
+			return;
+		}
+		this.editEntity(record);
+	};
+	
+	renderPaginationPanel = (props) => {
+		return (
+			<div className="pagination-block">
+				{ props.components.pageList }
+			</div>
+		);
+	};
+	
+	editRender = (cell, record) => {
+		const formatMessage = this.context.intl.formatMessage;
+		
+		return (
+			<span>
+				<Popconfirm title={formatMessage({id: 'common.confirm_message'})}
+							onConfirm={ () => {
+								this.props.deleteClinic(record).then(() => {
+									this.props.client.resetStore();
+								})
+							} } okText={formatMessage({id: 'common.confirm_yes'})}
+							cancelText={formatMessage({id: 'common.confirm_no'})}>
+					<Button size="small"
+							type='ghost'>{formatMessage({id: 'common.action_delete'})}</Button>
+				  </Popconfirm>
+				</span>
+		);
+	};
+	
+	renderName = (text, record) => {
+		return (
+			<div className="to-dynamic-container">
+				<span className="to-dynamic">{record.first_name} {record.last_name}</span>
+			</div>
+		);
+	};
+	
+	renderTitle = (text, record) => {
+		const formatMessage = this.context.intl.formatMessage;
+		
+		return (
+			<div className="to-dynamic-container">
+				<span className="to-dynamic" style={{ color: text == 'value1' ? '#d1d1d1' : 'inherit' }}>
+					{formatMessage({ id: `Therapists.field_title.${text}` })}
+				</span>
+			</div>
+		);
+	};
 
 	render() {
 		const { data: { loading, therapists }, deleteTherapist, currentClinic } = this.props;
 		const formatMessage = this.context.intl.formatMessage;
-
+		const options = {
+			paginationPanel: this.renderPaginationPanel,
+			onRowClick: this.onRowClick,
+		};
+		
 		const columns = [{
 			title: formatMessage({ id: 'common.field_name' }),
 			key: 'name',
@@ -355,7 +414,7 @@ class Therapists extends Component {
 							</Button>
 						</div>
 					</div>
-					<Table
+					{/*<Table
 						onRowClick={(record, index, event) => {
 							// dont edit when button clicked
 							if(event.target.tagName === 'BUTTON' || event.target.tagName === 'A'  || event.target.parentNode.tagName === 'BUTTON') {
@@ -363,11 +422,37 @@ class Therapists extends Component {
 							}
 							this.editEntity(record);
 						}}
-						dataSource={therapists} columns={columns} loading={loading} rowKey='id' />
+						dataSource={therapists} columns={columns} loading={loading} rowKey='id' />*/}
+					
+					<BootstrapTable data={therapists} keyField='id' hover consended options={options}
+									pagination>
+						<TableHeaderColumn width='25%' dataField='first_name' dataFormat={this.renderName} dataSort caretRender={ getCaret }>{formatMessage({ id: 'common.field_name' })}</TableHeaderColumn>
+						<TableHeaderColumn width='15%' dataField='title' dataFormat={this.renderTitle} dataSort caretRender={ getCaret }>{formatMessage({ id: 'Therapists.field_title.name' })}</TableHeaderColumn>
+						<TableHeaderColumn width='25%' dataField='phone' dataSort caretRender={ getCaret }>{formatMessage({ id: 'common.field_phone' })}</TableHeaderColumn>
+						<TableHeaderColumn width='25%' dataField='email' dataSort caretRender={ getCaret }>{formatMessage({ id: 'common.field_email' })}</TableHeaderColumn>
+						<TableHeaderColumn width='10%'
+							dataFormat={this.editRender.bind(this)}>{formatMessage({ id: 'common.field_actions' })}</TableHeaderColumn>
+					</BootstrapTable>
 				</div>
 			</section>
 		);
 	}
+}
+
+function getCaret(direction) {
+	if (direction === 'asc') {
+		return (
+			<span className="fa fa-sort-amount-asc"></span>
+		);
+	}
+	if (direction === 'desc') {
+		return (
+			<span className="fa fa-sort-amount-desc"></span>
+		);
+	}
+	return (
+		<span className="fa fa-exchange fa-rotate-90"></span>
+	);
 }
 
 const TherapistsApollo = withApollo(compose(

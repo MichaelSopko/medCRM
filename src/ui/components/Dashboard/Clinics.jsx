@@ -375,6 +375,7 @@ class Clinics extends Component {
 						<TableHeaderColumn dataField='name' dataSort caretRender={ getCaret }>{formatMessage({id: 'common.field_name'})}</TableHeaderColumn>
 						<TableHeaderColumn dataField='address' dataSort caretRender={ getCaret }>{formatMessage({id: 'common.field_address'})}</TableHeaderColumn>
 						<TableHeaderColumn dataField='phone' dataSort caretRender={ getCaret }>{formatMessage({id: 'common.field_phone'})}</TableHeaderColumn>
+						<TableHeaderColumn dataField='email' dataSort caretRender={ getCaret }>{formatMessage({id: 'common.field_email'})}</TableHeaderColumn>
 						<TableHeaderColumn
 							dataFormat={this.editRender.bind(this)}>{formatMessage({id: 'common.field_actions'})}</TableHeaderColumn>
 					</BootstrapTable>
