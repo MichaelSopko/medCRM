@@ -1,18 +1,13 @@
 import React, { Component, } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router'
-import { connect } from 'react-redux';
-import { graphql, compose, withApollo } from 'react-apollo'
-import ApolloClient from 'apollo-client'
-import gql from 'graphql-tag'
-import update from 'react-addons-update'
-import GET_ADMINISTRATORS_QUERY from '../../graphql/AdministratorsGet.graphql'
-import ADD_ADMINISTRATOR_MUTATION from '../../graphql/AdministratorsAddMutation.graphql'
-import DELETE_ADMINISTRATOR_MUTATION from '../../graphql/AdministratorsDeleteMutaion.graphql'
-import EDIT_ADMINISTRATOR_MUTATION from '../../graphql/AdministratorsEditMutation.graphql'
-import ROLES from '../../../helpers/constants/roles'
+import { graphql, compose, withApollo } from 'react-apollo';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, notification } from 'antd';
 
-import { Table, Icon, Button, Modal, Input, Form, Row, Col, Popconfirm, Select, notification } from 'antd'
+import GET_ADMINISTRATORS_QUERY from '../../graphql/AdministratorsGet.graphql';
+import ADD_ADMINISTRATOR_MUTATION from '../../graphql/AdministratorsAddMutation.graphql';
+import DELETE_ADMINISTRATOR_MUTATION from '../../graphql/AdministratorsDeleteMutaion.graphql';
+import EDIT_ADMINISTRATOR_MUTATION from '../../graphql/AdministratorsEditMutation.graphql';
 
 const EntityForm = Form.create()(
 	(props) => {
@@ -168,7 +163,42 @@ class Administrators extends Component {
 			modalOpened: true,
 			activeEntity: entity,
 		});
-	}
+	};
+	
+	onRowClick = (record, index, i, event) => {
+		// dont edit when button clicked
+		if (event.target.tagName === 'BUTTON' || event.target.tagName === 'A' || event.target.parentNode.tagName === 'BUTTON') {
+			return;
+		}
+		this.editEntity(record);
+	};
+	
+	renderPaginationPanel = (props) => {
+		return (
+			<div className="pagination-block">
+				{ props.components.pageList }
+			</div>
+		);
+	};
+	
+	editRender = (cell, record) => {
+		const formatMessage = this.context.intl.formatMessage;
+		
+		return (
+			<span>
+				<Popconfirm title={formatMessage({id: 'common.confirm_message'})}
+							onConfirm={ () => {
+								this.props.deleteClinic(record).then(() => {
+									this.props.client.resetStore();
+								})
+							} } okText={formatMessage({id: 'common.confirm_yes'})}
+							cancelText={formatMessage({id: 'common.confirm_no'})}>
+					<Button size="small"
+							type='ghost'>{formatMessage({id: 'common.action_delete'})}</Button>
+				  </Popconfirm>
+				</span>
+		);
+	};
 
 	render() {
 		const { data: { loading, administrators, clinics }, deleteAdministrator } = this.props;
@@ -205,7 +235,11 @@ class Administrators extends Component {
 			),
 		}];
 		const { modalOpened, activeEntity } = this.state;
-
+		const options = {
+			paginationPanel: this.renderPaginationPanel,
+			onRowClick: this.onRowClick,
+		};
+		
 		return (
 			<section className="Administrators">
 				<div className="Container Dashboard__Content">
@@ -232,18 +266,42 @@ class Administrators extends Component {
 							</Button>
 						</div>
 					</div>
-					<Table
+					{/*<Table
 						onRowClick={(record, index, event) => {
 							// dont edit when button clicked
 							if (event.target.tagName === 'BUTTON' || event.target.tagName === 'A'  || event.target.parentNode.tagName === 'BUTTON') {
 								return;
 							}
 							this.editEntity(record);
-						}} dataSource={administrators} columns={columns} loading={loading} rowKey='id'/>
+						}} dataSource={administrators} columns={columns} loading={loading} rowKey='id'/>*/}
+					
+					<BootstrapTable data={administrators} keyField='id' hover consended options={options}
+									pagination>
+						<TableHeaderColumn dataField='email' dataSort caretRender={ getCaret }>{formatMessage({ id: 'common.field_email' })}</TableHeaderColumn>
+						<TableHeaderColumn dataField='clinic.name' dataSort caretRender={ getCaret }>{formatMessage({ id: 'common.field_name' })}</TableHeaderColumn>
+						<TableHeaderColumn width='20%'
+										   dataFormat={this.editRender.bind(this)}>{formatMessage({ id: 'common.field_actions' })}</TableHeaderColumn>
+					</BootstrapTable>
 				</div>
 			</section>
 		);
 	}
+}
+
+function getCaret(direction) {
+	if (direction === 'asc') {
+		return (
+			<span className="fa fa-sort-amount-asc"></span>
+		);
+	}
+	if (direction === 'desc') {
+		return (
+			<span className="fa fa-sort-amount-desc"></span>
+		);
+	}
+	return (
+		<span className="fa fa-exchange fa-rotate-90"></span>
+	);
 }
 
 const AdministratorsApollo = withApollo(compose(
