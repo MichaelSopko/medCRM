@@ -257,5 +257,9 @@ body.rtl {
   }
   .ant-form-item-label {
     padding: 0;
+
+    label {
+      margin-bottom: 0;
+    }
   }
 }

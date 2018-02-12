@@ -24,7 +24,7 @@ const EntityForm = Form.create()(
       okText: formatMessage({ id: 'common.modal_save_confirm.ok' }),
       cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' }),
     }) : onCancel();
-	  const formLayout = 'vertical';
+    const formLayout = 'vertical';
 
     return (
       <Modal
