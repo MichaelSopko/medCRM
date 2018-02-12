@@ -263,3 +263,14 @@ body.rtl {
     }
   }
 }
+
+body.rtl {
+  .ant-form-vertical {
+    .ant-form-item {
+        display: block;
+      .ant-form-item-label {
+        text-align: right;
+      }
+    }
+  }
+}
