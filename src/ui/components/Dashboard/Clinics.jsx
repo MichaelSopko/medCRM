@@ -14,8 +14,8 @@ const EntityForm = Form.create()(
     const { visible, onCancel, onSubmit, form, loading, values = {}, formatMessage } = props;
     const { getFieldDecorator } = form;
     const formItemLayout = {
-      labelCol: { span: 6 },
-      wrapperCol: { span: 14 },
+      /*labelCol: { span: 6 },
+      wrapperCol: { span: 14 },*/
     };
     const isEditing = !!Object.keys(values).length;
     const checkForConfirm = () => form.isFieldsTouched() ? Modal.confirm({
@@ -24,6 +24,7 @@ const EntityForm = Form.create()(
       okText: formatMessage({ id: 'common.modal_save_confirm.ok' }),
       cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' }),
     }) : onCancel();
+	  const formLayout = 'vertical';
 
     return (
       <Modal
@@ -35,7 +36,7 @@ const EntityForm = Form.create()(
         width={800}
         confirmLoading={loading}
       >
-        <Form >
+        <Form layout={formLayout}>
           <Form.Item
             {...formItemLayout}
             label={formatMessage({ id: 'common.field_name' })}
