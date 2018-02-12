@@ -250,3 +250,12 @@ body.rtl {
   width: 100%;
   padding: 0 15px;
 }
+
+.ant-form.ant-form-vertical {
+  .ant-form-item {
+    margin-bottom: 12px;
+  }
+  .ant-form-item-label {
+    padding: 0;
+  }
+}
