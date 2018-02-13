@@ -1,5 +1,5 @@
 mutation deleteAdministrator(
-$id: ID!
+$id: Int!
 ) {
     deleteAdministrator(id: $id) {
         status

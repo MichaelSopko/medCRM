@@ -189,10 +189,9 @@ class Administrators extends Component {
 			<span>
 				<Popconfirm title={formatMessage({id: 'common.confirm_message'})}
 							onConfirm={ () => {
-								this.props.deleteClinic(record).then(() => {
-									this.props.client.resetStore();
-								})
-							} } okText={formatMessage({id: 'common.confirm_yes'})}
+								this.props.deleteAdministrator(record);
+							}
+							} okText={formatMessage({id: 'common.confirm_yes'})}
 							cancelText={formatMessage({id: 'common.confirm_no'})}>
 					<Button size="small"
 							type='ghost'>{formatMessage({id: 'common.action_delete'})}</Button>
