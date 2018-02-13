@@ -1,5 +1,5 @@
 mutation editAdministrator(
-    $id: ID!
+    $id: Int!
     $password: String!
 ) {
     editAdministrator(id: $id, password: $password) {
