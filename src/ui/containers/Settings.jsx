@@ -7,7 +7,7 @@ import { graphql, compose } from 'react-apollo'
 import './Settings.scss';
 import ROLES from '../../helpers/constants/roles'
 import GET_CURRENT_USER_QUERY from '../graphql/CurrentUser.graphql'
-import UPDATE_THERAPIST_MUTATION from '../graphql/updateTherapist.mutation.gql'
+import UPDATE_THERAPIST_MUTATION from '../graphql/UpdateTherapistMutation.graphql'
 
 @compose(
 	graphql(GET_CURRENT_USER_QUERY),

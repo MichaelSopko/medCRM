@@ -1,4 +1,4 @@
-#import './Therapist.fragment.gql'
+#import './Therapist.fragment.graphql'
 
 query therapists($clinic_id: ID) {
     therapists(clinic_id: $clinic_id) {

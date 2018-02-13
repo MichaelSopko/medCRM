@@ -162,19 +162,16 @@ const resolvers = {
         .then(res => ({ status: res }));
     },
 
-    addTherapist(_, user, context) {
-      return checkAccess(context, ROLES.CLINIC_ADMIN)
-        .then(() => context.Users.createUser({
-          ...user,
-          role: ROLES.THERAPIST,
-        }))
-        .then(res => ({ status: res }))
-        .catch(checkForNonUniqueField);
+    createTherapist(_, { clinic_id, therapist }, context) {
+      return checkAccess(context, ROLES.SYSTEM_ADMIN)
+          .then(() => context.Users.createUser({ clinic_id, ...therapist, role: ROLES.THERAPIST }))
+          .then(id => context.Users.findOne(id))
+          .catch(checkForNonUniqueField);
     },
-    editTherapist(_, user, context) {
+	updateTherapist(_, { id, therapist }, context) {
       return checkAccess(context, ROLES.CLINIC_ADMIN)
-        .then(() => context.Users.editUser(user))
-        .then(res => ({ status: res }))
+        .then(() => context.Users.editUser({ id, ...therapist }))
+        .then(res => context.Users.findOne(id))
         .catch(checkForNonUniqueField);
     },
     deleteTherapist(_, { id }, context) {

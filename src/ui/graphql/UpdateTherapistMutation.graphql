@@ -1,0 +1,13 @@
+#import './Therapist.fragment.graphql'
+
+mutation updateTherapist(
+    $id: ID!,
+    $therapist: TherapistInput!
+) {
+    updateTherapist(
+        id: $id,
+        therapist: $therapist
+    ) {
+        ...TherapistFields
+    }
+}

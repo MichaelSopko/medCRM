@@ -1,6 +1,6 @@
 import { graphql } from 'react-apollo';
 
-import GET_THERAPISTS_QUERY from '../ui/graphql/therapists.query.gql';
+import GET_THERAPISTS_QUERY from '../ui/graphql/therapists.query.graphql';
 
 export default graphql(GET_THERAPISTS_QUERY, {
 	alias: 'withTherapists',

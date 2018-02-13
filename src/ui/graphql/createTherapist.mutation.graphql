@@ -1,4 +1,4 @@
-#import './Therapist.fragment.gql'
+#import './Therapist.fragment.graphql'
 
 mutation createTherapist($clinic_id: ID!, $therapist: TherapistInput!) {
     createTherapist(clinic_id: $clinic_id, therapist: $therapist) {

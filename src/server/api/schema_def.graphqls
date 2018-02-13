@@ -45,6 +45,20 @@ type Therapist implements User {
 	title: String
 }
 
+input TherapistInput {
+	id_number: String
+	first_name: String
+	last_name: String
+	license_number: Int
+	phone: String
+	email: String
+	birth_date: Date
+	disabled: Boolean
+	role: Role
+	title: String
+	password: String
+}
+
 type PatientFile {
 	id: ID!
 	patient_id: ID!
@@ -433,34 +447,19 @@ type Mutation {
 ): MutationStatus
 
 
-	addTherapist(
-	password: String!
-	id_number: String!
-	first_name: String!
-	last_name: String!
-	clinic_id: ID!
-	license_number: Int!
-	phone: String!
-	email: String!
-	birth_date: Date!
-): MutationStatus
+	createTherapist(
+	clinic_id: ID!,
+	therapist: TherapistInput!
+): Therapist!
 
-	editTherapist(
-	id: Int!
-	password: String
-	id_number: String!
-	first_name: String!
-	last_name: String!
-	license_number: Int!
-	phone: String!
-	email: String!
-	birth_date: Date!
-	disabled: Boolean
-): MutationStatus
+	updateTherapist(
+	id: ID!,
+	therapist: TherapistInput!
+): Therapist!
 
 	deleteTherapist(
 	id: Int!
-): MutationStatus
+): Boolean!
 
 
 	addPatient(
