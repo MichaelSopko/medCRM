@@ -287,7 +287,7 @@ class Therapists extends Component {
 			<span>
 				<Popconfirm title={formatMessage({id: 'common.confirm_message'})}
 							onConfirm={ () => {
-								this.props.deleteClinic(record).then(() => {
+								this.props.deleteTherapist(record).then(() => {
 									this.props.client.resetStore();
 								})
 							} } okText={formatMessage({id: 'common.confirm_yes'})}
