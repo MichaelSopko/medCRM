@@ -1,51 +1,33 @@
 import React, { Component, } from 'react'; import PropTypes from 'prop-types';
-import { Link } from 'react-router'
 import { connect } from 'react-redux';
-import { graphql, compose, withApollo } from 'react-apollo'
-import ApolloClient from 'apollo-client'
-import gql from 'graphql-tag'
-import update from 'react-addons-update'
-import moment from 'moment'
+import { graphql, compose, withApollo } from 'react-apollo';
+import gql from 'graphql-tag';
+import moment from 'moment';
 
 import {
-	Table,
 	Icon,
 	Button,
-	Modal,
-	Input,
-	Form,
-	Row,
-	Col,
 	Popconfirm,
-	Select,
-	DatePicker,
-	Upload,
 	Checkbox,
 	notification,
 	message,
 	Tooltip,
-} from 'antd'
+} from 'antd';
 
+import PATIENTS_LIST_QUERY from '../../patient/graphql/PatientsList.graphql';
+import ADD_PATIENT_MUTATION from '../../patient/graphql/PatientAddMutation.graphql';
+import DELETE_PATIENT_MUTATION from '../../patient/graphql/PatientDeleteMutaion.graphql';
+import EDIT_PATIENT_MUTATION from '../../patient/graphql/PatientEditMutation.graphql';
 
-import PATIENTS_LIST_QUERY from '../../patient/graphql/PatientsList.graphql'
-
-import ADD_PATIENT_MUTATION from '../../patient/graphql/PatientAddMutation.graphql'
-import DELETE_PATIENT_MUTATION from '../../patient/graphql/PatientDeleteMutaion.graphql'
-import EDIT_PATIENT_MUTATION from '../../patient/graphql/PatientEditMutation.graphql'
-
-import PATIENT_CREATED_SUBSCRIPTION from '../../patient/graphql/PatientCreatedSubscription.graphql'
-import PATIENT_UPDATED_SUBSCRIPTION from '../../patient/graphql/PatientUpdatedSubscription.graphql'
-import PATIENT_DELETED_SUBSCRIPTION from '../../patient/graphql/PatientDeletedSubscription.graphql'
-
-import ROLES from '../../../helpers/constants/roles'
-import ClinicsSelector from '../ClinicsSelector'
-import CheckAccess from '../helpers/CheckAccess'
+import ROLES from '../../../helpers/constants/roles';
+import ClinicsSelector from '../ClinicsSelector';
+import CheckAccess from '../helpers/CheckAccess';
 import intersperse from '../../../utils/intersperse';
 import PatientForm from '../PatientForm';
 import PatientView from '../PatientView';
 import PatientSelector from '../PatientSelector';
 
-import './Patients.scss'
+import './Patients.scss';
 
 
 class Patients extends Component {
@@ -198,11 +180,11 @@ class Patients extends Component {
 
 	onPatientChange = (id) => {
 		this.setState({ currentPatientId: id })
-	}
+	};
 
 	onShowArchivedChange = (e) => {
 		this.setState({ showArchived: e.target.checked })
-	}
+	};
 
 	render() {
 		const { deletePatient, currentClinic, currentUser, data } = this.props;

@@ -229,6 +229,8 @@
     "field_first_name_error": "Please input first name",
     "field_last_name": "Last name",
     "field_last_name_error": "Please input last name",
+    "field_remarks": "Remarks",
+    "field_remarks_error": "Please input remarks",
     "field_address": "Address",
     "field_address_error": "Please input address",
     "field_phone": "Phone",

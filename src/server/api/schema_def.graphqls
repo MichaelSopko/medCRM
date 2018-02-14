@@ -192,6 +192,7 @@ type Patient implements User {
 	last_name: String!
 	birth_date: Date!
 	phone: String!
+	remarks: String
 	profile_email: String
 	clinic: Clinic
 	clinic_id: ID,
@@ -215,6 +216,7 @@ input PatientInput {
 	profile_email: String
 	related_persons: [PatientRelatedPersonInput]
 	health_maintenance: PatientHealthMaintenance
+	remarks: String
 	diagnoses: [String!]
 	treatment_summary: [String!]
 	gender: GENDER

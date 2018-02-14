@@ -11,6 +11,7 @@ fragment PatientFragment on Patient {
     profile_email
     archived
     gender
+    remarks
     clinic_id
     related_persons {
         type

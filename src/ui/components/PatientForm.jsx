@@ -1,27 +1,19 @@
-import React, { Component, } from 'react'; import PropTypes from 'prop-types';
+import React from 'react';
 import {
-	Table,
-	Icon,
-	Button,
 	Modal,
 	Input,
 	Form,
 	Row,
 	Col,
-	Popconfirm,
 	Select,
-	DatePicker,
-	Upload,
-	notification,
 	Checkbox,
 	Radio,
 	Tooltip,
-} from 'antd'
+} from 'antd';
 import moment from 'moment';
 
-
-import HEALTH_MAINTENANCES from '../../helpers/constants/health_maintenances'
-import RELATED_PERSONS from '../../helpers/constants/related_persons'
+import HEALTH_MAINTENANCES from '../../helpers/constants/health_maintenances';
+import RELATED_PERSONS from '../../helpers/constants/related_persons';
 
 export default Form.create()(
 	(props) => {
@@ -31,8 +23,8 @@ export default Form.create()(
 		} = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
-			labelCol: { span: 6 },
-			wrapperCol: { span: 14 },
+			/*labelCol: { span: 6 },
+			wrapperCol: { span: 14 },*/
 		};
 		const isEditing = !!Object.keys(values).length;
 		const normFile = (e) => {
@@ -49,6 +41,7 @@ export default Form.create()(
 		}) : onCancel();
 
 		const hasFirstPerson = form.getFieldValue('related_persons[0].type') !== undefined;
+		const formLayout = 'vertical';
 
 		return (
 			<Modal title={formatMessage({ id: isEditing ? 'Patients.edit_header' : 'Patients.create_header' })}
@@ -58,7 +51,7 @@ export default Form.create()(
 			       onOk={onSubmit}
 			       width={960}
 			       confirmLoading={loading}>
-				<Form>
+				<Form layout={formLayout}>
 					<Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'common.field_id_number' })}
@@ -113,7 +106,8 @@ export default Form.create()(
 							initialValue: values.phone,
 							validateTrigger: 'onBlur', rules: [{
 								pattern: /^\d{2,9}-?\d{2,9}?-?\d{0,9}$/,
-								required: false, message: formatMessage({ id: 'common.field_phone_error' }),
+								required: true,
+								message: formatMessage({ id: 'common.field_phone_error' }),
 							}],
 						})(
 							<Input />,
@@ -133,6 +127,17 @@ export default Form.create()(
 									{formatMessage({ id: `health_maintenance.${key}` })}
 								</Select.Option>)}
 							</Select>,
+						)}
+					</Form.Item>}
+					{<Form.Item
+						{...formItemLayout}
+						label={formatMessage({ id: 'common.field_remarks' })}
+						hasFeedback
+					>
+						{getFieldDecorator('remarks', {
+							initialValue: values.remarks,
+						})(
+							<Input />,
 						)}
 					</Form.Item>}
 					{<Form.Item
