@@ -282,6 +282,7 @@
     "field_first_name_error": "נא להכניס שם פרטי",
     "field_last_name": "שם משפחה",
     "field_last_name_error": "נא להכניס שם משפחה",
+    "field_remarks": "הערות",
     "field_address": "כתובת",
     "field_address_error": "נא להכניס כתובת",
     "field_phone": "טלפון",

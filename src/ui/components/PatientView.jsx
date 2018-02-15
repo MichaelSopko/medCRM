@@ -349,20 +349,18 @@ const DetailsTab = ({ patient, showRelatedPersonForm, deleteRelatedPerson, editR
 						<a href={`tel:${patient.phone}`}>{patient.phone}</a>
 					</div>
 				</div>
-
-				<div className='Details__field'>
-					<div className='Details__field-name'>{formatMessage({ id: 'common.field_email' })}</div>
-					<div className='Details__field-value'>
-						<a href={`mailto:${patient.profile_email}`}>{patient.profile_email}</a>
-					</div>
-				</div>
-
 				{!!patient.health_maintenance && <div className='Details__field'>
 					<div
 						className='Details__field-name'>{formatMessage({ id: 'Patients.field_health_maintenance' })}</div>
 					<div
 						className='Details__field-value'>{formatMessage({ id: `health_maintenance.${patient.health_maintenance}` })}</div>
 				</div>}
+				<div className='Details__field'>
+					<div className='Details__field-name'>{formatMessage({ id: 'common.field_remarks' })}</div>
+					<div className='Details__field-value'>
+						{patient.remarks}
+					</div>
+				</div>
 			</div>
 
 			<div className='Details__related-persons'>

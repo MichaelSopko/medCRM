@@ -1,0 +1,27 @@
+.PatientForm {
+  .ant-tabs-bar {
+    display: flex;
+    justify-content: space-between;
+  }
+  .ant-tabs-card > .ant-tabs-content {
+    margin-top: -16px !important;
+  }
+
+  .ant-tabs-card > .ant-tabs-content > .ant-tabs-tabpane {
+    background: #fff;
+    padding: 16px !important;
+  }
+
+  .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab {
+    border-color: transparent !important;
+  }
+
+  .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {
+    border-color: #fff !important;
+  }
+
+  &__Tab {
+    background: #ffffff;
+    padding: 24px;
+  }
+}
