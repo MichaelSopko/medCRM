@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { graphql, compose, withApollo } from 'react-apollo'
+import { graphql, compose, withApollo } from 'react-apollo';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
 import {
 	Table,
@@ -259,10 +260,6 @@ const RelatedPersonsTable = ({ patient, showRelatedPersonForm, deleteRelatedPers
 		{
 			width: '17%',
 			render: (text, record) => <div>
-				{/*				<Button size='small' type='ghost' onClick={editRelatedPerson(record)}>
-					{formatMessage({ id: 'common.action_edit' })}
-				</Button>
-				<span className='ant-divider'></span>*/}
 				<Popconfirm
 					title={formatMessage({ id: 'common.confirm_message' })}
 					onConfirm={deleteRelatedPerson(record._id)}
@@ -275,30 +272,95 @@ const RelatedPersonsTable = ({ patient, showRelatedPersonForm, deleteRelatedPers
 			</div>,
 		}];
 
+	const editRender = (cell, record) => {
+		return (
+			<span>
+				<Popconfirm
+					title={formatMessage({ id: 'common.confirm_message' })}
+					onConfirm={() => {
+						return deleteRelatedPerson(record._id);
+					}}
+					okText={formatMessage({ id: 'common.confirm_yes' })}
+					cancelText={formatMessage({ id: 'common.confirm_no' })}
+				>
+					<Button
+						size="small"
+						type="ghost"
+					>
+						{formatMessage({ id: 'common.action_delete' })}
+					</Button>
+				</Popconfirm>
+			</span>
+		);
+	};
+
+	const onRowClick = (record, index, i, event) => {
+		// dont edit when button clicked
+		if (event.target.tagName === 'BUTTON' || event.target.tagName === 'A' || event.target.parentNode.tagName === 'BUTTON') {
+			return;
+		}
+		editRelatedPerson(record);
+	};
+
+	const getCaret = (direction) => {
+		if (direction === 'asc') {
+			return (
+				<span className="fa fa-sort-amount-asc"></span>
+			);
+		}
+		if (direction === 'desc') {
+			return (
+				<span className="fa fa-sort-amount-desc"></span>
+			);
+		}
+		return (
+			<span className="fa fa-exchange fa-rotate-90"></span>
+		);
+	};
+
+	const options = {
+		onRowClick,
+	};
+
 	return (
 		<div>
-			<Table
-				dataSource={patient.related_persons.map((p, _id) => ({ ...p, _id }))}
-				columns={columns}
-				pagination={false}
-				onRowClick={(record, index, event) => {
-					// dont edit when button clicked
-					if(event.target.tagName === 'BUTTON' || event.target.tagName === 'A'  || event.target.parentNode.tagName === 'BUTTON') {
-						return;
-					}
-					editRelatedPerson(record);
-				}}
-				rowKey='_id'/>
-			<br/>
-			<Button onClick={showRelatedPersonForm}
-			        type='dashed'>{formatMessage({ id: 'Patients.add_related_persons' })}</Button>
+			<BootstrapTable
+				data={patient.related_persons.map((p, _id) => ({ ...p, _id }))}
+				keyField="_id" hover consended options={options}
+			>
+				<TableHeaderColumn width="10%" dataField="type" dataSort caretRender={getCaret}>
+					{formatMessage({ id: 'Patients.field_person_type' })}
+				</TableHeaderColumn>
+				<TableHeaderColumn width="20%" dataField="name" dataSort caretRender={getCaret}>
+					{formatMessage({ id: 'common.field_name' })}
+				</TableHeaderColumn>
+				<TableHeaderColumn width="13%" dataField="phone" dataSort caretRender={getCaret}>
+					{formatMessage({ id: 'common.field_phone' })}
+				</TableHeaderColumn>
+				<TableHeaderColumn width="20%" dataField="email" dataSort caretRender={getCaret}>
+					{formatMessage({ id: 'common.field_email' })}
+				</TableHeaderColumn>
+				<TableHeaderColumn width="20%" dataField="description" dataSort caretRender={getCaret}>
+					{formatMessage({ id: 'Patients.field_person_description' })}
+				</TableHeaderColumn>
+				<TableHeaderColumn width="17%" dataFormat={editRender}>
+					{formatMessage({ id: 'common.field_actions' })}
+				</TableHeaderColumn>
+			</BootstrapTable>
+			<br />
+			<Button
+				onClick={showRelatedPersonForm}
+				type="dashed"
+			>
+				{formatMessage({ id: 'Patients.add_related_persons' })}
+			</Button>
 		</div>
 	);
 };
 
 RelatedPersonsTable.contextTypes = {
 	intl: PropTypes.object.isRequired,
-}
+};
 
 
 const DetailsTab = ({ patient, showRelatedPersonForm, deleteRelatedPerson, editRelatedPerson }, context) => {
@@ -308,9 +370,9 @@ const DetailsTab = ({ patient, showRelatedPersonForm, deleteRelatedPerson, editR
 	let diff = moment.duration(moment().diff(bdate));
 
 	return (
-		<div className='Details'>
-
-			<div className='Details__fields'>
+		<div>
+			<div className='Details'>
+				<div className='Details__fields'>
 				<div className='Details__header'>
 				<span className='Details__name'>
 					{patient.first_name} {patient.last_name}
@@ -362,7 +424,7 @@ const DetailsTab = ({ patient, showRelatedPersonForm, deleteRelatedPerson, editR
 					</div>
 				</div>
 			</div>
-
+			</div>
 			<div className='Details__related-persons'>
 				<RelatedPersonsTable
 					showRelatedPersonForm={showRelatedPersonForm}
@@ -370,7 +432,6 @@ const DetailsTab = ({ patient, showRelatedPersonForm, deleteRelatedPerson, editR
 					patient={patient}
 					deleteRelatedPerson={deleteRelatedPerson}/>
 			</div>
-
 		</div>
 	)
 };
@@ -567,8 +628,8 @@ class PatientView extends Component {
 		this.setState({ showRelatedPersonForm: false, activeRelatedPerson: null });
 	}
 
-	deleteRelatedPerson = idx => () => {
-		const { __typename, archived, archived_date, files, ...patient } = this.props.data.patient;
+	deleteRelatedPerson = idx => {
+		const { __typename, archived, archived_date, files, clinic_id, ...patient } = this.props.data.patient;
 		patient.related_persons = patient.related_persons.map(({ __typename, ...p }) => p);
 		patient.related_persons.splice(idx, 1);
 		this.props.editPatient(patient)
@@ -578,8 +639,8 @@ class PatientView extends Component {
 			.catch((e) => {
 				console.error(e);
 				notification.error(e);
-			})
-	}
+			});
+	};
 
 	render() {
 		const { data, id, onEdit, currentUser, currentClinic } = this.props;
