@@ -16,7 +16,11 @@
 
 	.ant-tabs-card > .ant-tabs-content > .ant-tabs-tabpane {
 		background: #fff;
-		padding: 16px !important;
+		padding: 16px 16px;
+	}
+
+	.PatientObjectTab {
+		padding-top: 20px;
 	}
 
 	.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab {
@@ -82,4 +86,9 @@
 			content: ':';
 		}
 	}
+}
+
+.top-bar-extra {
+	position: relative;
+	top: 36px;
 }

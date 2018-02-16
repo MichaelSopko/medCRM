@@ -263,7 +263,7 @@ class Clinics extends Component {
 								})
 							} } okText={formatMessage({id: 'common.confirm_yes'})}
 							cancelText={formatMessage({id: 'common.confirm_no'})}>
-					<Button size="small" className="btn-actions btn-delete"
+					<Button size="small" className="btn-actions btn-danger"
 							type='ghost'>{formatMessage({id: 'common.action_delete'})}</Button>
 				  </Popconfirm>
 				</span>

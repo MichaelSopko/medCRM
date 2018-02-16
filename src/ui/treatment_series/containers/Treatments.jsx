@@ -285,7 +285,7 @@ class Treatments extends Component {
 		};
 
 		return (
-			<section className="Treatments">
+			<section className="Treatments PatientObjectTab">
 				<TreatmentSeriesForm
 					visible={currentFormType === FORM_TYPES.TreatmentSeries}
 					isNew={!currentSeries}
@@ -317,7 +317,7 @@ class Treatments extends Component {
 					{...formProps}
 				/>
 				<div className="Dashboard__Details" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-					<div className="Dashboard__Actions">
+					<div className="Dashboard__Actions PatientObjectTab__Actions">
 						<Button type="primary" size='small' onClick={ () => this.showForm(FORM_TYPES.TreatmentSeries) } disabled={ !currentClinic.id || patient.archived }>
 							<Icon type="plus-circle-o" />
 							{ formatMessage({ id: 'Treatments.create_series_button' }) }

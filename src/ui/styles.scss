@@ -290,11 +290,17 @@ body.rtl {
 .btn-actions {
   width: 100px;
   height: 36px;
-  background-color: #e96565;
   border-radius: unset;
   border-top: none;
   border-left: none;
   color: #fff;
+
+  &.btn-danger {
+    background-color: #e96565;
+  }
+  &.btn-primary {
+    background-color: #7497af;
+  }
 }
 
 .patient-relateds {

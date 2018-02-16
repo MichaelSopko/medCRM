@@ -97,7 +97,7 @@ class TreatmentSummaryTab extends Component {
 		console.log(object);
 
 		return (
-			<div>
+			<div className="PatientObjectTab">
 				<Form.Item
 					{...formItemLayout}
 					hasFeedback
