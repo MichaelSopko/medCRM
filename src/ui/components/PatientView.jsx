@@ -323,7 +323,7 @@ const RelatedPersonsTable = ({ patient, showRelatedPersonForm, deleteRelatedPers
 	};
 
 	return (
-		<div>
+		<div className="patient-relateds">
 			<BootstrapTable
 				data={patient.related_persons.map((p, _id) => ({ ...p, _id }))}
 				keyField="_id" hover consended options={options}
