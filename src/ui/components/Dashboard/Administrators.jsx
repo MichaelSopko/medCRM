@@ -193,7 +193,7 @@ class Administrators extends Component {
 							}
 							} okText={formatMessage({id: 'common.confirm_yes'})}
 							cancelText={formatMessage({id: 'common.confirm_no'})}>
-					<Button size="small"
+					<Button size="small" className="btn-actions btn-delete"
 							type='ghost'>{formatMessage({id: 'common.action_delete'})}</Button>
 				  </Popconfirm>
 				</span>
@@ -279,7 +279,7 @@ class Administrators extends Component {
 									pagination>
 						<TableHeaderColumn dataField='email' dataSort caretRender={ getCaret }>{formatMessage({ id: 'common.field_email' })}</TableHeaderColumn>
 						<TableHeaderColumn dataField='clinic.name' dataSort caretRender={ getCaret }>{formatMessage({ id: 'common.field_name' })}</TableHeaderColumn>
-						<TableHeaderColumn width='20%'
+						<TableHeaderColumn width="100px"
 										   dataFormat={this.editRender.bind(this)}>{formatMessage({ id: 'common.field_actions' })}</TableHeaderColumn>
 					</BootstrapTable>
 				</div>

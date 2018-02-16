@@ -285,7 +285,7 @@ const RelatedPersonsTable = ({ patient, showRelatedPersonForm, deleteRelatedPers
 				>
 					<Button
 						size="small"
-						type="ghost"
+						type="ghost" className="btn-actions btn-delete"
 					>
 						{formatMessage({ id: 'common.action_delete' })}
 					</Button>
@@ -340,10 +340,10 @@ const RelatedPersonsTable = ({ patient, showRelatedPersonForm, deleteRelatedPers
 				<TableHeaderColumn width="20%" dataField="email" dataSort caretRender={getCaret}>
 					{formatMessage({ id: 'common.field_email' })}
 				</TableHeaderColumn>
-				<TableHeaderColumn width="20%" dataField="description" dataSort caretRender={getCaret}>
+				<TableHeaderColumn  dataField="description" dataSort caretRender={getCaret}>
 					{formatMessage({ id: 'Patients.field_person_description' })}
 				</TableHeaderColumn>
-				<TableHeaderColumn width="17%" dataFormat={editRender}>
+				<TableHeaderColumn width="100px" dataFormat={editRender}>
 					{formatMessage({ id: 'common.field_actions' })}
 				</TableHeaderColumn>
 			</BootstrapTable>

@@ -263,7 +263,7 @@ class Clinics extends Component {
 								})
 							} } okText={formatMessage({id: 'common.confirm_yes'})}
 							cancelText={formatMessage({id: 'common.confirm_no'})}>
-					<Button size="small"
+					<Button size="small" className="btn-actions btn-delete"
 							type='ghost'>{formatMessage({id: 'common.action_delete'})}</Button>
 				  </Popconfirm>
 				</span>
@@ -377,7 +377,7 @@ class Clinics extends Component {
 						<TableHeaderColumn dataField='address' dataSort caretRender={ getCaret }>{formatMessage({id: 'common.field_address'})}</TableHeaderColumn>
 						<TableHeaderColumn dataField='phone' dataSort caretRender={ getCaret }>{formatMessage({id: 'common.field_phone'})}</TableHeaderColumn>
 						<TableHeaderColumn dataField='email' dataSort caretRender={ getCaret }>{formatMessage({id: 'common.field_email'})}</TableHeaderColumn>
-						<TableHeaderColumn
+						<TableHeaderColumn width="100px"
 							dataFormat={this.editRender.bind(this)}>{formatMessage({id: 'common.field_actions'})}</TableHeaderColumn>
 					</BootstrapTable>
 				</div>
