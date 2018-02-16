@@ -129,6 +129,9 @@
     "patient_name": "Patient name",
     "diagnose_date": "Diagnose date"
   },
+  "DiagnoseTab": {
+    "create_title": "Create"
+  },
   "Treatments": {
     "create_treatment_button": "Add treatment",
     "create_series_button": "Create treatments series",

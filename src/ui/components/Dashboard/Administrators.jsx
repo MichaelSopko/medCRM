@@ -266,21 +266,23 @@ class Administrators extends Component {
 							</Button>
 						</div>
 					</div>
-					{/*<Table
+					{/*
+					<Table
 						onRowClick={(record, index, event) => {
 							// dont edit when button clicked
-							if (event.target.tagName === 'BUTTON' || event.target.tagName === 'A'  || event.target.parentNode.tagName === 'BUTTON') {
+							if (event.target.tagName === 'BUTTON' || event.target.tagName === 'A'
+							|| event.target.parentNode.tagName === 'BUTTON') {
 								return;
 							}
 							this.editEntity(record);
-						}} dataSource={administrators} columns={columns} loading={loading} rowKey='id'/>*/}
+						}} dataSource={administrators} columns={columns} loading={loading} rowKey='id'/>
+					*/}
 					
 					<BootstrapTable data={administrators} keyField='id' hover consended options={options}
 									pagination>
 						<TableHeaderColumn dataField='email' dataSort caretRender={ getCaret }>{formatMessage({ id: 'common.field_email' })}</TableHeaderColumn>
 						<TableHeaderColumn dataField='clinic.name' dataSort caretRender={ getCaret }>{formatMessage({ id: 'common.field_name' })}</TableHeaderColumn>
-						<TableHeaderColumn width="100px"
-										   dataFormat={this.editRender.bind(this)}>{formatMessage({ id: 'common.field_actions' })}</TableHeaderColumn>
+						<TableHeaderColumn width="100px" dataFormat={this.editRender.bind(this)}>{formatMessage({ id: 'common.field_actions' })}</TableHeaderColumn>
 					</BootstrapTable>
 				</div>
 			</section>
