@@ -130,8 +130,8 @@ class DiagnoseTab extends Component {
 		const formatMessage = this.context.intl.formatMessage;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
-			labelCol: { span: 6 },
-			wrapperCol: { span: 14 },
+			/*labelCol: { span: 6 },
+			wrapperCol: { span: 14 },*/
 		};
 
 		return (
