@@ -135,46 +135,53 @@ class Treatments extends Component {
 		});
 	};
 
-	handleSubmit = async (form, values) => {
-			const { currentFormType, currentSeries, currentObject } = this.state;
-			let mutation, params, isNew;
-			if (currentFormType === FORM_TYPES.TreatmentSeries) {
-				isNew = !currentSeries;
-				mutation = isNew ? this.props.addSeries : this.props.editSeries;
-				values.start_date = moment(values.start_date).toISOString();
-				values.end_date = moment(values.end_date).toISOString();
-				params = isNew
-				? { patient_id: this.props.patient.id, clinic_id: this.props.currentClinic.id, ...values  }
-				: values;
-			} else {
-				isNew = !currentObject;
-				if (values.repeat_weeks_trigger !== undefined) {
-					delete values.repeat_weeks_trigger;
-				}
-				mutation = isNew ? this.props.createObject : this.props.updateObject;
-				params = isNew
-					? { series_id: currentSeries.id, object: { [`${currentFormType}Input`]: values } }
-					: { id: currentObject.id, object: { [`${currentFormType}Input`]: values } };
+	handleSubmit = (form, values) => {
+		const {currentFormType, currentSeries, currentObject} = this.state;
+		let mutation, params, isNew;
+		
+		if (currentFormType === FORM_TYPES.TreatmentSeries) {
+			isNew = !currentSeries;
+			mutation = isNew ? this.props.addSeries : this.props.editSeries;
+			values.start_date = moment(values.start_date).toISOString();
+			values.end_date = moment(values.end_date).toISOString();
+			params = {
+				patient_id: this.props.patient.id,
+				clinic_id: this.props.currentClinic.id,
+				...values,
+			};
+		} else {
+			isNew = !currentObject;
+			if (values.repeat_weeks_trigger !== undefined) {
+				delete values.repeat_weeks_trigger;
 			}
-			try {
-				this.setState({ modalLoading: true });
-				console.log('Running form', params);
-				await mutation(params);
-				this.hideForm();
-				form.resetFields();
-			} catch (error) {
-				this.setState({ modalLoading: false });
-				console.error(error);
-				let id = 'common.server_error';
-				if (error.graphQLErrors) {
-					id = error.graphQLErrors[0].message;
-				}
-				notification.error({
-					message: this.context.intl.formatMessage({ id }),
-				});
+			mutation = isNew ? this.props.createObject : this.props.updateObject;
+			params = isNew
+				? {series_id: currentSeries.id, object: {[`${currentFormType}Input`]: values}}
+				: {id: currentObject.id, object: {[`${currentFormType}Input`]: values}};
+		}
+		
+		this.setState({modalLoading: true});
+		
+		console.log('Running form', params);
+		
+		mutation(params).then((res) => {
+			console.log('res', res);
+			
+			this.hideForm();
+			form.resetFields();
+		}).catch(error => {
+			this.setState({modalLoading: false});
+			console.error(error);
+			let id = 'common.server_error';
+			if (error.graphQLErrors) {
+				id = error.graphQLErrors[0].message;
 			}
-	}
-
+			notification.error({
+				message: this.context.intl.formatMessage({id}),
+			});
+		});
+	};
+	
 	render() {
 		const {
 			data: { loading, treatmentSeries = [], therapists = [] },
@@ -195,32 +202,32 @@ class Treatments extends Component {
 			title: formatMessage({ id: 'Treatments.grid_headers.past_treatments' }),
 			key: 'past_treatments',
 			width: '10%',
-			render: (_, record) => record.objects.filter(obj => obj.__typename === 'Treatment' && moment(obj.start_date).valueOf() < moment().valueOf()).length,
+			render: (_, record) => record.objects && record.objects.filter(obj => obj.__typename === 'Treatment' && moment(obj.start_date).valueOf() < moment().valueOf()).length,
 		}, {
 			title: formatMessage({ id: 'Treatments.grid_headers.future_treatments' }),
 			key: 'future_treatments',
 			width: '10%',
-			render: (_, record) => record.objects.filter(obj => obj.__typename === 'Treatment' && moment(obj.start_date).valueOf() >= moment().valueOf()).length,
+			render: (_, record) => record.objects && record.objects.filter(obj => obj.__typename === 'Treatment' && moment(obj.start_date).valueOf() >= moment().valueOf()).length,
 		}, {
 			title: formatMessage({ id: 'Treatments.grid_headers.total_treatments' }),
 			key: 'total_treatments',
 			width: '10%',
-			render: (_, record) => record.objects.filter(obj => obj.__typename === 'Treatment').length,
+			render: (_, record) => record.objects && record.objects.filter(obj => obj.__typename === 'Treatment').length,
 		}, {
 			title: formatMessage({ id: 'Treatments.grid_headers.school_observations' }),
 			key: 'school_observations',
 			width: '10%',
-			render: (_, record) => record.objects.filter(obj => obj.__typename === 'SchoolObservation').length,
+			render: (_, record) => record.objects && record.objects.filter(obj => obj.__typename === 'SchoolObservation').length,
 		}, {
 			title: formatMessage({ id: 'Treatments.grid_headers.staff_meetings' }),
 			key: 'staff_meetings',
 			width: '10%',
-			render: (_, record) => record.objects.filter(obj => obj.__typename === 'StaffMeeting').length,
+			render: (_, record) => record.objects && record.objects.filter(obj => obj.__typename === 'StaffMeeting').length,
 		}, {
 			title: formatMessage({ id: 'Treatments.grid_headers.outside_source_consults' }),
 			key: 'outside_source_consults',
 			width: '10%',
-			render: (_, record) => record.objects.filter(obj => obj.__typename === 'OutsideSourceConsult').length,
+			render: (_, record) => record.objects && record.objects.filter(obj => obj.__typename === 'OutsideSourceConsult').length,
 		}/*, {
 			title: formatMessage({ id: 'Treatments.field_treatments_number' }),
 			key: 'treatments_number',
@@ -283,6 +290,8 @@ class Treatments extends Component {
 			currentClinic,
 			therapists,
 		};
+		
+		console.log(treatmentSeries);
 
 		return (
 			<section className="Treatments PatientObjectTab">
@@ -344,12 +353,12 @@ const getOptions = name => ({
 	props: ({ ownProps, mutate }) => ({
 		[name]: (fields) => mutate({
 			variables: fields,
-			refetchQueries: [/*{
-			 query: GET_TREATMENTS_QUERY,
-			 variables: {
-			 clinic_id: ownProps.currentClinic.id
-			 }
-			 }*/],
+			refetchQueries: [{
+				query: GET_TREATMENTS_QUERY,
+				variables: {
+					clinic_id: ownProps.currentClinic.id
+				},
+			}],
 		}),
 	}),
 });

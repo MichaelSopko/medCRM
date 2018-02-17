@@ -485,7 +485,7 @@ type Mutation {
 	addTreatmentSeries(
 	name: String
 	treatments_number: Int!
-	patient_id: Int!
+	patient_id: ID!
 	clinic_id: ID!
 ): MutationStatus
 
