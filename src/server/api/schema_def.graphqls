@@ -246,7 +246,7 @@ type PatientRelatedPerson {
 }
 
 input PatientRelatedPersonInput {
-	type: PatientRelatedPersonType!
+	type: PatientRelatedPersonType
 	description: String
 	phone: String
 	email: String
