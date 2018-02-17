@@ -1,7 +1,8 @@
-import React, { Component, } from 'react'; import PropTypes from 'prop-types';
+import React, { Component } from 'react'; import PropTypes from 'prop-types';
 import { Table, Button, message, Form, Input, notification, Col } from 'antd';
 import moment from 'moment';
 import { graphql } from 'react-apollo';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router';
 
@@ -30,38 +31,37 @@ class TreatmentSummaryTab extends Component {
 
 	static contextTypes = {
 		intl: PropTypes.object.isRequired,
-	}
+	};
 
 	state = {
 		formOpened: false,
 		viewOpened: false,
 		selectedItem: {},
-	}
+	};
 
 	openEditForm = (selectedItem) => {
 		this.setState({ formOpened: true, selectedItem });
-	}
+	};
 
 	openForm = () => {
 		this.setState({ formOpened: true });
-	}
+	};
 
 	closeForm = () => {
 		this.setState({ formOpened: false, selectedItem: {} });
 		setTimeout(() => {
 			this.form.resetFields();
 		}, 500);
-	}
+	};
 
 	openView = (selectedItem) => {
 		this.setState({ viewOpened: true, selectedItem });
-	}
+	};
 
 	closeView = () => {
 		this.setState({ viewOpened: false, selectedItem: {} });
-	}
-
-
+	};
+	
 	handleFormSubmit = () => {
 		const formatMessage = this.context.intl.formatMessage;
 		const form = this.form;
@@ -73,10 +73,10 @@ class TreatmentSummaryTab extends Component {
 			const isEditing = !!Object.keys(this.state.selectedItem).length;
 
 			values.patient_age = moment.duration(values.patient_age).asMilliseconds();
-
-			console.log(values);
-
-			(!isEditing ? this.props.addDiagnose(values) : this.props.editDiagnose(this.state.selectedItem.id, values))
+			
+			(!isEditing ? this.props.addDiagnose(values) :
+				this.props.editDiagnose(this.state.selectedItem.id, values)
+			)
 				.then((res) => {
 					this.closeForm();
 				}).catch(e => {
@@ -85,6 +85,42 @@ class TreatmentSummaryTab extends Component {
 			});
 
 		});
+	};
+	
+	onRowClick = (record, index, i, event) => {
+		// dont edit when button clicked
+		if (event.target.tagName === 'BUTTON' || event.target.tagName === 'A' || event.target.parentNode.tagName === 'BUTTON') {
+			return;
+		}
+		this.openEditForm(record);
+	};
+	
+	renderPaginationPanel = (props) => {
+		return (
+			<div className="pagination-block">
+				{ props.components.pageList }
+			</div>
+		);
+	};
+	
+	editRender = (cell, record) => {
+		const formatMessage = this.context.intl.formatMessage;
+		
+		return (
+			<span>
+				{/*
+				 <Popconfirm title={formatMessage({id: 'common.confirm_message'})}
+				 onConfirm={ () => {
+				 this.props.deleteAdministrator(record);
+				 }
+				 } okText={formatMessage({id: 'common.confirm_yes'})}
+				 cancelText={formatMessage({id: 'common.confirm_no'})}>
+				 <Button size="small" className="btn-actions btn-danger"
+				 type='ghost'>{formatMessage({id: 'common.action_delete'})}</Button>
+				 </Popconfirm>
+				 */}
+				</span>
+		);
 	};
 
 	renderFormFields = (form, object) => {
@@ -160,7 +196,7 @@ class TreatmentSummaryTab extends Component {
 				</Form.Item>
 			</div>
 		);
-	}
+	};
 
 	print() {
 		window.print();
@@ -184,14 +220,21 @@ class TreatmentSummaryTab extends Component {
 			key: 'action',
 			width: '20%',
 			render: (text, record) => ( <span>
-{/*				<Link to={`/print-object/${patient.id}/${record.id}`} target='_blank'>
+				{/*
+				<Link to={`/print-object/${patient.id}/${record.id}`} target='_blank'>
 					<Button size='small'>{formatMessage({ id: 'common.action_print' })}</Button>
 				</Link>
 				<Link to={`/api/generate-pdf/${patient.id}/${record.id}`} target='_blank'>
 					<Button size='small'>PDF</Button>
-				</Link>*/}
+				</Link>
+				*/}
 			</span> ),
 		}];
+		
+		const options = {
+			paginationPanel: this.renderPaginationPanel,
+			onRowClick: this.onRowClick,
+		};
 
 		return (
 			<div className='PatientObjectTab'>
@@ -207,20 +250,43 @@ class TreatmentSummaryTab extends Component {
 					object={selectedItem}
 					onSubmit={this.handleFormSubmit} />
 				<div className='PatientObjectTab__Actions'>
-					<Button onClick={this.openForm} type='primary'>{formatMessage({ id: 'TreatmentSummaryTab.create_title' })}</Button>
+					<Button onClick={this.openForm} type='primary'>{formatMessage({ id: 'DiagnoseTab.create_title' })}</Button>
 				</div>
+				{/*
 				<Table
 					onRowClick={(record, index, event) => {
 						// dont edit when button clicked
-						if(event.target.tagName === 'BUTTON' || event.target.tagName === 'A'  || event.target.parentNode.tagName === 'BUTTON') {
+						if(event.target.tagName === 'BUTTON' || event.target.tagName === 'A'
+						|| event.target.parentNode.tagName === 'BUTTON') {
 							return;
 						}
 						this.openEditForm(record);
 					}} dataSource={patient.treatment_summary} columns={columns} rowKey='id' />
+					*/}
+				
+				<BootstrapTable data={patient.treatment_summary} keyField='id' hover consended options={options} pagination>
+					<TableHeaderColumn dataField='date' dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.field_datetime' })}</TableHeaderColumn>
+					<TableHeaderColumn width="100px" dataFormat={this.editRender}>{formatMessage({ id: 'common.field_actions' })}</TableHeaderColumn>
+				</BootstrapTable>
 			</div>
 		);
 	}
 }
-;
+
+function getCaret(direction) {
+	if (direction === 'asc') {
+		return (
+			<span className="fa fa-sort-amount-asc"></span>
+		);
+	}
+	if (direction === 'desc') {
+		return (
+			<span className="fa fa-sort-amount-desc"></span>
+		);
+	}
+	return (
+		<span className="fa fa-exchange fa-rotate-90"></span>
+	);
+}
 
 export default TreatmentSummaryTab;
