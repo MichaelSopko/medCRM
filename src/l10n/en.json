@@ -132,6 +132,9 @@
   "DiagnoseTab": {
     "create_title": "Create"
   },
+  "TreatmentSummaryTab": {
+    "create_title": "Create"
+  },
   "Treatments": {
     "create_treatment_button": "Add treatment",
     "create_series_button": "Create treatments series",

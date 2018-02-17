@@ -127,10 +127,9 @@ class TreatmentSummaryTab extends Component {
 		const formatMessage = this.context.intl.formatMessage;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
-			labelCol: { span: 6 },
-			wrapperCol: { span: 14 },
+			/*labelCol: { span: 6 },
+			wrapperCol: { span: 14 },*/
 		};
-		console.log(object);
 
 		return (
 			<div className="PatientObjectTab">
@@ -250,7 +249,7 @@ class TreatmentSummaryTab extends Component {
 					object={selectedItem}
 					onSubmit={this.handleFormSubmit} />
 				<div className='PatientObjectTab__Actions'>
-					<Button onClick={this.openForm} type='primary'>{formatMessage({ id: 'DiagnoseTab.create_title' })}</Button>
+					<Button onClick={this.openForm} type='primary'>{formatMessage({ id: 'common.create_title' })}</Button>
 				</div>
 				{/*
 				<Table
