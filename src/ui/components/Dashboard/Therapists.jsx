@@ -325,6 +325,9 @@ class Therapists extends Component {
 		const options = {
 			paginationPanel: this.renderPaginationPanel,
 			onRowClick: this.onRowClick,
+			prePage: 'Previous', // Previous page button text
+			nextPage: 'Next', // Next page button text
+			alwaysShowAllBtns: true,
 		};
 		
 		const columns = [{

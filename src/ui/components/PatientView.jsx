@@ -248,7 +248,10 @@ const FilesTab = ({ patient, onAddFile, onDeleteFile }, context) => {
 	};
 	
 	const options = {
-		paginationPanel: renderPaginationPanel
+		paginationPanel: renderPaginationPanel,
+		prePage: 'Previous', // Previous page button text
+		nextPage: 'Next', // Next page button text
+		alwaysShowAllBtns: true,
 	};
 
 	return <div>
