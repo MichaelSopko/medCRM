@@ -1,36 +1,39 @@
 import React, { Component, } from 'react'; import PropTypes from 'prop-types';
-import { Link } from 'react-router'
-import { connect } from 'react-redux'
-import { graphql, compose, withApollo } from 'react-apollo'
-import ApolloClient from 'apollo-client'
-import gql from 'graphql-tag'
-import update from 'react-addons-update'
+import { Link } from 'react-router';
+import { connect } from 'react-redux';
+import { graphql, compose, withApollo } from 'react-apollo';
+import ApolloClient from 'apollo-client';
+import gql from 'graphql-tag';
+import update from 'react-addons-update';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+
 import {
-	Table, Icon, Button, Menu, Modal, Input, Form, Popconfirm, Select, DatePicker, InputNumber, notification, Col, Switch, Dropdown
-} from 'antd'
-import moment from 'moment'
+	Table, Icon, Button, Menu, Modal, Input, Form, Popconfirm, Select, DatePicker, InputNumber,
+	notification, Col, Switch, Dropdown
+} from 'antd';
+import moment from 'moment';
 
-import GET_TREATMENTS_QUERY from '../graphql/treatments.query.gql'
+import GET_TREATMENTS_QUERY from '../graphql/treatments.query.gql';
 
-import CREATE_OBJECT_MUTATION from '../graphql/createTreatmentSeriesObject.mutation.gql'
-import UPDATE_OBJECT_MUTATION from '../graphql/updateTreatmentSeriesObject.mutation.gql'
-import DELETE_OBJECT_MUTATION from '../graphql/deleteTreatmentSeriesObject.mutation.gql'
+import CREATE_OBJECT_MUTATION from '../graphql/createTreatmentSeriesObject.mutation.gql';
+import UPDATE_OBJECT_MUTATION from '../graphql/updateTreatmentSeriesObject.mutation.gql';
+import DELETE_OBJECT_MUTATION from '../graphql/deleteTreatmentSeriesObject.mutation.gql';
 
-import ADD_SERIES_MUTATION from '../graphql/addTreatmentSeries.mutation.gql'
-import DELETE_SERIES_MUTATION from '../graphql/deleteTreatmentSeries.mutation.gql'
-import EDIT_SERIES_MUTATION from '../graphql/editTreatmentSeries.mutation.gql'
+import ADD_SERIES_MUTATION from '../graphql/addTreatmentSeries.mutation.gql';
+import DELETE_SERIES_MUTATION from '../graphql/deleteTreatmentSeries.mutation.gql';
+import EDIT_SERIES_MUTATION from '../graphql/editTreatmentSeries.mutation.gql';
 
-import SERIES_CREATED_SUBSCRIPTION from '../graphql/treatmentSeriesCreated.subscription.gql'
-import SERIES_UPDATED_SUBSCRIPTION from '../graphql/treatmentSeriesUpdated.subscription.gql'
-import SERIES_DELETED_SUBSCRIPTION from '../graphql/treatmentSeriesDeleted.subscription.gql'
+import SERIES_CREATED_SUBSCRIPTION from '../graphql/treatmentSeriesCreated.subscription.gql';
+import SERIES_UPDATED_SUBSCRIPTION from '../graphql/treatmentSeriesUpdated.subscription.gql';
+import SERIES_DELETED_SUBSCRIPTION from '../graphql/treatmentSeriesDeleted.subscription.gql';
 
-import ROLES from '../../../helpers/constants/roles'
+import ROLES from '../../../helpers/constants/roles';
 import { withCurrentUser } from '../../components/helpers/withCurrentUser';
 import { TreatmentForm } from '../components/TreatmentForm';
 import { TreatmentSeriesForm } from '../components/TreatmentSeriesForm';
 import { TreatmentObjectsTable } from '../components/TreatmentObjectsTable';
 
-import './Treatments.scss'
+import './Treatments.scss';
 import SchoolObservationForm from '../components/SchoolObservationForm';
 import StaffMeetingForm from '../components/StaffMeetingForm';
 import OutsideSourceConsultForm from '../components/OutsideSourceConsultForm';
@@ -121,7 +124,7 @@ class Treatments extends Component {
 
 	updateObject = (object) => {
 		this.showForm(FORM_TYPES[object.__typename], null, object);
-	}
+	};
 
 	showForm = (currentFormType, currentSeries = null, currentObject = null) => {
 		this.setState({
@@ -180,6 +183,86 @@ class Treatments extends Component {
 				message: this.context.intl.formatMessage({id}),
 			});
 		});
+	};
+	
+	isExpandableRow = (row) => {
+		if (!this.state.expandedRecord) {
+			return true;
+		}
+		return row.id === this.state.expandedRecord.id;
+	};
+	
+	expandComponent = (row) => {
+		return (
+			<span>...</span>
+		);
+	};
+	
+	renderPaginationPanel = (props) => {
+		return (
+			<div className="pagination-block">
+				{ props.components.pageList }
+			</div>
+		);
+	};
+	
+	onRowClick = (record, index, i, event) => {
+		const isExpanded = this.state.isExpanded;
+		
+		if (isExpanded) {
+			this.setState({ expandedRecord: null });
+		} else {
+			this.setState({ expandedRecord: record });
+		}
+		this.setState({ isExpanded: !isExpanded });
+	};
+	
+	editRender = (cell, record) => {
+		const formatMessage = this.context.intl.formatMessage;
+		const { deleteSeries, patient } = this.props;
+		
+		return (
+			<span className="treatment-actions">
+				<Dropdown.Button
+						type='primary'
+						onClick={() => this.showForm(FORM_TYPES.Treatment, record)}
+						size='small'
+						disabled={patient.archived}
+						overlay={
+							<Menu onClick={({ key }) => this.showForm(FORM_TYPES[key], record)}>
+								<Menu.Item key={FORM_TYPES.SchoolObservation}>
+									<Icon type='plus-circle-o' style={{marginLeft: 6, marginRight: 6 }} />
+									{formatMessage({ id: 'Treatments.create_object_button.school_observation' })}
+								</Menu.Item>
+								<Menu.Item key={FORM_TYPES.StaffMeeting}>
+									<Icon type='plus-circle-o' style={{marginLeft: 6, marginRight: 6 }} />
+									{formatMessage({ id: 'Treatments.create_object_button.staff_meeting' })}
+								</Menu.Item>
+								<Menu.Item key={FORM_TYPES.OutsideSourceConsult}>
+									<Icon type='plus-circle-o' style={{marginLeft: 6, marginRight: 6 }} />
+									{formatMessage({ id: 'Treatments.create_object_button.outside_source_consult' })}
+								</Menu.Item>
+							</Menu>
+						}>
+				      <Icon type='plus-circle-o' />
+						{formatMessage({ id: 'Treatments.create_object_button.treatment' })}
+			    </Dropdown.Button>
+				<span>
+					<Button size="small" type='ghost' className="btn-actions btn-primary"
+							onClick={ () => this.showForm(FORM_TYPES.TreatmentSeries, record) }>
+						{formatMessage({ id: 'common.action_edit' })}
+					</Button>
+					<Popconfirm title={formatMessage({ id: 'common.confirm_message' })}
+								onConfirm={ () => {deleteSeries(record)} }
+								okText={formatMessage({ id: 'common.confirm_yes' })}
+								cancelText={formatMessage({ id: 'common.confirm_no' })}>
+						<Button size='small' type='ghost' className="btn-actions btn-danger">
+							{formatMessage({ id: 'common.action_delete' })}
+						</Button>
+					</Popconfirm>
+				</span>
+        </span>
+		);
 	};
 	
 	render() {
@@ -291,6 +374,14 @@ class Treatments extends Component {
 			therapists,
 		};
 		
+		const options = {
+			paginationPanel: this.renderPaginationPanel,
+			onRowClick: this.onRowClick,
+			prePage: 'Previous', // Previous page button text
+			nextPage: 'Next', // Next page button text
+			alwaysShowAllBtns: true,
+		};
+		
 		console.log(treatmentSeries);
 
 		return (
@@ -333,6 +424,7 @@ class Treatments extends Component {
 						</Button>
 					</div>
 				</div>
+				{/*
 				<Table
 					expandedRowRender={record => <TreatmentObjectsTable
 						treatments={record.objects}
@@ -344,9 +436,48 @@ class Treatments extends Component {
 					columns={columns}
 					loading={loading}
 					rowKey={item => item.id + item.__typename} />
+					*/}
+				
+				<BootstrapTable
+					data={treatmentSeries}
+					keyField={item => item.id + item.__typename}
+					expandableRow={ this.isExpandableRow }
+					expandComponent={record => <TreatmentObjectsTable
+						treatments={record.objects}
+						updateObject={this.updateObject}
+						formatMessage={formatMessage}
+						deleteObject={deleteObject} />
+					}
+					hover consended options={options} pagination
+				>
+					<TableHeaderColumn width="20%" dataField="name" dataSort caretRender={ getCaret }>{formatMessage({ id: 'common.field_name' })}</TableHeaderColumn>
+					<TableHeaderColumn width="10%" dataField="past_treatments" dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.grid_headers.past_treatments' })}</TableHeaderColumn>
+					<TableHeaderColumn width="10%" dataField="future_treatments" dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.grid_headers.future_treatments' })}</TableHeaderColumn>
+					<TableHeaderColumn width="10%" dataField="total_treatments" dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.grid_headers.total_treatments' })}</TableHeaderColumn>
+					<TableHeaderColumn width="10%" dataField="school_observations" dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.grid_headers.school_observations' })}</TableHeaderColumn>
+					<TableHeaderColumn width="10%" dataField="staff_meetings" dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.grid_headers.staff_meetings' })}</TableHeaderColumn>
+					<TableHeaderColumn width="10%" dataField="outside_source_consults" dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.grid_headers.outside_source_consults' })}</TableHeaderColumn>
+					<TableHeaderColumn width="200px" dataFormat={this.editRender.bind(this)}>{formatMessage({ id: 'common.field_actions' })}</TableHeaderColumn>
+				</BootstrapTable>
 			</section>
 		);
 	}
+}
+
+function getCaret(direction) {
+	if (direction === 'asc') {
+		return (
+			<span className="fa fa-sort-amount-asc"></span>
+		);
+	}
+	if (direction === 'desc') {
+		return (
+			<span className="fa fa-sort-amount-desc"></span>
+		);
+	}
+	return (
+		<span className="fa fa-exchange fa-rotate-90"></span>
+	);
 }
 
 const getOptions = name => ({

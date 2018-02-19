@@ -6,3 +6,24 @@
 		}
 	}
 }
+
+.treatment-actions {
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+}
+
+
+.ant-btn-group.ant-btn-group-sm.ant-dropdown-button {
+	height: 36px;
+	line-height: 36px;
+}
+
+.react-bs-table table th {
+	padding-right: 20px;
+
+	span {
+		right: 5px;
+	}
+}
+
