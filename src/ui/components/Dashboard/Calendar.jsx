@@ -1,13 +1,15 @@
 import React, { Component, } from 'react'; import PropTypes from 'prop-types';
-import { Link } from 'react-router'
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import { graphql, compose, withApollo } from 'react-apollo'
-import ApolloClient from 'apollo-client'
-import gql from 'graphql-tag'
-import update from 'react-addons-update'
-import moment from 'moment'
-import BigCalendar from 'react-big-calendar'
+import { graphql, compose, withApollo } from 'react-apollo';
+import ApolloClient from 'apollo-client';
+import gql from 'graphql-tag';
+import update from 'react-addons-update';
+// import $ from 'jquery';
+import moment from 'moment';
+import BigCalendar from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
+import FullCalendar from './fullcalendar';
 
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -56,11 +58,11 @@ class TreatmentsCalendar extends Component {
 
 	static contextTypes = {
 		intl: PropTypes.object,
-	}
+	};
 
 	state = {
 		currentTreatment: null,
-	}
+	};
 
 	componentWillMount() {
 		if (this.props.data && !this.props.data.loading) {
@@ -90,11 +92,11 @@ class TreatmentsCalendar extends Component {
 				},
 			},
 		}}).catch(errorHandler);
-	}
+	};
 
 	editTreatment = (e) => {
 		this.setState({ currentTreatment: e.treatment });
-	}
+	};
 
 	handleCancel = () => {
 		setTimeout(() => {
@@ -135,11 +137,12 @@ class TreatmentsCalendar extends Component {
 		const formatMessage = this.context.intl.formatMessage;
 
 		if (!currentClinic.id || !treatmentSeries) return null;
-
-
+		
 		let events = [];
 		treatmentSeries.forEach(series => {
-			events.push(...series.objects.filter(obj => obj.__typename === 'Treatment').map(t => ({ series, ...t })));
+			if (series.objects) {
+				events.push(...series.objects.filter(obj => obj.__typename === 'Treatment').map(t => ({ series, ...t })));
+			}
 		});
 		events = events.map(treatment => {
 			const startDate = new Date(treatment.start_date);
@@ -154,10 +157,11 @@ class TreatmentsCalendar extends Component {
 				treatment,
 			};
 		});
-
 		const getProps = (event) => ({
 			style: { backgroundColor: colorHash.hex(event && event.patient.id) },
 		});
+		
+		const calendarOptions = {};
 
 		return (
 			<div>
@@ -176,6 +180,7 @@ class TreatmentsCalendar extends Component {
 					currentClinic={currentClinic}
 				/>
 				<Spin spinning={loading}>
+					{/*
 					<DragAndDropCalendar
 						rtl={!__DEV__}
 						events={events}
@@ -185,9 +190,7 @@ class TreatmentsCalendar extends Component {
 						onSelectEvent={this.editTreatment}
 						formats={{
 							eventTimeRangeFormat: ({ start, end }, culture, local) =>
-								/*`${moment(start).format('H:mm')} — ${moment(end).format('H:mm')}`*/ '',
 							agendaTimeRangeFormat: ({ start, end }, culture, local) =>
-								/*`${moment(start).format('H:mm')} — ${moment(end).format('H:mm')}`*/ '',
 						}}
 						messages={{
 							allDay: <FormattedMessage id='Calendar.allDay' />,
@@ -200,6 +203,31 @@ class TreatmentsCalendar extends Component {
 							agenda: <FormattedMessage id='Calendar.agenda' />,
 						}}
 					/>
+					*/}
+					<FullCalendar
+						isRTL={!__DEV__}
+						id="ghjk"
+						header = {{
+							left: 'prev,next today myCustomButton, agenda',
+							center: 'title',
+							right: 'month,basicWeek,basicDay'
+						}}
+						events={events}
+						buttonText={{
+							allDay: formatMessage({id: 'Calendar.allDay'}),
+							prev: formatMessage({id: 'Calendar.previous'}),
+							next: formatMessage({id: 'Calendar.next'}),
+							today: formatMessage({id: 'Calendar.today'}),
+							month: formatMessage({id: 'Calendar.month'}),
+							week: formatMessage({id: 'Calendar.week'}),
+							day: formatMessage({id: 'Calendar.day'}),
+							agenda: formatMessage({id: 'Calendar.agenda'}),
+						}}
+						navLinks={true} // can click day/week names to navigate views
+						editable={true}
+					/>
+					
+					{/*<FullCalendar options={calendarOptions} />*/}
 				</Spin>
 			</div>
 		);

@@ -2,6 +2,7 @@ import React from 'react'
 import config from '../../../config/config';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
+var $ = require('jquery');
 
 const Html = ({ content, state, assetMap }) => {
   const isRtl = config.locale === 'he';
