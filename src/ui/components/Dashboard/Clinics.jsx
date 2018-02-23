@@ -254,19 +254,24 @@ class Clinics extends Component {
 	editRender = (cell, record) => {
 		const formatMessage = this.context.intl.formatMessage;
 		
+		const onDelete = () => {
+			this.props.deleteClinic(record).then(() => {
+				this.props.client.resetStore();
+			});
+		};
+		
+		const checkForConfirm = () => Modal.confirm({
+			title: formatMessage({id: 'common.confirm_message'}),
+			okText: formatMessage({id: 'common.confirm_yes'}),
+			cancelText: formatMessage({id: 'common.confirm_no'}),
+			onOk: onDelete.bind(this),
+		});
+		
 		return (
 			<span>
-				<Popconfirm title={formatMessage({id: 'common.confirm_message'})}
-							onConfirm={ () => {
-								this.props.deleteClinic(record).then(() => {
-									this.props.client.resetStore();
-								})
-							} } okText={formatMessage({id: 'common.confirm_yes'})}
-							cancelText={formatMessage({id: 'common.confirm_no'})}>
-					<Button size="small" className="btn-actions btn-danger"
-							type='ghost'>{formatMessage({id: 'common.action_delete'})}</Button>
-				  </Popconfirm>
-				</span>
+				<Button size="small" className="btn-actions btn-danger" onClick={checkForConfirm}
+						type='ghost'>{formatMessage({id: 'common.action_delete'})}</Button>
+			</span>
 		);
 	};
 	
