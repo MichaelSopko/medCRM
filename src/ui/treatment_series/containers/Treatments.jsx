@@ -145,6 +145,8 @@ class Treatments extends Component {
 		const {currentFormType, currentSeries, currentObject} = this.state;
 		let mutation, params, isNew;
 		
+		console.log(currentSeries);
+		
 		if (currentFormType === FORM_TYPES.TreatmentSeries) {
 			isNew = !currentSeries;
 			mutation = isNew ? this.props.addSeries : this.props.editSeries;
@@ -155,6 +157,10 @@ class Treatments extends Component {
 				clinic_id: this.props.currentClinic.id,
 				...values,
 			};
+			
+			if (currentSeries) {
+				params.id = currentSeries.id;
+			}
 		} else {
 			isNew = !currentObject;
 			if (values.repeat_weeks_trigger !== undefined) {

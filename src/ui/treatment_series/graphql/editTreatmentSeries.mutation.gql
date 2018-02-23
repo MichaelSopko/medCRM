@@ -1,9 +1,9 @@
 mutation editTreatmentSeries(
-$id: ID!
+$id: Int!
 $name: String
 $treatments_number: Int!
 ) {
-    updateTreatmentSeries(
+    editTreatmentSeries(
         id: $id
         name: $name
         treatments_number: $treatments_number
