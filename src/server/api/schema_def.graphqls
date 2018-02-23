@@ -501,8 +501,8 @@ type Mutation {
 
 
 	addTreatment(
-	series_id: Int!
-	treatment: TreatmentInput
+	series_id: Int!,
+	object: TreatmentSeriesObjectInput!
 ): MutationStatus
 
 	editTreatment(

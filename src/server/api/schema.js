@@ -299,13 +299,20 @@ const resolvers = {
         });
     },
 
-    async addTreatment(_, { series_id, treatment: { repeat_weeks, ...treatment } }, ctx) {
+    async addTreatment(_, {
+		series_id, object: {
+			TreatmentInput, ...restObject,
+		},
+	}, ctx) {
       await checkAccess(ctx, ROLES.THERAPIST);
+		let treatment = TreatmentInput;
       const isExists = await ctx.Treatments.isTreatmentExistsByTime(treatment.start_date, treatment.end_date);
       if (isExists) {
         throw new Error('Treatments.treatment_collided_error');
       }
+      
       const { Treatments } = ctx;
+      let repeat_weeks = treatment.repeat_weeks;
       if (repeat_weeks) {
         while (repeat_weeks--) {
           let { start_date, end_date, ...fields } = treatment;

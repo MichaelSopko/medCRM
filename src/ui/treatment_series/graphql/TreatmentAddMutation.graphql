@@ -1,10 +1,10 @@
 mutation addTreatment(
-$series_id: ID!
-$treatment: TreatmentInput
+$series_id: Int!
+$object: TreatmentSeriesObjectInput!
 ) {
     addTreatment(
         series_id: $series_id
-        treatment: $treatment
+        object: $object
     ) {
         status
     }

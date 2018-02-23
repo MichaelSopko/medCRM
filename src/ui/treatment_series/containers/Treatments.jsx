@@ -19,6 +19,8 @@ import CREATE_OBJECT_MUTATION from '../graphql/createTreatmentSeriesObject.mutat
 import UPDATE_OBJECT_MUTATION from '../graphql/updateTreatmentSeriesObject.mutation.gql';
 import DELETE_OBJECT_MUTATION from '../graphql/deleteTreatmentSeriesObject.mutation.gql';
 
+import MUTATION_ADD_TREATMENT from '../graphql/TreatmentAddMutation.graphql';
+
 import ADD_SERIES_MUTATION from '../graphql/addTreatmentSeries.mutation.gql';
 import DELETE_SERIES_MUTATION from '../graphql/deleteTreatmentSeries.mutation.gql';
 import EDIT_SERIES_MUTATION from '../graphql/editTreatmentSeries.mutation.gql';
@@ -555,7 +557,7 @@ const TreatmentsWithApollo = withApollo(compose(
 		}),
 	}),
 	graphql(EDIT_SERIES_MUTATION, getOptions('editSeries')),
-	graphql(CREATE_OBJECT_MUTATION, getOptions('createObject')),
+	graphql(MUTATION_ADD_TREATMENT, getOptions('createObject')),
 	graphql(UPDATE_OBJECT_MUTATION, getOptions('updateObject')),
 	graphql(DELETE_OBJECT_MUTATION, {
 		props: ({ ownProps: { patient, currentClinic }, mutate }) => ({
