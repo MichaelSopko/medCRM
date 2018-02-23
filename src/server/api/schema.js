@@ -270,11 +270,12 @@ const resolvers = {
     addTreatmentSeries(_, series, context) {
       return checkAccess(context, ROLES.THERAPIST)
         .then(() => context.Treatments.addSeries(series))
-        .then(async ([id]) => {
-          const series = await context.Treatments.findOne(id);
-          pubsub.publish('treatmentSeriesCreated', series);
-          return { status: true };
-        });
+          .then((id) => context.Treatments.findOne(id))
+        .then((series) => {
+			console.log(series);
+			pubsub.publish('treatmentSeriesCreated', series);
+			return {status: true};
+		});
     },
     editTreatmentSeries(_, series, context) {
       return checkAccess(context, ROLES.THERAPIST)

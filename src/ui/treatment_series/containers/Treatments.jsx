@@ -64,53 +64,56 @@ class Treatments extends Component {
 		modalLoading: false,
 	};
 
-	subscriptions = null;
-
-	componentWillReceiveProps(nextProps) {
-		const { subscribeToMore } = this.props.data;
-
-		if (!this.subscriptions && nextProps.patient) {
-			this.subscriptions = [
-				subscribeToMore({
-					document: SERIES_CREATED_SUBSCRIPTION,
-					variables: { patient_id: nextProps.patient.id },
-					updateQuery: (previousResult, { subscriptionData }) => {
-						previousResult = Object.assign({}, previousResult);
-						const newSeries = subscriptionData.data.treatmentSeriesCreated;
-						const newResult = update(previousResult, {
-							treatmentSeries: {
-								$unshift: [newSeries],
-							},
-						});
-						return newResult;
-					},
-				}),
-				subscribeToMore({
-					document: SERIES_UPDATED_SUBSCRIPTION,
-					variables: { patient_id: nextProps.patient.id },
-					updateQuery: (previousResult, { subscriptionData }) => {
-						previousResult = Object.assign({}, previousResult);
-						previousResult.treatmentSeries = previousResult.treatmentSeries.map((series) => {
-							if (series.id === subscriptionData.data.treatmentSeriesUpdated.id) {
-								return subscriptionData.data.treatmentSeriesUpdated
-							} else {
-								return series
-							}
-						})
-						return previousResult
-					},
-				}),
-				subscribeToMore({
-					document: SERIES_DELETED_SUBSCRIPTION,
-					variables: { patient_id: nextProps.patient.id },
-					updateQuery: (previousResult, { subscriptionData }) => {
-						previousResult = Object.assign({}, previousResult);
-						previousResult.treatmentSeries = previousResult.treatmentSeries.filter(series => series.id !== subscriptionData.data.treatmentSeriesDeleted.id)
-						return previousResult
-					},
-				})];
-		}
-	}
+	// subscriptions = null;
+	//
+	// componentWillReceiveProps(nextProps) {
+	// 	const { subscribeToMore } = this.props.data;
+	// 	if (!this.subscriptions && nextProps.patient) {
+	// 		console.log(subscribeToMore);
+	// 		this.subscriptions = [
+	// 			subscribeToMore({
+	// 				document: SERIES_CREATED_SUBSCRIPTION,
+	// 				variables: { patient_id: nextProps.patient.id },
+	// 				updateQuery: (previousResult, { subscriptionData }) => {
+	//
+	// 					console.log('************************');
+	//
+	// 					previousResult = Object.assign({}, previousResult);
+	// 					const newSeries = subscriptionData.data.treatmentSeriesCreated;
+	// 					const newResult = update(previousResult, {
+	// 						treatmentSeries: {
+	// 							$unshift: [newSeries],
+	// 						},
+	// 					});
+	// 					return newResult;
+	// 				},
+	// 			}),
+	// 			subscribeToMore({
+	// 				document: SERIES_UPDATED_SUBSCRIPTION,
+	// 				variables: { patient_id: nextProps.patient.id },
+	// 				updateQuery: (previousResult, { subscriptionData }) => {
+	// 					previousResult = Object.assign({}, previousResult);
+	// 					previousResult.treatmentSeries = previousResult.treatmentSeries.map((series) => {
+	// 						if (series.id === subscriptionData.data.treatmentSeriesUpdated.id) {
+	// 							return subscriptionData.data.treatmentSeriesUpdated;
+	// 						} else {
+	// 							return series;
+	// 						}
+	// 					});
+	// 					return previousResult;
+	// 				},
+	// 			}),
+	// 			subscribeToMore({
+	// 				document: SERIES_DELETED_SUBSCRIPTION,
+	// 				variables: { patient_id: nextProps.patient.id },
+	// 				updateQuery: (previousResult, { subscriptionData }) => {
+	// 					previousResult = Object.assign({}, previousResult);
+	// 					previousResult.treatmentSeries = previousResult.treatmentSeries.filter(series => series.id !== subscriptionData.data.treatmentSeriesDeleted.id)
+	// 					return previousResult;
+	// 				},
+	// 			})];
+	// 	}
+	// }
 
 	handleOk = () => {
 		this.setState({ seriesModalOpened: false, treatmentModalOpened: false });
@@ -168,10 +171,9 @@ class Treatments extends Component {
 		console.log('Running form', params);
 		
 		mutation(params).then((res) => {
-			console.log('res', res);
-			
 			this.hideForm();
 			form.resetFields();
+			this.props.data.refetch()
 		}).catch(error => {
 			this.setState({modalLoading: false});
 			console.error(error);
@@ -267,12 +269,11 @@ class Treatments extends Component {
 	
 	render() {
 		const {
-			data: { loading, treatmentSeries = [], therapists = [] },
+			data: { treatmentSeries = [], therapists = [] },
 			currentClinic, deleteSeries, currentUser, patient, deleteObject,
 		} = this.props;
 		const formatMessage = this.context.intl.formatMessage;
-
-		const columns = [{
+		/*const columns = [{
 			title: formatMessage({ id: 'common.field_name' }),
 			key: 'name',
 			dataIndex: 'name',
@@ -311,13 +312,13 @@ class Treatments extends Component {
 			key: 'outside_source_consults',
 			width: '10%',
 			render: (_, record) => record.objects && record.objects.filter(obj => obj.__typename === 'OutsideSourceConsult').length,
-		}/*, {
+		}/!*, {
 			title: formatMessage({ id: 'Treatments.field_treatments_number' }),
 			key: 'treatments_number',
 			dataIndex: 'treatments_number',
 			sorter: (a, b) => a.treatments_number > b.treatments_number,
 			width: '35%',
-		}*/, {
+		}*!/, {
 			title: formatMessage({ id: 'common.field_actions' }),
 			key: 'action',
 			width: '20%',
@@ -362,7 +363,7 @@ class Treatments extends Component {
 		      </Popconfirm>
         </span>
 			),
-		}];
+		}];*/
 		const { currentFormType, currentObject, currentSeries, modalLoading, } = this.state;
 		const formProps = {
 			loading: modalLoading,
@@ -440,7 +441,7 @@ class Treatments extends Component {
 				
 				<BootstrapTable
 					data={treatmentSeries}
-					keyField={item => item.id + item.__typename}
+					keyField='id'
 					expandableRow={ this.isExpandableRow }
 					expandComponent={record => <TreatmentObjectsTable
 						treatments={record.objects}
@@ -487,7 +488,8 @@ const getOptions = name => ({
 			refetchQueries: [{
 				query: GET_TREATMENTS_QUERY,
 				variables: {
-					clinic_id: ownProps.currentClinic.id
+					clinic_id: ownProps.currentClinic.id,
+					patient_id: ownProps.patient.id,
 				},
 			}],
 		}),
@@ -504,7 +506,20 @@ const TreatmentsWithApollo = withApollo(compose(
 			},
 		}),
 	}),
-	graphql(ADD_SERIES_MUTATION, getOptions('addSeries')),
+	graphql(ADD_SERIES_MUTATION, {
+		props: ({ ownProps, mutate }) => ({
+			addSeries: (fields) => mutate({
+				variables: fields,
+				refetchQueries: [{
+					query: GET_TREATMENTS_QUERY,
+					variables: {
+						clinic_id: ownProps.currentClinic.id,
+						patient_id: ownProps.patient.id,
+					},
+				}],
+			}),
+		}),
+	}),
 	graphql(DELETE_SERIES_MUTATION, {
 		props: ({ ownProps: { patient, currentClinic }, mutate }) => ({
 			deleteSeries: (fields) => mutate({

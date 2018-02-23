@@ -139,7 +139,7 @@ export const TreatmentObjectsTable = ({ treatments, deleteObject, updateObject, 
 				columns={columns}
 				rowKey={item => item.id + item.__typename} />
 				*/}
-			<BootstrapTable data={treatments} keyField={item => item.id + item.__typename} hover consended options={options}>
+			<BootstrapTable data={treatments} keyField="id" hover consended options={options}>
 				<TableHeaderColumn dataField="label" dataFormat={renderLabel} dataSort caretRender={getCaret}>{''}</TableHeaderColumn>
 				<TableHeaderColumn dataField="date" dataFormat={renderHeader} dataSort caretRender={getCaret}>{formatMessage({ id: 'Treatments.field_start_date_header' })}</TableHeaderColumn>
 				<TableHeaderColumn dataSort dataFormat={renderTherapist} caretRender={getCaret}>{formatMessage({ id: 'Treatments.field_therapists' })}</TableHeaderColumn>
