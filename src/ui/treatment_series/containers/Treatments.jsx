@@ -173,7 +173,7 @@ class Treatments extends Component {
 		mutation(params).then((res) => {
 			this.hideForm();
 			form.resetFields();
-			this.props.data.refetch()
+			this.props.data.refetch();
 		}).catch(error => {
 			this.setState({modalLoading: false});
 			console.error(error);
@@ -255,7 +255,21 @@ class Treatments extends Component {
 						{formatMessage({ id: 'common.action_edit' })}
 					</Button>
 					<Popconfirm title={formatMessage({ id: 'common.confirm_message' })}
-								onConfirm={ () => {deleteSeries(record)} }
+								onConfirm={ () => {
+									deleteSeries(record)
+										.then((res) => {
+											this.props.data.refetch();
+										}).catch(error => {
+										console.error(error);
+										let id = 'common.server_error';
+										if (error.graphQLErrors) {
+											id = error.graphQLErrors[0].message;
+										}
+										notification.error({
+											message: this.context.intl.formatMessage({id}),
+										});
+									});
+								} }
 								okText={formatMessage({ id: 'common.confirm_yes' })}
 								cancelText={formatMessage({ id: 'common.confirm_no' })}>
 						<Button size='small' type='ghost' className="btn-actions btn-danger">
