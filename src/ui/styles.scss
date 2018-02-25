@@ -22,7 +22,7 @@ html {
 body {
   font-family: $base-font;
   background: #ECECEC;
-  min-width: 1024px;
+  // min-width: 1024px;
 }
 
 body.rtl {
@@ -310,4 +310,77 @@ body.rtl {
 
 .react-bs-table-no-data {
   height: 36px;
+}
+
+@media only screen and (max-width: 500px) {
+  .Details__fields {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 1080px) {
+  .content-wrap {
+    margin-left: 0;
+  }
+
+  .main-header .logo {
+    width: 0;
+    padding: 0;
+  }
+
+  .navbar.navbar-static-top {
+    width: 100%;
+  }
+
+  .react-bs-table-container {
+    overflow-x: auto;
+
+    .react-bs-table,
+    .react-bs-table-pagination {
+      min-width: 500px;
+    }
+  }
+
+  .Dashboard__Details {
+    flex-direction: column;
+  }
+
+  .Dashboard__Actions {
+    flex-direction: column;
+    align-items: left;
+  }
+
+  .top-bar-extra {
+    display: flex;
+    flex-direction: column;
+    top: 0;
+
+    .ant-btn {
+      margin-left: 0;
+    }
+  }
+
+  .sidebar-collapse {
+    .main-header .logo {
+      width: 0;
+      padding: 0;
+    }
+    .content-wrap {
+      margin-left: 0;
+    }
+    .main-sidebar {
+      min-height: 0;
+      max-height: 0;
+      width: 0 !important;
+
+      .user-panel {
+        width: 0;
+      }
+    }
+    .sidebar-menu,
+    .sidebar-menu li {
+      width: 0;
+      visibility: hidden;
+    }
+  }
 }
