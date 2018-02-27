@@ -504,6 +504,7 @@ type Mutation {
 	addTreatment(
 	series_id: Int,
 	patient_id: Int!,
+	clinic_id: Int!,
 	object: TreatmentSeriesObjectInput!
 ): MutationStatus
 

@@ -176,6 +176,7 @@ class Treatments extends Component {
 					// series_id: currentSeries ? currentSeries.id : 1,
 					object: { [`${currentFormType}Input`]: values },
 					patient_id: this.props.patient.id,
+					clinic_id: +this.props.currentClinic.id,
 				}
 				: {
 					id: currentObject.id,
@@ -296,6 +297,10 @@ class Treatments extends Component {
 				</span>
         </span>
 		);
+	};
+	
+	deleteObj(record) {
+		this.props.deleteObject(record).then(() => this.props.data.refetch());
 	};
 	
 	render() {
@@ -518,7 +523,7 @@ class Treatments extends Component {
 					treatments={treatmentsList}
 					updateObject={this.updateObject}
 					formatMessage={formatMessage}
-					deleteObject={deleteObject} />
+					deleteObject={this.deleteObj.bind(this)} />
 			</section>
 		);
 	}

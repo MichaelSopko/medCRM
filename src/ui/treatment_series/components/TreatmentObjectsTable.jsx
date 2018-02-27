@@ -1,5 +1,4 @@
-import { Table, Popconfirm, Button, Tag } from 'antd';
-import moment from 'moment';
+import { Table, Icon, Button, Modal, Tag, Popconfirm } from 'antd';import moment from 'moment';
 import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
@@ -76,16 +75,21 @@ export const TreatmentObjectsTable = ({ treatments, deleteObject, updateObject, 
 	}
 	
 	const editRender = (cell, record) => {
+		const onDelete = () => {
+			deleteObject(record);
+		};
+		
+		const checkForConfirm = () => Modal.confirm({
+			title: formatMessage({id: 'common.confirm_message'}),
+			okText: formatMessage({id: 'common.confirm_yes'}),
+			cancelText: formatMessage({id: 'common.confirm_no'}),
+			onOk: onDelete,
+		});
+		
 		return (
 			<span>
-				<Popconfirm
-					title={formatMessage({ id: 'common.confirm_message' })}
-					onConfirm={() => deleteObject(record)}
-					okText={formatMessage({ id: 'common.confirm_yes' })}
-					cancelText={formatMessage({ id: 'common.confirm_no' })}
-				>
-					<a>{formatMessage({ id: 'common.action_delete' })}</a>
-				</Popconfirm>
+				<Button size="small" className="btn-actions btn-danger" onClick={checkForConfirm}
+						type='ghost'>{formatMessage({id: 'common.action_delete'})}</Button>
 			</span>
 		);
 	};

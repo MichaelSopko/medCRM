@@ -132,18 +132,25 @@ class TreatmentsCalendar extends Component {
 	};
 
 	render() {
-		const { data: { loading, treatmentSeries, therapists = [] }, currentUser, currentClinic } = this.props;
+		const {
+			data: {
+				loading, treatmentSeries, therapists = [], treatmentsList = [],
+			}, currentUser, currentClinic,
+		} = this.props;
 		const { currentTreatment, modalLoading } = this.state;
 		const formatMessage = this.context.intl.formatMessage;
 
 		if (!currentClinic.id || !treatmentSeries) return null;
 		
 		let events = [];
-		treatmentSeries.forEach(series => {
-			if (series.treatments) {
-				events.push(...series.treatments.filter(obj => obj.__typename === 'Treatment').map(t => ({ series, ...t })));
-			}
-		});
+		// treatmentSeries.forEach(series => {
+		// 	if (series.treatments) {
+		// 		events.push(...series.treatments.filter(obj => obj.__typename === 'Treatment').map(t => ({ series, ...t })));
+		// 	}
+		// });
+		
+		events = treatmentsList.filter(obj => obj.__typename === 'Treatment');
+		
 		events = events.map(treatment => {
 			const startDate = new Date(treatment.start_date);
 			const userTimezoneOffset = startDate.getTimezoneOffset() * 60000;
@@ -155,14 +162,14 @@ class TreatmentsCalendar extends Component {
 				// ${treatment.series.patient.last_name}
 				// (${moment(startDate).format('H:mm')} — ${moment(endDate).format('H:mm')})`,
 				title: `(${moment(startDate).format('H:mm')} — ${moment(endDate).format('H:mm')})`,
-				patient: treatment.series.patient,
+				patient: treatment.patient,
 				id: treatment.id,
 				treatment,
 			};
 		});
-		const getProps = (event) => ({
-			style: { backgroundColor: colorHash.hex(event && event.patient.id) },
-		});
+		// const getProps = (event) => ({
+		// 	style: { backgroundColor: colorHash.hex(event && event.patient.id) },
+		// });
 		
 		const calendarOptions = {};
 
