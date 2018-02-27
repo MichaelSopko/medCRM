@@ -146,12 +146,12 @@ class Treatments extends Component {
 	};
 
 	handleSubmit = (form, values) => {
-		const {currentFormType, currentSeries, currentObject} = this.state;
-		let mutation, params, isNew;
+		const { currentFormType, currentSeries, currentObject, patient } = this.state;
+		let mutation;
+		let params;
+		let isNew;
 		
 		if (currentFormType === FORM_TYPES.TreatmentSeries) {
-			console.log(currentSeries);
-			
 			isNew = !currentSeries;
 			mutation = isNew ? this.props.addSeries : this.props.editSeries;
 			values.start_date = moment(values.start_date).toISOString();
@@ -172,11 +172,18 @@ class Treatments extends Component {
 			}
 			mutation = isNew ? this.props.createObject : this.props.updateObject;
 			params = isNew
-				? {series_id: currentSeries.id, object: {[`${currentFormType}Input`]: values}}
-				: {id: currentObject.id, object: {[`${currentFormType}Input`]: values}};
+				? {
+					// series_id: currentSeries ? currentSeries.id : 1,
+					object: { [`${currentFormType}Input`]: values },
+					patient_id: this.props.patient.id,
+				}
+				: {
+					id: currentObject.id,
+					object: { [`${currentFormType}Input`]: values }
+				};
 		}
 		
-		this.setState({modalLoading: true});
+		this.setState({ modalLoading: true });
 		
 		console.log('Running form', params);
 		
@@ -406,9 +413,6 @@ class Treatments extends Component {
 			nextPage: 'Next', // Next page button text
 			alwaysShowAllBtns: true,
 		};
-		
-		console.log(this.props);
-		console.log(treatmentSeries);
 
 		return (
 			<section className="Treatments PatientObjectTab">
@@ -444,10 +448,34 @@ class Treatments extends Component {
 				/>
 				<div className="Dashboard__Details" style={{ display: 'flex', justifyContent: 'flex-end' }}>
 					<div className="Dashboard__Actions PatientObjectTab__Actions">
-						<Button type="primary" size='small' onClick={ () => this.showForm(FORM_TYPES.TreatmentSeries) } disabled={ !currentClinic.id || patient.archived }>
+						{/*<Button type="primary" size='small' onClick={ () => this.showForm(FORM_TYPES.TreatmentSeries) } disabled={ !currentClinic.id || patient.archived }>
 							<Icon type="plus-circle-o" />
 							{ formatMessage({ id: 'Treatments.create_series_button' }) }
-						</Button>
+						</Button>*/}
+						<Dropdown.Button
+							type='primary'
+							onClick={() => this.showForm(FORM_TYPES.Treatment)}
+							size='small'
+							disabled={patient.archived}
+							overlay={
+								<Menu onClick={({ key }) => this.showForm(FORM_TYPES[key])}>
+									<Menu.Item key={FORM_TYPES.SchoolObservation}>
+										<Icon type='plus-circle-o' style={{marginLeft: 6, marginRight: 6 }} />
+										{formatMessage({ id: 'Treatments.create_object_button.school_observation' })}
+									</Menu.Item>
+									<Menu.Item key={FORM_TYPES.StaffMeeting}>
+										<Icon type='plus-circle-o' style={{marginLeft: 6, marginRight: 6 }} />
+										{formatMessage({ id: 'Treatments.create_object_button.staff_meeting' })}
+									</Menu.Item>
+									<Menu.Item key={FORM_TYPES.OutsideSourceConsult}>
+										<Icon type='plus-circle-o' style={{marginLeft: 6, marginRight: 6 }} />
+										{formatMessage({ id: 'Treatments.create_object_button.outside_source_consult' })}
+									</Menu.Item>
+								</Menu>
+							}>
+							<Icon type='plus-circle-o' />
+							{formatMessage({ id: 'Treatments.create_object_button.treatment' })}
+						</Dropdown.Button>
 					</div>
 				</div>
 				{/*
@@ -464,7 +492,7 @@ class Treatments extends Component {
 					rowKey={item => item.id + item.__typename} />
 					*/}
 				
-				<BootstrapTable
+				{/*<BootstrapTable
 					data={treatmentSeries}
 					keyField='id'
 					expandableRow={ this.isExpandableRow }
@@ -484,13 +512,13 @@ class Treatments extends Component {
 					<TableHeaderColumn width="10%" dataField="staff_meetings" dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.grid_headers.staff_meetings' })}</TableHeaderColumn>
 					<TableHeaderColumn width="10%" dataField="outside_source_consults" dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.grid_headers.outside_source_consults' })}</TableHeaderColumn>
 					<TableHeaderColumn width="200px" dataFormat={this.editRender.bind(this)}>{formatMessage({ id: 'common.field_actions' })}</TableHeaderColumn>
-				</BootstrapTable>
+				</BootstrapTable>*/}
 				
-				{/*<TreatmentObjectsTable
+				<TreatmentObjectsTable
 					treatments={treatmentsList}
 					updateObject={this.updateObject}
 					formatMessage={formatMessage}
-					deleteObject={deleteObject} />*/}
+					deleteObject={deleteObject} />
 			</section>
 		);
 	}

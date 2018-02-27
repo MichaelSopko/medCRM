@@ -307,7 +307,7 @@ const resolvers = {
     },
 
     async addTreatment(_, {
-		series_id, object: {
+		series_id, patient_id, object: {
 			TreatmentInput, ...restObject,
 		},
 	}, ctx) {
@@ -328,13 +328,14 @@ const resolvers = {
 					end_date = moment(end_date).add(repeat_weeks, 'weeks').format('YYYY-MM-DD HH:mm:ss');
 					await Treatments.addTreatment({
 						series_id,
+						patient_id,
 						start_date,
 						end_date,
 						...fields,
 					});
 				}
 			} else {
-				await Treatments.addTreatment({ series_id, ...treatment });
+				await Treatments.addTreatment({ series_id, patient_id, ...treatment });
 			}
 			newObject = {
 				id: -1,
@@ -345,14 +346,14 @@ const resolvers = {
 			const { date, ...fields } = SchoolObservationInput || StaffMeetingInput || OutsideSourceConsultInput;
 			const inserted = await TreatmentObject.query().insertAndFetch({
 				series_id,
+				patient_id,
 				date,
 				fields,
 			});
 			newObject = { ...inserted, ...inserted.fields };
 		}
-      
-      const series = await Treatments.findOne(series_id);
-      pubsub.publish('treatmentSeriesUpdated', series);
+		
+      pubsub.publish('treatmentSeriesUpdated', {});
       return { status: true };
     },
     async editTreatment(_,  {
