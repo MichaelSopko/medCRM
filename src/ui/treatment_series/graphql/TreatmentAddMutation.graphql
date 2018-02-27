@@ -1,11 +1,13 @@
 mutation addTreatment(
 $series_id: Int
 $patient_id: Int!
+$clinic_id: Int!
 $object: TreatmentSeriesObjectInput!
 ) {
     addTreatment(
         series_id: $series_id
         patient_id: $patient_id
+        clinic_id: $clinic_id
         object: $object
     ) {
         status

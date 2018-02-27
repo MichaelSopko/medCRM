@@ -307,7 +307,7 @@ const resolvers = {
     },
 
     async addTreatment(_, {
-		series_id, patient_id, object: {
+		series_id, patient_id, clinic_id, object: {
 			TreatmentInput, ...restObject,
 		},
 	}, ctx) {
@@ -329,13 +329,14 @@ const resolvers = {
 					await Treatments.addTreatment({
 						series_id,
 						patient_id,
+						clinic_id,
 						start_date,
 						end_date,
 						...fields,
 					});
 				}
 			} else {
-				await Treatments.addTreatment({ series_id, patient_id, ...treatment });
+				await Treatments.addTreatment({ series_id, patient_id, clinic_id, ...treatment });
 			}
 			newObject = {
 				id: -1,
@@ -347,6 +348,7 @@ const resolvers = {
 			const inserted = await TreatmentObject.query().insertAndFetch({
 				series_id,
 				patient_id,
+				clinic_id,
 				date,
 				fields,
 			});

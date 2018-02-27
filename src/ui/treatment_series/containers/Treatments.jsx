@@ -176,6 +176,7 @@ class Treatments extends Component {
 					// series_id: currentSeries ? currentSeries.id : 1,
 					object: { [`${currentFormType}Input`]: values },
 					patient_id: this.props.patient.id,
+					clinic_id: +this.props.currentClinic.id,
 				}
 				: {
 					id: currentObject.id,
