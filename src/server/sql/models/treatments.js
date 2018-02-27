@@ -36,6 +36,26 @@ export default class Treatments {
       .orderBy('id', 'DESC')
       .select();
   }
+	
+	async getTreatmentsList({ patient_id, clinic_id, therapist_id }) {
+		const query = knex('treatments');
+		
+		if (patient_id) {
+			query.where('patient_id', patient_id);
+		} else if (clinic_id) {
+			query.where('clinic_id', clinic_id);
+		} else if (therapist_id) {
+			query.andWhere('therapist_ids', [therapist_id]);
+			
+			return query.andWhere('deleted', false)
+				.orderBy('id', 'DESC')
+				.select();
+		}
+		
+		return query.andWhere('deleted', false)
+			.orderBy('id', 'DESC')
+			.select();
+	}
 
   getSeriesByPatient(patient_id) {
     return knex('treatment_series')

@@ -20,6 +20,8 @@ import UPDATE_OBJECT_MUTATION from '../graphql/updateTreatmentSeriesObject.mutat
 import DELETE_OBJECT_MUTATION from '../graphql/deleteTreatmentSeriesObject.mutation.gql';
 
 import MUTATION_ADD_TREATMENT from '../graphql/TreatmentAddMutation.graphql';
+import MUTATION_EDIT_TREATMENT from '../graphql/TreatmentEditMutation.graphql';
+import MUTATION_DELETE_TREATMENT from '../graphql/TreatmentDeleteMutaion.graphql';
 
 import ADD_SERIES_MUTATION from '../graphql/addTreatmentSeries.mutation.gql';
 import DELETE_SERIES_MUTATION from '../graphql/deleteTreatmentSeries.mutation.gql';
@@ -147,9 +149,9 @@ class Treatments extends Component {
 		const {currentFormType, currentSeries, currentObject} = this.state;
 		let mutation, params, isNew;
 		
-		console.log(currentSeries);
-		
 		if (currentFormType === FORM_TYPES.TreatmentSeries) {
+			console.log(currentSeries);
+			
 			isNew = !currentSeries;
 			mutation = isNew ? this.props.addSeries : this.props.editSeries;
 			values.start_date = moment(values.start_date).toISOString();
@@ -291,7 +293,7 @@ class Treatments extends Component {
 	
 	render() {
 		const {
-			data: { treatmentSeries = [], therapists = [] },
+			data: { treatmentSeries = [], therapists = [], treatmentsList = [] },
 			currentClinic, deleteSeries, currentUser, patient, deleteObject,
 		} = this.props;
 		const formatMessage = this.context.intl.formatMessage;
@@ -405,6 +407,7 @@ class Treatments extends Component {
 			alwaysShowAllBtns: true,
 		};
 		
+		console.log(this.props);
 		console.log(treatmentSeries);
 
 		return (
@@ -482,6 +485,12 @@ class Treatments extends Component {
 					<TableHeaderColumn width="10%" dataField="outside_source_consults" dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.grid_headers.outside_source_consults' })}</TableHeaderColumn>
 					<TableHeaderColumn width="200px" dataFormat={this.editRender.bind(this)}>{formatMessage({ id: 'common.field_actions' })}</TableHeaderColumn>
 				</BootstrapTable>
+				
+				{/*<TreatmentObjectsTable
+					treatments={treatmentsList}
+					updateObject={this.updateObject}
+					formatMessage={formatMessage}
+					deleteObject={deleteObject} />*/}
 			</section>
 		);
 	}
@@ -558,11 +567,11 @@ const TreatmentsWithApollo = withApollo(compose(
 	}),
 	graphql(EDIT_SERIES_MUTATION, getOptions('editSeries')),
 	graphql(MUTATION_ADD_TREATMENT, getOptions('createObject')),
-	graphql(UPDATE_OBJECT_MUTATION, getOptions('updateObject')),
-	graphql(DELETE_OBJECT_MUTATION, {
+	graphql(MUTATION_EDIT_TREATMENT, getOptions('updateObject')),
+	graphql(MUTATION_DELETE_TREATMENT, {
 		props: ({ ownProps: { patient, currentClinic }, mutate }) => ({
-			deleteObject: ({ id, __typename }) => mutate({
-				variables: { id, __typename },
+			deleteObject: ({ id }) => mutate({
+				variables: { id },
 				refetchQueries: [{
 					query: GET_TREATMENTS_QUERY,
 					variables: patient ? { patient_id: +patient.id, clinic_id: null } : {

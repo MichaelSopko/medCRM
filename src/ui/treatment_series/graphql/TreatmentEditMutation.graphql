@@ -1,24 +1,11 @@
 mutation editTreatment(
-$id: ID!
-$treatment: TreatmentInput
+$id: Int!
+$object: TreatmentSeriesObjectInput!
 ) {
     editTreatment(
         id: $id
-        treatment: $treatment
+        object: $object
     ) {
-        id
-        target
-        method
-        process
-        parents_guidance
-        next_treatment_remark
-        therapists {
-            id
-            id_number
-            first_name
-            last_name
-        }
-        start_date
-        end_date
+        status
     }
 }

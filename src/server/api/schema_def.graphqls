@@ -411,6 +411,7 @@ type Query {
 	patients(clinic_id: ID!, archived: Boolean): [Patient]
 	patient(id: ID!): Patient
 	treatmentSeries(patient_id: ID, clinic_id: ID, therapist_id: ID): [TreatmentSeries]
+	treatmentsList(patient_id: ID, clinic_id: ID, therapist_id: ID): [Treatment]
 	currentUser: CurrentUser
 }
 
@@ -507,8 +508,8 @@ type Mutation {
 
 	editTreatment(
 	id: Int!
-	treatment: TreatmentInput
-): Treatment!
+	object: TreatmentSeriesObjectInput!
+): MutationStatus
 
 	deleteTreatment(
 	id: Int!

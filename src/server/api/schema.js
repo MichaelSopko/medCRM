@@ -72,6 +72,13 @@ const resolvers = {
     patient(_, { id }, context) {
       return context.Users.findOne(id);
     },
+    treatmentsList(ignored1, { patient_id, clinic_id, therapist_id }, context) {
+        return context.Treatments.getTreatmentsList({
+            patient_id,
+            clinic_id,
+            therapist_id,
+        });
+    },
     treatmentSeries(ignored1, { patient_id, clinic_id, therapist_id }, context) {
       return context.Treatments.getSeries({
         patient_id,
@@ -348,38 +355,73 @@ const resolvers = {
       pubsub.publish('treatmentSeriesUpdated', series);
       return { status: true };
     },
-    async editTreatment(_, { id, treatment }, context) {
-      const isExists = await context.Treatments.isTreatmentExistsByTime(treatment.start_date, treatment.end_date, id);
-      if (isExists) {
-        throw new Error('Treatments.treatment_collided_error');
-      }
-      return checkAccess(context, ROLES.THERAPIST)
-        .then(() => context.Treatments.editTreatment({
-          id,
-          ...treatment,
-        }))
-        .then(async () => {
-          treatment = await context.Treatments.findOneTreatment(id);
-          const series = await context.Treatments.findOne(treatment.series_id);
-          pubsub.publish('treatmentSeriesUpdated', series);
-
-          let { related_persons } = await context.Users.findOne(series.patient_id);
-          related_persons = safeParse(related_persons, []);
-
-          const mailOptions = {
-            from: `"Clinic" <${mailerConfig.auth.user}>`,
-            to: related_persons.filter(p => !!p.receive_updates).map(p => p.email),
-            subject: messages.Treatments.update_email.subject,
-            html: emailTemplate(treatment),
-          };
-
-          transporter.sendMail(mailOptions).then((info) => {
-            console.log('Message %s sent: %s', info.messageId, info.response);
-          });
-
-          return treatment;
-        });
-    },
+    async editTreatment(_,  {
+		id, object: {
+			TreatmentInput, ...restObject,
+		},
+	}, context) {
+		if (TreatmentInput) {
+			let treatment = TreatmentInput;
+			const isExists = await context.Treatments.isTreatmentExistsByTime(treatment.start_date, treatment.end_date, id);
+			if (isExists) {
+				throw new Error('Treatments.treatment_collided_error');
+			}
+			const oldTreatment = await context.Treatments.findOneTreatment(id);
+			const currentUser = context.currentUser;
+			
+			return checkAccess(context, ROLES.THERAPIST)
+				.then(() => context.Treatments.editTreatment({
+					id,
+					...treatment,
+				}))
+                .then(async () => {
+					treatment = await context.Treatments.findOneTreatment(id);
+					const series = await context.Treatments.findOne(treatment.series_id);
+					pubsub.publish('treatmentSeriesUpdated', series);
+	
+					let { related_persons, first_name, last_name } = await context.Users.findOne(series.patient_id);
+					related_persons = safeParse(related_persons, []);
+	
+					related_persons.filter(person => person.receive_updates).forEach(person => {
+		
+						const templateConfig = {
+							old_date: moment(oldTreatment.start_date).format('DD.MM.YYYY'),
+							old_time: moment(oldTreatment.start_date).format('HH:mm'),
+							new_time: moment(treatment.start_date).format('HH:mm'),
+							new_date: moment(treatment.start_date).format('DD.MM.YYYY'),
+							therapist_name: `${currentUser.first_name} ${currentUser.last_name}`,
+							relative_name: person.name,
+							patient_name: `${first_name} ${last_name}`,
+						};
+		
+						let mailOptions = {
+							from: `"Clinic" <${mailerConfig.auth.user}>`,
+							to: person.email,
+							subject: heMessages.Treatments.update_email.subject,
+							html: emailTemplate(templateConfig),
+						};
+		
+						transporter.sendMail(mailOptions).then(info => {
+							console.log('Message %s sent: %s', info.messageId, info.response);
+						});
+					});
+	
+					return treatment;
+                });
+        } else if (Object.keys(restObject).length) {
+			const { SchoolObservationInput, StaffMeetingInput, OutsideSourceConsultInput } = restObject;
+			const { date, ...fields } = SchoolObservationInput || StaffMeetingInput || OutsideSourceConsultInput;
+			const updatedTreatment = await context.TreatmentObject.query().updateAndFetchById(id, { date, fields });
+			const series = await context.Treatments.findOne(updatedTreatment.series_id);
+			pubsub.publish('treatmentSeriesUpdated', series);
+			return {
+				...updatedTreatment,
+				...updatedTreatment.fields,
+			};
+		}
+	
+		return { status: true };
+	},
     deleteTreatment(_, { id }, context) {
       let series_id;
       return checkAccess(context, ROLES.THERAPIST)
