@@ -466,7 +466,7 @@ class Treatments extends Component {
 					keyField='id'
 					expandableRow={ this.isExpandableRow }
 					expandComponent={record => <TreatmentObjectsTable
-						treatments={record.objects}
+						treatments={record.treatments}
 						updateObject={this.updateObject}
 						formatMessage={formatMessage}
 						deleteObject={deleteObject} />

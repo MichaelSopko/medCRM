@@ -305,29 +305,45 @@ const resolvers = {
 		},
 	}, ctx) {
       await checkAccess(ctx, ROLES.THERAPIST);
-		let treatment = TreatmentInput;
-      const isExists = await ctx.Treatments.isTreatmentExistsByTime(treatment.start_date, treatment.end_date);
-      if (isExists) {
-        throw new Error('Treatments.treatment_collided_error');
-      }
+      const { Treatments, Treatment, TreatmentSeries, TreatmentObject } = ctx;
+      let newObject;
+	
+		if (TreatmentInput) {
+			let { repeat_weeks, ...treatment } = TreatmentInput;
+			const isExists = await ctx.Treatments.isTreatmentExistsByTime(treatment.start_date, treatment.end_date);
+			if (isExists) {
+				throw new Error('Treatments.treatment_collided_error');
+			}
+			if (repeat_weeks) {
+				while (repeat_weeks--) {
+					let { start_date, end_date, ...fields } = treatment;
+					start_date = moment(start_date).add(repeat_weeks, 'weeks').format('YYYY-MM-DD HH:mm:ss');
+					end_date = moment(end_date).add(repeat_weeks, 'weeks').format('YYYY-MM-DD HH:mm:ss');
+					await Treatments.addTreatment({
+						series_id,
+						start_date,
+						end_date,
+						...fields,
+					});
+				}
+			} else {
+				await Treatments.addTreatment({ series_id, ...treatment });
+			}
+			newObject = {
+				id: -1,
+				...TreatmentInput,
+			};
+		} else if (Object.keys(restObject).length) {
+			const { SchoolObservationInput, StaffMeetingInput, OutsideSourceConsultInput } = restObject;
+			const { date, ...fields } = SchoolObservationInput || StaffMeetingInput || OutsideSourceConsultInput;
+			const inserted = await TreatmentObject.query().insertAndFetch({
+				series_id,
+				date,
+				fields,
+			});
+			newObject = { ...inserted, ...inserted.fields };
+		}
       
-      const { Treatments } = ctx;
-      let repeat_weeks = treatment.repeat_weeks;
-      if (repeat_weeks) {
-        while (repeat_weeks--) {
-          let { start_date, end_date, ...fields } = treatment;
-          start_date = moment(start_date).add(repeat_weeks, 'weeks').format('YYYY-MM-DD HH:mm:ss');
-          end_date = moment(end_date).add(repeat_weeks, 'weeks').format('YYYY-MM-DD HH:mm:ss');
-          await Treatments.addTreatment({
-            series_id,
-            start_date,
-            end_date,
-            ...fields,
-          });
-        }
-      } else {
-        await Treatments.addTreatment({ series_id, ...treatment });
-      }
       const series = await Treatments.findOne(series_id);
       pubsub.publish('treatmentSeriesUpdated', series);
       return { status: true };

@@ -7,12 +7,10 @@ import schema from '../api/schema';
 import Clinics from '../sql/clinics';
 import Users from '../sql/models/users';
 import Treatments from '../sql/models/treatments';
-// import Clinic from '../sql/models/Clinic';
-// import Users from '../sql/models/users';
-// import Treatments from '../sql/models/treatments';
-// import Treatment from '../sql/models/Treatment';
-// import TreatmentSeries from '../sql/models/TreatmentSeries';
-// import TreatmentObject from '../sql/models/TreatmentObject';
+import Clinic from '../sql/models/Clinic';
+import Treatment from '../sql/models/Treatment';
+import TreatmentSeries from '../sql/models/TreatmentSeries';
+import TreatmentObject from '../sql/models/TreatmentObject';
 
 // export default graphqlExpress(async (req, res) => {
 // 	let currentUser = null;
@@ -37,11 +35,15 @@ import Treatments from '../sql/models/treatments';
 
 export default graphqlExpress((req, res) => ({
 	schema,
+	formatError,
 	context: {
+		Clinic,
+		Treatment,
+		TreatmentObject,
+		TreatmentSeries,
 		Clinics: new Clinics(),
 		Users: new Users(),
 		Treatments: new Treatments(),
 		currentUser: req.user ? req.user.user : {},
 	},
 }));
-
