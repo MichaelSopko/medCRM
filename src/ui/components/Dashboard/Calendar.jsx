@@ -140,8 +140,8 @@ class TreatmentsCalendar extends Component {
 		
 		let events = [];
 		treatmentSeries.forEach(series => {
-			if (series.objects) {
-				events.push(...series.objects.filter(obj => obj.__typename === 'Treatment').map(t => ({ series, ...t })));
+			if (series.treatments) {
+				events.push(...series.treatments.filter(obj => obj.__typename === 'Treatment').map(t => ({ series, ...t })));
 			}
 		});
 		events = events.map(treatment => {
@@ -151,7 +151,10 @@ class TreatmentsCalendar extends Component {
 			return {
 				start: new Date(startDate.getTime()),
 				end: new Date(endDate.getTime()),
-				title: `${treatment.series.patient.first_name} ${treatment.series.patient.last_name} (${moment(startDate).format('H:mm')} — ${moment(endDate).format('H:mm')})`,
+				// title: `${treatment.series.patient.first_name}
+				// ${treatment.series.patient.last_name}
+				// (${moment(startDate).format('H:mm')} — ${moment(endDate).format('H:mm')})`,
+				title: `(${moment(startDate).format('H:mm')} — ${moment(endDate).format('H:mm')})`,
 				patient: treatment.series.patient,
 				id: treatment.id,
 				treatment,
