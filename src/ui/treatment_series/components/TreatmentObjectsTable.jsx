@@ -114,6 +114,14 @@ export const TreatmentObjectsTable = ({ treatments, deleteObject, updateObject, 
 		</div>
 	);
 	
+	const renderPaginationPanel = (props) => {
+		return (
+			<div className="pagination-block">
+				{ props.components.pageList }
+			</div>
+		);
+	};
+	
 	const renderTherapist = (text, record) => (
 		<div className='to-dynamic-container'>
 				<span
@@ -125,6 +133,10 @@ export const TreatmentObjectsTable = ({ treatments, deleteObject, updateObject, 
 	
 	const options = {
 		onRowClick,
+		renderPaginationPanel,
+		prePage: 'Previous', // Previous page button text
+		nextPage: 'Next', // Next page button text
+		alwaysShowAllBtns: true,
 	};
 	
 	return (
@@ -143,7 +155,7 @@ export const TreatmentObjectsTable = ({ treatments, deleteObject, updateObject, 
 				columns={columns}
 				rowKey={item => item.id + item.__typename} />
 				*/}
-			<BootstrapTable data={treatments} keyField="id" hover consended options={options}>
+			<BootstrapTable data={treatments} keyField="id" hover consended pagination options={options}>
 				<TableHeaderColumn dataField="label" dataFormat={renderLabel} dataSort caretRender={getCaret}>{''}</TableHeaderColumn>
 				<TableHeaderColumn dataField="date" dataFormat={renderHeader} dataSort caretRender={getCaret}>{formatMessage({ id: 'Treatments.field_start_date_header' })}</TableHeaderColumn>
 				<TableHeaderColumn dataSort dataFormat={renderTherapist} caretRender={getCaret}>{formatMessage({ id: 'Treatments.field_therapists' })}</TableHeaderColumn>

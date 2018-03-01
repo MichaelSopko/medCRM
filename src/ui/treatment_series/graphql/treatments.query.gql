@@ -1,4 +1,5 @@
 #import './TreatmentFragment.fragment.gql'
+#import './TreatmentSeriesObject.fragment.gql'
 
 query treatments($patient_id: ID, $clinic_id: ID) {
     treatmentSeries(patient_id: $patient_id, clinic_id: $clinic_id) {
@@ -20,6 +21,9 @@ query treatments($patient_id: ID, $clinic_id: ID) {
             start_date
             end_date
         }
+    treatmentObjects(patient_id: $patient_id, clinic_id: $clinic_id) {
+        ...TreatmentSeriesObjectFragment
+    }
     therapists(clinic_id: $clinic_id) {
         id
         id_number

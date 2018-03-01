@@ -412,6 +412,7 @@ type Query {
 	patient(id: ID!): Patient
 	treatmentSeries(patient_id: ID, clinic_id: ID, therapist_id: ID): [TreatmentSeries]
 	treatmentsList(patient_id: ID, clinic_id: ID, therapist_id: ID): [Treatment]
+	treatmentObjects(patient_id: ID, clinic_id: ID, therapist_id: ID): [TreatmentSeriesObject]
 	currentUser: CurrentUser
 }
 
@@ -554,6 +555,8 @@ type Subscription {
 	treatmentSeriesUpdated(patient_id: Int!): TreatmentSeries!
 	treatmentSeriesDeleted(patient_id: Int!): TreatmentSeries!
 }
+
+
 
 schema {
 	query: Query

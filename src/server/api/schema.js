@@ -79,6 +79,13 @@ const resolvers = {
             therapist_id,
         });
     },
+	treatmentObjects(ignored1, { patient_id, clinic_id, therapist_id }, context) {
+		return context.Treatments.getTreatmentObjects({
+			patient_id,
+			clinic_id,
+			therapist_id,
+		});
+	},
     treatmentSeries(ignored1, { patient_id, clinic_id, therapist_id }, context) {
       return context.Treatments.getSeries({
         patient_id,
@@ -513,6 +520,24 @@ const resolvers = {
       return context.Clinics.findOne(user.clinic_id);
     },
   },
+	TreatmentSeriesObject: {
+		__resolveType(obj, context, info){
+			if((obj.therapist_ids !== undefined || JSON.parse(obj.fields).therapist_ids !== undefined || obj.therapists !== undefined) && !obj.start_date){
+				return 'SchoolObservation';
+			}
+			if(obj.participant_ids !== undefined || JSON.parse(obj.fields)['participant_ids'] || obj.participants !== undefined){
+				return 'StaffMeeting';
+			}
+			if(obj.consultantRole !== undefined || JSON.parse(obj.fields)['meetingSummary'] !== undefined){
+				return 'OutsideSourceConsult';
+			}
+			if(obj.start_date !== undefined){
+				return 'Treatment';
+			}
+			console.log(obj);
+			throw Error('cant resolve object type');
+		},
+	},
   Therapist: {
     clinic(user, _, context) {
       return context.Clinics.findOne(user.clinic_id);

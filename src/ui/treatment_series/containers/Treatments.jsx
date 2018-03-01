@@ -305,7 +305,7 @@ class Treatments extends Component {
 	
 	render() {
 		const {
-			data: { treatmentSeries = [], therapists = [], treatmentsList = [] },
+			data: { treatmentSeries = [], therapists = [], treatmentsList = [], treatmentObjects = [] },
 			currentClinic, deleteSeries, currentUser, patient, deleteObject,
 		} = this.props;
 		const formatMessage = this.context.intl.formatMessage;
@@ -418,6 +418,8 @@ class Treatments extends Component {
 			nextPage: 'Next', // Next page button text
 			alwaysShowAllBtns: true,
 		};
+		
+		const treatments = treatmentsList.concat(treatmentObjects);
 
 		return (
 			<section className="Treatments PatientObjectTab">
@@ -520,7 +522,7 @@ class Treatments extends Component {
 				</BootstrapTable>*/}
 				
 				<TreatmentObjectsTable
-					treatments={treatmentsList}
+					treatments={treatments}
 					updateObject={this.updateObject}
 					formatMessage={formatMessage}
 					deleteObject={this.deleteObj.bind(this)} />
