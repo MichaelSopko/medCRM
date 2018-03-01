@@ -300,7 +300,11 @@ class Treatments extends Component {
 	};
 	
 	deleteObj(record) {
-		this.props.deleteObject(record).then(() => this.props.data.refetch());
+		if (record['__typename'] === 'Treatment') {
+			this.props.deleteTreatment(record).then(() => this.props.data.refetch());
+		} else {
+			this.props.deleteObject(record).then(() => this.props.data.refetch());
+		}
 	};
 	
 	render() {
@@ -604,6 +608,20 @@ const TreatmentsWithApollo = withApollo(compose(
 	graphql(MUTATION_ADD_TREATMENT, getOptions('createObject')),
 	graphql(MUTATION_EDIT_TREATMENT, getOptions('updateObject')),
 	graphql(MUTATION_DELETE_TREATMENT, {
+		props: ({ ownProps: { patient, currentClinic }, mutate }) => ({
+			deleteTreatment: ({ id }) => mutate({
+				variables: { id },
+				refetchQueries: [{
+					query: GET_TREATMENTS_QUERY,
+					variables: patient ? { patient_id: +patient.id, clinic_id: null } : {
+						patient_id: null,
+						clinic_id: currentClinic.id,
+					},
+				}],
+			}),
+		}),
+	}),
+	graphql(DELETE_OBJECT_MUTATION, {
 		props: ({ ownProps: { patient, currentClinic }, mutate }) => ({
 			deleteObject: ({ id }) => mutate({
 				variables: { id },

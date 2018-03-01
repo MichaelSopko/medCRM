@@ -1,3 +1,3 @@
-mutation deleteTreatmentSeriesObject($id: ID!, $__typename: String!) {
-    deleteTreatmentSeriesObject(id: $id, __typename: $__typename)
+mutation deleteTreatmentSeriesObject($id: ID!) {
+    deleteTreatmentSeriesObject(id: $id)
 }

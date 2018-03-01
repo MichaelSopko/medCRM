@@ -84,6 +84,8 @@ const resolvers = {
 			patient_id,
 			clinic_id,
 			therapist_id,
+		}).then((objects) => {
+			return objects.map(({ fields, ...obj }) => ({ ...obj, ...(JSON.parse(fields)) }));
 		});
 	},
     treatmentSeries(ignored1, { patient_id, clinic_id, therapist_id }, context) {
@@ -422,8 +424,7 @@ const resolvers = {
 			const { SchoolObservationInput, StaffMeetingInput, OutsideSourceConsultInput } = restObject;
 			const { date, ...fields } = SchoolObservationInput || StaffMeetingInput || OutsideSourceConsultInput;
 			const updatedTreatment = await context.TreatmentObject.query().updateAndFetchById(id, { date, fields });
-			const series = await context.Treatments.findOne(updatedTreatment.series_id);
-			pubsub.publish('treatmentSeriesUpdated', series);
+			pubsub.publish('treatmentSeriesUpdated', {});
 			return {
 				...updatedTreatment,
 				...updatedTreatment.fields,
@@ -433,18 +434,21 @@ const resolvers = {
 		return { status: true };
 	},
     deleteTreatment(_, { id }, context) {
-      let series_id;
       return checkAccess(context, ROLES.THERAPIST)
-        .then(() => context.Treatments.findOneTreatment(id))
-        .then((treatment) => {
-          series_id = treatment.series_id;
-        })
         .then(() => context.Treatments.deleteTreatment({ id }))
         .then(() => {
           pubsub.publish('treatmentSeriesUpdated', {});
         })
         .then(res => ({ status: true }));
     },
+	  deleteTreatmentSeriesObject(_, { id }, context) {
+		  return checkAccess(context, ROLES.THERAPIST)
+			  .then(() => context.Treatments.deleteTreatmentObject({ id }))
+			  .then(() => {
+				  pubsub.publish('treatmentSeriesUpdated', {});
+			  })
+			  .then(res => ({ status: true }));
+	  },
     async addPatientFile(_, { file }, ctx) {
       await checkAccess(ctx, ROLES.THERAPIST);
       const { Users } = ctx;
@@ -522,13 +526,13 @@ const resolvers = {
   },
 	TreatmentSeriesObject: {
 		__resolveType(obj, context, info){
-			if((obj.therapist_ids !== undefined || JSON.parse(obj.fields).therapist_ids !== undefined || obj.therapists !== undefined) && !obj.start_date){
+			if((obj.therapist_ids !== undefined || obj.therapists !== undefined) && !obj.start_date){
 				return 'SchoolObservation';
 			}
-			if(obj.participant_ids !== undefined || JSON.parse(obj.fields)['participant_ids'] || obj.participants !== undefined){
+			if(obj.participant_ids !== undefined || obj.participants !== undefined){
 				return 'StaffMeeting';
 			}
-			if(obj.consultantRole !== undefined || JSON.parse(obj.fields)['meetingSummary'] !== undefined){
+			if(obj.consultantRole !== undefined || obj.meetingSummary !== undefined){
 				return 'OutsideSourceConsult';
 			}
 			if(obj.start_date !== undefined){
@@ -536,6 +540,35 @@ const resolvers = {
 			}
 			console.log(obj);
 			throw Error('cant resolve object type');
+		},
+	},
+	SchoolObservation: {
+		async therapists(obj, args, { TreatmentObject, Users }) {
+			if (obj.therapist_ids) {
+				return Users.getUsers(obj.therapist_ids);
+			} else {
+				return [];
+			}
+		},
+	},
+	StaffMeeting: {
+		async participants(obj, args, { TreatmentObject, Users }) {
+			if (obj.participant_ids) {
+				const realIds = obj.participant_ids.filter(Number);
+				const fakeIds = obj.participant_ids.filter(id => !realIds.some(realId => realId === id));
+				const realParticipants = await Users.getUsers(realIds);
+				const fakeParticipants = fakeIds.map(id => ({
+					id,
+					first_name: id,
+					last_name: '',
+				}));
+				return [...realParticipants, ...fakeParticipants];
+			} else {
+				return [];
+			}
+		},
+		meetingPurpose(obj) {
+			return obj.meetingPurpose || null;
 		},
 	},
   Therapist: {

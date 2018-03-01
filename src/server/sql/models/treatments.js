@@ -184,5 +184,14 @@ export default class Treatments {
       // .delete()
     ]);
   }
+	
+	deleteTreatmentObject({ id }) {
+		return Promise.all([
+			knex('treatments_objects')
+				.where('id', id)
+				.update('deleted', true),
+			// .delete()
+		]);
+	}
 
 }
