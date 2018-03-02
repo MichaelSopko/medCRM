@@ -24,6 +24,12 @@ query treatments($patient_id: ID, $clinic_id: ID) {
     treatmentObjects(patient_id: $patient_id, clinic_id: $clinic_id) {
         ...TreatmentSeriesObjectFragment
     }
+    past_treatments(patient_id: $patient_id)
+    future_treatments(patient_id: $patient_id)
+    total_treatments(patient_id: $patient_id)
+    school_observations(patient_id: $patient_id)
+    staff_meetings(patient_id: $patient_id)
+    outside_source_consults(patient_id: $patient_id)
     therapists(clinic_id: $clinic_id) {
         id
         id_number

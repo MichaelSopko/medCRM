@@ -309,7 +309,10 @@ class Treatments extends Component {
 	
 	render() {
 		const {
-			data: { treatmentSeries = [], therapists = [], treatmentsList = [], treatmentObjects = [] },
+			data: { treatmentSeries = [], therapists = [], treatmentsList = [], treatmentObjects = [],
+				past_treatments, future_treatments, total_treatments, school_observations, staff_meetings,
+				outside_source_consults
+			},
 			currentClinic, deleteSeries, currentUser, patient, deleteObject,
 		} = this.props;
 		const formatMessage = this.context.intl.formatMessage;
@@ -423,7 +426,17 @@ class Treatments extends Component {
 			alwaysShowAllBtns: true,
 		};
 		
-		const treatments = treatmentsList.concat(treatmentObjects);
+		const treatmentsCounts = [{
+			past_treatments,
+			future_treatments,
+			total_treatments,
+			school_observations,
+			staff_meetings,
+			outside_source_consults,
+		}];
+		
+		const treatments = treatmentsList.concat(treatmentObjects)
+			.sort((a, b) => moment(a.start_date || a.date).valueOf() > moment(b.start_date || b.date).valueOf());
 
 		return (
 			<section className="Treatments PatientObjectTab">
@@ -530,6 +543,15 @@ class Treatments extends Component {
 					updateObject={this.updateObject}
 					formatMessage={formatMessage}
 					deleteObject={this.deleteObj.bind(this)} />
+				
+				<BootstrapTable data={treatmentsCounts} keyField='id' hover consended >
+					<TableHeaderColumn dataField="past_treatments">{formatMessage({ id: 'Treatments.grid_headers.past_treatments' })}</TableHeaderColumn>
+					<TableHeaderColumn dataField="future_treatments">{formatMessage({ id: 'Treatments.grid_headers.future_treatments' })}</TableHeaderColumn>
+					<TableHeaderColumn dataField="total_treatments">{formatMessage({ id: 'Treatments.grid_headers.total_treatments' })}</TableHeaderColumn>
+					<TableHeaderColumn dataField="school_observations">{formatMessage({ id: 'Treatments.grid_headers.school_observations' })}</TableHeaderColumn>
+					<TableHeaderColumn dataField="staff_meetings">{formatMessage({ id: 'Treatments.grid_headers.staff_meetings' })}</TableHeaderColumn>
+					<TableHeaderColumn dataField="outside_source_consults">{formatMessage({ id: 'Treatments.grid_headers.outside_source_consults' })}</TableHeaderColumn>
+				</BootstrapTable>
 			</section>
 		);
 	}

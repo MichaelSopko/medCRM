@@ -413,6 +413,12 @@ type Query {
 	treatmentSeries(patient_id: ID, clinic_id: ID, therapist_id: ID): [TreatmentSeries]
 	treatmentsList(patient_id: ID, clinic_id: ID, therapist_id: ID): [Treatment]
 	treatmentObjects(patient_id: ID, clinic_id: ID, therapist_id: ID): [TreatmentSeriesObject]
+	past_treatments(patient_id: ID): Int
+	future_treatments(patient_id: ID): Int
+	total_treatments(patient_id: ID): Int
+	school_observations(patient_id: ID): Int
+	staff_meetings(patient_id: ID): Int
+	outside_source_consults(patient_id: ID): Int
 	currentUser: CurrentUser
 }
 

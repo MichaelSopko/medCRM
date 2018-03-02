@@ -53,6 +53,35 @@ export default class Treatments {
 			.select();
 	}
 	
+	async getPastTreatmentsCount(patient_id) {
+		const res = await knex('treatments')
+			.where('patient_id', patient_id)
+			.andWhere('start_date', '<', Date.now())
+			.andWhere('deleted', false)
+			.count();
+		
+		return res[0]['count(*)'];
+	}
+	
+	async getFeatureTreatmentsCount(patient_id) {
+		const res = await knex('treatments')
+			.where('patient_id', patient_id)
+			.andWhere('start_date', '>', Date.now())
+			.andWhere('deleted', false)
+			.count();
+		
+		return res[0]['count(*)'];
+	}
+	
+	async getPatientTreatmentsCount(patient_id) {
+		const res = await knex('treatments')
+			.where('patient_id', patient_id)
+			.andWhere('deleted', false)
+			.count();
+		
+		return res[0]['count(*)'];
+	}
+	
 	getTreatmentObjects({ patient_id, clinic_id, therapist_id }) {
 		const query = knex('treatments_objects');
 		
@@ -66,6 +95,13 @@ export default class Treatments {
 		
 		return query.andWhere('deleted', false)
 			.orderBy('id', 'DESC')
+			.select();
+	}
+	
+	getPatientTreatmentObjects(patient_id) {
+		return knex('treatments_objects')
+			.where('patient_id', patient_id)
+			.andWhere('deleted', false)
 			.select();
 	}
 

@@ -95,6 +95,44 @@ const resolvers = {
         therapist_id,
       });
     },
+	  past_treatments(ignored1, { patient_id }, context) {
+		  return context.Treatments.getPastTreatmentsCount(patient_id);
+	  },
+	  future_treatments(ignored1, { patient_id }, context) {
+		  return context.Treatments.getFeatureTreatmentsCount(patient_id);
+	  },
+	  total_treatments(ignored1, { patient_id }, context) {
+		  return context.Treatments.getPatientTreatmentsCount(patient_id);
+	  },
+	  school_observations(ignored1, { patient_id }, context) {
+		  return context.Treatments.getPatientTreatmentObjects(patient_id)
+			  .then((objects) => {
+				  return objects.map(({fields, ...obj}) => ({...obj, ...(JSON.parse(fields))}))
+					  .filter((obj) => (obj.therapist_ids !== undefined || obj.therapists !== undefined) && !obj.start_date);
+			  }).then((objects) => {
+				  return objects.length;
+			  });
+	  },
+	  staff_meetings(ignored1, { patient_id }, context) {
+		  return context.Treatments.getPatientTreatmentObjects(patient_id)
+			  .then((objects) => {
+				  return objects.map(({fields, ...obj}) => ({...obj, ...(JSON.parse(fields))}))
+					  .filter((obj) => obj.participant_ids !== undefined || obj.participants !== undefined)
+			  })
+			  .then((objects) => {
+				  return objects.length;
+			  });
+	  },
+	  outside_source_consults(ignored1, { patient_id }, context) {
+		  return context.Treatments.getPatientTreatmentObjects(patient_id)
+			  .then((objects) => {
+				  return objects.map(({fields, ...obj}) => ({...obj, ...(JSON.parse(fields))}))
+					  .filter((obj) => obj.consultantRole !== undefined || obj.meetingSummary !== undefined)
+			  })
+			  .then((objects) => {
+				  return objects.length;
+			  });
+	  },
     currentUser(ignored1, ignored2, context) {
       return context.Users.findOne(context.currentUser.id);
     },
