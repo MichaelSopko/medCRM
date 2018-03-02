@@ -426,10 +426,9 @@ const resolvers = {
 				}))
                 .then(async () => {
 					treatment = await context.Treatments.findOneTreatment(id);
-					const series = await context.Treatments.findOne(treatment.series_id);
-					pubsub.publish('treatmentSeriesUpdated', series);
+					pubsub.publish('treatmentSeriesUpdated', {});
 	
-					let { related_persons, first_name, last_name } = await context.Users.findOne(series.patient_id);
+					let { related_persons, first_name, last_name } = await context.Users.findOne(treatment.patient_id);
 					related_persons = safeParse(related_persons, []);
 	
 					related_persons.filter(person => person.receive_updates).forEach(person => {
