@@ -17,6 +17,31 @@
 		padding: 12px !important;
 		border-radius: 3px;
 		margin-top: 36px !important;
+
+		&.Calendar__Content {
+			background: transparent;
+
+			.calendar-wrap {
+				background: #ffffff;
+				padding: 12px !important;
+				position: relative;
+
+				.treatment-btns-wrap {
+					max-width: 400px;
+					position: absolute;
+					top: 0;
+					right: 0;
+				}
+
+				.Dashboard__Actions.PatientObjectTab__Actions {
+					margin: 0;
+				}
+			}
+
+			.fc-toolbar.fc-header-toolbar {
+				width: 70%;
+			}
+		}
 	}
 
 	&__Details {

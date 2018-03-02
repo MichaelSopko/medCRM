@@ -219,7 +219,12 @@
   },
   "Calendar": {
     "header": "View treatments",
-    "show_all": "Show all"
+    "show_all": "Show all",
+    "today": "Today",
+    "month": "Month",
+    "week": "Week",
+    "day": "Day",
+    "agenda": "Agenda"
   },
   "Settings": {
     "tab1": "General",

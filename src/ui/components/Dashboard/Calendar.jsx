@@ -29,22 +29,30 @@ import {
 	Checkbox,
 	notification,
 	message,
-	Spin
-} from 'antd'
-import ColorHash from 'color-hash'
-import { FormattedMessage } from 'react-intl'
+	Dropdown,
+	Menu,
+	Spin,
+} from 'antd';
+import ColorHash from 'color-hash';
+import { FormattedMessage } from 'react-intl';
 
-import PATIENTS_LIST_QUERY from '../../patient/graphql/PatientsList.graphql'
-import GET_TREATMENTS_QUERY from '../../treatment_series/graphql/treatments.query.gql'
-import UPDATE_OBJECT_MUTATION from '../../treatment_series/graphql/updateTreatmentSeriesObject.mutation.gql'
+import PATIENTS_LIST_QUERY from '../../patient/graphql/PatientsList.graphql';
+import GET_TREATMENTS_QUERY from '../../treatment_series/graphql/treatments.query.gql';
+import UPDATE_OBJECT_MUTATION from '../../treatment_series/graphql/updateTreatmentSeriesObject.mutation.gql';
+import MUTATION_ADD_TREATMENT from '../../treatment_series/graphql/TreatmentAddMutation.graphql';
+import MUTATION_EDIT_TREATMENT from '../../treatment_series/graphql/TreatmentEditMutation.graphql';
 
-import ROLES from '../../../helpers/constants/roles'
-import ClinicsSelector from '../ClinicsSelector'
-import CheckAccess from '../helpers/CheckAccess'
-import PatientSelector from '../PatientSelector'
+import ROLES from '../../../helpers/constants/roles';
+import ClinicsSelector from '../ClinicsSelector';
+import CheckAccess from '../helpers/CheckAccess';
+import PatientSelector from '../PatientSelector';
 import {TreatmentForm} from '../../treatment_series/components/TreatmentForm';
+import SchoolObservationForm from '../../treatment_series/components/SchoolObservationForm';
+import StaffMeetingForm from '../../treatment_series/components/StaffMeetingForm';
+import OutsideSourceConsultForm from '../../treatment_series/components/OutsideSourceConsultForm';
 
-import './Calendar.scss'
+
+import './Calendar.scss';
 
 BigCalendar.momentLocalizer(moment);
 
@@ -53,15 +61,27 @@ const colorHash = new ColorHash();
 
 const DragAndDropCalendar = withDragAndDrop(BigCalendar);
 
+export const FORM_TYPES = {
+	TreatmentSeries: 'TreatmentSeries',
+	SchoolObservation: 'SchoolObservation',
+	Treatment: 'Treatment',
+	StaffMeeting: 'StaffMeeting',
+	OutsideSourceConsult: 'OutsideSourceConsult',
+};
+
 @DragDropContext(HTML5Backend)
 class TreatmentsCalendar extends Component {
 
 	static contextTypes = {
 		intl: PropTypes.object,
 	};
-
+	
 	state = {
 		currentTreatment: null,
+		currentFormType: null,
+		currentObject: null,
+		currentSeries: null,
+		modalLoading: false,
 	};
 
 	componentWillMount() {
@@ -100,9 +120,56 @@ class TreatmentsCalendar extends Component {
 
 	handleCancel = () => {
 		setTimeout(() => {
-			this.setState({ currentTreatment: null });
-			this.treatmentForm.resetFields();
+			this.setState({
+				currentTreatment: null, currentFormType: null, currentObject: null, currentSeries: null, modalLoading: false,
+			});
+			this.treatmentForm && this.treatmentForm.resetFields();
 		}, 300);
+	};
+	
+	handleSubmit = (form, values) => {
+		const { currentFormType, currentSeries, currentObject, patient } = this.state;
+		const isNew = !currentObject;
+		let mutation;
+		let params;
+		
+		if (values.repeat_weeks_trigger !== undefined) {
+			delete values.repeat_weeks_trigger;
+		}
+		mutation = isNew ? this.props.createObject : this.props.updateObject;
+		
+		params = isNew
+			? {
+				// series_id: currentSeries ? currentSeries.id : 1,
+				object: { [`${currentFormType}Input`]: values },
+				patient_id: this.props.patientId,
+				clinic_id: +this.props.currentClinic.id,
+			}
+			: {
+				id: currentObject.id,
+				object: { [`${currentFormType}Input`]: values }
+			};
+		
+		
+		this.setState({ modalLoading: true });
+		
+		console.log('Running form', params);
+		
+		mutation(params).then((res) => {
+			this.handleCancel();
+			form.resetFields();
+			this.props.data.refetch();
+		}).catch(error => {
+			this.setState({modalLoading: false});
+			console.error(error);
+			let id = 'common.server_error';
+			if (error.graphQLErrors) {
+				id = error.graphQLErrors[0].message;
+			}
+			notification.error({
+				message: this.context.intl.formatMessage({id}),
+			});
+		});
 	};
 
 	handleTreatmentSubmit = () => {
@@ -130,6 +197,12 @@ class TreatmentsCalendar extends Component {
 			}).catch(errorHandler);
 		});
 	};
+	
+	showForm = (currentFormType, currentSeries = null, currentObject = null) => {
+		this.setState({
+			currentFormType, currentObject, currentSeries,
+		});
+	};
 
 	render() {
 		const {
@@ -137,8 +210,17 @@ class TreatmentsCalendar extends Component {
 				loading, treatmentSeries, therapists = [], treatmentsList = [],
 			}, currentUser, currentClinic,
 		} = this.props;
-		const { currentTreatment, modalLoading } = this.state;
+		const { currentTreatment, modalLoading, currentFormType, currentObject, currentSeries } = this.state;
 		const formatMessage = this.context.intl.formatMessage;
+		const formProps = {
+			loading: modalLoading,
+			onCancel: this.handleCancel,
+			onSubmit: this.handleSubmit.bind(this),
+			formatMessage,
+			currentUser,
+			currentClinic,
+			therapists,
+		};
 
 		if (!currentClinic.id || !treatmentSeries) return null;
 		
@@ -174,8 +256,8 @@ class TreatmentsCalendar extends Component {
 		const calendarOptions = {};
 
 		return (
-			<div>
-				<TreatmentForm
+			<div className="calendar-wrap">
+				{/*<TreatmentForm
 					ref={form => {
 						this.treatmentForm = form
 					}}
@@ -188,6 +270,30 @@ class TreatmentsCalendar extends Component {
 					formatMessage={formatMessage}
 					currentUser={currentUser}
 					currentClinic={currentClinic}
+				/>*/}
+				<TreatmentForm
+					visible={currentFormType === FORM_TYPES.Treatment}
+					isNew={!currentObject}
+					values={currentObject}
+					{...formProps}
+				/>
+				<SchoolObservationForm
+					visible={currentFormType === FORM_TYPES.SchoolObservation}
+					isNew={!currentObject}
+					values={currentObject}
+					{...formProps}
+				/>
+				<StaffMeetingForm
+					visible={currentFormType === FORM_TYPES.StaffMeeting}
+					isNew={!currentObject}
+					values={currentObject}
+					{...formProps}
+				/>
+				<OutsideSourceConsultForm
+					visible={currentFormType === FORM_TYPES.OutsideSourceConsult}
+					isNew={!currentObject}
+					values={currentObject}
+					{...formProps}
 				/>
 				<Spin spinning={loading}>
 					{/*
@@ -214,19 +320,52 @@ class TreatmentsCalendar extends Component {
 						}}
 					/>
 					*/}
+					<div className="treatment-btns-wrap">
+						<div className="Dashboard__Actions PatientObjectTab__Actions">
+							{/*<Button type="primary" size='small' onClick={ () => this.showForm(FORM_TYPES.TreatmentSeries) } disabled={ !currentClinic.id || patient.archived }>
+							 <Icon type="plus-circle-o" />
+							 { formatMessage({ id: 'Treatments.create_series_button' }) }
+							 </Button>*/}
+							<Dropdown.Button
+								type='primary'
+								onClick={() => this.showForm(FORM_TYPES.Treatment)}
+								size='small'
+								disabled={!this.props.patientId}
+								overlay={
+									<Menu onClick={({ key }) => this.showForm(FORM_TYPES[key])}>
+										<Menu.Item key={FORM_TYPES.SchoolObservation}>
+											<Icon type='plus-circle-o' style={{marginLeft: 6, marginRight: 6 }} />
+											{formatMessage({ id: 'Treatments.create_object_button.school_observation' })}
+										</Menu.Item>
+										<Menu.Item key={FORM_TYPES.StaffMeeting}>
+											<Icon type='plus-circle-o' style={{marginLeft: 6, marginRight: 6 }} />
+											{formatMessage({ id: 'Treatments.create_object_button.staff_meeting' })}
+										</Menu.Item>
+										<Menu.Item key={FORM_TYPES.OutsideSourceConsult}>
+											<Icon type='plus-circle-o' style={{marginLeft: 6, marginRight: 6 }} />
+											{formatMessage({ id: 'Treatments.create_object_button.outside_source_consult' })}
+										</Menu.Item>
+									</Menu>
+								}>
+								<Icon type='plus-circle-o' />
+								{formatMessage({ id: 'Treatments.create_object_button.treatment' })}
+							</Dropdown.Button>
+						</div>
+					</div>
 					<FullCalendar
 						isRTL={!__DEV__}
 						id="ghjk"
 						header = {{
-							left: 'prev,next today myCustomButton, agenda',
+							left: 'prev,next today, month, basicWeek, basicDay,' +
+							' agenda',
 							center: 'title',
-							right: 'month,basicWeek,basicDay'
+							right: ''
 						}}
 						events={events}
 						buttonText={{
 							allDay: formatMessage({id: 'Calendar.allDay'}),
-							prev: formatMessage({id: 'Calendar.previous'}),
-							next: formatMessage({id: 'Calendar.next'}),
+							// prev: formatMessage({id: 'Calendar.previous'}),
+							// next: formatMessage({id: 'Calendar.next'}),
 							today: formatMessage({id: 'Calendar.today'}),
 							month: formatMessage({id: 'Calendar.month'}),
 							week: formatMessage({id: 'Calendar.week'}),
@@ -244,6 +383,20 @@ class TreatmentsCalendar extends Component {
 	}
 }
 
+const getOptions = name => ({
+	props: ({ ownProps, mutate }) => ({
+		[name]: (fields) => mutate({
+			variables: fields,
+			refetchQueries: [{
+				query: GET_TREATMENTS_QUERY,
+				variables: {
+					clinic_id: ownProps.currentClinic.id,
+					patient_id: ownProps.patientId,
+				},
+			}],
+		}),
+	}),
+});
 const TreatmentsCalendarWithData = compose(
 	connect(({ currentClinic, currentUser }) => ({ currentClinic, currentUser })),
 	graphql(GET_TREATMENTS_QUERY, {
@@ -255,6 +408,8 @@ const TreatmentsCalendarWithData = compose(
 		}),
 		skip: ({ currentClinic, patientId }) => !currentClinic && !patientId,
 	}),
+	graphql(MUTATION_ADD_TREATMENT, getOptions('createObject')),
+	graphql(MUTATION_EDIT_TREATMENT, getOptions('updateObject')),
 	graphql(UPDATE_OBJECT_MUTATION),
 )(TreatmentsCalendar);
 
@@ -286,7 +441,7 @@ class Calendar extends Component {
 
 		return (
 			<section className='Calendar'>
-				<div className='Container Dashboard__Content'>
+				<div className='Container Dashboard__Content Calendar__Content'>
 					<div className='Dashboard__Details'>
 						<h1 className='Dashboard__Header'>
 							{formatMessage({ id: 'Calendar.header' })}
