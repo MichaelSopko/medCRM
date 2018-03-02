@@ -51,6 +51,7 @@ import SchoolObservationForm from '../../treatment_series/components/SchoolObser
 import StaffMeetingForm from '../../treatment_series/components/StaffMeetingForm';
 import OutsideSourceConsultForm from '../../treatment_series/components/OutsideSourceConsultForm';
 
+import TherapistSelector from '../TherapistSelector';
 
 import './Calendar.scss';
 
@@ -203,6 +204,10 @@ class TreatmentsCalendar extends Component {
 			currentFormType, currentObject, currentSeries,
 		});
 	};
+	
+	onTherapistChange = id => {
+		this.props.onTherapistChange(id);
+	};
 
 	render() {
 		const {
@@ -253,24 +258,8 @@ class TreatmentsCalendar extends Component {
 		// 	style: { backgroundColor: colorHash.hex(event && event.patient.id) },
 		// });
 		
-		const calendarOptions = {};
-
 		return (
 			<div className="calendar-wrap">
-				{/*<TreatmentForm
-					ref={form => {
-						this.treatmentForm = form
-					}}
-					visible={!!currentTreatment}
-					loading={modalLoading}
-					onCancel={this.handleCancel}
-					onSubmit={this.handleTreatmentSubmit}
-					values={currentTreatment || {}}
-					therapists={therapists}
-					formatMessage={formatMessage}
-					currentUser={currentUser}
-					currentClinic={currentClinic}
-				/>*/}
 				<TreatmentForm
 					visible={currentFormType === FORM_TYPES.Treatment}
 					isNew={!currentObject}
@@ -296,36 +285,15 @@ class TreatmentsCalendar extends Component {
 					{...formProps}
 				/>
 				<Spin spinning={loading}>
-					{/*
-					<DragAndDropCalendar
-						rtl={!__DEV__}
-						events={events}
-						eventPropGetter={getProps}
-						onEventDrop={this.moveEvent}
-						selectable
-						onSelectEvent={this.editTreatment}
-						formats={{
-							eventTimeRangeFormat: ({ start, end }, culture, local) =>
-							agendaTimeRangeFormat: ({ start, end }, culture, local) =>
-						}}
-						messages={{
-							allDay: <FormattedMessage id='Calendar.allDay' />,
-							previous: <FormattedMessage id='Calendar.previous' />,
-							next: <FormattedMessage id='Calendar.next' />,
-							today: <FormattedMessage id='Calendar.today' />,
-							month: <FormattedMessage id='Calendar.month' />,
-							week: <FormattedMessage id='Calendar.week' />,
-							day: <FormattedMessage id='Calendar.day' />,
-							agenda: <FormattedMessage id='Calendar.agenda' />,
-						}}
-					/>
-					*/}
 					<div className="treatment-btns-wrap">
 						<div className="Dashboard__Actions PatientObjectTab__Actions">
-							{/*<Button type="primary" size='small' onClick={ () => this.showForm(FORM_TYPES.TreatmentSeries) } disabled={ !currentClinic.id || patient.archived }>
-							 <Icon type="plus-circle-o" />
-							 { formatMessage({ id: 'Treatments.create_series_button' }) }
-							 </Button>*/}
+							<TherapistSelector
+								value={this.props.therapistId}
+								data={{therapists, loading}}
+								allowClear showArchived={false}
+								onChange={this.onTherapistChange}
+							/>
+							
 							<Dropdown.Button
 								type='primary'
 								onClick={() => this.showForm(FORM_TYPES.Treatment)}
@@ -375,8 +343,6 @@ class TreatmentsCalendar extends Component {
 						navLinks={true} // can click day/week names to navigate views
 						editable={true}
 					/>
-					
-					{/*<FullCalendar options={calendarOptions} />*/}
 				</Spin>
 			</div>
 		);
@@ -392,6 +358,7 @@ const getOptions = name => ({
 				variables: {
 					clinic_id: ownProps.currentClinic.id,
 					patient_id: ownProps.patientId,
+					therapist_id: ownProps.therapistId,
 				},
 			}],
 		}),
@@ -400,11 +367,14 @@ const getOptions = name => ({
 const TreatmentsCalendarWithData = compose(
 	connect(({ currentClinic, currentUser }) => ({ currentClinic, currentUser })),
 	graphql(GET_TREATMENTS_QUERY, {
-		options: ({ currentClinic, patientId }) => ({
-			variables: patientId ? { patient_id: +patientId, clinic_id: null } : {
-				patient_id: null,
-				clinic_id: currentClinic.id,
-			},
+		options: ({ currentClinic, patientId, therapistId }) => ({
+			variables: therapistId ?
+				{ therapist_id: +therapistId, patient_id: null, clinic_id: null } :
+				(patientId ? { therapist_id: null, patient_id: +patientId, clinic_id: null } : {
+					therapist_id: null,
+					patient_id: null,
+					clinic_id: currentClinic.id
+				}),
 		}),
 		skip: ({ currentClinic, patientId }) => !currentClinic && !patientId,
 	}),
@@ -425,19 +395,24 @@ class Calendar extends Component {
 
 	state = {
 		patientId: undefined,
-	}
+		therapistId: undefined,
+	};
 
 	onPatientChange = id => {
 		this.setState({ patientId: id });
-	}
+	};
+	
+	onTherapistChange = id => {
+		this.setState({ therapistId: id });
+	};
 
 	resetFilter = () => {
 		this.onPatientChange(undefined);
-	}
+	};
 
 	render() {
 		const formatMessage = this.context.intl.formatMessage;
-		const { patientId } = this.state;
+		const { patientId, therapistId } = this.state;
 
 		return (
 			<section className='Calendar'>
@@ -458,7 +433,9 @@ class Calendar extends Component {
 						</div>
 					</div>
 
-					<TreatmentsCalendarWithData patientId={patientId} />
+					<TreatmentsCalendarWithData patientId={patientId}
+												therapistId={therapistId}
+												onTherapistChange={this.onTherapistChange.bind(this)} />
 				</div>
 			</section>
 		);
