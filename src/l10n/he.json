@@ -277,6 +277,7 @@
   },
   "common": {
     "field_name": "שם",
+    "field_type": "סוּג",
     "field_name_error": "נא להכניס שם",
     "field_first_name": "שם פרטי",
     "field_first_name_error": "נא להכניס שם פרטי",

@@ -230,6 +230,7 @@
   "common": {
     "size": "Size",
     "field_name": "Name",
+    "field_type": "Type",
     "field_name_error": "Please input name",
     "field_first_name": "First name",
     "field_first_name_error": "Please input first name",
