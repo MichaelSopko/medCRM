@@ -1,11 +1,11 @@
 #import './TreatmentFragment.fragment.gql'
 #import './TreatmentSeriesObject.fragment.gql'
 
-query treatments($patient_id: ID, $clinic_id: ID) {
-    treatmentSeries(patient_id: $patient_id, clinic_id: $clinic_id) {
+query treatments($patient_id: ID, $clinic_id: ID, $therapist_id: ID) {
+    treatmentSeries(patient_id: $patient_id, clinic_id: $clinic_id, therapist_id: $therapist_id) {
         ...TreatmentFragment
     }
-    treatmentsList(patient_id: $patient_id, clinic_id: $clinic_id) {
+    treatmentsList(patient_id: $patient_id, clinic_id: $clinic_id, therapist_id: $therapist_id) {
             id
             target
             method
@@ -21,7 +21,7 @@ query treatments($patient_id: ID, $clinic_id: ID) {
             start_date
             end_date
         }
-    treatmentObjects(patient_id: $patient_id, clinic_id: $clinic_id) {
+    treatmentObjects(patient_id: $patient_id, clinic_id: $clinic_id, therapist_id: $therapist_id) {
         ...TreatmentSeriesObjectFragment
     }
     past_treatments(patient_id: $patient_id)

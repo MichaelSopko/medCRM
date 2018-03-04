@@ -76,7 +76,7 @@ const resolvers = {
         return context.Treatments.getTreatmentsList({
             patient_id,
             clinic_id,
-            therapist_id,
+			therapist_id,
         });
     },
 	treatmentObjects(ignored1, { patient_id, clinic_id, therapist_id }, context) {

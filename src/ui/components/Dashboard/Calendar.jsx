@@ -207,6 +207,7 @@ class TreatmentsCalendar extends Component {
 	
 	onTherapistChange = id => {
 		this.props.onTherapistChange(id);
+		this.props.data.refetch();
 	};
 
 	render() {
@@ -355,11 +356,13 @@ const getOptions = name => ({
 			variables: fields,
 			refetchQueries: [{
 				query: GET_TREATMENTS_QUERY,
-				variables: {
-					clinic_id: ownProps.currentClinic.id,
-					patient_id: ownProps.patientId,
-					therapist_id: ownProps.therapistId,
-				},
+				variables: ownProps.therapistId ?
+					{ therapist_id: +ownProps.therapistId, patient_id: null, clinic_id: null } :
+					(ownProps.patientId ? { therapist_id: null, patient_id: +ownProps.patientId, clinic_id: null } : {
+						therapist_id: null,
+						patient_id: null,
+						clinic_id: ownProps.currentClinic.id
+					}),
 			}],
 		}),
 	}),

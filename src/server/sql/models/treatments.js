@@ -40,12 +40,13 @@ export default class Treatments {
 	async getTreatmentsList({ patient_id, clinic_id, therapist_id }) {
 		const query = knex('treatments');
 		
-		if (patient_id) {
+		if (therapist_id) {
+			return query.whereRaw('JSON_CONTAINS(`therapist_ids`, ?) AND deleted = false', JSON.stringify([therapist_id]))
+				.select();
+		} else if (patient_id) {
 			query.where('patient_id', patient_id);
 		} else if (clinic_id) {
 			query.where('clinic_id', clinic_id);
-		} else if (therapist_id) {
-			query.where('therapist_ids', therapist_id);
 		}
 		
 		return query.andWhere('deleted', false)
@@ -90,7 +91,7 @@ export default class Treatments {
 		} else if (clinic_id) {
 			query.where('clinic_id', clinic_id);
 		} else if (therapist_id) {
-			query.andwhere('therapist_ids', [therapist_id]);
+			// query.where('therapist_ids', [therapist_id]);
 		}
 		
 		return query.andWhere('deleted', false)
