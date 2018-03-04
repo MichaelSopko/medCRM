@@ -75,7 +75,7 @@ export const TreatmentObjectsTable = ({ treatments, deleteObject, updateObject, 
 	}
 	
 	const renderIndex = (text, record) => {
-		return treatments.indexOf(record);
+		return treatments.indexOf(record) + 1;
 	};
 	
 	const editRender = (cell, record) => {
