@@ -180,7 +180,24 @@ body.rtl {
 .ant-table-row {
 	cursor: pointer;
 }
-
+.rtl .main-header {
+  display: flex;
+  .navbar {
+    flex-grow: 1;
+  }
+}
+.rtl .sidebar-collapse {
+  .main-sidebar{
+    text-align: left;
+  }
+  .content-wrap {
+    margin-right: 50px;
+    margin-left: 0;
+  }
+  .main-header {
+    display: flex;
+  }
+}
 .sidebar-collapse {
   .main-sidebar {
     -webkit-transform: translate(0, 0);
