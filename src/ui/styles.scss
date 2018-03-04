@@ -337,7 +337,21 @@ body.rtl {
 
 @media only screen and (max-width: 1080px) {
   .content-wrap {
-    margin-left: 0;
+    padding-right: 0;
+    /* margin-left: 0; */
+    overflow: hidden;
+    &>div {
+      padding-right: 0;
+    }
+  }
+
+  .rtl .content-wrap {
+    padding-left: 0;
+    /* margin-left: 0; */
+    overflow: hidden;
+    &>div {
+      padding-left: 0;
+    }
   }
 
   .main-header .logo {
