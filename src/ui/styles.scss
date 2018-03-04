@@ -417,7 +417,10 @@ body.rtl {
   .main-sidebar {
     transition: transform .3s ease-in-out,width .3s ease-in-out;
   }
-
+  .rtl .sidebar-collapse .content-wrap {
+    margin-right: 0;
+    padding: 64px 24px 40px;
+  }
   .sidebar-collapse {
     .main-header .logo {
       width: 0;
@@ -425,6 +428,7 @@ body.rtl {
     }
     .content-wrap {
       margin-left: 0;
+      padding: 64px 24px 40px;
     }
     .main-sidebar {
       min-height: 0;
