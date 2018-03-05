@@ -329,12 +329,43 @@ body.rtl {
   height: 36px;
 }
 
+@media only screen and (max-width: 380px) {
+  .Calendar {
+    min-width: 340px !important;
+    width: 340px !important;
+    max-width: 340px !important;
+  }
+  .content-wrap {
+    .Calendar {
+      min-width: 340px !important;
+      width: 340px !important;
+      max-width: 340px !important;
+    }
+  }
+  .rtl .content-wrap {
+    padding-left: 0;
+    /* margin-left: 0; */
+    overflow: hidden;
+    &>div,
+    &>section {
+      padding-left: 0;
+    }
+    .Calendar {
+      padding: 0 !important;
+      overflow: scroll;
+      min-width: 340px !important;
+      width: 340px !important;
+      max-width: 340px !important;
+    }
+  }
+}
+
 @media only screen and (max-width: 500px) {
   .Details__fields {
     width: 100%;
   }
   .treatment-btns-wrap {
-    position: static;
+    position: static !important;
   }
   .Dashboard__Content.Calendar__Content .fc-toolbar.fc-header-toolbar {
     padding: 10px 0;
