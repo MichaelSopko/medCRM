@@ -118,4 +118,9 @@ body.rtl, html[dir="rtl"] {
 	.ant-dropdown-menu-item {
 		text-align: right;
 	}
+	.table.table-bordered {
+		td {
+			text-align: right !important;
+		}
+	}
 }
