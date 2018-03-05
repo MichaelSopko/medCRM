@@ -357,7 +357,7 @@ const getOptions = name => ({
 			refetchQueries: [{
 				query: GET_TREATMENTS_QUERY,
 				variables: ownProps.therapistId ?
-					{ therapist_id: +ownProps.therapistId, patient_id: null, clinic_id: null } :
+					{ therapist_id: +ownProps.therapistId, patient_id: null, clinic_id: ownProps.currentClinic.id } :
 					(ownProps.patientId ? { therapist_id: null, patient_id: +ownProps.patientId, clinic_id: ownProps.currentClinic.id } : {
 						therapist_id: null,
 						patient_id: null,
