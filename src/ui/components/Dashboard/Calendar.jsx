@@ -358,7 +358,7 @@ const getOptions = name => ({
 				query: GET_TREATMENTS_QUERY,
 				variables: ownProps.therapistId ?
 					{ therapist_id: +ownProps.therapistId, patient_id: null, clinic_id: null } :
-					(ownProps.patientId ? { therapist_id: null, patient_id: +ownProps.patientId, clinic_id: null } : {
+					(ownProps.patientId ? { therapist_id: null, patient_id: +ownProps.patientId, clinic_id: ownProps.currentClinic.id } : {
 						therapist_id: null,
 						patient_id: null,
 						clinic_id: ownProps.currentClinic.id
@@ -372,8 +372,8 @@ const TreatmentsCalendarWithData = compose(
 	graphql(GET_TREATMENTS_QUERY, {
 		options: ({ currentClinic, patientId, therapistId }) => ({
 			variables: therapistId ?
-				{ therapist_id: +therapistId, patient_id: null, clinic_id: null } :
-				(patientId ? { therapist_id: null, patient_id: +patientId, clinic_id: null } : {
+				{ therapist_id: +therapistId, patient_id: null, clinic_id: currentClinic.id } :
+				(patientId ? { therapist_id: null, patient_id: +patientId, clinic_id: currentClinic.id } : {
 					therapist_id: null,
 					patient_id: null,
 					clinic_id: currentClinic.id
