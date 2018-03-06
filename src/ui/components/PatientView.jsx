@@ -730,6 +730,18 @@ class PatientView extends Component {
 		const canUnarchive = currentUser.role === 'SYSTEM_ADMIN' || (!currentClinic.archive_time || minutes <= 0);
 
 		console.log(archivedForNow, minutes, canUnarchive, currentClinic);
+		
+			
+			// const onDelete = () => {
+			// 	this.props.deleteAdministrator(record);
+			// };
+			
+		const checkForConfirm = () => Modal.confirm({
+			title: formatMessage({id: 'common.confirm_message'}),
+			okText: formatMessage({id: 'common.confirm_yes'}),
+			cancelText: formatMessage({id: 'common.confirm_no'}),
+			onOk: this.props.archivePatient,
+		});
 
 		return (
 			<div className='PatientView'>
@@ -769,21 +781,25 @@ class PatientView extends Component {
 								</Tooltip>
 							)
 							: (
-								<Popconfirm
-									title={formatMessage({ id: 'common.confirm_message' })}
-									onConfirm={this.props.archivePatient}
-									okText={formatMessage({ id: 'common.confirm_yes' })}
-									cancelText={formatMessage({ id: 'common.confirm_no' })}
-								>
+								<span>
+							{/*<Popconfirm
+							 title={formatMessage({ id: 'common.confirm_message' })}
+							 onConfirm={this.props.archivePatient}
+							 okText={formatMessage({ id: 'common.confirm_yes' })}
+							 cancelText={formatMessage({ id: 'common.confirm_no' })}
+							 >*/}
+									
 									<Button
 										type="danger"
 										loading={archiveLoading}
+										onClick={checkForConfirm}
 										icon="lock"
 										className="btn-actions btn-danger"
 									>
 										{formatMessage({ id: 'common.action_archive' })}
 									</Button>
-								</Popconfirm>
+							</span>
+						
 							)
 						}
 					</div>}
