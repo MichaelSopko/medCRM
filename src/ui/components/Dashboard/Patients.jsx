@@ -83,24 +83,7 @@ class Patients extends Component {
 		const formatMessage = this.context.intl.formatMessage;
 		const form = this.form;
 		const isEditing = !!Object.keys(this.state.activeEntity).length;
-				/*const processRelatedPersons = (relatedPersons, values) => {
-					values.related_persons = [];
-					relatedPersons.forEach(({ _id }) => {
-						const type = values[`related_persons-${_id}-type`];
-						delete values[`related_persons-${_id}-type`];
-						const phone = values[`related_persons-${_id}-phone`];
-						delete values[`related_persons-${_id}-phone`];
-						const email = values[`related_persons-${_id}-email`];
-						delete values[`related_persons-${_id}-email`];
-						const description = values[`related_persons-${_id}-description`];
-						delete values[`related_persons-${_id}-description`];
-						const receive_updates = values[`related_persons-${_id}-receive_updates`];
-						delete values[`related_persons-${_id}-receive_updates`];
-						values.related_persons.push({ type, phone, email, description, receive_updates });
-					});
-					return values;
-				};*/
-				
+		
 		const processRelatedPersons = (relatedPersons, values) => {
 			values.related_persons = [];
 			relatedPersons.forEach((person) => {
@@ -128,14 +111,13 @@ class Patients extends Component {
 			if (err) {
 				return;
 			}
-			this.setState({ modalLoading: true });
 			
-			console.log(values);
-
-			values = processRelatedPersons(this.state.relatedPersons, values);
-
+			this.setState({ modalLoading: true });
+			const relatedPersons = values.related_persons.slice();
+			
+			values = processRelatedPersons(relatedPersons, values);
 			values.birth_date = moment(values.birth_date);
-
+			
 			isEditing
 
 				? this.props.editPatient({

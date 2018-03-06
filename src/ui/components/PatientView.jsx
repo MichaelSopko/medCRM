@@ -266,7 +266,6 @@ const FilesTab = ({ patient, onAddFile, onDeleteFile }, context) => {
 				<p className='ant-upload-text'>{formatMessage({ id: 'Patients.upload_files' })}</p>
 			</Upload.Dragger>
 		</div>
-		{/*<Table dataSource={patient.files} columns={columns} rowKey='id'/>*/}
 		<BootstrapTable data={patient.files} keyField='id' hover consended options={options} pagination>
 			<TableHeaderColumn dataField='name' dataFormat={nameRender} dataSort caretRender={ getCaret }>{formatMessage({ id: 'common.field_name' })}</TableHeaderColumn>
 			<TableHeaderColumn width="15%" dataField='size' dataSort caretRender={ getCaret }>{formatMessage({ id: 'common.size' })}</TableHeaderColumn>
@@ -782,13 +781,6 @@ class PatientView extends Component {
 							)
 							: (
 								<span>
-							{/*<Popconfirm
-							 title={formatMessage({ id: 'common.confirm_message' })}
-							 onConfirm={this.props.archivePatient}
-							 okText={formatMessage({ id: 'common.confirm_yes' })}
-							 cancelText={formatMessage({ id: 'common.confirm_no' })}
-							 >*/}
-									
 									<Button
 										type="danger"
 										loading={archiveLoading}
@@ -798,8 +790,7 @@ class PatientView extends Component {
 									>
 										{formatMessage({ id: 'common.action_archive' })}
 									</Button>
-							</span>
-						
+								</span>
 							)
 						}
 					</div>}
