@@ -96,6 +96,7 @@
   "Patients": {
     "create_button": "צור מטופל",
     "create_header": "צור מטופל",
+    "persons": "הוסף אדם קשור",
     "edit_header": "ערוך מטופל",
     "header": "מטופלים",
     "field_related_persons": "קרובים",

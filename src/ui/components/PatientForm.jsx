@@ -223,7 +223,7 @@ export default Form.create()(
 							</TabPane>
 							{ !isEditing && <TabPane
 								className="PatientView__Tab"
-								tab={formatMessage({ id: 'Patients.tabs.persons' })}
+								tab={formatMessage({ id: 'Patients.persons' })}
 								key="related">
 									<Form.Item
 										hasFeedback

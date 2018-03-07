@@ -96,6 +96,7 @@
   "Patients": {
     "create_button": "Create a Patient",
     "create_header": "Create Patient",
+    "persons": "Add related person",
     "edit_header": "Edit Patient",
     "header": "Patients",
     "field_related_persons": "Related persons",
