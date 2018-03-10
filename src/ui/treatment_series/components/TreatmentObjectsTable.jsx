@@ -160,7 +160,7 @@ export const TreatmentObjectsTable = ({ treatments, deleteObject, updateObject, 
 				rowKey={item => item.id + item.__typename} />
 				*/}
 			<BootstrapTable data={treatments} keyField="id" hover consended pagination options={options}>
-				<TableHeaderColumn width="100px" dataField="label" dataFormat={renderIndex}>ID</TableHeaderColumn>
+				<TableHeaderColumn width="100px" dataField="label" dataFormat={renderIndex}>{formatMessage({ id: 'common.field_id' })}</TableHeaderColumn>
 				<TableHeaderColumn dataField="label" dataFormat={renderLabel} dataSort caretRender={getCaret}>{formatMessage({ id: 'common.field_type' })}</TableHeaderColumn>
 				<TableHeaderColumn dataField="date" dataFormat={renderHeader} dataSort caretRender={getCaret}>{formatMessage({ id: 'Treatments.field_start_date_header' })}</TableHeaderColumn>
 				<TableHeaderColumn dataSort dataFormat={renderTherapist} caretRender={getCaret}>{formatMessage({ id: 'Treatments.field_therapists' })}</TableHeaderColumn>

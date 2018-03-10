@@ -18,8 +18,24 @@ body.rtl, html[dir="rtl"] {
 	.Dashboard__Actions > div {
 		margin-left: 12px;
 	}
+	.Dashboard__Actions{
+		&>button,
+		.ant-btn {
+			display: flex;
+			flex-direction: row-reverse;
+			align-items: center;
+		}
+
+		.rtl-left-actions {
+			display: flex;
+		}
+
+		&.PatientObjectTab__Actions {
+			flex-direction: row-reverse;
+		}
+	}
 	.Dashboard__Details {
-		justify-content: flex-start;
+		justify-content: space-between;
 	}
 	.ant-table table {
 		text-align: right;
@@ -70,6 +86,21 @@ body.rtl, html[dir="rtl"] {
 	form .has-feedback .ant-select-arrow, form .has-feedback .ant-select-selection__clear {
 		right: 7px;
 	}
+
+	.ant-select-selection.ant-select-selection--single {
+		.ant-select-selection__rendered {
+			text-align: right;
+		}
+		.ant-select-arrow {
+			right: auto;
+			left: 8px;
+		}
+	}
+
+	.ant-select-dropdown-menu-item {
+		text-align: right;
+	}
+
 	.Patients__RelatedPersonsItem .ant-row.ant-form-item {
 		> div {
 			flex: 1;
@@ -103,6 +134,18 @@ body.rtl, html[dir="rtl"] {
 	.ant-form-item-control-wrapper:first-child {
 		flex: 1;
 	}
+	.ant-form-item-control {
+		text-align: right;
+	}
+	.ant-form-item-control-wrapper {
+		.rtl-to-right {
+			display: flex;
+			.ant-col-offset-1 {
+				margin-right: 4.16666667%;
+				margin-left: 0;
+			}
+		}
+	}
 	.ant-notification-notice-with-icon {
 		display: flex;
 		flex-direction: row-reverse;
@@ -119,8 +162,34 @@ body.rtl, html[dir="rtl"] {
 		text-align: right;
 	}
 	.table.table-bordered {
-		td {
+		td,
+		th {
 			text-align: right !important;
+		}
+
+		th {
+			span {
+				right: auto;
+				left: 16px;
+			}
+		}
+	}
+
+	.Details {
+		&__fields {
+			text-align: right;
+		}
+		&__related-persons {
+			text-align: right;
+		}
+	}
+
+	.react-bs-table-pagination {
+		text-align: right;
+		margin-bottom: 15px;
+
+		.react-bootstrap-table-page-btns-ul {
+			float: left;
 		}
 	}
 }

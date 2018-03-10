@@ -267,6 +267,7 @@
     "field_birth_date": "Birth date",
     "field_birth_date_error": "Please input date",
     "field_id_number": "ID number",
+    "field_id": "ID",
     "field_id_number_error": "Please input ID",
     "field_id_number_error_duplicate": "Same id number already exists",
     "field_licence": "Licence number",

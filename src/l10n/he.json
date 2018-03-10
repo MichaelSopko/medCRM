@@ -84,7 +84,7 @@
     "edit_header": "עריכת מטפל",
     "header": "מטפלים",
     "field_title": {
-      "name": "Title",
+      "name": "כותרת",
       "value1": "none",
       "value2": "P.hd.",
       "value3": "Mba"
@@ -306,6 +306,7 @@
     "field_birth_date": "תאריך לידה",
     "field_birth_date_error": "נא להכניס תאריך",
     "field_id_number": "מספר זהות",
+    "field_id": "מזהה",
     "field_id_number_error": "נא להכניס מספר זהות",
     "field_licence": "מספר רשיון",
     "field_licence_error": "נא להכניס מספר רשיון",

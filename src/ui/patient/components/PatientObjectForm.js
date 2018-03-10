@@ -94,7 +94,7 @@ const PatientObjectForm = (props, context) => {
 					<Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'Patients.age_in_diagnose' })}>
-						<Row>
+						<Row className="rtl-to-right">
 							<Col span={4}>
 								{getFieldDecorator('patient_age.years', {
 									initialValue: age.years,

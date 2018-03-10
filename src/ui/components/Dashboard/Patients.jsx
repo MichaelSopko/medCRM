@@ -268,7 +268,7 @@ class Patients extends Component {
 								<Checkbox style={{ marginRight: 8 }} checked={showArchived}
 								          onChange={this.onShowArchivedChange}>{formatMessage({ id: 'Patients.show-archived' })}</Checkbox>
 							</div>
-							<div>
+							<div className="rtl-left-actions">
 								<CheckAccess role={ROLES.SYSTEM_ADMIN}>
 									<ClinicsSelector />
 								</CheckAccess>

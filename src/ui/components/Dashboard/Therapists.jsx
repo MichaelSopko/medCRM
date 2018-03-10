@@ -378,10 +378,6 @@ class Therapists extends Component {
 			width: '10%',
 			render: (text, record) => (
 				<span>
-{/*		      <Button size="small" type='ghost' onClick={ this.editEntity(record) }>
-			      {formatMessage({ id: 'common.action_edit' })}
-		      </Button>
-					<span className="ant-divider" />*/}
 		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
 			      deleteTherapist(record)
 		      } } okText={formatMessage({ id: 'common.confirm_yes' })}
@@ -423,16 +419,6 @@ class Therapists extends Component {
 							</Button>
 						</div>
 					</div>
-					{/*<Table
-						onRowClick={(record, index, event) => {
-							// dont edit when button clicked
-							if(event.target.tagName === 'BUTTON' || event.target.tagName === 'A'  || event.target.parentNode.tagName === 'BUTTON') {
-								return;
-							}
-							this.editEntity(record);
-						}}
-						dataSource={therapists} columns={columns} loading={loading} rowKey='id' />*/}
-					
 					<BootstrapTable data={therapists} keyField='id' hover consended options={options}
 									pagination>
 						<TableHeaderColumn width='25%' dataField='first_name' dataFormat={this.renderName} dataSort caretRender={ getCaret }>{formatMessage({ id: 'common.field_name' })}</TableHeaderColumn>
