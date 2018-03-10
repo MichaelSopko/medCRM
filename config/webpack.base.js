@@ -44,7 +44,7 @@ const config = {
         exclude: /node_modules/,
         loader: 'graphql-tag/loader',
       },
-      { test: /\.(woff2?|svg|png|ico|jpg|xml)$/, loader: 'url-loader?name=[hash].[ext]&limit=10000' },
+      { test: /\.(woff2?|svg|png|ico|jpg|xml)$/, loader: 'url-loader?name=[hash].[ext]&limit=100000' },
       { test: /\.(ttf|eot)$/, loader: 'file-loader?name=[hash].[ext]' },
     ],
   },
