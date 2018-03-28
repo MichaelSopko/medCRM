@@ -95,7 +95,8 @@
       background-color: transparent;
 
       &.active,
-      &.menu-open {
+      &.menu-open,
+      &:hover {
         color: #fff;
         background: #1e282c;
       }

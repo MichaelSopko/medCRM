@@ -213,6 +213,23 @@ body.rtl {
       display: none !important;
       -webkit-transform: translateZ(0);
     }
+
+    .sidebar-menu:hover {
+      overflow: visible;
+    }
+
+    .sidebar-menu li:hover a {
+      span {
+        display: block !important;
+        position: absolute;
+        width: 180px;
+        left: 50px;
+        top: 0;
+        margin-left: -3px;
+        padding: 12px 5px 12px 15px;
+        background-color: inherit;
+      }
+    }
   }
 
   .main-header .logo {
