@@ -22,7 +22,7 @@ export default Form.create()(
 	(props) => {
 		const {
 			visible, onCancel, onSubmit, form, loading, values = {},
-			onUploadFileChange, formatMessage,
+			onUploadFileChange, formatMessage, activeKey, onChangeKey,
 		} = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
@@ -59,6 +59,9 @@ export default Form.create()(
 						<Tabs
 							animated={false}
 							type="card"
+							defaultActiveKey="related"
+							activeKey={activeKey}
+							onChange={onChangeKey}
 						>
 							<TabPane
 								className="PatientView__Tab"

@@ -47,6 +47,7 @@ class Patients extends Component {
 		relatedPersons: [],
 		currentPatientId: null,
 		showArchived: false,
+		activeKey: 'details'
 	};
 
 	constructor(props) {
@@ -61,7 +62,7 @@ class Patients extends Component {
 	};
 
 	handleCancel = () => {
-		this.setState({ modalOpened: false, relatedPersons: [] });
+		this.setState({ modalOpened: false, relatedPersons: [], activeKey: 'details' });
 		this.resetActiveEntity();
 	};
 
@@ -179,6 +180,10 @@ class Patients extends Component {
 	onShowArchivedChange = (e) => {
 		this.setState({ showArchived: e.target.checked })
 	};
+	
+	onChangeKey = (activeKey) => {
+		this.setState({ activeKey });
+	};
 
 	render() {
 		const { deletePatient, currentClinic, currentUser, data } = this.props;
@@ -257,7 +262,9 @@ class Patients extends Component {
 						relatedPersons={relatedPersons}
 						addRelatedPerson={this.addRelatedPerson}
 						removeRelatedPerson={this.removeRelatedPerson}
-					/>
+						activeKey={this.state.activeKey}
+						onChangeKey={this.onChangeKey}
+						/>
 					<div>
 						{/*						<h1 className="Dashboard__Header">
 						 { formatMessage({ id: 'Patients.header' }) }
