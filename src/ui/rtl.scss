@@ -225,4 +225,13 @@ body.rtl, html[dir="rtl"] {
 			}
 		}
 	}
+
+	.ant-confirm-body {
+		display: flex;
+
+		i {
+			margin-left: 16px;
+			margin-right: 0;
+		}
+	}
 }
