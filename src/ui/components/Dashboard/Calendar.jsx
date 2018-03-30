@@ -230,14 +230,7 @@ class TreatmentsCalendar extends Component {
 
 		if (!currentClinic.id || !treatmentSeries) return null;
 		
-		let events = [];
-		// treatmentSeries.forEach(series => {
-		// 	if (series.treatments) {
-		// 		events.push(...series.treatments.filter(obj => obj.__typename === 'Treatment').map(t => ({ series, ...t })));
-		// 	}
-		// });
-		
-		events = treatmentsList.filter(obj => obj.__typename === 'Treatment');
+		let events = treatmentsList.filter(obj => obj.__typename === 'Treatment');
 		
 		events = events.map(treatment => {
 			const startDate = new Date(treatment.start_date);
@@ -255,9 +248,6 @@ class TreatmentsCalendar extends Component {
 				treatment,
 			};
 		});
-		// const getProps = (event) => ({
-		// 	style: { backgroundColor: colorHash.hex(event && event.patient.id) },
-		// });
 		
 		return (
 			<div className="calendar-wrap">
@@ -288,12 +278,12 @@ class TreatmentsCalendar extends Component {
 				<Spin spinning={loading}>
 					<div className="treatment-btns-wrap">
 						<div className="Dashboard__Actions PatientObjectTab__Actions">
-							<TherapistSelector
+							{(currentUser.role === ROLES.SYSTEM_ADMIN || currentUser.role === ROLES.CLINIC_ADMIN) && <TherapistSelector
 								value={this.props.therapistId}
 								data={{therapists, loading}}
 								allowClear showArchived={false}
 								onChange={this.onTherapistChange}
-							/>
+							/>}
 							
 							<Dropdown.Button
 								type='primary'

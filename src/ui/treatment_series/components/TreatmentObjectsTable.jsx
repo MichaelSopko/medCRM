@@ -143,6 +143,13 @@ export const TreatmentObjectsTable = ({ treatments, deleteObject, updateObject, 
 		alwaysShowAllBtns: true,
 	};
 	
+	treatments = treatments.map((record) => {
+		return  Object.assign({}, record, {
+			therapistName: (record.therapists || record.participants || []).map(user => `${user.first_name} ${user.last_name}`).join(', '),
+			index: treatments.indexOf(record) + 1
+		});
+	});
+	
 	return (
 		<div>
 			{/*
@@ -160,10 +167,10 @@ export const TreatmentObjectsTable = ({ treatments, deleteObject, updateObject, 
 				rowKey={item => item.id + item.__typename} />
 				*/}
 			<BootstrapTable data={treatments} keyField="id" hover consended pagination options={options}>
-				<TableHeaderColumn width="100px" dataField="label" dataFormat={renderIndex}>{formatMessage({ id: 'common.field_id' })}</TableHeaderColumn>
+				<TableHeaderColumn width="100px" dataField="index" dataSort dataFormat={renderIndex} caretRender={getCaret}>{formatMessage({ id: 'common.field_id' })}</TableHeaderColumn>
 				<TableHeaderColumn dataField="label" dataFormat={renderLabel} dataSort caretRender={getCaret}>{formatMessage({ id: 'common.field_type' })}</TableHeaderColumn>
 				<TableHeaderColumn dataField="date" dataFormat={renderHeader} dataSort caretRender={getCaret}>{formatMessage({ id: 'Treatments.field_start_date_header' })}</TableHeaderColumn>
-				<TableHeaderColumn dataSort dataFormat={renderTherapist} caretRender={getCaret}>{formatMessage({ id: 'Treatments.field_therapists' })}</TableHeaderColumn>
+				<TableHeaderColumn dataField="therapistName" dataSort dataFormat={renderTherapist} caretRender={getCaret}>{formatMessage({ id: 'Treatments.field_therapists' })}</TableHeaderColumn>
 				<TableHeaderColumn width="100px" dataFormat={editRender}>{formatMessage({ id: 'common.field_actions' })}</TableHeaderColumn>
 			</BootstrapTable>
 		</div>
