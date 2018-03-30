@@ -36,8 +36,8 @@ export const TreatmentForm = Form.create()(
 		} else {
 			values = {
 				...values,
-				start_date: moment(values.start_date),
-				end_date: moment(values.end_date),
+				start_date: moment(values.start_date).utc(),
+				end_date: moment(values.end_date).utc(),
 			}
 		}
 
