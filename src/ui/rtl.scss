@@ -234,4 +234,8 @@ body.rtl, html[dir="rtl"] {
 			margin-right: 0;
 		}
 	}
+
+	.ant-modal-title {
+		text-align: right;
+	}
 }
