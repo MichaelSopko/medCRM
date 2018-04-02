@@ -22,7 +22,7 @@ export default Form.create()(
 	(props) => {
 		const {
 			visible, onCancel, onSubmit, form, loading, values = {},
-			onUploadFileChange, formatMessage, activeKey, onChangeKey,
+			onUploadFileChange, formatMessage, activeKey, onChangeKey, addRelatedPerson,
 		} = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
@@ -307,6 +307,9 @@ export default Form.create()(
 										)}
 										<b>{formatMessage({ id: 'Patients.field_receive_updates'})}</b>
 									</Form.Item>
+								<Form.Item>
+									<button disabled={!form.getFieldValue('related_persons[0].type')} type="button" className="ant-btn ant-btn-primary ant-btn-lg" onClick={addRelatedPerson}>Add realted person</button>
+								</Form.Item>
 							</TabPane> }
 						</Tabs>
 					</div>

@@ -88,6 +88,7 @@ class Patients extends Component {
 		const processRelatedPersons = (relatedPersons, values) => {
 			values.related_persons = [];
 			relatedPersons.forEach((person) => {
+				delete person._id;
 				if (person && person.name && person.type) {
 					values.related_persons.push(person);
 				}
@@ -114,7 +115,9 @@ class Patients extends Component {
 			}
 			
 			this.setState({ modalLoading: true });
-			const relatedPersons = values.related_persons.slice();
+			
+			// const relatedPersons = values.related_persons.slice();
+			const relatedPersons = this.state.relatedPersons;
 			
 			values = processRelatedPersons(relatedPersons, values);
 			values.birth_date = moment(values.birth_date);
@@ -163,8 +166,30 @@ class Patients extends Component {
 	};
 
 	addRelatedPerson = () => {
-		let relatedPersons = [...this.state.relatedPersons, { _id: Math.random().toString(36).substring(7) }];
-		this.setState({ relatedPersons });
+		const form = this.form;
+		form.validateFields([
+			'related_persons[0].name', 'related_persons[0].description',
+			'related_persons[0].email', 'related_persons[0].phone',
+		], (err, values) => {
+			if (err) {
+				return;
+			}
+			
+			const person = values.related_persons[0];
+			const relatedPersons = [
+				...this.state.relatedPersons,
+				Object.assign({}, { _id: Math.random().toString(36).substring(7)}, person)
+			];
+			this.setState({ relatedPersons });
+			form.resetFields([
+				'related_persons[0].type',
+				'related_persons[0].name',
+				'related_persons[0].description',
+				'related_persons[0].email',
+				'related_persons[0].phone',
+				'related_persons[0].receive_updates',
+			]);
+		});
 	};
 
 	removeRelatedPerson = (id) => {
