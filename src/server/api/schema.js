@@ -679,9 +679,12 @@ const resolvers = {
     },
   },
   Treatment: {
-    therapists(treatment, _, context) {
-      return (treatment && treatment.therapists) || context.Users.getUsers(safeParse(treatment.therapist_ids));
-    },
+	  therapists(treatment, _, context) {
+		  return (treatment && treatment.therapists) || context.Users.getUsers(safeParse(treatment.therapist_ids));
+	  },
+	  patient(treatment, _, ctx) {
+		  return ctx.Users.findOne(treatment.patient_id);
+	  },
   },
   Date: GraphQLMomentMySQL,
 };

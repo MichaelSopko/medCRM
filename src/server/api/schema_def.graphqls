@@ -342,6 +342,7 @@ type Treatment {
 	parents_guidance: String
 	next_treatment_remark: String
 	therapists: [Therapist]
+	patient: Patient
 	start_date: Date
 	end_date: Date
 }

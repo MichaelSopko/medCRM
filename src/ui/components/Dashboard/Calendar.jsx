@@ -197,7 +197,7 @@ class TreatmentsCalendar extends Component {
 
 		if (!currentClinic.id || !treatmentSeries) return null;
 		
-		let events = treatmentsList.slice().concat(treatmentObjects);
+		let events = treatmentsList.slice().filter(obj => obj.patient);
 		// .filter(obj => obj.__typename === 'Treatment');
 		
 		events = events.map(treatment => {
@@ -205,12 +205,9 @@ class TreatmentsCalendar extends Component {
 			const userTimezoneOffset = startDate.getTimezoneOffset() * 60000;
 			const endDate = new Date(treatment.end_date);
 			return {
-				start: new Date(startDate.getTime()),
-				end: new Date(endDate.getTime()),
-				// title: `${treatment.series.patient.first_name}
-				// ${treatment.series.patient.last_name}
-				// (${moment(startDate).format('H:mm')} — ${moment(endDate).format('H:mm')})`,
-				title: `(${moment(startDate).format('H:mm')} — ${moment(endDate).format('H:mm')})`,
+				start: new Date(startDate.getTime() + userTimezoneOffset),
+				end: new Date(endDate.getTime() + userTimezoneOffset),
+				title: `${treatment.patient.first_name} ${treatment.patient.last_name} (${moment(startDate).format('H:mm')} — ${moment(endDate).format('H:mm')})`,
 				patient: treatment.patient,
 				id: treatment.id,
 				treatment,
