@@ -1,4 +1,5 @@
-import knex from '../connector'
+import knex from '../connector';
+import moment from 'moment';
 
 const safeParse = (json, deflt = []) => {
   try {
@@ -57,7 +58,7 @@ export default class Treatments {
 	async getPastTreatmentsCount(patient_id) {
 		const res = await knex('treatments')
 			.where('patient_id', patient_id)
-			.andWhere('start_date', '<', Date.now())
+			.andWhere('start_date', '<', moment().format('YYYY-MM-DD HH:mm:ss'))
 			.andWhere('deleted', false)
 			.count();
 		
@@ -67,7 +68,7 @@ export default class Treatments {
 	async getFeatureTreatmentsCount(patient_id) {
 		const res = await knex('treatments')
 			.where('patient_id', patient_id)
-			.andWhere('start_date', '>', Date.now())
+			.andWhere('start_date', '>', moment().format('YYYY-MM-DD HH:mm:ss'))
 			.andWhere('deleted', false)
 			.count();
 		
