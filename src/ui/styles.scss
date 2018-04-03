@@ -25,110 +25,6 @@ body {
   // min-width: 1024px;
 }
 
-body.rtl {
-  direction: rtl;
-  .ant-modal-close {
-    left: 16px;
-  }
-  .ProfileWidget__Content {
-    padding-left: 0;
-    padding-right: 12px;
-  }
-  .ProfileWidget__Role {
-    padding-left: 0;
-    padding-right: 4px;
-  }
-  .ant-btn > .anticon + span, .ant-btn > span + .anticon {
-    margin-right: 0.5em;
-    margin-left: 0.5em;
-  }
-  .Dashboard__Actions > div {
-    margin-left: 12px;
-  }
-  .ant-table table {
-    text-align: right;
-  }
-  .ant-table-thead > tr > th {
-    text-align: right;
-  }
-  .ant-form-item {
-    display: flex;
-
-  }
-  .has-success.has-feedback:after, .has-warning.has-feedback:after, .has-error.has-feedback:after, .is-validating.has-feedback:after {
-    right: auto;
-    left: 0;
-  }
-  .ant-modal-footer {
-    display: flex;
-    flex-direction: row-reverse;
-  }
-  form .has-feedback .ant-input {
-    padding-right: 7px;
-    padding-left: 24px;
-  }
-  .ant-calendar-picker-clear {
-    right: auto;
-    left: 7px;
-  }
-  .ant-calendar-picker-icon {
-    right: auto;
-    left: 8px;
-  }
-  .ant-select-selection-selected-value {
-    float: right;
-  }
-  .ant-select-selection__placeholder, .ant-select-search__field__placeholder {
-    right: 16px;
-  }
-  .ant-select-selection--multiple .ant-select-selection__rendered {
-    padding-left: 24px;
-    ul {
-      display: inline-flex;
-    }
-  }
-  .ant-select-dropdown.ant-select-dropdown--multiple .ant-select-dropdown-menu-item:after {
-    right: auto;
-    left: 8px;
-  }
-  form .has-feedback .ant-select-arrow, form .has-feedback .ant-select-selection__clear {
-    right: 7px;
-  }
-  .Patients__RelatedPersonsItem .ant-row.ant-form-item {
-    > div {
-      flex: 1;
-    }
-  }
-  .Login .ant-row.ant-form-item > div {
-    flex: 1;
-  }
-
-  .ant-calendar-header .ant-calendar-next-century-btn, .ant-calendar-header .ant-calendar-next-decade-btn, .ant-calendar-header .ant-calendar-next-year-btn,
-  .ant-calendar-month-panel-header .ant-calendar-month-panel-next-century-btn, .ant-calendar-month-panel-header .ant-calendar-month-panel-next-decade-btn, .ant-calendar-month-panel-header .ant-calendar-month-panel-next-year-btn {
-    left: 7px;
-    right: auto;
-  }
-  .ant-calendar-header .ant-calendar-next-month-btn {
-    left: 29px;
-    right: auto;
-  }
-  .ant-calendar-header .ant-calendar-prev-century-btn, .ant-calendar-header .ant-calendar-prev-decade-btn, .ant-calendar-header .ant-calendar-prev-year-btn,
-  .ant-calendar-month-panel-header .ant-calendar-month-panel-prev-century-btn, .ant-calendar-month-panel-header .ant-calendar-month-panel-prev-decade-btn, .ant-calendar-month-panel-header .ant-calendar-month-panel-prev-year-btn {
-    left: auto;
-    right: 7px;
-  }
-  .ant-calendar-header .ant-calendar-prev-month-btn {
-    left: auto;
-    right: 29px;
-  }
-  .ant-tabs-nav.ant-tabs-nav-animated {
-    float: right;
-  }
-  .ant-form-item-control-wrapper:first-child {
-    flex: 1;
-  }
-}
-
 .Container {
   padding: 0 1em;
   margin: 0 auto;
@@ -308,17 +204,6 @@ body.rtl {
   }
 }
 
-body.rtl {
-  .ant-form-vertical {
-    .ant-form-item {
-        display: block;
-      .ant-form-item-label {
-        text-align: right;
-      }
-    }
-  }
-}
-
 .btn-actions {
   width: 100px;
   height: 36px;
@@ -373,6 +258,13 @@ body.rtl {
     }
   }
 }
+
+
+/*
+*
+        Responsive styles
+*
+*/
 
 @media only screen and (max-width: 500px) {
   .Details__fields {

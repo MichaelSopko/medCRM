@@ -71,7 +71,7 @@ body.rtl, html[dir="rtl"] {
 		float: right;
 	}
 	.ant-select-selection__placeholder, .ant-select-search__field__placeholder {
-		right: 16px;
+		right: 0;
 	}
 	.ant-select-selection--multiple .ant-select-selection__rendered {
 		padding-left: 24px;
@@ -237,5 +237,14 @@ body.rtl, html[dir="rtl"] {
 
 	.ant-modal-title {
 		text-align: right;
+	}
+
+	.ant-form-vertical {
+		.ant-form-item {
+			display: block;
+			.ant-form-item-label {
+				text-align: right;
+			}
+		}
 	}
 }
