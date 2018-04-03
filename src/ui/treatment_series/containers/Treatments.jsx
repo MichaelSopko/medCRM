@@ -316,97 +316,6 @@ class Treatments extends Component {
 			currentClinic, deleteSeries, currentUser, patient, deleteObject,
 		} = this.props;
 		const formatMessage = this.context.intl.formatMessage;
-		/*const columns = [{
-			title: formatMessage({ id: 'common.field_name' }),
-			key: 'name',
-			dataIndex: 'name',
-			sorter: (a, b) => a.name > b.name,
-			render: text => <div className="to-dynamic-container">
-				<span className="to-dynamic">{ text }</span>
-			</div>,
-			width: '20%',
-		}, {
-			title: formatMessage({ id: 'Treatments.grid_headers.past_treatments' }),
-			key: 'past_treatments',
-			width: '10%',
-			render: (_, record) => record.objects && record.objects.filter(obj => obj.__typename === 'Treatment' && moment(obj.start_date).valueOf() < moment().valueOf()).length,
-		}, {
-			title: formatMessage({ id: 'Treatments.grid_headers.future_treatments' }),
-			key: 'future_treatments',
-			width: '10%',
-			render: (_, record) => record.objects && record.objects.filter(obj => obj.__typename === 'Treatment' && moment(obj.start_date).valueOf() >= moment().valueOf()).length,
-		}, {
-			title: formatMessage({ id: 'Treatments.grid_headers.total_treatments' }),
-			key: 'total_treatments',
-			width: '10%',
-			render: (_, record) => record.objects && record.objects.filter(obj => obj.__typename === 'Treatment').length,
-		}, {
-			title: formatMessage({ id: 'Treatments.grid_headers.school_observations' }),
-			key: 'school_observations',
-			width: '10%',
-			render: (_, record) => record.objects && record.objects.filter(obj => obj.__typename === 'SchoolObservation').length,
-		}, {
-			title: formatMessage({ id: 'Treatments.grid_headers.staff_meetings' }),
-			key: 'staff_meetings',
-			width: '10%',
-			render: (_, record) => record.objects && record.objects.filter(obj => obj.__typename === 'StaffMeeting').length,
-		}, {
-			title: formatMessage({ id: 'Treatments.grid_headers.outside_source_consults' }),
-			key: 'outside_source_consults',
-			width: '10%',
-			render: (_, record) => record.objects && record.objects.filter(obj => obj.__typename === 'OutsideSourceConsult').length,
-		}/!*, {
-			title: formatMessage({ id: 'Treatments.field_treatments_number' }),
-			key: 'treatments_number',
-			dataIndex: 'treatments_number',
-			sorter: (a, b) => a.treatments_number > b.treatments_number,
-			width: '35%',
-		}*!/, {
-			title: formatMessage({ id: 'common.field_actions' }),
-			key: 'action',
-			width: '20%',
-			render: (text, record) => (
-				<span>
-					<Dropdown.Button
-						type='primary'
-						onClick={() => this.showForm(FORM_TYPES.Treatment, record)}
-						size='small'
-						disabled={patient.archived}
-						overlay={
-						<Menu onClick={({ key }) => this.showForm(FORM_TYPES[key], record)}>
-							<Menu.Item key={FORM_TYPES.SchoolObservation}>
-								<Icon type='plus-circle-o' style={{marginLeft: 6, marginRight: 6 }} />
-								{formatMessage({ id: 'Treatments.create_object_button.school_observation' })}
-							</Menu.Item>
-							<Menu.Item key={FORM_TYPES.StaffMeeting}>
-								<Icon type='plus-circle-o' style={{marginLeft: 6, marginRight: 6 }} />
-								{formatMessage({ id: 'Treatments.create_object_button.staff_meeting' })}
-							</Menu.Item>
-							<Menu.Item key={FORM_TYPES.OutsideSourceConsult}>
-								<Icon type='plus-circle-o' style={{marginLeft: 6, marginRight: 6 }} />
-								{formatMessage({ id: 'Treatments.create_object_button.outside_source_consult' })}
-							</Menu.Item>
-						</Menu>
-					}>
-				      <Icon type='plus-circle-o' />
-				      {formatMessage({ id: 'Treatments.create_object_button.treatment' })}
-			    </Dropdown.Button>
-					<span className='ant-divider' />
-		      <Button size="small" type='ghost' onClick={ () => this.showForm(FORM_TYPES.TreatmentSeries, record) }>
-			      {formatMessage({ id: 'common.action_edit' })}
-		      </Button>
-					<span className='ant-divider' />
-		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={ () => {
-			      deleteSeries(record)
-		      } } okText={formatMessage({ id: 'common.confirm_yes' })}
-		                  cancelText={formatMessage({ id: 'common.confirm_no' })}>
-		        <Button size='small' type='ghost'>
-			        {formatMessage({ id: 'common.action_delete' })}
-		        </Button>
-		      </Popconfirm>
-        </span>
-			),
-		}];*/
 		const { currentFormType, currentObject, currentSeries, modalLoading, } = this.state;
 		const formProps = {
 			loading: modalLoading,
@@ -542,7 +451,8 @@ class Treatments extends Component {
 					treatments={treatments}
 					updateObject={this.updateObject}
 					formatMessage={formatMessage}
-					deleteObject={this.deleteObj.bind(this)} />
+					deleteObject={this.deleteObj.bind(this)}
+				/>
 				
 				<BootstrapTable data={treatmentsCounts} keyField='id' hover consended >
 					<TableHeaderColumn dataField="past_treatments">{formatMessage({ id: 'Treatments.grid_headers.past_treatments' })}</TableHeaderColumn>
