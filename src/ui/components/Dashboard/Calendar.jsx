@@ -14,21 +14,9 @@ import FullCalendar from './fullcalendar';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import {
-	Table,
 	Icon,
-	Button,
-	Modal,
-	Input,
-	Form,
-	Row,
-	Col,
-	Popconfirm,
-	Select,
-	DatePicker,
-	Upload,
 	Checkbox,
 	notification,
-	message,
 	Dropdown,
 	Menu,
 	Spin,
@@ -114,9 +102,9 @@ class TreatmentsCalendar extends Component {
 			},
 		}}).catch(errorHandler);
 	};
-
-	editTreatment = (e) => {
-		this.setState({ currentTreatment: e.treatment });
+	
+	eventClick = (calEvent) => {
+		this.showForm(FORM_TYPES.Treatment, null, calEvent.treatment);
 	};
 
 	handleCancel = () => {
@@ -137,6 +125,9 @@ class TreatmentsCalendar extends Component {
 		if (values.repeat_weeks_trigger !== undefined) {
 			delete values.repeat_weeks_trigger;
 		}
+		
+		console.log( this.state);
+		
 		mutation = isNew ? this.props.createObject : this.props.updateObject;
 		
 		params = isNew
@@ -170,32 +161,6 @@ class TreatmentsCalendar extends Component {
 			notification.error({
 				message: this.context.intl.formatMessage({id}),
 			});
-		});
-	};
-
-	handleTreatmentSubmit = () => {
-		const form = this.treatmentForm;
-		const formatMessage = this.context.intl.formatMessage;
-		const errorHandler = e => {
-			this.setState({ modalLoading: false });
-			console.error(e);
-			let id = 'common.server_error';
-			if (e.graphQLErrors) {
-				id = e.graphQLErrors[0].message;
-			}
-			notification.error({
-				message: formatMessage({ id }),
-			});
-		};
-		form.validateFields((err, { repeat_weeks_trigger, ...values }) => {
-			if (err) {
-				return;
-			}
-			this.setState({ modalLoading: true });
-			this.props.mutate({ variables: { id: this.state.currentTreatment.id, object: { TreatmentInput: values } }}).then(() => {
-				form.resetFields();
-				this.setState({ modalLoading: false, currentTreatment: null });
-			}).catch(errorHandler);
 		});
 	};
 	
@@ -333,6 +298,7 @@ class TreatmentsCalendar extends Component {
 						}}
 						navLinks={true} // can click day/week names to navigate views
 						editable={true}
+						eventClick={this.eventClick}
 					/>
 				</Spin>
 			</div>
