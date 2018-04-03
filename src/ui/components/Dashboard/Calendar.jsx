@@ -104,7 +104,9 @@ class TreatmentsCalendar extends Component {
 	};
 	
 	eventClick = (calEvent) => {
-		this.showForm(FORM_TYPES.Treatment, null, calEvent.treatment);
+		console.log(calEvent);
+		console.log(FORM_TYPES.Treatment);
+		this.showForm(calEvent.treatment.__typename, null, calEvent.treatment);
 	};
 
 	handleCancel = () => {
@@ -178,7 +180,7 @@ class TreatmentsCalendar extends Component {
 	render() {
 		const {
 			data: {
-				loading, treatmentSeries, therapists = [], treatmentsList = [],
+				loading, treatmentSeries, therapists = [], treatmentsList = [], treatmentObjects = []
 			}, currentUser, currentClinic,
 		} = this.props;
 		const { currentTreatment, modalLoading, currentFormType, currentObject, currentSeries } = this.state;
@@ -195,7 +197,8 @@ class TreatmentsCalendar extends Component {
 
 		if (!currentClinic.id || !treatmentSeries) return null;
 		
-		let events = treatmentsList.filter(obj => obj.__typename === 'Treatment');
+		let events = treatmentsList.slice().concat(treatmentObjects);
+		// .filter(obj => obj.__typename === 'Treatment');
 		
 		events = events.map(treatment => {
 			const startDate = new Date(treatment.start_date);
