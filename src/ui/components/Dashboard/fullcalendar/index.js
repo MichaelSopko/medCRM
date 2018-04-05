@@ -40,6 +40,7 @@ export default class FullCalendar extends React.Component{
 	
 	render(){
 		this.root = this.props.id || 'ID' + this.date.getTime();
+		console.log(this.props);
 		return(
 			<div id={this.root}></div>
 		)

@@ -205,13 +205,13 @@ class TreatmentsCalendar extends Component {
 			const startDate = new Date(treatment.start_date || treatment.date);
 			const userTimezoneOffset = startDate.getTimezoneOffset() * 60000;
 			const endDate = new Date(treatment.end_date || treatment.date);
-			
 			return {
 				start: new Date(startDate.getTime() + userTimezoneOffset),
 				end: new Date(endDate.getTime() + userTimezoneOffset),
 				title: `${treatment.patient.first_name} ${treatment.patient.last_name} (${moment(startDate).format('H:mm')} — ${moment(endDate).format('H:mm')})`,
 				patient: treatment.patient,
 				id: treatment.id,
+				allDay: true,
 				treatment,
 			};
 		});
