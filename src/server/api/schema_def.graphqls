@@ -293,6 +293,7 @@ type StaffMeeting {
 	protocol: String
 	nextRecommendation: String
 	meetingPurpose: String
+	patient: Patient!
 }
 
 input StaffMeetingInput {
@@ -308,6 +309,7 @@ type OutsideSourceConsult {
 	consultantRole: String
 	date: Date
 	meetingSummary: String
+	patient: Patient!
 }
 
 input OutsideSourceConsultInput {

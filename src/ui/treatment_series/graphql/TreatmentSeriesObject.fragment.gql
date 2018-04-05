@@ -27,6 +27,11 @@ fragment TreatmentSeriesObjectFragment on TreatmentSeriesObject {
         previousDiagnoses
         educationalFramework
         observationSummary
+        patient {
+                    id
+                    first_name
+                    last_name
+                }
         therapists {
             id
             id_number
@@ -46,11 +51,21 @@ fragment TreatmentSeriesObjectFragment on TreatmentSeriesObject {
         protocol
         nextRecommendation
         meetingPurpose
+        patient {
+                            id
+                            first_name
+                            last_name
+                        }
     }
     ... on OutsideSourceConsult {
         id
         consultantRole
         date
         meetingSummary
+         patient {
+                                    id
+                                    first_name
+                                    last_name
+                                }
     }
 }

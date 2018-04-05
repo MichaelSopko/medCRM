@@ -197,13 +197,15 @@ class TreatmentsCalendar extends Component {
 
 		if (!currentClinic.id || !treatmentSeries) return null;
 		
-		let events = treatmentsList.slice().filter(obj => obj.patient);
-		// .filter(obj => obj.__typename === 'Treatment');
+		
+		
+		let events = treatmentsList.concat(treatmentObjects).filter(obj => obj.patient);
 		
 		events = events.map(treatment => {
-			const startDate = new Date(treatment.start_date);
+			const startDate = new Date(treatment.start_date || treatment.date);
 			const userTimezoneOffset = startDate.getTimezoneOffset() * 60000;
-			const endDate = new Date(treatment.end_date);
+			const endDate = new Date(treatment.end_date || treatment.date);
+			
 			return {
 				start: new Date(startDate.getTime() + userTimezoneOffset),
 				end: new Date(endDate.getTime() + userTimezoneOffset),

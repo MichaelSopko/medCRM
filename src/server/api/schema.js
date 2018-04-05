@@ -587,6 +587,13 @@ const resolvers = {
 				return [];
 			}
 		},
+		patient(obj, _, ctx) {
+			if (obj.patient_id) {
+				return ctx.Users.findOne(obj.patient_id);
+			} else {
+				return [];
+			}
+		},
 	},
 	StaffMeeting: {
 		async participants(obj, args, { TreatmentObject, Users }) {
@@ -600,33 +607,49 @@ const resolvers = {
 					last_name: '',
 				}));
 				return [...realParticipants, ...fakeParticipants];
-			} else {
-				return [];
 			}
+			
+			return [];
 		},
 		meetingPurpose(obj) {
 			return obj.meetingPurpose || null;
 		},
+		patient(obj, _, ctx) {
+			if (obj.patient_id) {
+				return ctx.Users.findOne(obj.patient_id);
+			}
+			
+			return [];
+		},
 	},
-  Therapist: {
-    clinic(user, _, context) {
-      return context.Clinics.findOne(user.clinic_id);
-    },
-  },
-  Patient: {
-    related_persons(user, _, ctx) {
-      return safeParse(user.related_persons);
-    },
-    files(user, _, ctx) {
-      return ctx.Users.getPatientFiles(user.id);
-    },
-    diagnoses(user, _, ctx) {
-      return ctx.Users.getDiagnoses(user.id);
-    },
-    treatment_summary(user, _, ctx) {
-      return ctx.Users.getTreatmentSummary(user.id);
-    },
-  },
+	OutsideSourceConsult: {
+		patient(obj, _, ctx) {
+			if (obj.patient_id) {
+				return ctx.Users.findOne(obj.patient_id);
+			}
+			
+			return [];
+		},
+	},
+	Therapist: {
+		clinic(user, _, context) {
+			return context.Clinics.findOne(user.clinic_id);
+		},
+	},
+	Patient: {
+		related_persons(user, _, ctx) {
+			return safeParse(user.related_persons);
+		},
+		files(user, _, ctx) {
+			return ctx.Users.getPatientFiles(user.id);
+		},
+		diagnoses(user, _, ctx) {
+			return ctx.Users.getDiagnoses(user.id);
+		},
+		treatment_summary(user, _, ctx) {
+			return ctx.Users.getTreatmentSummary(user.id);
+		},
+	},
   Diagnose: {
     async fillers(diagnose, _, context) {
       if (!diagnose || !diagnose.fillers_ids) {
