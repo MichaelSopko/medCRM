@@ -176,6 +176,12 @@ class TreatmentsCalendar extends Component {
 		this.props.onTherapistChange(id);
 		this.props.data.refetch();
 	};
+	
+	
+	componentWillReceiveProps(nextProps){
+		console.log('nextProps');
+		console.log(nextProps);
+	}
 
 	render() {
 		const {
@@ -195,9 +201,9 @@ class TreatmentsCalendar extends Component {
 			therapists,
 		};
 
-		if (!currentClinic.id || !treatmentSeries) return null;
+		if (!currentClinic.id) return null;
 		
-		
+		console.log(treatmentObjects);
 		
 		let events = treatmentsList.concat(treatmentObjects).filter(obj => obj.patient);
 		
@@ -208,10 +214,10 @@ class TreatmentsCalendar extends Component {
 			return {
 				start: new Date(startDate.getTime() + userTimezoneOffset),
 				end: new Date(endDate.getTime() + userTimezoneOffset),
-				title: `${treatment.patient.first_name} ${treatment.patient.last_name} (${moment(startDate).format('H:mm')} — ${moment(endDate).format('H:mm')})`,
+				title: `${treatment.__typename} ${treatment.patient.first_name} ${treatment.patient.last_name} (${moment(startDate).format('H:mm')} — ${moment(endDate).format('H:mm')})`,
 				patient: treatment.patient,
 				id: treatment.id,
-				allDay: true,
+				// allDay: true,
 				treatment,
 			};
 		});
@@ -337,7 +343,7 @@ const TreatmentsCalendarWithData = compose(
 					clinic_id: currentClinic.id
 				}),
 		}),
-		skip: ({ currentClinic, patientId }) => !currentClinic && !patientId,
+		skip: ({ currentClinic, patientId }) => !currentClinic,
 	}),
 	graphql(MUTATION_ADD_TREATMENT, getOptions('createObject')),
 	graphql(MUTATION_EDIT_TREATMENT, getOptions('updateObject')),
