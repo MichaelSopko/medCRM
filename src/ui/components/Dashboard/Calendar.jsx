@@ -203,7 +203,7 @@ class TreatmentsCalendar extends Component {
 
 		if (!currentClinic.id) return null;
 		
-		console.log(treatmentObjects);
+		console.log(treatmentObjects.length);
 		
 		let events = treatmentsList.concat(treatmentObjects).filter(obj => obj.patient);
 		
