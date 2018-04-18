@@ -365,7 +365,7 @@ export const TreatmentForm = Form.create()(
 						style={ { display: !isTherapist ? 'none' : 'flex' } }
 						hasFeedback
 					>
-						<div>{ (isEditing ? values.therapists : [currentUser]).map(user => `${user.first_name} ${user.last_name}`).join(', ') }</div>
+						<div>{ (isEditing ? values.therapists || [] : [currentUser]).map(user => `${user.first_name} ${user.last_name}`).join(', ') }</div>
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
