@@ -14,7 +14,8 @@ import React from 'react';
 
 export const TreatmentForm = Form.create()(
 	(props) => {
-		let { visible, onCancel, onSubmit, form, loading, therapists, values, formatMessage, currentUser, currentClinic } = props;
+		let { visible, onCancel, onSubmit, form, loading, therapists,
+			values, formatMessage, currentUser, currentClinic } = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
 			labelCol: { span: 6 },
@@ -32,28 +33,27 @@ export const TreatmentForm = Form.create()(
 				...values,
 				start_date: moment(new Date()),
 				end_date: undefined,
-			}
+			};
 		} else {
 			values = {
 				...values,
 				start_date: moment(values.start_date).utc(),
 				end_date: moment(values.end_date).utc(),
-			}
+			};
 		}
 
 		const onStartDateChange = () => {
 			setTimeout(() => {
 				const m = moment(form.getFieldValue('start_date')).add(currentClinic.treatment_duration, 'minutes');
-				console.log(m);
 				form.setFieldsValue({ end_date: {
 					year: m.year().toString(),
 					date: m.date().toString(),
 					month: m.month().toString(),
 					hours: m.hours().toString(),
 					minutes: m.minutes().toString(),
-				} })
+				} });
 			}, 1);
-		}
+		};
 
 		const defaultStartMoment = moment(values.start_date || undefined);
 		const defaultEndMoment = moment(values.start_date || undefined).add(currentClinic.treatment_duration, 'minutes');
@@ -365,7 +365,7 @@ export const TreatmentForm = Form.create()(
 						style={ { display: !isTherapist ? 'none' : 'flex' } }
 						hasFeedback
 					>
-						<div>{ (isEditing ? therapists : [currentUser]).map(user => `${user.first_name} ${user.last_name}`).join(', ') }</div>
+						<div>{ (isEditing ? values.therapists : [currentUser]).map(user => `${user.first_name} ${user.last_name}`).join(', ') }</div>
 					</Form.Item> }
 					{ <Form.Item
 						{...formItemLayout}
