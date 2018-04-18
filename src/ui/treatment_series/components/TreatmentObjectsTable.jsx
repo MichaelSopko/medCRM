@@ -88,6 +88,17 @@ export const TreatmentObjectsTable = ({ treatments, deleteObject, updateObject, 
 		</div>
 	);
 	
+	const sortDate = (a, b, order) => {
+		let aDate = new Date(a.start_date || a.date);
+		let bDate = new Date(b.start_date || b.date);
+		
+		if (order === 'desc') {
+			return aDate - bDate;
+		}
+		
+		return bDate - aDate;
+	};
+	
 	const options = {
 		onRowClick,
 		renderPaginationPanel,
@@ -108,7 +119,7 @@ export const TreatmentObjectsTable = ({ treatments, deleteObject, updateObject, 
 			<BootstrapTable data={treatments} keyField="id" hover consended pagination options={options}>
 				<TableHeaderColumn width="100px" dataField="index" dataSort dataFormat={renderIndex} caretRender={getCaret}>{formatMessage({ id: 'common.field_id' })}</TableHeaderColumn>
 				<TableHeaderColumn dataField="__typename" dataFormat={renderLabel} dataSort caretRender={getCaret}>{formatMessage({ id: 'common.field_type' })}</TableHeaderColumn>
-				<TableHeaderColumn dataField="date" dataFormat={renderHeader} dataSort caretRender={getCaret}>{formatMessage({ id: 'Treatments.field_start_date_header' })}</TableHeaderColumn>
+				<TableHeaderColumn dataField="date" sortFunc={sortDate} dataFormat={renderHeader} dataSort caretRender={getCaret}>{formatMessage({ id: 'Treatments.field_start_date_header' })}</TableHeaderColumn>
 				<TableHeaderColumn dataField="therapistName" dataSort dataFormat={renderTherapist} caretRender={getCaret}>{formatMessage({ id: 'Treatments.field_therapists' })}</TableHeaderColumn>
 				<TableHeaderColumn width="100px" dataFormat={editRender}>{formatMessage({ id: 'common.field_actions' })}</TableHeaderColumn>
 			</BootstrapTable>
