@@ -12,6 +12,7 @@ module.exports = {
 			user: process.env.DATABASE_USER || 'root',
 			password: process.env.DATABASE_PASSWORD || '',
 			database: process.env.DATABASE_NAME || 'clinic-prod',
+			insecureAuth : true,
 		},
 		seeds: {
 			directory: './src/database/seeds'
@@ -27,7 +28,8 @@ module.exports = {
 			host: process.env.DATABASE_HOST || '127.0.0.1',
 			user: process.env.DATABASE_USER || 'root',
 			password: process.env.DATABASE_PASSWORD || '',
-			database: process.env.DATABASE_NAME || 'clinic-app'
+			database: process.env.DATABASE_NAME || 'clinic-app',
+			insecureAuth : true,
 		},
 		seeds: {
 			directory: './src/database/seeds'
