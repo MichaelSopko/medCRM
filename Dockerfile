@@ -7,7 +7,7 @@ ENV PORT $PORT
 
 ARG NODE_ENV=production
 ENV NODE_ENV $NODE_ENV
-ENV TOOL_NODE_FLAGS="--max-old-space-size=2048"
+ENV TOOL_NODE_FLAGS="--max-old-space-size=4096"
 
 ARG APP_DIR=/usr/src/app
 ENV APP_DIR $APP_DIR
