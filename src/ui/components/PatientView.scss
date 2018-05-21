@@ -92,3 +92,20 @@
 	position: relative;
 	top: 36px;
 }
+
+.rtl {
+	.Details {
+		&__fields {
+			width: 50%;
+		}
+		&__header {
+			display: flex;
+		}
+		&__name {
+			width: 200px;
+		}
+		&__age {
+			flex-grow: 1;
+		}
+	}
+}
