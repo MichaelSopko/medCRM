@@ -351,6 +351,14 @@ const RelatedPersonsTable = (
 			</span>
 		);
 	};
+	
+	const typeRender = (cell, record) => {
+		return (
+			<span>
+				{formatMessage({ id: `related_persons.${record.type}` })}
+			</span>
+		);
+	};
 
 	const onRowClick = (record, index, i, event) => {
 		// dont edit when button clicked
@@ -386,7 +394,7 @@ const RelatedPersonsTable = (
 				data={patient.related_persons.map((p, _id) => ({ ...p, _id }))}
 				keyField="_id" hover consended options={options}
 			>
-				<TableHeaderColumn width="10%" dataField="type" dataSort caretRender={getCaret}>
+				<TableHeaderColumn width="10%" dataFormat={typeRender} dataField="type" dataSort caretRender={getCaret}>
 					{formatMessage({ id: 'Patients.field_person_type' })}
 				</TableHeaderColumn>
 				<TableHeaderColumn width="20%" dataField="name" dataSort caretRender={getCaret}>
