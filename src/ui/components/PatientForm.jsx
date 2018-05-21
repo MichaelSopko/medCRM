@@ -263,7 +263,7 @@ export default Form.create()(
 										{getFieldDecorator(`related_persons[0].description`, {
 											initialValue: values.description,
 											validateTrigger: 'onBlur',
-											rules: [{ required: hasFirstPerson, message: formatMessage({ id: 'Patients.field_person_description_error' }) }],
+											rules: [{ message: formatMessage({ id: 'Patients.field_person_description_error' }) }],
 											
 										})(
 											<Input placeholder={formatMessage({ id: 'Patients.field_person_description' })} />,
