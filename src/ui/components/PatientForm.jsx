@@ -44,6 +44,7 @@ export default Form.create()(
 		}) : onCancel();
 
 		const hasFirstPerson = form.getFieldValue('related_persons[0].type') !== undefined;
+		const checkEmail = form.getFieldValue('related_persons[0].receive_updates') === true;
 		const formLayout = 'vertical';
 
 		return (
@@ -276,7 +277,7 @@ export default Form.create()(
 										{getFieldDecorator(`related_persons[0].email`, {
 											validateTrigger: 'onBlur',
 											initialValue: values.email,
-											rules: [{ type: 'email', message: formatMessage({ id: 'common.field_email_error' }) }],
+											rules: [{ required: checkEmail, type: 'email', message: formatMessage({ id: 'common.field_email_error' }) }],
 										})(
 											<Input type='email' placeholder={formatMessage({ id: 'common.field_email' })} />,
 										)}
