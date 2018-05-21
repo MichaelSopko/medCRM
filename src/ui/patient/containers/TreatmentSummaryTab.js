@@ -252,7 +252,7 @@ class TreatmentSummaryTab extends Component {
 					object={selectedItem}
 					onSubmit={this.handleFormSubmit} />
 				<div className='PatientObjectTab__Actions'>
-					<Button onClick={this.openForm} type='primary'>{formatMessage({ id: 'common.action_create' })}</Button>
+					<Button onClick={this.openForm} type='primary'>{formatMessage({ id: 'TreatmentSummaryTab.create_title' })}</Button>
 				</div>
 				<BootstrapTable data={patient.treatment_summary} keyField='id' hover consended options={options} pagination>
 					<TableHeaderColumn dataField='date' dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.field_datetime' })}</TableHeaderColumn>
