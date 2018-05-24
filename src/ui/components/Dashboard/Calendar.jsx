@@ -287,6 +287,7 @@ class TreatmentsCalendar extends Component {
 					<FullCalendar
 						isRTL={!__DEV__}
 						id="ghjk"
+						locale={!__DEV__ ? 'he' : 'en'}
 						header = {{
 							left: 'prev,next today, month, basicWeek, basicDay,' +
 							' agenda',
@@ -305,7 +306,7 @@ class TreatmentsCalendar extends Component {
 							agenda: formatMessage({id: 'Calendar.agenda'}),
 						}}
 						navLinks={true} // can click day/week names to navigate views
-						editable={true}
+						// editable={true}
 						eventClick={this.eventClick}
 					/>
 				</Spin>
