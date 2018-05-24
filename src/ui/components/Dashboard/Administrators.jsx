@@ -11,12 +11,10 @@ import EDIT_ADMINISTRATOR_MUTATION from '../../graphql/AdministratorsEditMutatio
 
 const EntityForm = Form.create()(
 	(props) => {
-		const { visible, onCancel, onSubmit, form, loading, values = {}, clinics = [], formatMessage } = props;
+		const { visible, onCancel, onSubmit, form, loading, values = {},
+			clinics = [], formatMessage } = props;
 		const { getFieldDecorator } = form;
-		const formItemLayout = {
-			/*labelCol: { span: 6 },
-			wrapperCol: { span: 14 },*/
-		};
+		const formItemLayout = {};
 		const isEditing = !!Object.keys(values).length;
 		const checkForConfirm = () => form.isFieldsTouched() ? Modal.confirm({
 			title: formatMessage({ id: 'common.modal_save_confirm.title' }),
@@ -75,8 +73,10 @@ const EntityForm = Form.create()(
 							}],
 						})(
 							<Select>
-								{clinics.map(clinic => <Select.Option key={clinic.id}
-								                                      value={clinic.id.toString()}>{clinic.name}</Select.Option>)}
+								{clinics.map(
+									clinic => <Select.Option key={clinic.id} value={clinic.id.toString()}>
+										{clinic.name}
+									</Select.Option>)}
 							</Select>,
 						)}
 					</Form.Item>}
@@ -245,6 +245,7 @@ class Administrators extends Component {
 			prePage: 'Previous', // Previous page button text
 			nextPage: 'Next', // Next page button text
 			alwaysShowAllBtns: true,
+			noDataText: formatMessage({id: 'common.no_data'}),
 		};
 		
 		return (
@@ -273,17 +274,6 @@ class Administrators extends Component {
 							</Button>
 						</div>
 					</div>
-					{/*
-					<Table
-						onRowClick={(record, index, event) => {
-							// dont edit when button clicked
-							if (event.target.tagName === 'BUTTON' || event.target.tagName === 'A'
-							|| event.target.parentNode.tagName === 'BUTTON') {
-								return;
-							}
-							this.editEntity(record);
-						}} dataSource={administrators} columns={columns} loading={loading} rowKey='id'/>
-					*/}
 					
 					<BootstrapTable data={administrators} keyField='id' hover consended options={options}
 									pagination>

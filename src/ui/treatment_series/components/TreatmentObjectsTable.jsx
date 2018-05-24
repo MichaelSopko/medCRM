@@ -105,6 +105,7 @@ export const TreatmentObjectsTable = ({ treatments, deleteObject, updateObject, 
 		prePage: 'Previous', // Previous page button text
 		nextPage: 'Next', // Next page button text
 		alwaysShowAllBtns: true,
+		noDataText: formatMessage({id: 'common.no_data'}),
 	};
 	
 	treatments = treatments.map((record) => {

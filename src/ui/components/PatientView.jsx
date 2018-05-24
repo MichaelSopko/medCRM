@@ -250,6 +250,7 @@ const FilesTab = ({ patient, onAddFile, onDeleteFile }, context) => {
 		prePage: 'Previous', // Previous page button text
 		nextPage: 'Next', // Next page button text
 		alwaysShowAllBtns: true,
+		noDataText: formatMessage({id: 'common.no_data'}),
 	};
 
 	return <div>
@@ -386,6 +387,7 @@ const RelatedPersonsTable = (
 
 	const options = {
 		onRowClick,
+		noDataText: formatMessage({id: 'common.no_data'}),
 	};
 
 	return (
@@ -573,7 +575,10 @@ class PatientView extends Component {
 
 		const { subscribeToMore } = this.props.data;
 
-		if (!nextProps.data.loading && nextProps.data.patient && nextProps.data.patient.id && (!this.subscriptions || !this.props.data.patient || this.props.data.patient.id !== nextProps.data.patient.id)) {
+		if (!nextProps.data.loading && nextProps.data.patient && nextProps.data.patient.id
+			&& (!this.subscriptions || !this.props.data.patient
+			|| this.props.data.patient.id !== nextProps.data.patient.id)
+		) {
 			this.subscriptions = [
 				subscribeToMore({
 					document: PATIENT_UPDATED_SUBSCRIPTION,
@@ -735,13 +740,6 @@ class PatientView extends Component {
 		const archivedForNow = moment(patient.archived_date).diff(moment(), 'minutes');
 		const minutes = currentClinic.archive_time - (-archivedForNow);
 		const canUnarchive = currentUser.role === 'SYSTEM_ADMIN' || (!currentClinic.archive_time || minutes <= 0);
-
-		console.log(archivedForNow, minutes, canUnarchive, currentClinic);
-		
-			
-			// const onDelete = () => {
-			// 	this.props.deleteAdministrator(record);
-			// };
 			
 		const checkForConfirm = () => Modal.confirm({
 			title: formatMessage({id: 'common.confirm_message'}),
@@ -818,19 +816,19 @@ class PatientView extends Component {
 						className='PatientView__Tab'
 						tab={formatMessage({ id: 'Patients.tabs.diagnoses' })}
 						key='diagnoses'>
-						<DiagnoseTab patient={patient}/>
+						<DiagnoseTab patient={patient} />
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
 						tab={formatMessage({ id: 'Patients.tabs.treatments' })}
 						key='treatments'>
-						<TreatmentsTab patient={patient}/>
+						<TreatmentsTab patient={patient} />
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'
 						tab={formatMessage({ id: 'Patients.tabs.treatment_summary' })}
 						key='treatment_summary'>
-						<TreatmentSummaryTab patient={patient}/>
+						<TreatmentSummaryTab patient={patient} />
 					</TabPane>
 					<TabPane
 						className='PatientView__Tab'

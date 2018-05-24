@@ -162,9 +162,17 @@ body {
       opacity: 0.5;
     }
   }
-
-
+  .react-bs-table-no-data {
+    padding: 8px;
+  }
 }
+
+.react-bs-table table td:last-child {
+  &.react-bs-table-no-data {
+    padding: 8px;
+  }
+}
+
 .react-bs-table table td{
   padding: 8px;
   word-break: break-all;

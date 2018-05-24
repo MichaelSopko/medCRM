@@ -236,6 +236,7 @@ class TreatmentSummaryTab extends Component {
 			prePage: 'Previous', // Previous page button text
 			nextPage: 'Next', // Next page button text
 			alwaysShowAllBtns: true,
+			noDataText: formatMessage({id: 'common.no_data'}),
 		};
 
 		return (

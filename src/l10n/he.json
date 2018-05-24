@@ -313,9 +313,6 @@
     "field_id_number_error_duplicate": "מספר זהות כבר קיים במערכת",
     "field_email_error_duplicate": "אימייל כבר קיים במערכת",
     "server_error": "שגיאה כללית",
-    "field_licence": "מספר רשיון",
-    "field_licence_error": "נא להזין מספר רשיון",
-    "server_error": "Server error",
     "field_disabled": "חסום",
     "field_archived": "נשלח לארכיון",
     "field_year": "שנה",
@@ -328,6 +325,7 @@
     "action_unarchive": "הוצא מארכיון",
     "field_date": "Date",
     "field_required": "נא למלא שדה זה",
+    "no_data": "לא קיים מידע",
     "gender": {
       "field_name": "מין",
       "field_error": "נא לבחור מין",

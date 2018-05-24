@@ -280,6 +280,7 @@
     "field_day": "Day",
     "field_date": "Date",
     "field_required": "Required field error message",
+    "no_data": "There is no data to display",
     "modal_save_confirm": {
       "ok": "Close",
       "cancel": "Return to editing",

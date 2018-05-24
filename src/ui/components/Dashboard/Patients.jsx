@@ -330,10 +330,10 @@ const PatientsWithApollo = withApollo(compose(
 	connect(({ currentClinic, currentUser }) => ({ currentClinic, currentUser })),
 	graphql(gql`
 		query patients($clinic_id: ID!) {
-				patients(clinic_id: $clinic_id) {
-						id
-				}
-		}
+            patients(clinic_id: $clinic_id) {
+                id
+            }
+        }
 	`, {
 		options: ({ currentClinic, showArchived }) => ({
 			variables: { clinic_id: currentClinic.id, archived: showArchived },

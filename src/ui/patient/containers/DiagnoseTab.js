@@ -129,10 +129,7 @@ class DiagnoseTab extends Component {
 	renderFormFields = (form, object) => {
 		const formatMessage = this.context.intl.formatMessage;
 		const { getFieldDecorator } = form;
-		const formItemLayout = {
-			/*labelCol: { span: 6 },
-			wrapperCol: { span: 14 },*/
-		};
+		const formItemLayout = {};
 
 		return (
 			<Tabs animated={false}>
@@ -323,6 +320,7 @@ class DiagnoseTab extends Component {
 			prePage: 'Previous', // Previous page button text
 			nextPage: 'Next', // Next page button text
 			alwaysShowAllBtns: true,
+			noDataText: formatMessage({id: 'common.no_data'}),
 		};
 
 		return (
@@ -342,17 +340,6 @@ class DiagnoseTab extends Component {
 				<div className='PatientObjectTab__Actions'>
 					<Button onClick={this.openForm} type='primary'>{formatMessage({ id: 'DiagnoseTab.create_title' })}</Button>
 				</div>
-				{/*
-				<Table
-					onRowClick={(record, index, event) => {
-						// dont edit when button clicked
-						if (event.target.tagName === 'BUTTON' || event.target.tagName === 'A'
-						 || event.target.parentNode.tagName === 'BUTTON') {
-							return;
-						}
-						this.openEditForm(record);
-					}} dataSource={patient.diagnoses} columns={columns} rowKey='id' />
-				*/}
 				
 				<BootstrapTable data={patient.diagnoses} keyField='id' hover consended options={options} pagination>
 					<TableHeaderColumn dataField='date' dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.field_datetime' })}</TableHeaderColumn>

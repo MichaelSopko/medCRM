@@ -17,10 +17,7 @@ const EntityForm = Form.create()(
 	(props) => {
 		const { visible, onCancel, onSubmit, form, loading, values = {}, formatMessage } = props;
 		const { getFieldDecorator } = form;
-		const formItemLayout = {
-			/*labelCol: { span: 6 },
-			wrapperCol: { span: 14 },*/
-		};
+		const formItemLayout = {};
 		const isEditing = !!Object.keys(values).length;
 		const checkForConfirm = () => form.isFieldsTouched() ? Modal.confirm({
 			title: formatMessage({ id: 'common.modal_save_confirm.title' }),
@@ -333,6 +330,7 @@ class Therapists extends Component {
 			prePage: 'Previous', // Previous page button text
 			nextPage: 'Next', // Next page button text
 			alwaysShowAllBtns: true,
+			noDataText: formatMessage({id: 'common.no_data'}),
 		};
 		
 		const columns = [{

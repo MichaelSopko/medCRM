@@ -411,41 +411,6 @@ class Treatments extends Component {
 						</Dropdown.Button>
 					</div>
 				</div>
-				{/*
-				<Table
-					expandedRowRender={record => <TreatmentObjectsTable
-						treatments={record.objects}
-						updateObject={this.updateObject}
-						formatMessage={formatMessage}
-						deleteObject={deleteObject} />
-					}
-					dataSource={treatmentSeries}
-					columns={columns}
-					loading={loading}
-					rowKey={item => item.id + item.__typename} />
-					*/}
-				
-				{/*<BootstrapTable
-					data={treatmentSeries}
-					keyField='id'
-					expandableRow={ this.isExpandableRow }
-					expandComponent={record => <TreatmentObjectsTable
-						treatments={record.treatments}
-						updateObject={this.updateObject}
-						formatMessage={formatMessage}
-						deleteObject={deleteObject} />
-					}
-					hover consended options={options} pagination
-				>
-					<TableHeaderColumn width="20%" dataField="name" dataSort caretRender={ getCaret }>{formatMessage({ id: 'common.field_name' })}</TableHeaderColumn>
-					<TableHeaderColumn width="10%" dataField="past_treatments" dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.grid_headers.past_treatments' })}</TableHeaderColumn>
-					<TableHeaderColumn width="10%" dataField="future_treatments" dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.grid_headers.future_treatments' })}</TableHeaderColumn>
-					<TableHeaderColumn width="10%" dataField="total_treatments" dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.grid_headers.total_treatments' })}</TableHeaderColumn>
-					<TableHeaderColumn width="10%" dataField="school_observations" dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.grid_headers.school_observations' })}</TableHeaderColumn>
-					<TableHeaderColumn width="10%" dataField="staff_meetings" dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.grid_headers.staff_meetings' })}</TableHeaderColumn>
-					<TableHeaderColumn width="10%" dataField="outside_source_consults" dataSort caretRender={ getCaret }>{formatMessage({ id: 'Treatments.grid_headers.outside_source_consults' })}</TableHeaderColumn>
-					<TableHeaderColumn width="200px" dataFormat={this.editRender.bind(this)}>{formatMessage({ id: 'common.field_actions' })}</TableHeaderColumn>
-				</BootstrapTable>*/}
 				
 				<TreatmentObjectsTable
 					treatments={treatments}

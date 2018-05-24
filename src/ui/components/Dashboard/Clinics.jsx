@@ -236,7 +236,7 @@ class Clinics extends Component {
 		});
 	};
 	
-	editEntity = entity => {
+	editEntity = (entity) => {
 		this.setState({
 			modalOpened: true,
 			activeEntity: entity,
@@ -341,6 +341,7 @@ class Clinics extends Component {
 			prePage: 'Previous', // Previous page button text
 			nextPage: 'Next', // Next page button text
 			alwaysShowAllBtns: true,
+			noDataText: formatMessage({id: 'common.no_data'}),
 		};
 		
 		return (
@@ -368,25 +369,15 @@ class Clinics extends Component {
 							</Button>
 						</div>
 					</div>
-					{/*<Table
-					 onRowClick={(record, index, event) => {
-					 // dont edit when button clicked
-					 if(event.target.tagName === 'BUTTON' || event.target.tagName === 'A'  || event.target.parentNode.tagName === 'BUTTON') {
-					 return;
-					 }
-					 this.editEntity(record);
-					 }}
-					 dataSource={clinics} columns={columns} loading={loading} rowKey='id'
-					 />*/}
 					
-					<BootstrapTable data={clinics} keyField='id' hover consended options={options}
-									pagination>
+					<BootstrapTable data={clinics} keyField='id' hover consended options={options} pagination>
 						<TableHeaderColumn dataField='name' dataSort caretRender={ getCaret }>{formatMessage({id: 'common.field_name'})}</TableHeaderColumn>
 						<TableHeaderColumn dataField='address' dataSort caretRender={ getCaret }>{formatMessage({id: 'common.field_address'})}</TableHeaderColumn>
 						<TableHeaderColumn dataField='phone' dataSort caretRender={ getCaret }>{formatMessage({id: 'common.field_phone'})}</TableHeaderColumn>
 						<TableHeaderColumn dataField='email' dataSort caretRender={ getCaret }>{formatMessage({id: 'common.field_email'})}</TableHeaderColumn>
-						<TableHeaderColumn width="100px"
-							dataFormat={this.editRender.bind(this)}>{formatMessage({id: 'common.field_actions'})}</TableHeaderColumn>
+						<TableHeaderColumn width="100px" dataFormat={this.editRender.bind(this)}>
+							{formatMessage({id: 'common.field_actions'})}
+						</TableHeaderColumn>
 					</BootstrapTable>
 				</div>
 			</section>
