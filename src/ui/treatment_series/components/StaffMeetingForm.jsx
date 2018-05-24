@@ -2,12 +2,8 @@ import {
 	Form,
 	Modal,
 	Input,
-	Switch,
 	Select,
-	Col,
-	Row,
 	DatePicker,
-	Tabs,
 } from 'antd';
 import React from 'react';
 import moment from 'moment';
@@ -82,7 +78,7 @@ const StaffMeetingForm = (props) => {
 					{getFieldDecorator('date', {
 						validateTrigger: 'onBlur', rules: [],
 					})(
-						<DatePicker showTime format="DD.MM.YYYY HH:mm" />,
+						<DatePicker showTime format="DD.MM.YYYY" />,
 					)}
 				</Form.Item>
 				<Form.Item

@@ -240,13 +240,13 @@
       }
     },
     "staff_meeting": {
-      "create_header": "חדש",
+      "create_header": "ישיבת צוות חדשה",
       "update_header": "עריכה",
       "field": {
         "participants": "משתתפים",
         "nextRecommendation": "המלצות לפגישה הבאה",
         "protocol": "פירוט הישיבה",
-        "meetingPurpose": "meeting purpose"
+        "meetingPurpose": "מטרת ישיבת הצוות"
       }
     },
     "grid_headers": {
