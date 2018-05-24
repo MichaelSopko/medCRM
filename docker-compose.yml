@@ -11,7 +11,6 @@ services:
     environment:
       PORT: 3000
       NODE_ENV: production
-      NODE_OPTIONS: "--max-old-space-size=300"
       ADMIN_PASSWORD: 'admin'
       DATABASE_HOST: 'mysql-app'
       DATABASE_USER: 'rootUser'
@@ -38,7 +37,6 @@ services:
     environment:
       PORT: 3000
       NODE_ENV: development
-      NODE_OPTIONS: "--max-old-space-size=300"
       ADMIN_PASSWORD: 'admin'
       DATABASE_HOST: 'mysql-app'
       DATABASE_USER: 'rootUser'
