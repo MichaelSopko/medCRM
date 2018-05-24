@@ -13,10 +13,7 @@ const EntityForm = Form.create()(
   (props) => {
     const { visible, onCancel, onSubmit, form, loading, values = {}, formatMessage } = props;
     const { getFieldDecorator } = form;
-    const formItemLayout = {
-      /*labelCol: { span: 6 },
-      wrapperCol: { span: 14 },*/
-    };
+    const formItemLayout = {};
     const isEditing = !!Object.keys(values).length;
     const checkForConfirm = () => form.isFieldsTouched() ? Modal.confirm({
       title: formatMessage({ id: 'common.modal_save_confirm.title' }),
@@ -125,8 +122,9 @@ const EntityForm = Form.create()(
               initialValue: values.treatment_duration,
               validateTrigger: 'onBlur',
               rules: [{
-                required: true,
-              }],
+              	required: true,
+				message: formatMessage({ id: 'common.field_required' }),
+			  }],
             })(
               <Input type="number" />,
             )}
@@ -141,6 +139,7 @@ const EntityForm = Form.create()(
               validateTrigger: 'onBlur',
               rules: [{
                 required: true,
+				message: formatMessage({ id: 'common.field_required' }),
               }],
             })(
               <Input type="number" />,
@@ -156,6 +155,7 @@ const EntityForm = Form.create()(
               validateTrigger: 'onBlur',
               rules: [{
                 required: true,
+				message: formatMessage({ id: 'common.field_required' }),
               }],
             })(
               <Input type="number" />,

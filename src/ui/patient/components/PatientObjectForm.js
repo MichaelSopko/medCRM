@@ -63,6 +63,7 @@ const PatientObjectForm = (props, context) => {
 							validateTrigger: 'onBlur',
 							rules: [{
 								required: true,
+								message: formatMessage({ id: 'common.field_required' }),
 							}],
 						})(
 							<DatePicker showTime />,
@@ -78,6 +79,7 @@ const PatientObjectForm = (props, context) => {
 							validateTrigger: 'onBlur',
 							rules: [{
 								required: true,
+								message: formatMessage({ id: 'common.field_required' }),
 							}],
 						})(
 							<Select mode="tags">
@@ -99,7 +101,10 @@ const PatientObjectForm = (props, context) => {
 								{getFieldDecorator('patient_age.years', {
 									initialValue: age.years,
 									validateTrigger: 'onBlur',
-									rules: [{ required: true }],
+									rules: [{
+										required: true,
+										message: formatMessage({ id: 'common.field_required' }),
+									}],
 								})(
 									<Input type='number' />,
 								)}
@@ -109,7 +114,10 @@ const PatientObjectForm = (props, context) => {
 								{getFieldDecorator('patient_age.months', {
 									initialValue: age.months,
 									validateTrigger: 'onBlur',
-									rules: [{ required: true }],
+									rules: [{
+										required: true,
+										message: formatMessage({ id: 'common.field_required' }),
+									}],
 								})(
 									<Input type='number' />,
 								)}
@@ -119,7 +127,10 @@ const PatientObjectForm = (props, context) => {
 								{getFieldDecorator('patient_age.days', {
 									initialValue: age.days,
 									validateTrigger: 'onBlur',
-									rules: [{ required: true }],
+									rules: [{
+										required: true,
+										message: formatMessage({ id: 'common.field_required' }),
+									}],
 								})(
 									<Input type='number' />,
 								)}

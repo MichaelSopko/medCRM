@@ -279,6 +279,7 @@
     "field_month": "Month",
     "field_day": "Day",
     "field_date": "Date",
+    "field_required": "Required field error message",
     "modal_save_confirm": {
       "ok": "Close",
       "cancel": "Return to editing",

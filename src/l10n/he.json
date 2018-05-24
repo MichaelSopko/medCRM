@@ -327,6 +327,7 @@
     "action_archive": "שלח לארכיון",
     "action_unarchive": "הוצא מארכיון",
     "field_date": "Date",
+    "field_required": "נא למלא שדה זה",
     "gender": {
       "field_name": "מין",
       "field_error": "נא לבחור מין",
