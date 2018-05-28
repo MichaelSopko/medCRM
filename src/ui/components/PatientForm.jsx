@@ -258,7 +258,7 @@ export default Form.create()(
 									</Form.Item>
 									<Form.Item
 										hasFeedback
-										label={formatMessage({ id: 'common.field_description' })}
+										label={formatMessage({ id: 'Patients.field_person_description' })}
 									>
 										{getFieldDecorator(`related_persons[0].description`, {
 											initialValue: values.description,
