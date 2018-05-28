@@ -235,6 +235,11 @@ body.rtl, html[dir="rtl"] {
 		}
 	}
 
+	.ant-confirm .ant-confirm-btns button + button {
+		margin-left: 0;
+		margin-right: 10px;
+	}
+
 	.ant-modal-title {
 		text-align: right;
 	}
