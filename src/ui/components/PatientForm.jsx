@@ -121,7 +121,6 @@ export default Form.create()(
 										initialValue: values.phone,
 										validateTrigger: 'onBlur', rules: [{
 											pattern: /^\d{2,9}-?\d{2,9}?-?\d{0,9}$/,
-											required: true,
 											message: formatMessage({ id: 'common.field_phone_error' }),
 										}],
 									})(
