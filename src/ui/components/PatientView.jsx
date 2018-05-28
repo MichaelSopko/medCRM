@@ -201,6 +201,23 @@ const FilesTab = ({ patient, onAddFile, onDeleteFile }, context) => {
 		);
 	};
 	
+	function formatBytes(bytes,decimals) {
+		if(bytes == 0) return '0 Bytes';
+		var k = 1024,
+			dm = decimals || 2,
+			sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+			i = Math.floor(Math.log(bytes) / Math.log(k));
+		return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+	}
+	
+	const sizeRender = (text, record) => {
+		return (
+			<span>
+				{formatBytes(record.size)}
+			</span>
+		);
+	};
+	
 	const editRender = (cell, record) => {
 		const onDelete = () => {
 			onDeleteFile(record.id)
@@ -269,7 +286,7 @@ const FilesTab = ({ patient, onAddFile, onDeleteFile }, context) => {
 		</div>
 		<BootstrapTable data={patient.files} keyField='id' hover consended options={options} pagination>
 			<TableHeaderColumn dataField='name' dataFormat={nameRender} dataSort caretRender={ getCaret }>{formatMessage({ id: 'common.field_name' })}</TableHeaderColumn>
-			<TableHeaderColumn width="15%" dataField='size' dataSort caretRender={ getCaret }>{formatMessage({ id: 'common.size' })}</TableHeaderColumn>
+			<TableHeaderColumn width="15%" dataFormat={sizeRender} dataSort caretRender={ getCaret }>{formatMessage({ id: 'common.size' })}</TableHeaderColumn>
 			<TableHeaderColumn width="100px" dataFormat={editRender}>{formatMessage({ id: 'common.field_actions' })}</TableHeaderColumn>
 		</BootstrapTable>
 	</div>
