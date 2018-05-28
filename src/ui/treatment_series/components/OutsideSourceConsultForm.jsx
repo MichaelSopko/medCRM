@@ -66,7 +66,7 @@ const OutsideSourceConsultForm = (props) => {
 					{getFieldDecorator('date', {
 						validateTrigger: 'onBlur', rules: [],
 					})(
-						<DatePicker showTime format="DD.MM.YYYY HH:mm" />,
+						<DatePicker showTime format="DD.MM.YYYY" />,
 					)}
 				</Form.Item>}
 				{<Form.Item
