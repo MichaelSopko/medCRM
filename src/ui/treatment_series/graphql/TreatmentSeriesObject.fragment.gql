@@ -27,6 +27,7 @@ fragment TreatmentSeriesObjectFragment on TreatmentSeriesObject {
         previousDiagnoses
         educationalFramework
         observationSummary
+        observationFindings
         patient {
                     id
                     first_name
