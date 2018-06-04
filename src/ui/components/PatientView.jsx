@@ -454,61 +454,61 @@ const DetailsTab = (
 	const diff = moment.duration(moment().diff(bdate));
 
 	return (
-		<div>
+		<div className="detail-tab-wrap">
 			<div className="Details">
 				<div className="Details__fields">
-				<div className="Details__header">
-				<span className="Details__name">
-					{patient.first_name} {patient.last_name}
-				</span>
-					<span className="Details__age" style={{ marginRight: 8 }}>
-					<FormattedMessage
-						id="Patients.age"
-						values={{
-							years: diff.years() || '0',
-							months: diff.months() || '0',
-							days: diff.days() || '0',
-						}}
-					/>
-				</span>
-				</div>
-				<div className="Details__field">
-					<div className="Details__field-name">{formatMessage({ id: 'common.field_id_number' })}</div>
-					<div className="Details__field-value">{patient.id_number}</div>
-				</div>
-
-				<div className="Details__field">
-					<div className="Details__field-name">{formatMessage({ id: 'common.field_first_name' })}</div>
-					<div className="Details__field-value">{patient.first_name}</div>
-				</div>
-
-				<div className="Details__field">
-					<div className="Details__field-name">{formatMessage({ id: 'common.field_last_name' })}</div>
-					<div className="Details__field-value">{patient.last_name}</div>
-				</div>
-
-				<div className="Details__field">
-					<div className="Details__field-name">{formatMessage({ id: 'common.field_birth_date' })}</div>
-					<div className="Details__field-value">{moment(patient.birth_date).format('L')}</div>
-				</div>
-
-				<div className="Details__field">
-					<div className="Details__field-name">{formatMessage({ id: 'common.field_phone' })}</div>
-					<div className="Details__field-value">
-						<a href={`tel:${patient.phone}`}>{patient.phone}</a>
+					<div className="Details__header">
+					<span className="Details__name">
+						{patient.first_name} {patient.last_name}
+					</span>
+						<span className="Details__age">
+						<FormattedMessage
+							id="Patients.age"
+							values={{
+								years: diff.years() || '0',
+								months: diff.months() || '0',
+								days: diff.days() || '0',
+							}}
+						/>
+					</span>
 					</div>
-				</div>
-				{!!patient.health_maintenance && <div className="Details__field">
-					<div className="Details__field-name">{formatMessage({ id: 'Patients.field_health_maintenance' })}</div>
-					<div className="Details__field-value">{formatMessage({ id: `health_maintenance.${patient.health_maintenance}` })}</div>
-				</div>}
-				<div className="Details__field">
+					<div className="Details__field">
+						<div className="Details__field-name">{formatMessage({ id: 'common.field_id_number' })}</div>
+						<div className="Details__field-value">{patient.id_number}</div>
+					</div>
+	
+					<div className="Details__field">
+						<div className="Details__field-name">{formatMessage({ id: 'common.field_first_name' })}</div>
+						<div className="Details__field-value">{patient.first_name}</div>
+					</div>
+	
+					<div className="Details__field">
+						<div className="Details__field-name">{formatMessage({ id: 'common.field_last_name' })}</div>
+						<div className="Details__field-value">{patient.last_name}</div>
+					</div>
+	
+					<div className="Details__field">
+						<div className="Details__field-name">{formatMessage({ id: 'common.field_birth_date' })}</div>
+						<div className="Details__field-value">{moment(patient.birth_date).format('L')}</div>
+					</div>
+	
+					<div className="Details__field">
+						<div className="Details__field-name">{formatMessage({ id: 'common.field_phone' })}</div>
+						<div className="Details__field-value">
+							<a href={`tel:${patient.phone}`}>{patient.phone}</a>
+						</div>
+					</div>
+					{!!patient.health_maintenance && <div className="Details__field">
+						<div className="Details__field-name">{formatMessage({ id: 'Patients.field_health_maintenance' })}</div>
+						<div className="Details__field-value">{formatMessage({ id: `health_maintenance.${patient.health_maintenance}` })}</div>
+					</div>}
+					<div className="Details__field">
 					<div className="Details__field-name">{formatMessage({ id: 'common.field_remarks' })}</div>
 					<div className="Details__field-value">
 						{patient.remarks}
 					</div>
 				</div>
-			</div>
+				</div>
 			</div>
 			<div className="Details__related-persons">
 				<RelatedPersonsTable

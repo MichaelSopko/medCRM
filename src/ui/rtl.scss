@@ -176,11 +176,32 @@ body.rtl, html[dir="rtl"] {
 	}
 
 	.Details {
+		width: 50%;
+		margin-left: 10px;
+
 		&__fields {
 			text-align: right;
+			width: 100%;
 		}
 		&__related-persons {
 			text-align: right;
+			width: 75%;
+			.table.table-bordered th span {
+				left: 8px;
+			}
+			.patient-relateds {
+				margin-top: 12px;
+			}
+		}
+		&__header {
+			display: flex;
+			align-items: center;
+		}
+		&__name {
+			width: 200px;
+		}
+		&__age {
+			flex-grow: 1;
 		}
 	}
 
@@ -260,5 +281,10 @@ body.rtl, html[dir="rtl"] {
 		.order-first {
 			order: -1;
 		}
+	}
+
+	.detail-tab-wrap {
+		display: flex;
+		margin-top: 20px;
 	}
 }
