@@ -4,4 +4,10 @@ query patient($id: ID!) {
     patient(id: $id) {
         ...PatientFragment
     }
+    past_treatments(patient_id: $id)
+    future_treatments(patient_id: $id)
+    total_treatments(patient_id: $id)
+    school_observations(patient_id: $id)
+    staff_meetings(patient_id: $id)
+    outside_source_consults(patient_id: $id)
 }

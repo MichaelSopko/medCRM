@@ -448,20 +448,22 @@ RelatedPersonsTable.contextTypes = {
 };
 
 const DetailsTab = (
-	{ patient, showRelatedPersonForm, deleteRelatedPerson, editRelatedPerson }, context) => {
+	{ patient, showRelatedPersonForm, deleteRelatedPerson, editRelatedPerson, treatmentsCounts },
+	context) => {
 	const formatMessage = context.intl.formatMessage;
 	const bdate = moment(patient.birth_date);
 	const diff = moment.duration(moment().diff(bdate));
 
 	return (
-		<div className="detail-tab-wrap">
-			<div className="Details">
-				<div className="Details__fields">
-					<div className="Details__header">
+		<div>
+			<div className="detail-tab-wrap">
+				<div className="Details">
+					<div className="Details__fields">
+						<div className="Details__header">
 					<span className="Details__name">
 						{patient.first_name} {patient.last_name}
 					</span>
-						<span className="Details__age">
+							<span className="Details__age">
 						<FormattedMessage
 							id="Patients.age"
 							values={{
@@ -471,53 +473,62 @@ const DetailsTab = (
 							}}
 						/>
 					</span>
-					</div>
-					<div className="Details__field">
-						<div className="Details__field-name">{formatMessage({ id: 'common.field_id_number' })}</div>
-						<div className="Details__field-value">{patient.id_number}</div>
-					</div>
-	
-					<div className="Details__field">
-						<div className="Details__field-name">{formatMessage({ id: 'common.field_first_name' })}</div>
-						<div className="Details__field-value">{patient.first_name}</div>
-					</div>
-	
-					<div className="Details__field">
-						<div className="Details__field-name">{formatMessage({ id: 'common.field_last_name' })}</div>
-						<div className="Details__field-value">{patient.last_name}</div>
-					</div>
-	
-					<div className="Details__field">
-						<div className="Details__field-name">{formatMessage({ id: 'common.field_birth_date' })}</div>
-						<div className="Details__field-value">{moment(patient.birth_date).format('L')}</div>
-					</div>
-	
-					<div className="Details__field">
-						<div className="Details__field-name">{formatMessage({ id: 'common.field_phone' })}</div>
-						<div className="Details__field-value">
-							<a href={`tel:${patient.phone}`}>{patient.phone}</a>
+						</div>
+						<div className="Details__field">
+							<div className="Details__field-name">{formatMessage({ id: 'common.field_id_number' })}</div>
+							<div className="Details__field-value">{patient.id_number}</div>
+						</div>
+						
+						<div className="Details__field">
+							<div className="Details__field-name">{formatMessage({ id: 'common.field_first_name' })}</div>
+							<div className="Details__field-value">{patient.first_name}</div>
+						</div>
+						
+						<div className="Details__field">
+							<div className="Details__field-name">{formatMessage({ id: 'common.field_last_name' })}</div>
+							<div className="Details__field-value">{patient.last_name}</div>
+						</div>
+						
+						<div className="Details__field">
+							<div className="Details__field-name">{formatMessage({ id: 'common.field_birth_date' })}</div>
+							<div className="Details__field-value">{moment(patient.birth_date).format('L')}</div>
+						</div>
+						
+						<div className="Details__field">
+							<div className="Details__field-name">{formatMessage({ id: 'common.field_phone' })}</div>
+							<div className="Details__field-value">
+								<a href={`tel:${patient.phone}`}>{patient.phone}</a>
+							</div>
+						</div>
+						{!!patient.health_maintenance && <div className="Details__field">
+							<div className="Details__field-name">{formatMessage({ id: 'Patients.field_health_maintenance' })}</div>
+							<div className="Details__field-value">{formatMessage({ id: `health_maintenance.${patient.health_maintenance}` })}</div>
+						</div>}
+						<div className="Details__field">
+							<div className="Details__field-name">{formatMessage({ id: 'common.field_remarks' })}</div>
+							<div className="Details__field-value">
+								{patient.remarks}
+							</div>
 						</div>
 					</div>
-					{!!patient.health_maintenance && <div className="Details__field">
-						<div className="Details__field-name">{formatMessage({ id: 'Patients.field_health_maintenance' })}</div>
-						<div className="Details__field-value">{formatMessage({ id: `health_maintenance.${patient.health_maintenance}` })}</div>
-					</div>}
-					<div className="Details__field">
-					<div className="Details__field-name">{formatMessage({ id: 'common.field_remarks' })}</div>
-					<div className="Details__field-value">
-						{patient.remarks}
-					</div>
 				</div>
+				<div className="Details__related-persons">
+					<RelatedPersonsTable
+						showRelatedPersonForm={showRelatedPersonForm}
+						editRelatedPerson={editRelatedPerson}
+						patient={patient}
+						deleteRelatedPerson={deleteRelatedPerson}
+					/>
 				</div>
 			</div>
-			<div className="Details__related-persons">
-				<RelatedPersonsTable
-					showRelatedPersonForm={showRelatedPersonForm}
-					editRelatedPerson={editRelatedPerson}
-					patient={patient}
-					deleteRelatedPerson={deleteRelatedPerson}
-				/>
-			</div>
+			<BootstrapTable data={treatmentsCounts} keyField='id' hover consended >
+				<TableHeaderColumn dataField="past_treatments">{formatMessage({ id: 'Treatments.grid_headers.past_treatments' })}</TableHeaderColumn>
+				<TableHeaderColumn dataField="future_treatments">{formatMessage({ id: 'Treatments.grid_headers.future_treatments' })}</TableHeaderColumn>
+				<TableHeaderColumn dataField="total_treatments">{formatMessage({ id: 'Treatments.grid_headers.total_treatments' })}</TableHeaderColumn>
+				<TableHeaderColumn dataField="school_observations">{formatMessage({ id: 'Treatments.grid_headers.school_observations' })}</TableHeaderColumn>
+				<TableHeaderColumn dataField="staff_meetings">{formatMessage({ id: 'Treatments.grid_headers.staff_meetings' })}</TableHeaderColumn>
+				<TableHeaderColumn dataField="outside_source_consults">{formatMessage({ id: 'Treatments.grid_headers.outside_source_consults' })}</TableHeaderColumn>
+			</BootstrapTable>
 		</div>
 	);
 };
@@ -732,7 +743,7 @@ class PatientView extends Component {
 		const { data, id, onEdit, currentUser, currentClinic } = this.props;
 		const { archiveLoading, formLoading, showRelatedPersonForm, activeRelatedPerson } = this.state;
 		const formatMessage = this.context.intl.formatMessage;
-
+		
 		if (!data) {
 			return (
 				<div className="PatientView__Empty">
@@ -741,8 +752,8 @@ class PatientView extends Component {
 			);
 		}
 
-		const { patient, loading, error } = data;
-
+		const { patient, loading, past_treatments, future_treatments, total_treatments,
+			school_observations, staff_meetings, outside_source_consults, error } = data;
 		const isReady = !loading && !error;
 
 		if (!isReady) {
@@ -764,7 +775,16 @@ class PatientView extends Component {
 			cancelText: formatMessage({id: 'common.confirm_no'}),
 			onOk: this.props.archivePatient,
 		});
-
+		
+		const treatmentsCounts = [{
+			past_treatments,
+			future_treatments,
+			total_treatments,
+			school_observations,
+			staff_meetings,
+			outside_source_consults,
+		}];
+		
 		return (
 			<div className='PatientView'>
 				<RelatedPersonForm
@@ -825,6 +845,7 @@ class PatientView extends Component {
 						key="details">
 						<DetailsTab
 							patient={patient}
+							treatmentsCounts={treatmentsCounts}
 							showRelatedPersonForm={this.showRelatedPersonForm}
 							editRelatedPerson={this.editRelatedPerson}
 							deleteRelatedPerson={this.deleteRelatedPerson}/>
