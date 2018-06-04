@@ -392,3 +392,16 @@ body {
     }
   }
 }
+
+.ant-confirm-btns {
+  .ant-btn {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+  }
+  .ant-btn.ant-btn-primary {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+  }
+}

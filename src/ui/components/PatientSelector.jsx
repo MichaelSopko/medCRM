@@ -32,7 +32,10 @@ class PatientSelector extends Component {
 
 		const { subscribeToMore } = this.props.data;
 
-		if (!nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id && (!this.subscriptions || !this.props.currentClinic || this.props.currentClinic.id !== nextProps.currentClinic.id)) {
+		if (!nextProps.data.loading && nextProps.currentClinic && nextProps.currentClinic.id
+			&& (!this.subscriptions || !this.props.currentClinic
+			|| this.props.currentClinic.id !== nextProps.currentClinic.id)
+		) {
 			this.subscriptions = [
 				subscribeToMore({
 					document: PATIENT_CREATED_SUBSCRIPTION,
@@ -54,7 +57,7 @@ class PatientSelector extends Component {
 
 	onClinicChange = id => {
 		this.props.setCurrentClinic({ id });
-	}
+	};
 
 	render() {
 		const { data, ...props } = this.props;
