@@ -156,6 +156,7 @@ class Patients extends Component {
 					modalLoading: false,
 					relatedPersons: [],
 					currentPatientId: res.data.addPatient.id,
+					activeKey: 'details',
 				});
 				message.success(this.context.intl.formatMessage({ id: 'Patients.created-message' }));
 			}).catch(errorHandler);
