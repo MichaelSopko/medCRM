@@ -50,7 +50,6 @@ const SchoolObservationForm = (props) => {
 			onCancel={checkForConfirm}
 			onOk={handleSubmit}
 			confirmLoading={loading}
-			width={800}
 		>
 			<Form>
 				{<Form.Item

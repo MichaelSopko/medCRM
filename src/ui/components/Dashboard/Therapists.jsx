@@ -33,7 +33,6 @@ const EntityForm = Form.create()(
 			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
 			       onCancel={checkForConfirm}
 			       onOk={onSubmit}
-			       width={700}
 			       confirmLoading={loading}>
 				<Form layout={formLayout}>
 					<Form.Item

@@ -49,7 +49,6 @@ const PatientObjectForm = (props, context) => {
 			okText={ isEditing ? formatMessage({ id: 'common.action_edit' }) : formatMessage({ id: 'common.action_create' }) }
 			onOk={onSubmit}
 			onCancel={checkForConfirm}
-			width={1000}
 			confirmLoading={loading}
 		>
 			<div>
