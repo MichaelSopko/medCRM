@@ -252,4 +252,13 @@ body.rtl, html[dir="rtl"] {
 			}
 		}
 	}
+
+	.treatment-form {
+		display: flex;
+		flex-direction: column;
+
+		.order-first {
+			order: -1;
+		}
+	}
 }

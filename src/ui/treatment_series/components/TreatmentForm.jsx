@@ -82,7 +82,7 @@ export const TreatmentForm = Form.create()(
 			       onOk={handleSubmit}
 			       width={800}
 			       confirmLoading={loading}>
-				<Form>
+				<Form className="treatment-form">
 					{ <Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'Treatments.field_target' })}
@@ -163,30 +163,10 @@ export const TreatmentForm = Form.create()(
 								<InputNumber style={{marginLeft: 12}} min={1} />,
 							)}
 					</Form.Item> }
-					{/*<Form.Item
-						{...formItemLayout}
-						label={formatMessage({ id: 'Treatments.field_start_date' })}
-						hasFeedback
-					>
-						{getFieldDecorator('start_date', {
-							initialValue: values.start_date,
-							validateTrigger: 'onBlur', rules: [{
-								type: 'object', required: true,
-							}],
-						})(
-							<DatePicker
-								showTime
-								allowClear={false}
-								placeholder={formatMessage({ id: 'Treatments.field_start_date' })}
-								onChange={(start_date) => {
-									form.setFieldsValue({ end_date: moment(start_date).add(currentClinic.treatment_duration, 'minutes') })
-								}}
-								format="YYYY-MM-DD HH:mm:ss" />,
-						)}
-					</Form.Item>*/}
 
 					{ <Form.Item
 						{...formItemLayout}
+						className="order-first"
 						label={formatMessage({ id: 'Treatments.field_start_date' })}
 					>
 						<Col span={4}>
@@ -277,6 +257,7 @@ export const TreatmentForm = Form.create()(
 
 					{ <Form.Item
 						{...formItemLayout}
+						className="order-first"
 						label={formatMessage({ id: 'Treatments.field_end_date' })}
 					>
 						<Col span={4}>
