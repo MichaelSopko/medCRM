@@ -8,7 +8,7 @@ import withCurrentUser from '../../../utils/withCurrentUser';
 const PatientObjectForm = (props, context) => {
 	const formatMessage = context.intl.formatMessage;
 	const { patient, visible, onSubmit, onCancel, form, loading, title, therapists, currentUser,
-		showHearingTest, renderFields, object } = props;
+		showHearingTest, activeKey, onChangeKey, renderFields, object } = props;
 	const { getFieldDecorator, isFieldsTouched } = form;
 	const formItemLayout = {
 		/*labelCol: { span: 6 },

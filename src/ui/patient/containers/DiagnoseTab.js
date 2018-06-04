@@ -37,6 +37,7 @@ class DiagnoseTab extends Component {
 		formOpened: false,
 		viewOpened: false,
 		selectedItem: {},
+		activeTabKey: 'firstTab',
 	};
 
 	openForm = () => {
@@ -48,7 +49,7 @@ class DiagnoseTab extends Component {
 	};
 
 	closeForm = () => {
-		this.setState({ formOpened: false });
+		this.setState({ formOpened: false, activeTabKey: 'firstTab' });
 		setTimeout(() => {
 			this.setState({ selectedItem: {} });
 		}, 500);
@@ -101,6 +102,10 @@ class DiagnoseTab extends Component {
 
 		});
 	};
+
+	onChangeKey = (activeKey) => {
+		this.setState({ activeTabKey: activeKey });
+	};
 	
 	editRender = (cell, record) => {
 		const formatMessage = this.context.intl.formatMessage;
@@ -132,8 +137,10 @@ class DiagnoseTab extends Component {
 		const formItemLayout = {};
 
 		return (
-			<Tabs animated={false}>
-				<Tabs.TabPane key={1} tab={formatMessage({ id: 'DiagnoseTab.tab1' })}>
+			<Tabs animated={false}
+				  activeKey={this.state.activeTabKey}
+				  onChange={this.onChangeKey}>
+				<Tabs.TabPane key={'firstTab'} tab={formatMessage({ id: 'DiagnoseTab.tab1' })}>
 					<Form.Item
 						{...formItemLayout}
 						hasFeedback
@@ -205,7 +212,7 @@ class DiagnoseTab extends Component {
 						(<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />)}
 					</Form.Item>
 				</Tabs.TabPane>
-				<Tabs.TabPane key={2} tab={formatMessage({ id: 'DiagnoseTab.tab2' })}>
+				<Tabs.TabPane key={'2'} tab={formatMessage({ id: 'DiagnoseTab.tab2' })}>
 					<Form.Item
 						{...formItemLayout}
 						hasFeedback
@@ -263,7 +270,7 @@ class DiagnoseTab extends Component {
 						(<Input type='textarea' autosize={{ minRows: 2, maxRows: 20 }} />)}
 					</Form.Item>
 				</Tabs.TabPane>
-				<Tabs.TabPane key={3} tab={formatMessage({ id: 'DiagnoseTab.tab3' })}>
+				<Tabs.TabPane key={'3'} tab={formatMessage({ id: 'DiagnoseTab.tab3' })}>
 					<Form.Item
 						{...formItemLayout}
 						hasFeedback
@@ -336,6 +343,8 @@ class DiagnoseTab extends Component {
 					showHearingTest
 					renderFields={this.renderFormFields}
 					object={selectedItem}
+					activeKey={this.state.activeTabKey}
+					onChangeKey={this.onChangeKey}
 					onSubmit={this.handleFormSubmit} />
 				<div className='PatientObjectTab__Actions'>
 					<Button onClick={this.openForm} type='primary'>{formatMessage({ id: 'DiagnoseTab.create_title' })}</Button>
