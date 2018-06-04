@@ -31,6 +31,7 @@ const PatientObjectForm = (props, context) => {
 	if (isEditing) {
 		selectedFillers = object.fillers.map(t => t.id === -1 ? t.first_name : t.id.toString());
 	}
+	const isTherapist = currentUser.role === 'THERAPIST';
 
 	const checkForConfirm = () => isFieldsTouched() ? Modal.confirm({
 		title: formatMessage({ id: 'common.modal_save_confirm.title' }),
@@ -69,9 +70,18 @@ const PatientObjectForm = (props, context) => {
 							<DatePicker showTime />,
 						)}
 					</Form.Item>
-					<Form.Item
+					{ <Form.Item
+						{...formItemLayout}
+						label={formatMessage({ id: 'Treatments.field_therapists' })}
+						style={ { display: !isTherapist ? 'none' : 'flex' } }
+						hasFeedback
+					>
+						<div>{ (isEditing ? values.therapists || [] : [currentUser]).map(user => `${user.first_name} ${user.last_name}`).join(', ') }</div>
+					</Form.Item> }
+					{<Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'Patients.diagnose_fillers' })}
+						style={ { display: isTherapist ? 'none' : 'flex' } }
 						hasFeedback
 					>
 						{getFieldDecorator('fillers_ids', {
@@ -92,7 +102,7 @@ const PatientObjectForm = (props, context) => {
 								))}
 							</Select>,
 						)}
-					</Form.Item>
+					</Form.Item>}
 					<Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'Patients.age_in_diagnose' })}>
