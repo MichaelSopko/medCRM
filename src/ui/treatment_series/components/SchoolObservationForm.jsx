@@ -14,7 +14,8 @@ import ROLES from '../../../helpers/constants/roles';
 import mapPropsToFields from './mapPropsToFields';
 
 const SchoolObservationForm = (props) => {
-	const { visible, onCancel, onSubmit, form, loading, isNew, formatMessage, therapists, currentUser, values } = props;
+	const { visible, onCancel, onSubmit, form, loading, isNew, formatMessage, therapists,
+		currentUser, activeKey, onChangeKey, values } = props;
 	const { getFieldDecorator } = form;
 	const formItemLayout = {
 		labelCol: { span: 6 },
@@ -98,8 +99,10 @@ const SchoolObservationForm = (props) => {
 				</Form.Item>}
 
 
-				<Tabs animated={false}>
-					<Tabs.TabPane key={1} tab={formatMessage({ id: 'Treatments.school_observation.tab1' })}>
+				<Tabs animated={false}
+					  activeKey={activeKey}
+					  onChange={onChangeKey}>
+					<Tabs.TabPane key={'background'} tab={formatMessage({ id: 'Treatments.school_observation.tab1' })}>
 						<Form.Item
 							{...formItemLayout}
 							hasFeedback

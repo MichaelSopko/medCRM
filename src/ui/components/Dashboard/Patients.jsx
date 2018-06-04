@@ -47,7 +47,6 @@ class Patients extends Component {
 		relatedPersons: [],
 		currentPatientId: null,
 		showArchived: false,
-		firstPageError: false,
 		activeKey: 'details',
 	};
 

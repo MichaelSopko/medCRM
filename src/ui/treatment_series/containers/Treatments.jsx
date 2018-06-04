@@ -66,6 +66,7 @@ class Treatments extends Component {
 		currentObject: null,
 		currentSeries: null,
 		modalLoading: false,
+		observationActiveKey: 'background',
 	};
 
 	// subscriptions = null;
@@ -125,8 +126,12 @@ class Treatments extends Component {
 	};
 
 	handleCancel = () => {
-		this.setState({ seriesModalOpened: false, treatmentModalOpened: false });
+		this.setState({ seriesModalOpened: false, treatmentModalOpened: false, observationActiveKey: 'background' });
 		this.resetActiveEntity();
+	};
+	
+	onChangeKey = (activeKey) => {
+		this.setState({ observationActiveKey: activeKey });
 	};
 
 	updateObject = (object) => {
@@ -141,7 +146,11 @@ class Treatments extends Component {
 
 	hideForm = () => {
 		this.setState({
-			currentFormType: null, currentObject: null, currentSeries: null, modalLoading: false,
+			currentFormType: null,
+			currentObject: null,
+			currentSeries: null,
+			modalLoading: false,
+			observationActiveKey: 'background',
 		});
 	};
 
@@ -365,6 +374,8 @@ class Treatments extends Component {
 					visible={currentFormType === FORM_TYPES.SchoolObservation}
 					isNew={!currentObject}
 					values={currentObject}
+					activeKey={this.state.observationActiveKey}
+					onChangeKey={this.onChangeKey}
 					{...formProps}
 				/>
 				<StaffMeetingForm
