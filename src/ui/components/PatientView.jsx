@@ -460,19 +460,19 @@ const DetailsTab = (
 				<div className="Details">
 					<div className="Details__fields">
 						<div className="Details__header">
-					<span className="Details__name">
-						{patient.first_name} {patient.last_name}
-					</span>
+							<span className="Details__name">
+								{patient.first_name} {patient.last_name}
+							</span>
 							<span className="Details__age">
-						<FormattedMessage
-							id="Patients.age"
-							values={{
-								years: diff.years() || '0',
-								months: diff.months() || '0',
-								days: diff.days() || '0',
-							}}
-						/>
-					</span>
+								<FormattedMessage
+									id="Patients.age"
+									values={{
+										years: diff.years() || '0',
+										months: diff.months() || '0',
+										days: diff.days() || '0',
+									}}
+								/>
+							</span>
 						</div>
 						<div className="Details__field">
 							<div className="Details__field-name">{formatMessage({ id: 'common.field_id_number' })}</div>
@@ -521,14 +521,14 @@ const DetailsTab = (
 					/>
 				</div>
 			</div>
-			<BootstrapTable data={treatmentsCounts} keyField='id' hover consended >
+			{!__DEV__ && <BootstrapTable data={treatmentsCounts} keyField='id' hover consended >
 				<TableHeaderColumn dataField="past_treatments">{formatMessage({ id: 'Treatments.grid_headers.past_treatments' })}</TableHeaderColumn>
 				<TableHeaderColumn dataField="future_treatments">{formatMessage({ id: 'Treatments.grid_headers.future_treatments' })}</TableHeaderColumn>
 				<TableHeaderColumn dataField="total_treatments">{formatMessage({ id: 'Treatments.grid_headers.total_treatments' })}</TableHeaderColumn>
 				<TableHeaderColumn dataField="school_observations">{formatMessage({ id: 'Treatments.grid_headers.school_observations' })}</TableHeaderColumn>
 				<TableHeaderColumn dataField="staff_meetings">{formatMessage({ id: 'Treatments.grid_headers.staff_meetings' })}</TableHeaderColumn>
 				<TableHeaderColumn dataField="outside_source_consults">{formatMessage({ id: 'Treatments.grid_headers.outside_source_consults' })}</TableHeaderColumn>
-			</BootstrapTable>
+			</BootstrapTable>}
 		</div>
 	);
 };

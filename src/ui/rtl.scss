@@ -189,6 +189,9 @@ body.rtl, html[dir="rtl"] {
 			.table.table-bordered th span {
 				left: 8px;
 			}
+			.table.table-bordered th {
+				padding-right: 8px;
+			}
 			.patient-relateds {
 				margin-top: 12px;
 			}
