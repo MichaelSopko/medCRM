@@ -116,6 +116,8 @@ export default {
 							therapist_name: `${currentUser.first_name} ${currentUser.last_name}`,
 							relative_name: person.name,
 							patient_name: `${first_name} ${last_name}`,
+							start_date: treatment.start_date,
+							end_date: treatment.end_date,
 						};
 
 						let mailOptions = {
