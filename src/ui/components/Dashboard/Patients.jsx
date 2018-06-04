@@ -47,7 +47,8 @@ class Patients extends Component {
 		relatedPersons: [],
 		currentPatientId: null,
 		showArchived: false,
-		activeKey: 'details'
+		firstPageError: false,
+		activeKey: 'details',
 	};
 
 	constructor(props) {
@@ -108,9 +109,22 @@ class Patients extends Component {
 				message: formatMessage({ id }),
 			});
 		};
+		
+		const formFields = ['id_number','first_name','last_name','gender','birth_date'];
 
 		form.validateFields((err, values) => {
 			if (err) {
+				let isFirstTab = false;
+				for (let k in err) {
+					if (err.hasOwnProperty(k) && formFields.includes(k)) {
+						isFirstTab = true;
+					}
+				}
+				if (isFirstTab) {
+					this.setState({ activeKey: 'details' });
+				} else {
+					this.setState({ activeKey: 'related' });
+				}
 				return;
 			}
 			
@@ -280,6 +294,7 @@ class Patients extends Component {
 						}}
 						visible={modalOpened}
 						loading={modalLoading}
+						firstPageError={this.state.firstPageError}
 						onCancel={this.handleCancel}
 						onSubmit={this.handleFormSubmit}
 						formatMessage={formatMessage}
