@@ -8,4 +8,5 @@ fragment ClinicFragment on Clinic {
     treatment_duration
     patients_limit
     archive_time
+    disabled
 }

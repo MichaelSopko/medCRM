@@ -22,6 +22,8 @@ const EntityForm = Form.create()(
       cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' }),
     }) : onCancel();
     const formLayout = 'vertical';
+    
+    console.log(values.disabled);
 
     return (
       <Modal
@@ -166,6 +168,7 @@ const EntityForm = Form.create()(
           >
             {getFieldDecorator('disabled', {
               initialValue: values.disabled,
+				valuePropName: 'checked',
               validateTrigger: 'onBlur',
               rules: [],
             })(
