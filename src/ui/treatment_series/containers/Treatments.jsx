@@ -430,14 +430,14 @@ class Treatments extends Component {
 					deleteObject={this.deleteObj.bind(this)}
 				/>
 				
-				{__DEV__ && <BootstrapTable data={treatmentsCounts} keyField='id' hover consended >
+				{/*{__DEV__ && <BootstrapTable data={treatmentsCounts} keyField='id' hover consended >
 					<TableHeaderColumn dataField="past_treatments">{formatMessage({ id: 'Treatments.grid_headers.past_treatments' })}</TableHeaderColumn>
 					<TableHeaderColumn dataField="future_treatments">{formatMessage({ id: 'Treatments.grid_headers.future_treatments' })}</TableHeaderColumn>
 					<TableHeaderColumn dataField="total_treatments">{formatMessage({ id: 'Treatments.grid_headers.total_treatments' })}</TableHeaderColumn>
 					<TableHeaderColumn dataField="school_observations">{formatMessage({ id: 'Treatments.grid_headers.school_observations' })}</TableHeaderColumn>
 					<TableHeaderColumn dataField="staff_meetings">{formatMessage({ id: 'Treatments.grid_headers.staff_meetings' })}</TableHeaderColumn>
 					<TableHeaderColumn dataField="outside_source_consults">{formatMessage({ id: 'Treatments.grid_headers.outside_source_consults' })}</TableHeaderColumn>
-				</BootstrapTable>}
+				</BootstrapTable>}*/}
 			</section>
 		);
 	}

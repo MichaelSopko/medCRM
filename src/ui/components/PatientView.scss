@@ -49,13 +49,28 @@
 
 }
 
-.Details {
+.detail-tab-wrap {
 	display: flex;
+	margin-top: 20px;
+}
+
+.Details {
+	width: 50%;
+	margin-right: 10px;
 	&__fields {
-		width: 50%;
+		width: 100%;
 	}
 	&__related-persons {
-		width: 100%;
+		width: 75%;
+		//.table.table-bordered th span {
+		//	left: 8px;
+		//}
+		//.table.table-bordered th {
+		//	padding-right: 8px;
+		//}
+		.patient-relateds {
+			margin-top: 12px;
+		}
 	}
 	&__header {
 		display: flex;
