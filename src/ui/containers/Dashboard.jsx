@@ -58,7 +58,11 @@ class Dashboard extends Component {
         </div> }
         { !showSpinner && <UserNavbar currentUser={currentUser} toggleSidebar={this.toggleSidebarHandler.bind(this)} /> }
         { !showSpinner && <NavBar currentUser={currentUser} /> }
-        { !showSpinner && currentUser && <div className="content-wrap">{ children }</div> }
+        { !showSpinner && currentUser && <div className="content-wrap">
+           <div style={{ direction: __DEV__ ? 'ltr' : 'rtl' }}>
+			   { children }
+           </div>
+        </div> }
       </main>
     );
   }
