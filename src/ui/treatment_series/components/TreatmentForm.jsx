@@ -80,6 +80,7 @@ export const TreatmentForm = Form.create()(
 			       okText={ formatMessage({ id: isEditing ? 'common.action_edit' : 'common.action_create' }) }
 			       onCancel={checkForConfirm}
 			       onOk={handleSubmit}
+				   width={700}
 			       confirmLoading={loading}>
 				<Form className="treatment-form">
 					{ <Form.Item
