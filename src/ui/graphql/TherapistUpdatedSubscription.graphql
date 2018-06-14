@@ -1,0 +1,7 @@
+#import './Therapist.fragment.graphql'
+
+subscription onTherapistUpdated($id: ID!){
+    therapistUpdated(id: $id) {
+        ...TherapistFields
+    }
+}

@@ -30,6 +30,11 @@ const subscriptionManager = new SubscriptionManager({
                 filter: compareID(args)
             }
         }),
+        therapistUpdated: (options, args) => ({
+            therapistUpdated: {
+                filter: compareID(args)
+            }
+        }),
 		treatmentSeriesCreated: (options, args) => ({
 			treatmentSeriesCreated: {
 				filter: comparePatient(args)

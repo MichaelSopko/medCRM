@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import Cookie from 'js-cookie';
 import PropTypes from 'prop-types';
 
-import CLINIC_UPDATED_SUBSCRIPTION from '../graphql/ClinicUpdatedSubscription.graphql'
+import CLINIC_UPDATED_SUBSCRIPTION from '../graphql/ClinicUpdatedSubscription.graphql';
+import THERAPIST_UPDATED_SUBSCRIPTION from '../graphql/TherapistUpdatedSubscription.graphql';
 
 @graphql(GET_CURRENT_USER_QUERY)
 @withApollo
@@ -84,7 +85,20 @@ export default class CurrentUserProvider extends Component {
                         
                         return true;
                     },
-                }),];
+                }),
+                subscribeToMore({
+                    document: THERAPIST_UPDATED_SUBSCRIPTION,
+                    variables: { id: currentUser.id },
+                    updateQuery: (previousResult, { subscriptionData }) => {
+                        const newClinicData = subscriptionData.data.therapistUpdated;
+                        if (newClinicData.disabled) {
+                            this.logout();
+                        }
+            
+                        return true;
+                    },
+                }),
+            ];
         }
     }
   }

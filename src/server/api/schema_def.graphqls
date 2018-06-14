@@ -212,7 +212,7 @@ input PatientInput {
 	first_name: String!
 	last_name: String!
 	birth_date: Date!
-	phone: String!
+	phone: String
 	profile_email: String
 	related_persons: [PatientRelatedPersonInput]
 	health_maintenance: PatientHealthMaintenance
@@ -558,6 +558,7 @@ type Mutation {
 
 type Subscription {
 	clinicUpdated(id: ID!): Clinic!
+	therapistUpdated(id: ID!): Therapist!
 	patientCreated(clinic_id: ID!): Patient!
 	patientUpdated(id: ID!): Patient!
 	patientDeleted(clinic_id: ID!): Patient!

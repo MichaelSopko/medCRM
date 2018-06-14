@@ -232,6 +232,10 @@ const resolvers = {
       return checkAccess(context, ROLES.CLINIC_ADMIN)
         .then(() => context.Users.editUser({ id, ...therapist }))
         .then(res => context.Users.findOne(id))
+        .then((therapist) => {
+            pubsub.publish('therapistUpdated', therapist);
+            return therapist;
+        })
         .catch(checkForNonUniqueField);
     },
     deleteTherapist(_, { id }, context) {
@@ -544,8 +548,10 @@ const resolvers = {
   },
   Subscription: {
     clinicUpdated(clinic) {
-        console.log('Upp', clinic.id)
       return clinic;
+    },
+    therapistUpdated(therapist) {
+      return therapist;
     },
     patientCreated(patient) {
       return patient;
