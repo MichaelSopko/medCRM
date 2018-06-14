@@ -30,18 +30,6 @@ let server;
 const app = express();
 
 
-// const jwtMiddleware = jwt({
-// 	secret: settings.secret,
-// 	getToken: (req) => {
-// 		if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
-// 			return req.headers.authorization.split(' ')[1];
-// 		} else if (req.cookies && req.cookies.token) {
-// 			return req.cookies.token;
-// 		}
-// 		return null;
-// 	}
-// });
-
 const port = process.env.PORT || settings.apiPort;
 
 console.log('PORT: ' + process.env.PORT);
@@ -82,7 +70,17 @@ if (__DEV__) {
 }
 // app.use('/graphql', jwtMiddleware, (...args) => graphqlMiddleware(...args));
 
-const jwtMiddleware = jwt({ secret: settings.secret });
+const jwtMiddleware = jwt({
+	secret: settings.secret,
+	getToken: (req) => {
+		if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+			return req.headers.authorization.split(' ')[1];
+		} else if (req.cookies && req.cookies.token) {
+			return req.cookies.token;
+		}
+		return null;
+	}
+});
 
 app.use('/graphql', (req, res, next) => {
   const { body } = req;

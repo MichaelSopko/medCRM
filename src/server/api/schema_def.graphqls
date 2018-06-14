@@ -557,6 +557,7 @@ type Mutation {
 
 
 type Subscription {
+	clinicUpdated(id: ID!): Clinic!
 	patientCreated(clinic_id: ID!): Patient!
 	patientUpdated(id: ID!): Patient!
 	patientDeleted(clinic_id: ID!): Patient!

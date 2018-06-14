@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import Cookie from 'js-cookie';
 import PropTypes from 'prop-types';
 
+import CLINIC_UPDATED_SUBSCRIPTION from '../graphql/ClinicUpdatedSubscription.graphql'
 
 @graphql(GET_CURRENT_USER_QUERY)
 @withApollo
@@ -51,7 +52,8 @@ export default class CurrentUserProvider extends Component {
 
   componentWillReceiveProps(newProps) {
     const { data: { loading = false, currentUser = null, error = null } } = newProps;
-
+    const { subscribeToMore } = this.props.data;
+    
     if (newProps.data.error) {
       this.logout();
       return false;
@@ -68,6 +70,22 @@ export default class CurrentUserProvider extends Component {
     }
     if (currentUser && currentUser.clinic) {
       this.props.setCurrentClinic(currentUser.clinic);
+        if (!newProps.data.loading && currentUser.id && (!this.subscriptions || !currentUser)
+        ) {
+            this.subscriptions = [
+                subscribeToMore({
+                    document: CLINIC_UPDATED_SUBSCRIPTION,
+                    variables: { id: currentUser.clinic.id },
+                    updateQuery: (previousResult, { subscriptionData }) => {
+                        const newClinicData = subscriptionData.data.clinicUpdated;
+                        if (newClinicData.disabled) {
+                          this.logout();
+                        }
+                        
+                        return true;
+                    },
+                }),];
+        }
     }
   }
 

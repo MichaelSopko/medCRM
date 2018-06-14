@@ -2,7 +2,7 @@ import { SubscriptionManager } from 'graphql-subscriptions'
 // import schema, { pubsub } from './schema'
 import schema, { pubsub } from '../api/schema'
 
-const compareID = args => entity => +entity.id === +args.id;
+const compareID = args => entity =>  +entity.id === +args.id;
 const comparePatient = args => entity => +entity.patient_id === +args.patient_id;
 const compareClinic = args => entity => +entity.clinic_id === +args.clinic_id;
 
@@ -25,6 +25,11 @@ const subscriptionManager = new SubscriptionManager({
 				filter: compareClinic(args)
 			}
 		}),
+        clinicUpdated: (options, args) => ({
+            clinicUpdated: {
+                filter: compareID(args)
+            }
+        }),
 		treatmentSeriesCreated: (options, args) => ({
 			treatmentSeriesCreated: {
 				filter: comparePatient(args)

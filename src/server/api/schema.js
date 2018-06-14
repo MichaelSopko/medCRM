@@ -187,7 +187,13 @@ const resolvers = {
     editClinic(_, { id, clinic }, context) {
       return checkAccess(context, ROLES.SYSTEM_ADMIN)
         .then(() => context.Clinics.editClinic(id, clinic))
-        .then(res => context.Clinics.findOne(id));
+        .then(res => {
+            return context.Clinics.findOne(id);
+        })
+          .then((clinic) => {
+              pubsub.publish('clinicUpdated', clinic);
+              return clinic;
+          });
     },
     deleteClinic(_, { id }, context) {
       return checkAccess(context, ROLES.SYSTEM_ADMIN)
@@ -537,6 +543,10 @@ const resolvers = {
     },
   },
   Subscription: {
+    clinicUpdated(clinic) {
+        console.log('Upp', clinic.id)
+      return clinic;
+    },
     patientCreated(patient) {
       return patient;
     },
