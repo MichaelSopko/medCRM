@@ -227,63 +227,11 @@ class Patients extends Component {
 	render() {
 		const { deletePatient, currentClinic, currentUser, data } = this.props;
 		const formatMessage = this.context.intl.formatMessage;
-		const { modalOpened, activeEntity, modalLoading, relatedPersons, currentPatientId, showArchived } = this.state;
-
-		const columns = [{
-			title: formatMessage({ id: 'common.field_name' }),
-			key: 'name',
-			width: '20%',
-			render: (text, record) => <div className='to-dynamic-container'>
-				<span className='to-dynamic'>{record.first_name} {record.last_name}</span>
-			</div>,
-		}, {
-			title: formatMessage({ id: 'common.field_phone' }),
-			dataIndex: 'phone',
-			key: 'phone',
-			width: '15%',
-			render: text => <div className='to-dynamic-container'>
-				<span className='to-dynamic'><a href={`tel:${text}`}>{text}</a></span>
-			</div>,
-		}, {
-			title: formatMessage({ id: 'common.field_email' }),
-			dataIndex: 'profile_email',
-			key: 'profile_email',
-			width: '15%',
-			render: text => <div className='to-dynamic-container'>
-				<span className='to-dynamic'><a href={`mailto:${text}`}>{text}</a></span>
-			</div>,
-		}, {
-			title: formatMessage({ id: 'Patients.field_files' }),
-			dataIndex: 'files',
-			key: 'files',
-			render: (text, record) => <div className='to-dynamic-container'>
-				<span className='to-dynamic'>
-					{intersperse(record.files.map(file => <a href={file.url}>{file.name}</a>), ", ")}
-					</span>
-			</div>,
-		}, {
-			title: formatMessage({ id: 'common.field_actions' }),
-			key: 'action',
-			width: '20%',
-			render: (text, record) => (
-				<span>
-		      <Button size='small' type='ghost' onClick={this.editEntity(record)}>
-			      {formatMessage({ id: 'common.action_edit' })}
-		      </Button>
-					<span className='ant-divider' />
-		      <Popconfirm title={formatMessage({ id: 'common.confirm_message' })} onConfirm={() => {
-			      deletePatient(record)
-		      }} okText={formatMessage({ id: 'common.confirm_yes' })}
-		                  cancelText={formatMessage({ id: 'common.confirm_no' })}>
-		        <Button size='small' type='ghost'>
-			        {formatMessage({ id: 'common.action_delete' })}
-		        </Button>
-		      </Popconfirm>
-        </span>
-			),
-		}];
-
-		const canAddPatient = currentClinic.id && (currentUser.role === 'SYSTEM_ADMIN' || !currentClinic.patients_limit || (data && data.patients && data.patients.length < currentClinic.patients_limit));
+		const { modalOpened, activeEntity, modalLoading, relatedPersons,
+			currentPatientId, showArchived } = this.state;
+		const canAddPatient = currentClinic.id
+			&& (currentUser.role === 'SYSTEM_ADMIN' || !currentClinic.patients_limit
+			|| (data && data.patients && data.patients.length < currentClinic.patients_limit));
 
 		return (
 			<div className='Container Patient_container'>
@@ -306,9 +254,6 @@ class Patients extends Component {
 						onChangeKey={this.onChangeKey}
 						/>
 					<div>
-						{/*						<h1 className="Dashboard__Header">
-						 { formatMessage({ id: 'Patients.header' }) }
-						 </h1>*/}
 						<div className='Dashboard__Actions'>
 							<div>
 								<PatientSelector showArchived={showArchived} onChange={this.onPatientChange} />

@@ -1,15 +1,15 @@
 import React from 'react';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import {
 	Modal,
 	Input,
 	Form,
-	Row,
 	Col,
 	Tabs,
 	Select,
 	Checkbox,
 	Radio,
-	Tooltip,
+    Button,
 } from 'antd';
 import moment from 'moment';
 
@@ -21,8 +21,8 @@ const TabPane = Tabs.TabPane;
 export default Form.create()(
 	(props) => {
 		const {
-			visible, onCancel, onSubmit, form, loading, values = {},
-			onUploadFileChange, formatMessage, activeKey, onChangeKey, addRelatedPerson,
+			visible, onCancel, onSubmit, form, loading, values = {}, relatedPersons,
+			formatMessage, activeKey, onChangeKey, addRelatedPerson,
 		} = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
@@ -46,7 +46,52 @@ export default Form.create()(
 		const hasFirstPerson = form.getFieldValue('related_persons[0].type') !== undefined;
 		const checkEmail = form.getFieldValue('related_persons[0].receive_updates') === true;
 		const formLayout = 'vertical';
-
+		
+        const typeRender = (cell, record) => {
+            return (
+				<span>
+				{formatMessage({ id: `related_persons.${record.type}` })}
+			</span>
+            );
+        };
+        const getCaret = (direction) => {
+            if (direction === 'asc') {
+                return (
+					<span className="fa fa-sort-amount-asc"></span>
+                );
+            }
+            if (direction === 'desc') {
+                return (
+					<span className="fa fa-sort-amount-desc"></span>
+                );
+            }
+            return (
+				<span className="fa fa-exchange fa-rotate-90"></span>
+            );
+        };
+        const editRender = (cell, record) => {
+            // const onDelete = () => {
+            //     deleteRelatedPerson(record._id);
+            // };
+            //
+            // const checkForConfirm = () => Modal.confirm({
+            //     title: formatMessage({id: 'common.confirm_message'}),
+            //     okText: formatMessage({id: 'common.confirm_yes'}),
+            //     cancelText: formatMessage({id: 'common.confirm_no'}),
+            //     onOk: onDelete.bind(this),
+            // });
+            
+            return (
+				<span>
+				{/*<Button size="small" className="btn-actions btn-danger" onClick={checkForConfirm}
+						type='ghost'>{formatMessage({id: 'common.action_delete'})}</Button>*/}
+			</span>
+            );
+        };
+        const options = {
+            noDataText: formatMessage({id: 'common.no_data'}),
+        };
+		
 		return (
 			<Modal
 			       visible={visible}
@@ -308,6 +353,31 @@ export default Form.create()(
 								<Form.Item>
 									<button disabled={!form.getFieldValue('related_persons[0].type')} type="button" className="ant-btn ant-btn-primary ant-btn-lg" onClick={addRelatedPerson}>{formatMessage({ id: 'Patients.persons' })}</button>
 								</Form.Item>
+								<div>
+									<BootstrapTable
+										data={relatedPersons.map((p, _id) => ({ ...p, _id }))}
+										keyField="_id" hover consended options={options}
+									>
+										<TableHeaderColumn width="20%" dataFormat={typeRender} dataField="type" dataSort caretRender={getCaret}>
+                                            {formatMessage({ id: 'Patients.field_person_type' })}
+										</TableHeaderColumn>
+										<TableHeaderColumn width="20%" dataField="name" dataSort caretRender={getCaret}>
+                                            {formatMessage({ id: 'common.field_name' })}
+										</TableHeaderColumn>
+										<TableHeaderColumn width="20%" dataField="phone" dataSort caretRender={getCaret}>
+                                            {formatMessage({ id: 'common.field_phone' })}
+										</TableHeaderColumn>
+										<TableHeaderColumn width="20%" dataField="email" dataSort caretRender={getCaret}>
+                                            {formatMessage({ id: 'common.field_email' })}
+										</TableHeaderColumn>
+										{/*<TableHeaderColumn dataField="description" dataSort caretRender={getCaret}>
+                                            {formatMessage({ id: 'Patients.field_person_description' })}
+										</TableHeaderColumn>
+										<TableHeaderColumn width="100px" dataFormat={editRender}>
+                                            {formatMessage({ id: 'common.field_actions' })}
+										</TableHeaderColumn>*/}
+									</BootstrapTable>
+								</div>
 							</TabPane> }
 						</Tabs>
 					</div>

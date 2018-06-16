@@ -44,7 +44,7 @@ const TabPane = Tabs.TabPane;
 
 const RelatedPersonForm = Form.create()(
 	({ form: { getFieldDecorator, isFieldsTouched },
-loading, visible, onSubmit, onCancel, formatMessage, values }) => {
+		 loading, visible, onSubmit, onCancel, formatMessage, values }) => {
 		const formItemLayout = {
 			labelCol: { span: 6 },
 			wrapperCol: { span: 14 },
@@ -300,55 +300,6 @@ FilesTab.contextTypes = {
 const RelatedPersonsTable = (
 	{ patient, showRelatedPersonForm, deleteRelatedPerson, editRelatedPerson }, context) => {
 	const formatMessage = context.intl.formatMessage;
-	const columns = [{
-		title: formatMessage({ id: 'Patients.field_person_type' }),
-		key: 'type',
-		width: '10%',
-		sorter: (a, b) => a.type > b.type,
-		render: (text, record) => <span>{formatMessage({ id: `related_persons.${record.type}` })}</span>,
-	},
-		{
-			title: formatMessage({ id: 'Patients.field_person_name' }),
-			width: '20%',
-			key: 'name',
-			render: (text, record) => <div className='to-dynamic-container'>
-				<span className='to-dynamic'>{record.name}</span>
-			</div>,
-		},
-		{
-			title: formatMessage({ id: 'common.field_phone' }),
-			width: '13%',
-			key: 'phone',
-			render: (text, record) => <a href={`tel:${record.phone}`}>{record.phone}</a>,
-		},
-		{
-			title: formatMessage({ id: 'common.field_email' }),
-			width: '20%',
-			key: 'email',
-			render: (text, record) => <a href={`mailto:${record.email}`}>{record.email}</a>,
-		},
-		{
-			title: formatMessage({ id: 'Patients.field_person_description' }),
-			width: '20%',
-			key: 'description',
-			render: (text, record) => <div className='to-dynamic-container'>
-				<span className='to-dynamic'>{record.description}</span>
-			</div>,
-		},
-		{
-			width: '17%',
-			render: (text, record) => <div>
-				<Popconfirm
-					title={formatMessage({ id: 'common.confirm_message' })}
-					onConfirm={deleteRelatedPerson(record._id)}
-					okText={formatMessage({ id: 'common.confirm_yes' })}
-					cancelText={formatMessage({ id: 'common.confirm_no' })}>
-					<Button size='small' type='ghost'>
-						{formatMessage({ id: 'common.action_delete' })}
-					</Button>
-				</Popconfirm>
-			</div>,
-		}];
 	
 	const editRender = (cell, record) => {
 		const onDelete = () => {
