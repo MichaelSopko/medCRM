@@ -32,24 +32,29 @@ a {
   }
 
   &.ant-btn-primary {
-    background: $light-blue;
-    border-color: $light-blue;
+    background-color: #3c8dbc;
     color: #ffffff;
+    border-radius: 3px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: 1px solid #367fa9;
+    min-height: 34px;
 
     &:hover {
-      background: #367fa9;
+      background-color: #286090;
       border-color: #204d74;
     }
 
     &:active {
-      background: #367fa9;
+      background-color: #286090;
       border-color: #204d74;
       box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
     }
 
     &:focus {
-      background: $light-blue;
-      border-color: $light-blue;
+      color: #fff;
+      background-color: #286090;
+      border-color: #122b40;
     }
   }
 

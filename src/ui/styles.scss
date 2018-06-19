@@ -215,16 +215,54 @@ body {
 .btn-actions {
   width: 100px;
   height: 36px;
-  border-radius: unset;
-  border-top: none;
-  border-left: none;
   color: #fff;
+  border-radius: 3px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border: 1px solid transparent;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 400;
+
+  &.ant-btn:hover {
+    color: #fff;
+  }
 
   &.btn-danger {
-    background-color: #e96565;
+    background-color: #dd4b39;
+    border-color: #d73925;
+  }
+  &.btn-danger:hover,
+  &.btn-danger:active{
+    color: #fff;
+    background-color: #ac2925;
+    border-color: #761c19;
   }
   &.btn-primary {
-    background-color: #7497af;
+    background-color: #3c8dbc;
+    color: #ffffff;
+    border-radius: 3px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: 1px solid #367fa9;
+    min-height: 34px;
+
+    &:hover {
+      background-color: #286090;
+      border-color: #204d74;
+    }
+
+    &:active {
+      background-color: #286090;
+      border-color: #204d74;
+      box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    }
+
+    &:focus {
+      color: #fff;
+      background-color: #286090;
+      border-color: #122b40;
+    }
   }
 }
 
