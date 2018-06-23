@@ -124,7 +124,8 @@
     "sqlite3": "3.1.4",
     "subscriptions-transport-ws": "0.5.3",
     "wait-port": "^0.2.2",
-    "underscore": "1.9.1"
+    "underscore": "1.9.1",
+    "html-pdf": "2.2.0"
   },
   "devDependencies": {
     "apollo-codegen": "0.10.9",
