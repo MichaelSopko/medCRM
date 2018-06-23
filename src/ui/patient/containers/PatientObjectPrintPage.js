@@ -19,7 +19,7 @@ class PatientObjectPrintPage extends Component {
 	
 	static contextTypes = {
 		intl: PropTypes.object.isRequired,
-	}
+	};
 	
 	componentWillReceiveProps(newProps) {
 		if (newProps.data && newProps.data.patient && !newProps.data.loading && !this.printed) {
@@ -43,7 +43,7 @@ class PatientObjectPrintPage extends Component {
 					))}
 				</Col>
 			);
-	}
+	};
 	
 	renderDiagnoseFields = (fields) => {
 		return fields && (
@@ -69,11 +69,12 @@ class PatientObjectPrintPage extends Component {
 					))}
 				</Col>
 			);
-	}
+	};
 	
 	render() {
 		const { params: { patient_id, object_id }, data: { patient, error, loading } } = this.props;
-		const object = patient ? (patient.diagnoses.find(d => d.id == object_id) || patient.treatment_summary.find(d => d.id == object_id)) : {};
+		const object = patient ? (patient.diagnoses.find(d => d.id === object_id)
+		|| patient.treatment_summary.find(d => d.id === object_id)) : {};
 		
 		return (
 			<main className='PatientObjectPrintPage'>

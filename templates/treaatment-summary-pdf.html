@@ -6,8 +6,89 @@
 </head>
 <body>
 <div style="max-width: 900px;">
-  <%= `${data.date}` %>
-  <%= data.type %>
+  <div style="display: flex">
+    <div>
+      <table style="border-spacing: 1em .5em;width: 100%;font-size: 14px;">
+        <tr>
+          <td style="font-weight: 600;vertical-align: text-top;">
+            <%= formatMessage({ id: 'Patients.diagnose_date' }) %>:
+          </td>
+          <td><%= moment(object.date).format('L') %></td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600;vertical-align: text-top;">
+            <%= formatMessage({ id: 'common.field_birth_date' }) %>:
+          </td>
+          <td><%= moment(patient.birth_date).format('L') %></td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600;vertical-align: text-top;">
+            <%= formatMessage({ id: 'Patients.age_in_diagnose' }) %>:</td>
+          <td>
+            <%= ageDiff %>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600;vertical-align: text-top;">
+            <%= formatMessage({ id: 'Patients.print_date' }) %>:
+          </td>
+          <td><%= moment().format('L') %></td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <table style="border-spacing: 1em .5em;width: 100%;font-size: 14px;">
+        <tr>
+          <td style="font-weight: 600;vertical-align: text-top;">
+            <%= formatMessage({ id: 'Patients.patient_name' }) %>:
+          </td>
+          <td><%= patient.first_name + ' ' + patient.last_name %></td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600;vertical-align: text-top;">
+            <%= formatMessage({ id: 'Patients.field_health_maintenance' }) %>:
+          </td>
+          <td><%= patient.health_maintenance ? formatMessage({ id:
+            `health_maintenance.${patient.health_maintenance}` }) : ''  %></td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600;vertical-align: text-top;">ID#:</td>
+          <td><%= patient.id_number %></td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600;vertical-align: text-top;">
+            <%= formatMessage({ id: 'common.gender.field_name' }) %>:</td>
+          <td><%= formatMessage({ id: `common.gender.${patient.gender}` }) %></td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600;vertical-align: text-top;">Relatives</td>
+          <td>
+            <ol style="list-style-type: decimal">
+              <% if (patient.related_persons && patient.related_persons.length) { %>
+              <% patient.related_persons.forEach(function(prsn) { %>
+              <li><%= formatMessage({ id: `related_persons.${prsn.type}` }) + ', ' + prsn.description %></li>
+              <% }) %>
+              <% } %>
+            </ol>
+          </td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600;vertical-align: text-top;">
+            <%= formatMessage({ id: 'Patients.diagnose_fillers' }) %>:
+          </td>
+          <td>
+            <ul style="list-style-type: disc">
+              <% if (object.fillers && object.fillers.length) { %>
+              <% object.fillers && object.fillers.forEach(function(flr) { %>
+              <li><%= flr.first_name + ' ' + flr.last_name %></li>
+              <% }) %>
+              <% } %>
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </div>
 
 </body>

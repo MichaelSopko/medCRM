@@ -1,29 +1,74 @@
 import * as pdf from 'html-pdf';
 import * as fs from 'fs';
 import * as _ from 'underscore';
+import moment from 'moment';
 import User from '../sql/models/users';
+import enMessages from '../../l10n/en.json';
+import heMessages from '../../l10n/he.json';
 
 const user = new User();
 const pdfTemplate = fs.readFileSync('./templates/treaatment-summary-pdf.html', 'utf-8');
 
+function flattenMessages(nestedMessages, prefix = '') {
+    return Object.keys(nestedMessages).reduce((messages, key) => {
+        const value = nestedMessages[key];
+        const prefixedKey = prefix ? `${prefix}.${key}` : key;
+        
+        if (typeof value === 'string') {
+            messages[prefixedKey] = value;
+        } else {
+            Object.assign(messages, flattenMessages(value, prefixedKey));
+        }
+        
+        return messages;
+    }, {});
+}
+
 export default (req, res, next) => {
     const params = req.params;
     const template = _.template(pdfTemplate);
+    const locale = __DEV__ ? 'en' : 'he';
+    let messages = locale === 'he' ? heMessages : enMessages;
     
-    user.getTreatmentSummaryById(params.recordId).then((result) => {
-        const data = result[0];
-
-        console.log(data);
-        
-        pdf.create(template({ data }), { format: 'A3', orientation: 'portrait' }).toStream((err, stream) => {
-            if (err) {
-                return next(err);
+    messages = flattenMessages(messages);
+    
+    function formatMessage({ id }) {
+        return messages[id] || id;
+    }
+    
+    user.findOne(params.patientId).then((patient) => {
+        user.getTreatmentSummaryById(params.recordId).then((result) => {
+            const object = result[0];
+            const ageDiff = object && moment.duration(parseInt(object.patient_age, 10));
+            let ageDiffStr = '';
+            if (ageDiff.years()) {
+                ageDiffStr = +ageDiff.years() + ' years ';
             }
-            
-            res.setHeader('Content-disposition', 'inline');
-            res.setHeader('Content-Type', 'application/pdf; charset=utf-8');
+            if (ageDiff.months()) {
+                ageDiffStr += +ageDiff.months() + ' month ';
+            }
+            if (ageDiff.days()) {
+                ageDiffStr += +ageDiff.days() + ' days';
+            }
     
-            return stream.pipe(res);
-        });
+            patient.related_persons = JSON.parse(patient.related_persons);
+    
+            console.log(patient);
+            console.log(object);
+            
+            pdf.create(
+                template({ patient, object, moment, ageDiff: ageDiffStr, formatMessage }),
+                { format: 'A3', orientation: 'portrait' },
+            ).toStream((err, stream) => {
+                if (err) {
+                    return next(err);
+                }
+            
+                res.setHeader('Content-disposition', 'inline');
+                res.setHeader('Content-Type', 'application/pdf; charset=utf-8');
+            
+                return stream.pipe(res);
+            });
+        }).catch(err => res.status(400).send(err));
     }).catch(err => res.status(400).send(err));
 };
