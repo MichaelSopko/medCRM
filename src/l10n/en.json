@@ -279,6 +279,7 @@
     "field_month": "Month",
     "field_day": "Day",
     "field_date": "Date",
+    "action_print": "Print",
     "field_required": "Required field error message",
     "no_data": "There is no data to display",
     "modal_save_confirm": {

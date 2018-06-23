@@ -1,7 +1,5 @@
-import { app as settings } from '../../../package.json'
-import jwt from 'jsonwebtoken';
 import upload from 'jquery-file-upload-middleware';
-
+import { app as settings } from '../../../package.json';
 
 export default (req, res, next) => {
 	const { user } = req.user;
@@ -11,12 +9,7 @@ export default (req, res, next) => {
 	const timestamp = new Date().getTime();
 
 	upload.fileHandler({
-		uploadDir: function () {
-			return `${settings.uploadsDir}/${timestamp}`
-		},
-		uploadUrl: function () {
-			return `/uploads/${timestamp}`
-		}
+		uploadDir: () => `${settings.uploadsDir}/${timestamp}`,
+		uploadUrl: () => `/uploads/${timestamp}`,
 	})(req, res, next);
-
-}
+};

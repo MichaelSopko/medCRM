@@ -10,8 +10,8 @@ import jwt from 'express-jwt';
 import fs from 'fs';
 import cookieParser from 'cookie-parser';
 
-import { app as settings } from '../../package.json'
-import log from '../log'
+import { app as settings } from '../../package.json';
+import log from '../log';
 import Clinic from './sql/models/Clinic';
 import TreatmentObject from './sql/models/TreatmentObject';
 import Users from './sql/models/users';
@@ -23,6 +23,7 @@ let graphiqlMiddleware = require('./middleware/graphiql').default;
 let graphqlMiddleware = require('./middleware/graphql').default;
 let authenticationMiddleware = require('./middleware/authentication').default;
 let uploadsMiddleware = require('./middleware/uploads').default;
+let pdfMiddleware = require('./middleware/pdf').default;
 let subscriptionManager = require('./graphql/subscriptions').subscriptionManager;
 
 let server;
@@ -59,7 +60,7 @@ app.use(cookieParser());
 app.use('/', express.static(settings.frontendBuildDir, { maxAge: '180 days' }));
 app.use('/uploads', express.static(settings.uploadsDir, {
   setHeaders(res) {
-	  res.attachment();
+  	res.attachment();
   },
 }));
 app.use('/documents', express.static('documents'));
@@ -79,7 +80,7 @@ const jwtMiddleware = jwt({
 			return req.cookies.token;
 		}
 		return null;
-	}
+	},
 });
 
 app.use('/graphql', (req, res, next) => {
@@ -93,6 +94,8 @@ app.use('/graphql', (req, res, next) => {
 app.use('/graphql', (...args) => graphqlMiddleware(...args));
 app.use('/graphiql', (...args) => graphiqlMiddleware(...args));
 app.use('/api/authentication', (...args) => authenticationMiddleware(...args));
+// todo check token
+app.use('/api/generate-pdf/:patientId/:recordId', (...args) => pdfMiddleware(...args));
 app.use('/api/upload-file', jwt({ secret: settings.secret }), (...args) => uploadsMiddleware(...args));
 app.use((...args) => websiteMiddleware(...args));
 
@@ -137,7 +140,7 @@ server.on('close', () => {
 
 if (module.hot) {
 	try {
-		module.hot.dispose(() => {
+        module.hot.dispose(() => {
 			if (server) {
 				server.close();
 			}
@@ -163,6 +166,9 @@ if (module.hot) {
 		});
 		module.hot.accept('./middleware/uploads', () => {
 			uploadsMiddleware = require('./middleware/uploads').default;
+		});
+		module.hot.accept('./middleware/uploads', () => {
+			pdfMiddleware = require('./middleware/pdf').default;
 		});
 	} catch (err) {
 		log(err.stack);

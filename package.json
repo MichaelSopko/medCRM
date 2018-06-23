@@ -123,7 +123,8 @@
     "source-map-support": "0.4.2",
     "sqlite3": "3.1.4",
     "subscriptions-transport-ws": "0.5.3",
-    "wait-port": "^0.2.2"
+    "wait-port": "^0.2.2",
+    "underscore": "1.9.1"
   },
   "devDependencies": {
     "apollo-codegen": "0.10.9",

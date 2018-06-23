@@ -192,6 +192,12 @@ export default class Users {
       .orderBy('id', 'DESC')
       .select();
   }
+  
+  getTreatmentSummaryById(id) {
+    return knex('patient_objects')
+      .where('id', id)
+      .select();
+  }
 
   findByRole(role, clinic_id, archived = false) {
     let k = knex('users')
