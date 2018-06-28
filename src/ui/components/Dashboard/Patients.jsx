@@ -208,7 +208,7 @@ class Patients extends Component {
 
 	removeRelatedPerson = (id) => {
 		let { relatedPersons } = this.state;
-		relatedPersons = relatedPersons.filter(person => person._id !== id);
+		relatedPersons = relatedPersons.filter((person, i) => i !== id);
 		this.setState({ relatedPersons });
 	};
 
@@ -249,6 +249,7 @@ class Patients extends Component {
 						values={activeEntity}
 						relatedPersons={relatedPersons}
 						addRelatedPerson={this.addRelatedPerson}
+						removeRelatedPerson={this.removeRelatedPerson}
 						removeRelatedPerson={this.removeRelatedPerson}
 						activeKey={this.state.activeKey}
 						onChangeKey={this.onChangeKey}

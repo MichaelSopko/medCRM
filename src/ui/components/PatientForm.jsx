@@ -22,7 +22,7 @@ export default Form.create()(
 	(props) => {
 		const {
 			visible, onCancel, onSubmit, form, loading, values = {}, relatedPersons,
-			formatMessage, activeKey, onChangeKey, addRelatedPerson,
+			formatMessage, activeKey, onChangeKey, addRelatedPerson, removeRelatedPerson
 		} = props;
 		const { getFieldDecorator } = form;
 		const formItemLayout = {
@@ -69,23 +69,26 @@ export default Form.create()(
 				<span className="fa fa-exchange fa-rotate-90"></span>
             );
         };
+        const deleteRelatedPerson = (id) => {
+            removeRelatedPerson(id);
+		};
         const editRender = (cell, record) => {
-            // const onDelete = () => {
-            //     deleteRelatedPerson(record._id);
-            // };
-            //
-            // const checkForConfirm = () => Modal.confirm({
-            //     title: formatMessage({id: 'common.confirm_message'}),
-            //     okText: formatMessage({id: 'common.confirm_yes'}),
-            //     cancelText: formatMessage({id: 'common.confirm_no'}),
-            //     onOk: onDelete.bind(this),
-            // });
+            const onDelete = () => {
+                 deleteRelatedPerson(record._id);
+            };
+            
+            const checkForConfirm = () => Modal.confirm({
+                title: formatMessage({id: 'common.confirm_message'}),
+                okText: formatMessage({id: 'common.confirm_yes'}),
+                cancelText: formatMessage({id: 'common.confirm_no'}),
+                onOk: onDelete.bind(this),
+            });
             
             return (
 				<span>
-				{/*<Button size="small" className="btn-actions btn-danger" onClick={checkForConfirm}
-						type='ghost'>{formatMessage({id: 'common.action_delete'})}</Button>*/}
-			</span>
+					<Button size="small" className="btn-actions btn-danger" onClick={checkForConfirm}
+							type='ghost'>{formatMessage({id: 'common.action_delete'})}</Button>
+				</span>
             );
         };
         const options = {
@@ -370,12 +373,12 @@ export default Form.create()(
 										<TableHeaderColumn width="20%" dataField="email" dataSort caretRender={getCaret}>
                                             {formatMessage({ id: 'common.field_email' })}
 										</TableHeaderColumn>
-										{/*<TableHeaderColumn dataField="description" dataSort caretRender={getCaret}>
+										<TableHeaderColumn dataField="description" dataSort caretRender={getCaret}>
                                             {formatMessage({ id: 'Patients.field_person_description' })}
 										</TableHeaderColumn>
 										<TableHeaderColumn width="100px" dataFormat={editRender}>
                                             {formatMessage({ id: 'common.field_actions' })}
-										</TableHeaderColumn>*/}
+										</TableHeaderColumn>
 									</BootstrapTable>
 								</div>
 							</TabPane> }
