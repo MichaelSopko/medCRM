@@ -47,6 +47,15 @@
 		padding: 36px;
 	}
 
+	.top-bar-extra {
+		position: relative;
+		top: 43px;
+
+		&>button:first-child {
+			margin-left: 8px;
+		}
+	}
+
 }
 
 .detail-tab-wrap {
@@ -62,12 +71,7 @@
 	}
 	&__related-persons {
 		width: 75%;
-		//.table.table-bordered th span {
-		//	left: 8px;
-		//}
-		//.table.table-bordered th {
-		//	padding-right: 8px;
-		//}
+
 		.patient-relateds {
 			margin-top: 12px;
 		}
@@ -104,9 +108,4 @@
 			content: ':';
 		}
 	}
-}
-
-.top-bar-extra {
-	position: relative;
-	top: 36px;
 }

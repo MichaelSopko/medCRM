@@ -753,7 +753,6 @@ class PatientView extends Component {
 						<Button
 							icon="edit"
 							className="btn-actions btn-primary"
-							style={{ marginLeft: 8 }}
 							onClick={onEdit(patient)}
 						>{formatMessage({ id: 'common.action_edit' })}</Button>
 						{patient.archived
@@ -762,7 +761,7 @@ class PatientView extends Component {
 									title={!canUnarchive && formatMessage({ id: 'Patients.archive_error_time' }, { time: minutes })}>
 									<Button
 										type="primary"
-										style={{ backgroundColor: '#00A854' }}
+										style={{ backgroundColor: '#00A854', borderColor: '#00A854' }}
 										loading={archiveLoading}
 										onClick={this.onUnarchiveClick}
 										disabled={!canUnarchive}

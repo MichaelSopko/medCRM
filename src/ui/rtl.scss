@@ -312,6 +312,21 @@ body.rtl, html[dir="rtl"] {
 	.ant-select-selection-selected-value {
 		padding: 0;
 	}
+
+	.PatientView {
+		.top-bar-extra {
+			&>button:first-child {
+				margin-left: 0;
+			}
+			&>:last-child {
+				margin-right: 16px;
+			}
+			button:last-child {
+				width: 110px;
+				margin-left: 8px;
+			}
+		}
+	}
 }
 
 

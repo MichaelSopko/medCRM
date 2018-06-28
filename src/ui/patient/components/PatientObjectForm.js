@@ -1,4 +1,5 @@
-import React, { } from 'react'; import PropTypes from 'prop-types';
+import React, { } from 'react';
+import PropTypes from 'prop-types';
 import { Modal, Form, Col, Row, DatePicker, Input, Radio, Select } from 'antd';
 import moment from 'moment';
 
