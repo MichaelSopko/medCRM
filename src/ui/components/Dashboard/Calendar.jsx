@@ -128,8 +128,6 @@ class TreatmentsCalendar extends Component {
 			delete values.repeat_weeks_trigger;
 		}
 		
-		console.log( this.state);
-		
 		mutation = isNew ? this.props.createObject : this.props.updateObject;
 		
 		params = isNew
@@ -146,8 +144,6 @@ class TreatmentsCalendar extends Component {
 		
 		
 		this.setState({ modalLoading: true });
-		
-		console.log('Running form', params);
 		
 		mutation(params).then((res) => {
 			this.handleCancel();
@@ -177,10 +173,7 @@ class TreatmentsCalendar extends Component {
 		this.props.data.refetch();
 	};
 	
-	
 	componentWillReceiveProps(nextProps){
-		console.log('nextProps');
-		console.log(nextProps);
 	}
 
 	render() {

@@ -22,9 +22,7 @@ const EntityForm = Form.create()(
       cancelText: formatMessage({ id: 'common.modal_save_confirm.cancel' }),
     }) : onCancel();
     const formLayout = 'vertical';
-    
-    console.log(values.disabled);
-
+	  
     return (
       <Modal
         title={formatMessage({ id: isEditing ? 'Clinics.edit_header' : 'Clinics.create_header' })}
