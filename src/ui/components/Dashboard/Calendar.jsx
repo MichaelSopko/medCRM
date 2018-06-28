@@ -288,6 +288,7 @@ class TreatmentsCalendar extends Component {
 						isRTL={!__DEV__}
 						id="ghjk"
 						locale={!__DEV__ ? 'he' : 'en'}
+						titleFormat="YYYY MMMM D"
 						header = {{
 							left: 'prev,next today, month, basicWeek, basicDay,' +
 							' agenda',
