@@ -271,10 +271,10 @@
     "agenda": "רשימה"
   },
   "Settings": {
-    "tab1": "General",
-    "header": "Settings",
-    "save_button": "Save",
-    "success_message": "Settings saved"
+    "tab1": "כללי",
+    "header": "הגדרות",
+    "save_button": "שמור",
+    "success_message": "ההגדרות נשמרו"
   },
   "common": {
     "field_name": "שם",
