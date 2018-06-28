@@ -3,14 +3,7 @@ import PropTypes from 'prop-types';
 import { Select } from 'antd';
 
 import { connect } from 'react-redux';
-// import { graphql, compose } from 'react-apollo';
-// import update from 'react-addons-update';
-//
-// import PATIENTS_LIST_QUERY from '../patient/graphql/PatientsList.graphql'
-//
-// @connect(
-// 	(state) => ({ currentClinic: state.currentClinic }),
-// )
+
 class TherapistSelector extends Component {
 	static contextTypes = {
 		intl: PropTypes.object.isRequired,
@@ -23,8 +16,6 @@ class TherapistSelector extends Component {
 	render() {
 		const { data, ...props } = this.props;
 		const formatMessage = this.context.intl.formatMessage;
-		
-		console.log(data);
 		
 		if (!data) {
 			return false;

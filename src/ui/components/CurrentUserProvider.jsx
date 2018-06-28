@@ -60,7 +60,6 @@ export default class CurrentUserProvider extends Component {
       return false;
     }
     if (currentUser) {
-      console.log(currentUser);
       this.props.setCurrentUser({
         ...currentUser,
         loading: false,
