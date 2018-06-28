@@ -331,6 +331,11 @@ body.rtl, html[dir="rtl"] {
 	.Settings {
 		direction: rtl;
 	}
+
+	.fc-left>fc-button-group {
+		display: flex;
+		flex-direction: row-reverse;
+	}
 }
 
 
