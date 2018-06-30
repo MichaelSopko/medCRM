@@ -86,15 +86,18 @@
 		display: flex;
 	}
 	&__name {
-		width: 200px;
+		width: 50%;
 		display: inline-block;
 		font-weight: 600;
 		font-size: 28px;
+		word-wrap: break-word;
 	}
 	&__age {
-		flex-grow: 1;
+		width: 50%;
+		display: inline-block;
 		margin-left: 0;
 		font-size: 20px;
+		word-wrap: break-word;
 	}
 	&__id {
 		color: #b7b7b7;
@@ -108,10 +111,17 @@
 		font-size: 16px;
 	}
 	&__field-name {
-		width: 200px;
+		width: 50%;
+		display: inline-block;
 		font-weight: 300;
+		word-wrap: break-word;
 		&::after {
 			content: ':';
 		}
+	}
+	&__field-value {
+		width: 50%;
+		display: inline-block;
+		word-wrap: break-word;
 	}
 }
