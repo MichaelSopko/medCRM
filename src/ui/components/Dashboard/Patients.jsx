@@ -48,6 +48,7 @@ class Patients extends Component {
 		currentPatientId: null,
 		showArchived: false,
 		activeKey: 'details',
+        activeTabKey: 'details',
 	};
 
 	constructor(props) {
@@ -213,7 +214,7 @@ class Patients extends Component {
 	};
 
 	onPatientChange = (id) => {
-		this.setState({ currentPatientId: id })
+		this.setState({ currentPatientId: id, activeTabKey: 'details' })
 	};
 
 	onShowArchivedChange = (e) => {
@@ -223,6 +224,10 @@ class Patients extends Component {
 	onChangeKey = (activeKey) => {
 		this.setState({ activeKey });
 	};
+    
+    onChangeTabKey = (activeTabKey) => {
+        this.setState({ activeTabKey });
+    };
 
 	render() {
 		const { deletePatient, currentClinic, currentUser, data } = this.props;
@@ -258,8 +263,11 @@ class Patients extends Component {
 						<div className='Dashboard__Actions'>
 							<div>
 								<PatientSelector showArchived={showArchived} onChange={this.onPatientChange} />
-								<Checkbox style={{ marginRight: 8 }} checked={showArchived}
-								          onChange={this.onShowArchivedChange}>{formatMessage({ id: 'Patients.show-archived' })}</Checkbox>
+								<Checkbox style={{ marginRight: 8 }}
+										  checked={showArchived}
+								          onChange={this.onShowArchivedChange}>
+									{formatMessage({ id: 'Patients.show-archived' })}
+								</Checkbox>
 							</div>
 							<div className="rtl-left-actions">
 								<CheckAccess role={ROLES.SYSTEM_ADMIN}>
@@ -278,7 +286,11 @@ class Patients extends Component {
 					</div>
 
 					<div style={{ marginTop: 24 }}>
-						<PatientView patientId={currentPatientId} onEdit={this.editEntity} />
+						<PatientView patientId={currentPatientId}
+									 onEdit={this.editEntity}
+									 onChangeTabKey={this.onChangeTabKey}
+									 activeTabKey={this.state.activeTabKey}
+						/>
 					</div>
 					{/*<Table dataSource={patients} columns={columns} loading={loading} rowKey='id'/>*/}
 				</section>

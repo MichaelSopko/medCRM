@@ -546,6 +546,7 @@ class PatientView extends Component {
 		formLoading: false,
 		showRelatedPersonForm: false,
 		activeRelatedPerson: null,
+        activeKey: 'details',
 	};
 
 	componentWillReceiveProps(nextProps) {
@@ -691,7 +692,7 @@ class PatientView extends Component {
 	};
 
 	render() {
-		const { data, id, onEdit, currentUser, currentClinic } = this.props;
+		const { data, id, onEdit, currentUser, currentClinic, activeTabKey, onChangeTabKey } = this.props;
 		const { archiveLoading, formLoading, showRelatedPersonForm, activeRelatedPerson } = this.state;
 		const formatMessage = this.context.intl.formatMessage;
 		
@@ -749,6 +750,8 @@ class PatientView extends Component {
 				/>
 				<Tabs
 					animated={false}
+					activeKey={activeTabKey}
+					onChange={onChangeTabKey}
 					tabBarExtraContent={<div className="top-bar-extra">
 						<Button
 							icon="edit"
