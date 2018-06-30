@@ -7,9 +7,7 @@
 @import "~react-big-calendar/lib/addons/dragAndDrop/styles.css";
 @import "../assets/styles/variables";
 @import "../assets/styles/general";
-
 @import "./rtl.scss";
-
 
 $primary-color: #191654;
 
@@ -22,7 +20,6 @@ html {
 body {
   font-family: $base-font;
   background: #ECECEC;
-  // min-width: 1024px;
 }
 
 .Container {
@@ -71,16 +68,18 @@ body {
 }
 
 .ant-table-row {
-	cursor: pointer;
+  cursor: pointer;
 }
+
 .rtl .main-header {
   display: flex;
   .navbar {
     flex-grow: 1;
   }
 }
+
 .rtl .sidebar-collapse {
-  .main-sidebar{
+  .main-sidebar {
     text-align: left;
   }
   .content-wrap {
@@ -91,6 +90,7 @@ body {
     display: flex;
   }
 }
+
 .sidebar-collapse {
   .main-sidebar {
     -webkit-transform: translate(0, 0);
@@ -100,11 +100,11 @@ body {
     width: 50px !important;
     z-index: 850;
 
-    .user-panel>.info,
+    .user-panel > .info,
     .sidebar-form,
-    .sidebar-menu>li>a>span,
-    .sidebar-menu>li>.treeview-menu,
-    .sidebar-menu>li>a>.pull-right,
+    .sidebar-menu > li > a > span,
+    .sidebar-menu > li > .treeview-menu,
+    .sidebar-menu > li > a > .pull-right,
     .sidebar-menu li.header {
       display: none !important;
       -webkit-transform: translateZ(0);
@@ -131,7 +131,7 @@ body {
   .main-header .logo {
     width: 50px;
   }
-  .main-header .logo>.logo-lg {
+  .main-header .logo > .logo-lg {
     display: none;
   }
 
@@ -145,7 +145,7 @@ body {
   font-size: 12px;
   color: rgba(0, 0, 0, 0.65);
 
-  th, td  {
+  th, td {
     padding: 16px 8px;
     word-break: break-all;
   }
@@ -173,7 +173,7 @@ body {
   }
 }
 
-.react-bs-table table td{
+.react-bs-table table td {
   padding: 8px;
   word-break: break-all;
   vertical-align: middle;
@@ -233,7 +233,7 @@ body {
     border-color: #d73925;
   }
   &.btn-danger:hover,
-  &.btn-danger:active{
+  &.btn-danger:active {
     color: #fff;
     background-color: #ac2925;
     border-color: #761c19;
@@ -291,8 +291,8 @@ body {
     padding-left: 0;
     /* margin-left: 0; */
     overflow: hidden;
-    &>div,
-    &>section {
+    & > div,
+    & > section {
       padding-left: 0;
     }
     .Calendar {
@@ -304,7 +304,6 @@ body {
     }
   }
 }
-
 
 /*
 *
@@ -335,8 +334,8 @@ body {
     padding-right: 0;
     /* margin-left: 0; */
     overflow: hidden;
-    &>div,
-    &>section {
+    & > div,
+    & > section {
       padding-right: 0;
     }
     .Calendar {
@@ -350,8 +349,8 @@ body {
     padding-left: 0;
     /* margin-left: 0; */
     overflow: hidden;
-    &>div,
-    &>section {
+    & > div,
+    & > section {
       padding-left: 0;
     }
     .Calendar {
@@ -398,7 +397,7 @@ body {
     }
   }
   .main-sidebar {
-    transition: transform .3s ease-in-out,width .3s ease-in-out;
+    transition: transform .3s ease-in-out, width .3s ease-in-out;
   }
   .rtl .sidebar-collapse .content-wrap {
     margin-right: 0;
@@ -417,7 +416,7 @@ body {
       min-height: 0;
       max-height: 0;
       width: 0 !important;
-      transition: transform .3s ease-in-out,width .3s ease-in-out;
+      transition: transform .3s ease-in-out, width .3s ease-in-out;
 
       .user-panel {
         width: 0;
