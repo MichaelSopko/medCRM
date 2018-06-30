@@ -26,6 +26,13 @@ body.rtl, html[dir="rtl"] {
       align-items: center;
     }
 
+    .ant-btn.ant-btn-primary {
+      border-bottom-left-radius: 3px;
+      border-top-left-radius: 3px;
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
+    }
+
     .rtl-left-actions {
       display: flex;
     }
@@ -200,20 +207,15 @@ body.rtl, html[dir="rtl"] {
       display: flex;
       align-items: center;
     }
-    &__name {
-      width: 200px;
-    }
-    &__age {
-      flex-grow: 1;
-    }
   }
 
   .react-bs-table-pagination {
-    text-align: right;
     margin-bottom: 15px;
-
+    .react-bs-table-sizePerPage-dropdown {
+      display: none;
+    }
     .react-bootstrap-table-page-btns-ul {
-      float: left;
+      float: right;
     }
   }
 
@@ -265,15 +267,6 @@ body.rtl, html[dir="rtl"] {
 
   .ant-modal-title {
     text-align: right;
-  }
-
-  .ant-form-vertical {
-    .ant-form-item {
-      display: block;
-      .ant-form-item-label {
-        text-align: right;
-      }
-    }
   }
 
   .treatment-form {

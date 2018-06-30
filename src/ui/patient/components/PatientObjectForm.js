@@ -73,7 +73,7 @@ const PatientObjectForm = (props, context) => {
 					{ <Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'Treatments.field_therapists' })}
-						style={ { display: !isTherapist ? 'none' : 'flex' } }
+						style={ { display: !isTherapist ? 'none' : 'block' } }
 						hasFeedback
 					>
 						<div>{ (isEditing ? values.therapists || [] : [currentUser]).map(user => `${user.first_name} ${user.last_name}`).join(', ') }</div>
@@ -81,7 +81,7 @@ const PatientObjectForm = (props, context) => {
 					{<Form.Item
 						{...formItemLayout}
 						label={formatMessage({ id: 'Patients.diagnose_fillers' })}
-						style={ { display: isTherapist ? 'none' : 'flex' } }
+						style={ { display: isTherapist ? 'none' : 'block' } }
 						hasFeedback
 					>
 						{getFieldDecorator('fillers_ids', {
