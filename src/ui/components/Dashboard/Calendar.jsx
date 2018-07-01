@@ -5,11 +5,21 @@ import { graphql, compose, withApollo } from 'react-apollo';
 import ApolloClient from 'apollo-client';
 import gql from 'graphql-tag';
 import update from 'react-addons-update';
-// import $ from 'jquery';
 import moment from 'moment';
 import BigCalendar from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 import FullCalendar from './fullcalendar';
+
+// /* eslint-disable import/no-unresolved */
+
+import * as $ from 'jquery';
+// console.log(global === window );
+if (typeof $.extend === 'function') {
+    import('fullcalendar')
+    .then((something) => {
+        console.log(something.something);
+    });
+}
 
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -71,6 +81,7 @@ class TreatmentsCalendar extends Component {
 		currentObject: null,
 		currentSeries: null,
 		modalLoading: false,
+		defaultDate: new Date(),
 	};
 
 	componentWillMount() {
@@ -104,8 +115,12 @@ class TreatmentsCalendar extends Component {
 	};
 	
 	eventClick = (calEvent) => {
-		console.log(calEvent);
-		console.log(FORM_TYPES.Treatment);
+		let date = this.jq(`#ghjk`).fullCalendar( 'getDate' );
+		
+        this.setState({
+            defaultDate: date
+        });
+		
 		this.showForm(calEvent.treatment.__typename, null, calEvent.treatment);
 	};
 
@@ -193,6 +208,8 @@ class TreatmentsCalendar extends Component {
 			currentClinic,
 			therapists,
 		};
+        
+        this.jq = $.noConflict();
 
 		if (!currentClinic.id) return null;
 		
@@ -286,6 +303,7 @@ class TreatmentsCalendar extends Component {
 							center: 'title',
 							right: ''
 						}}
+						defaultDate={this.state.defaultDate}
 						events={events}
 						buttonText={{
 							allDay: formatMessage({id: 'Calendar.allDay'}),
