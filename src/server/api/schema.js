@@ -307,7 +307,7 @@ const resolvers = {
           payload: patients_limit,
         }));
       }
-      if (!isAdmin && archive_time && moment(archived_date).diff(moment(), 'minutes') < archive_time) {
+      if (!isAdmin && archive_time && (-moment(archived_date).diff(moment(), 'minutes')) < archive_time) {
         throw new Error(JSON.stringify({
           code: 'TIME_LIMIT',
           payload: archive_time,
