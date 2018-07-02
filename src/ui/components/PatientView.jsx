@@ -769,7 +769,7 @@ class PatientView extends Component {
 										onClick={this.onUnarchiveClick}
 										disabled={!canUnarchive}
 										icon="unlock"
-										className="btn-actions btn-danger"
+										//className="btn-actions btn-danger"
 									>
 										{formatMessage({ id: 'common.action_unarchive' })}
 									</Button>
