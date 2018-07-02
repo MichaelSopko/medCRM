@@ -298,8 +298,9 @@ class TreatmentsCalendar extends Component {
 						locale={!__DEV__ ? 'he' : 'en'}
 						titleFormat="YYYY MMMM D"
 						header = {{
-							left: 'prev,next today, month, basicWeek, basicDay,' +
-							' agenda',
+							left: !__DEV__ ?
+								'next, prev, today, month, basicWeek, basicDay, agenda' :
+								'prev, next, today, month, basicWeek, basicDay, agenda',
 							center: 'title',
 							right: ''
 						}}

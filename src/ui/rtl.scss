@@ -337,6 +337,15 @@ body.rtl, html[dir="rtl"] {
     display: flex;
     flex-direction: row-reverse;
   }
+
+  .Calendar {
+    .fc-next-button,
+    .fc-prev-button {
+      .fc-icon {
+        transform: rotate(180deg);
+      }
+    }
+  }
 }
 
 
