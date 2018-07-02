@@ -579,11 +579,16 @@ class PatientView extends Component {
 			this.setState({ archiveLoading: false });
 		}).catch(e => {
 			const { code, payload } = JSON.parse(e.graphQLErrors[0].message);
-			if (code) {
+			if (code === 'PATIENTS_LIMIT') {
 				e.graphQLErrors[0].message == 'PATIENTS_LIMIT'
 				Modal.error({
 					title: formatMessage({ id: 'Patients.archive_error_title' }),
 					content: formatMessage({ id: 'Patients.archive_error_content' }, { limit: payload }),
+				});
+			} else if (code === 'TIME_LIMIT') {
+				Modal.error({
+					title: formatMessage({ id: 'Patients.archive_error_title' }),
+					content: formatMessage({ id: 'Patients.archive_error_time' }, { time: payload }),
 				});
 			} else {
 				message.error(formatMessage({ id: 'common.server_error' }));
@@ -769,7 +774,6 @@ class PatientView extends Component {
 										onClick={this.onUnarchiveClick}
 										disabled={!canUnarchive}
 										icon="unlock"
-										//className="btn-actions btn-danger"
 									>
 										{formatMessage({ id: 'common.action_unarchive' })}
 									</Button>
