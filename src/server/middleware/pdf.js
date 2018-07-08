@@ -57,7 +57,7 @@ export default (req, res, next) => {
             console.log(object);
             
             pdf.create(
-                template({ patient, object, moment, ageDiff: ageDiffStr, formatMessage }),
+                template({ patient, object, moment, ageDiff: ageDiffStr, formatMessage, locale }),
                 { format: 'A3', orientation: 'portrait' },
             ).toStream((err, stream) => {
                 if (err) {
