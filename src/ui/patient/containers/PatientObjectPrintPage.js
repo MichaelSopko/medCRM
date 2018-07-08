@@ -46,10 +46,13 @@ class PatientObjectPrintPage extends Component {
 	};
 	
 	renderDiagnoseFields = (fields) => {
+        let aligne = (__DEV__ ? 'right' : 'left');
+		let styl = { margin: 12, 'text-align': aligne };
+		
 		return fields && (
-				<Col style={{ margin: 12 }}>
+				<Col style={styl} >
 					{Object.keys(fields).map((key, i) => (
-						<div style={{ marginTop: 16 }}>
+						<div style={{ marginTop: 16 }} >
 							{ i === 0 && <h3 style={{ marginBottom: 16 }}>
 								<FormattedMessage id={`DiagnoseTab.tab1`} />:
 							</h3> }
