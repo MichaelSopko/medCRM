@@ -42,6 +42,7 @@ const PatientObjectForm = (props, context) => {
 	}) : onCancel();
 	
 	const formLayout = 'vertical';
+	let values = therapists || [];
 
 	return (
 		<Modal
@@ -76,7 +77,7 @@ const PatientObjectForm = (props, context) => {
 						style={ { display: !isTherapist ? 'none' : 'block' } }
 						hasFeedback
 					>
-						<div>{ (isEditing ? values.therapists || [] : [currentUser]).map(user => `${user.first_name} ${user.last_name}`).join(', ') }</div>
+						<div>{ (isEditing && values ? values.therapists || [] : [currentUser]).map(user => `${user.first_name} ${user.last_name}`).join(', ') }</div>
 					</Form.Item> }
 					{<Form.Item
 						{...formItemLayout}
