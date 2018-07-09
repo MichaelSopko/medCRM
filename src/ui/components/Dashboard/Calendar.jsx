@@ -222,7 +222,7 @@ class TreatmentsCalendar extends Component {
 			return {
 				start: new Date(startDate.getTime() + userTimezoneOffset),
 				end: new Date(endDate.getTime() + userTimezoneOffset),
-				title: `${formatMessage({ id: 'Treatments.object_label_name.' + treatment.__typename })} ${treatment.patient.first_name} ${treatment.patient.last_name} (${moment(startDate).format('H:mm')} — ${moment(endDate).format('H:mm')})`,
+				title: `${formatMessage({ id: 'Treatments.object_label_name.' + treatment.__typename })} ${treatment.patient.first_name} ${treatment.patient.last_name} (${moment(new Date(startDate.getTime() + userTimezoneOffset)).format('H:mm')} — ${moment(new Date(endDate.getTime() + userTimezoneOffset)).format('H:mm')})`,
 				patient: treatment.patient,
 				id: treatment.id,
 				// allDay: true,
