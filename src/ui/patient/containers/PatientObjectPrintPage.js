@@ -46,7 +46,7 @@ class PatientObjectPrintPage extends Component {
 	};
 	
 	renderDiagnoseFields = (fields) => {
-        let aligne = (__DEV__ ? 'right' : 'left');
+        let aligne = (!__DEV__ ? 'right' : 'left');
 		let styl = { margin: 12, 'text-align': aligne };
 		
 		return fields && (

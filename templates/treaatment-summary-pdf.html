@@ -4,6 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
+  <style>
+    .right-text {
+      text-align: right;
+    }
+  </style>
 </head>
 <body>
 <div style="max-width: 900px;">
@@ -92,7 +97,7 @@
     </div>
   </div>
   <div style="clear: both;"></div>
-  <div style="padding: 1em">
+  <div style="padding: 1em" class="<%= locale === 'he'? 'right-text' : '' %>">
     <% for (let key in object.fields) { %>
     <div style="margin-top: 16px">
 

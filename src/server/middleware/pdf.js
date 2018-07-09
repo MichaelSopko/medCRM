@@ -36,7 +36,7 @@ const safeParse = (json, deflt = []) => {
 export default (req, res, next) => {
     const params = req.params;
     const template = _.template(pdfTemplate);
-    const locale = __DEV__ ? 'en' : 'he';
+    const locale = !__DEV__ ? 'en' : 'he';
     let messages = locale === 'he' ? heMessages : enMessages;
     
     messages = flattenMessages(messages);
@@ -67,8 +67,6 @@ export default (req, res, next) => {
                 object.fillers = realFillers;
                 object.fields = safeParse(object.fields, '{}');
                 
-                console.log(object);
-    
                 pdf.create(
                     template({
                         patient, object, moment, ageDiff: ageDiffStr, formatMessage, locale,
