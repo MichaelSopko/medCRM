@@ -24,6 +24,15 @@ function flattenMessages(nestedMessages, prefix = '') {
     }, {});
 }
 
+const safeParse = (json, deflt = []) => {
+    try {
+        return JSON.parse(json || `${deflt}`);
+    } catch (e) {
+        console.log('JSON parse error');
+        return deflt;
+    }
+};
+
 export default (req, res, next) => {
     const params = req.params;
     const template = _.template(pdfTemplate);
@@ -52,23 +61,30 @@ export default (req, res, next) => {
             }
     
             patient.related_persons = JSON.parse(patient.related_persons);
+            const fillers = safeParse(object.fillers_ids, '[]') || [];
+            
+            user.getUsers(fillers).then((realFillers) => {
+                object.fillers = realFillers;
+                object.fields = safeParse(object.fields, '{}');
+                
+                console.log(object);
     
-            console.log(patient);
-            console.log(object);
-            
-            pdf.create(
-                template({ patient, object, moment, ageDiff: ageDiffStr, formatMessage, locale }),
-                { format: 'A3', orientation: 'portrait' },
-            ).toStream((err, stream) => {
-                if (err) {
-                    return next(err);
-                }
-            
-                res.setHeader('Content-disposition', 'inline');
-                res.setHeader('Content-Type', 'application/pdf; charset=utf-8');
-            
-                return stream.pipe(res);
-            });
+                pdf.create(
+                    template({
+                        patient, object, moment, ageDiff: ageDiffStr, formatMessage, locale,
+                    }),
+                    { format: 'A3', orientation: 'portrait' },
+                ).toStream((err, stream) => {
+                    if (err) {
+                        return next(err);
+                    }
+        
+                    res.setHeader('Content-disposition', 'inline');
+                    res.setHeader('Content-Type', 'application/pdf; charset=utf-8');
+        
+                    return stream.pipe(res);
+                });
+            }).catch(err => res.status(400).send(err));
         }).catch(err => res.status(400).send(err));
     }).catch(err => res.status(400).send(err));
 };

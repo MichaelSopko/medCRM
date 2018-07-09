@@ -336,7 +336,6 @@ const resolvers = {
         .then(() => context.Treatments.addSeries(series))
           .then((id) => context.Treatments.findOne(id))
         .then((series) => {
-			console.log(series);
 			pubsub.publish('treatmentSeriesCreated', series);
 			return {status: true};
 		});
@@ -346,7 +345,6 @@ const resolvers = {
         .then(() => context.Treatments.editSeries(series))
         .then(() => context.Treatments.findOne(series.id))
         .then((series) => {
-          console.log(series);
           pubsub.publish('treatmentSeriesUpdated', series);
           return { status: true };
         });
@@ -677,7 +675,6 @@ const resolvers = {
         first_name: flr,
       }));
       const realFillers = await context.Users.getUsers(fillers);
-      console.log([...realFillers, ...customFillers]);
       return [...realFillers, ...customFillers];
     },
     fields(diagnose, _, ctx) {
@@ -705,7 +702,6 @@ const resolvers = {
   },
   CurrentUser: {
     clinic(user, _, context) {
-      console.log(user);
       return context.Clinics.findOne(user.clinic_id);
     },
   },

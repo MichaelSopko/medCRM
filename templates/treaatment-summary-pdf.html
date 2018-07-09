@@ -7,8 +7,8 @@
 </head>
 <body>
 <div style="max-width: 900px;">
-  <div style="display: flex">
-    <div>
+  <div style="display: flex; clear: both;">
+    <div style="width: 50%; float: left;">
       <table style="border-spacing: 1em .5em;width: 100%;font-size: 14px;">
         <tr>
           <td style="font-weight: 600;vertical-align: text-top;">
@@ -37,7 +37,7 @@
         </tr>
       </table>
     </div>
-    <div>
+    <div style="width: 50%; float: left">
       <table style="border-spacing: 1em .5em;width: 100%;font-size: 14px;">
         <tr>
           <td style="font-weight: 600;vertical-align: text-top;">
@@ -66,9 +66,10 @@
           <td>
             <ol style="list-style-type: decimal">
               <% if (patient.related_persons && patient.related_persons.length) { %>
-              <% patient.related_persons.forEach(function(prsn) { %>
-              <li><%= formatMessage({ id: `related_persons.${prsn.type}` }) + ', ' + prsn.description %></li>
-              <% }) %>
+                <% patient.related_persons.forEach(function(prsn) { %>
+                  <li><%= formatMessage({ id: `related_persons.${prsn.type}` }) %>, <%=
+                    prsn.description %></li>
+                <% }) %>
               <% } %>
             </ol>
           </td>
@@ -80,15 +81,51 @@
           <td>
             <ul style="list-style-type: disc">
               <% if (object.fillers && object.fillers.length) { %>
-              <% object.fillers && object.fillers.forEach(function(flr) { %>
-              <li><%= flr.first_name + ' ' + flr.last_name %></li>
-              <% }) %>
+                <% object.fillers && object.fillers.forEach(function(flr) { %>
+                  <li><%= flr.first_name + ' ' + flr.last_name %></li>
+                <% }) %>
               <% } %>
             </ul>
           </td>
         </tr>
       </table>
     </div>
+  </div>
+  <div style="clear: both;"></div>
+  <div style="padding: 1em">
+    <% for (let key in object.fields) { %>
+    <div style="margin-top: 16px">
+
+      <% if (Object.keys(object.fields).indexOf(key) === 0) { %>
+        <h3 style="margin-top: 16px">
+          <%= formatMessage({ id: 'DiagnoseTab.tab1' }) %>
+        </h3>
+      <% } %>
+      <% if (Object.keys(object.fields).indexOf(key) === 9) { %>
+        <h3 style="margin-top: 16px">
+          <%= formatMessage({ id: 'DiagnoseTab.tab2' }) %>
+        </h3>
+      <% } %>
+      <% if (Object.keys(object.fields).indexOf(key) === 17) { %>
+        <h3 style="margin-top: 16px">
+          <%= formatMessage({ id: 'DiagnoseTab.tab3' }) %>
+        </h3>
+      <% } %>
+
+      <h4>
+        <%= formatMessage({ id: 'DiagnoseTab.' + key }) %>:
+      </h4>
+
+      <p>
+        <% if (object.fields[key]) { %>
+          <%= object.fields[key] %>
+        <% } else { %>
+          <span style="font-style: italic"><%= formatMessage({ id: 'Patients.field_empty' }) %></span>
+        <% } %>
+      </p>
+
+    </div>
+    <% } %>
   </div>
 </div>
 

@@ -100,6 +100,6 @@ const PatientObjectView = (props, context) => {
 
 PatientObjectView.contextTypes = {
 	intl: PropTypes.object.isRequired,
-}
+};
 
 export default PatientObjectView;
