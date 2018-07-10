@@ -31,8 +31,10 @@ class PatientObjectPrintPage extends Component {
 	}
 	
 	renderTreatmentFields = (fields) => {
+        let aligne = (!__DEV__ ? 'right' : 'left');
+        let styl = { margin: 12, 'text-align': aligne };
 		return fields && (
-				<Col style={{ margin: 12 }}>
+				<Col style={styl}>
 					{Object.keys(fields).map(key => fields[key] && (
 						<div style={{ marginTop: 12 }}>
 							<h4>
