@@ -10,12 +10,15 @@ const PatientObjectView = (props, context) => {
 	const { object, patient, renderFields, showHearingTest, loading } = props;
 	const ageDiff = object && moment.duration(parseInt(object.patient_age));
 	const { __typename, ...fields } = object.fields || {};
+    
+    let aligne = (!__DEV__ ? 'right' : 'left');
+    let styl = { margin: 12, 'text-align': aligne };
 
 	return (
 		<Spin spinning={loading}>
 			{ !!patient && object && Object.keys(object).length && <Row>
 				<Col span={12}>
-					<table className='PatientObjectView__Table'>
+					<table style={styl} className='PatientObjectView__Table'>
 						<tr>
 							<td>{formatMessage({ id: 'Patients.diagnose_date' })}:</td>
 							<td>{moment(object.date).format('L')}</td>
@@ -48,7 +51,7 @@ const PatientObjectView = (props, context) => {
 					</table>
 				</Col>
 				<Col span={12}>
-					<table className='PatientObjectView__Table'>
+					<table style={styl} className='PatientObjectView__Table'>
 						<tr>
 							<td>{formatMessage({ id: 'Patients.patient_name' })}:</td>
 							<td>{patient.first_name} {patient.last_name}</td>

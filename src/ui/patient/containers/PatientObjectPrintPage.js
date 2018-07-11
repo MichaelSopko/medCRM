@@ -83,7 +83,7 @@ class PatientObjectPrintPage extends Component {
 		
 		return (
 			<main className='PatientObjectPrintPage'>
-				<div className="Container">
+				<div className="Container" style={{padding: '12px'}}>
 					<PatientObjectView
 						patient={patient}
 						object={object}
