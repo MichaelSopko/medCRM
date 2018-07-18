@@ -229,7 +229,7 @@ const resolvers = {
           .catch(checkForNonUniqueField);
     },
 	updateTherapist(_, { id, therapist }, context) {
-      return checkAccess(context, ROLES.CLINIC_ADMIN)
+      return checkAccess(context, ROLES.THERAPIST)
         .then(() => context.Users.editUser({ id, ...therapist }))
         .then(res => context.Users.findOne(id))
         .then((therapist) => {
