@@ -23,10 +23,11 @@ Make sure that `Docker` ran on your machine
 `npm run start:dev:docker-db`
 
 ### Without dockert
-Or without `Docker`, but make sure that `MySQL` server installed and ran
+English version: Make sure that `MySQL` server installed and ran. Then do `npm run install` after that
 `npm run start:dev`
 
-Run app in production
+Hebrew version: Run app in production make sure that `MySQL` server installed and ran.
+Then do `npm run install` after that
 `npm run start:prod`
 
 ### Use https
