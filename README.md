@@ -1,5 +1,4 @@
-### setup envinronments
-##
+## setup envinronments
 set `NODE_ENV` to `production`
 
 setup db connection in `knexfile.js`
@@ -7,8 +6,8 @@ setup db connection in `knexfile.js`
 set `ADMIN_PASSWORD` to yours
 
 
-### *** Manual installation ***
-## requirements
+## *** Manual installation ***
+### requirements
 
 Mysql 8.0                                                                        
 nodejs >= 7.0
@@ -22,18 +21,18 @@ Then do `npm run install` after that
 `npm run start:prod`
 
 
-### *** Using docker ***
+## *** Using docker ***
 
-## requirements
+### requirements
 
 Docker ~17.09
 
-## Use docker-compose
+### Use docker-compose
 Run app in docker development mode
 
 docker-compose up --build`
 
-## Run 
+### Run 
 Run app in development mode with HMR
 
 Make sure that `Docker` ran on your machine
