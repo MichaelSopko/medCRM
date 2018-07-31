@@ -1,5 +1,5 @@
 ### setup envinronments
-
+##
 set `NODE_ENV` to `production`
 
 setup db connection in `knexfile.js`
@@ -10,7 +10,7 @@ set `ADMIN_PASSWORD` to yours
 ### *** Manual installation ***
 ## requirements
 
-Mysql 8.0
+Mysql 8.0                                                                        
 nodejs >= 7.0
 
 ### Run
