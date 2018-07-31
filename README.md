@@ -30,7 +30,7 @@ Docker ~17.09
 ### Use docker-compose
 Run app in docker development mode
 
-docker-compose up --build`
+docker-compose up --build
 
 ### Run 
 Run app in development mode with HMR
