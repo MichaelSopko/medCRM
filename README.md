@@ -1,4 +1,4 @@
-## setup envinronments
+## Setup environments
 set `NODE_ENV` to `production`
 
 setup db connection in `knexfile.js`
